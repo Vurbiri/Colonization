@@ -4,7 +4,7 @@ using Vurbiri;
 
 namespace VurbiriEditor.Collections
 {
-    public abstract class AIdCollectionDrawer : PropertyDrawer
+    public abstract class IdCollectionDrawer : PropertyDrawer
     {
         #region Consts
         protected readonly int INDEX_TYPE = 0, INDEX_VALUE = 1;
@@ -25,11 +25,11 @@ namespace VurbiriEditor.Collections
 
             bool isInit = idType == _idType & _names != null;
 
-            if (!isInit && IdTypesCacheEditor.Contain(idType))
+            if (!isInit && IdCacheEd.Contain(idType))
             {
                 _idType = idType;
-                _count = IdTypesCacheEditor.GetCount(idType);
-                _names = IdTypesCacheEditor.GetPositiveNames(idType);
+                _count = IdCacheEd.GetCount(idType);
+                _names = IdCacheEd.GetNames(idType);
                 isInit = true;
             }
             

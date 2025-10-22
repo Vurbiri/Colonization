@@ -19,8 +19,8 @@ namespace Vurbiri.Colonization
                 {
                     if (FindActors(HumanId))
                     {
-                        yield return CanPayOrExchange_Cn(OutB.Get(out int key));
-                        if (OutB.Result(key))
+                        yield return CanPayOrExchange_Cn(Out<bool>.Get(out int key));
+                        if (Out<bool>.Result(key))
                         {
                             Human.Pay(Spell.Cost);
                             s_actors.Rand().ZealCharge = true;
@@ -28,16 +28,16 @@ namespace Vurbiri.Colonization
                     }
                     s_actors.Clear();
                     yield break;
-                }
 
-                [Impl(256)]
-                private static bool FindActors(int playerId)
-                {
-                    foreach (Actor actor in GameContainer.Actors[playerId])
-                        if (!actor.ZealCharge)
-                            s_actors.Add(actor);
+                    // ====== Local ============
+                    [Impl(256)] static bool FindActors(int playerId)
+                    {
+                        foreach (Actor actor in GameContainer.Actors[playerId])
+                            if (!actor.ZealCharge)
+                                s_actors.Add(actor);
 
-                    return s_actors.Count > 0;
+                        return s_actors.Count > 0;
+                    }
                 }
             }
         }

@@ -20,7 +20,7 @@ namespace Vurbiri.Colonization.UI
         {
             for(int i = 0; i < ActorAbilityId.Count; i++)
                 if (_abilities[i] == null)
-                    _abilities[i] = EUtility.FindAnyAsset<Sprite>($"SP_Icon{ActorAbilityId.GetName_Ed(i)}");
+                    _abilities[i] = EUtility.FindAnyAsset<Sprite>($"SP_Icon{ActorAbilityId.Names_Ed[i]}");
 
             if (_abilities[ActorAbilityId.CurrentHP] == null)
                 _abilities[ActorAbilityId.CurrentHP] = EUtility.FindAnyAsset<Sprite>("SP_IconMaxHP");

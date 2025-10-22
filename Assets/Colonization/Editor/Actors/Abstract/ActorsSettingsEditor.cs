@@ -33,7 +33,7 @@ namespace VurbiriEditor.Colonization.Actors
                 propertySkills = propertyValue.FindPropertyRelative(P_SKILLS);
 
                 element = _treeActorSettings.Instantiate(propertyValue.propertyPath);
-                element.Q<Foldout>(U_LABEL).text = IdType<TId>.GetName_Ed(i);
+                element.Q<Foldout>(U_LABEL).text = IdType<TId>.Names_Ed[i];
                 element.Q<VisualElement>(U_SKILLS).Add(_treeSkillsVT.Instantiate(propertySkills.propertyPath));
                 container.Add(element);
             }

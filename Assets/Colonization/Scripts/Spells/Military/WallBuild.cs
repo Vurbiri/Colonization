@@ -49,7 +49,7 @@ namespace Vurbiri.Colonization
 
             private IEnumerator Cast_Cn(int playerId, Crossroad colony)
             {
-                yield return GameContainer.CameraController.ToPositionControlled(playerId, colony);
+                yield return GameContainer.CameraController.ToPositionControlled(playerId, colony.Position);
                 ShowSpellName(playerId);
                 yield return Humans[playerId].BuyWall(colony, _cost);
                 s_isCasting.False();

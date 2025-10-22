@@ -27,7 +27,12 @@ namespace Vurbiri.Collections
             _values = values;
             _count = values.Length;
         }
-        [Impl(256), JsonConstructor]
+        [Impl(256)] public ReadOnlyArray(List<TValue> values)
+        {
+            _values = values.ToArray();
+            _count = values.Count;
+        }
+        [JsonConstructor]
         public ReadOnlyArray(IReadOnlyList<TValue> list)
         {
             _count = list.Count;

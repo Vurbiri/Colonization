@@ -26,7 +26,10 @@ namespace Vurbiri.Colonization.Characteristics
         public const int IsCity                 = 21;
         public const int WarriorProfit          = 22;
         public const int IsArtefact             = 23;
-        
+
+        public static int WarriorToAbility(int warriorId) => warriorId + IsMilitia;
+        public static int AbilityToWarrior(int abilityId) => abilityId - IsMilitia;
+
         static HumanAbilityId() => ConstructorRun();
     }
 }

@@ -48,36 +48,44 @@ namespace Vurbiri.Colonization
                     if (!_done)
                     {
                         if (_cursor < _roadsCount)
-                        {
-                            Step step;
-                            bool canRoadBuild = _cursor > 0 || Resources >= _allCost || s_settings.chanceIncomplete.Roll;
-                            while (canRoadBuild)
-                            {
-                                yield return Human.Exchange_Cn(_roadCost, OutB.Get(out int key));
-                                if (canRoadBuild = OutB.Result(key))
-                                {
-                                    step = _steps[_cursor]; _steps[_cursor++] = null;
-                                    yield return GameContainer.CameraController.ToPositionControlled(step.link.Position);
-                                    yield return Human.BuyRoad(step.crossroad.Type, step.link, _roadCost);
-                                    yield return s_waitRealtime.Restart();
-                                    canRoadBuild = _cursor < _roadsCount;
-                                }
-                            }
-                        }
-                        
-                        if(_cursor == _roadsCount)
-                        {
-                            yield return Human.Exchange_Cn(_edificeCost, Out<bool>.Get(out int key));
-                            if (Out<bool>.Result(key))
-                            {
-                                var crossroad = _steps[_cursor].crossroad;
-                                yield return GameContainer.CameraController.ToPositionControlled(crossroad.Position);
-                                yield return Human.BuyEdificeUpgrade(crossroad, _edificeCost);
-                                _done = true;
-                            }
-                        }
+                            yield return BuyRoads_Cn();
+
+                        if (_cursor == _roadsCount)
+                            yield return BuyCamp_Cn();
                     }
                     yield return s_waitRealtime.Restart();
+                }
+
+                private IEnumerator BuyRoads_Cn()
+                {
+                    Step step;
+                    bool canRoadBuild = _cursor > 0 || Resources >= _allCost || s_settings.chanceIncomplete.Roll;
+                    while (canRoadBuild)
+                    {
+                        yield return Human.Exchange_Cn(_roadCost, Out<bool>.Get(out int key));
+                        if (canRoadBuild = Out<bool>.Result(key))
+                        {
+                            step = _steps[_cursor]; _steps[_cursor++] = null;
+                            yield return GameContainer.CameraController.ToPositionControlled(step.link.Position);
+                            yield return Human.BuyRoad(step.crossroad.Type, step.link, _roadCost);
+                            yield return s_waitRealtime.Restart();
+                            canRoadBuild = _cursor < _roadsCount;
+                            Log.Info($"[Builder::LandBuild] Player {HumanId} built Road");
+                        }
+                    }
+                }
+
+                private IEnumerator BuyCamp_Cn()
+                {
+                    yield return Human.Exchange_Cn(_edificeCost, Out<bool>.Get(out int key));
+                    if (Out<bool>.Result(key))
+                    {
+                        var crossroad = _steps[_cursor].crossroad;
+                        yield return GameContainer.CameraController.ToPositionControlled(crossroad.Position);
+                        yield return Human.BuyEdificeUpgrade(crossroad, _edificeCost); ;
+                        Log.Info($"[Builder::LandBuild] Player {HumanId} built Camp");
+                        _done = true;
+                    }
                 }
 
                 public static IEnumerator Create_Cn(Builder parent, Plans plans)

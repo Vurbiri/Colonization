@@ -18,8 +18,8 @@ namespace Vurbiri.Colonization
                 {
                     if(FindHexagons(HumanId))
                     {
-                        yield return CanPayOrExchange_Cn(OutB.Get(out int key));
-                        if (OutB.Result(key) && Spell.Prep(_param))
+                        yield return CanPayOrExchange_Cn(Out<bool>.Get(out int key));
+                        if (Out<bool>.Result(key) && Spell.Prep(_param))
                         {
                             Spell.Cast(_param);
 

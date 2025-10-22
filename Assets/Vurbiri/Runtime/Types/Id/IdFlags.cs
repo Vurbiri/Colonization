@@ -17,7 +17,6 @@ namespace Vurbiri
         {
 #if UNITY_EDITOR
             string name = typeof(T).Name;
-            Throw.IfNegative(IdType<T>.Min, $"{name}.Min");
             Throw.IfGreater(IdType<T>.Count, 32, $"{name}.Count");
 #endif  
         }

@@ -16,8 +16,8 @@ namespace Vurbiri
         [Impl(256)] public Id(int id)
         {
 #if UNITY_EDITOR
-            if (id < IdType<T>.Min | id >= IdType<T>.Count)
-                Errors.ArgumentOutOfRange($"Value {id} is less than {IdType<T>.Min} or greater than or equal to {IdType<T>.Count}");
+            if (id < IdType<T>.None | id >= IdType<T>.Count)
+                Errors.ArgumentOutOfRange($"[Id<{typeof(T).Name}>] Value {id} must be greater than {IdType<T>.None} and less than {IdType<T>.Count}");
 #endif
 
             _id = id;

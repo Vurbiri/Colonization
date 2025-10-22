@@ -5,7 +5,6 @@ namespace Vurbiri.Colonization
 
     public class EdificeGroupId : IdType<EdificeGroupId>
     {
-        public const int None    = -1;
         public const int Shrine  =  0;
         public const int Colony  =  1;
         public const int Port    =  2;

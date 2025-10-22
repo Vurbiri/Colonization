@@ -14,13 +14,8 @@ namespace Vurbiri.Colonization
 
                 public override IEnumerator TryCasting_Cn()
                 {
-                    int mana = Mana;
-                    IEnumerator casting = null;
-                    Log.Info($"Order: {100 * mana / s_settings.resDivider}");
-                    if (Chance.Rolling(100 * mana / s_settings.resDivider))
-                        casting = Casting_Cn(Random.Range(1, (int)(mana * s_settings.maxUseRes) + 1));
-
-                    return casting;
+                    int mana = (int)(Mana * s_settings.useResRatio);
+                    return Chance.Rolling(10 * mana) ? Casting_Cn(Random.Range(1, mana + 1)) : null;
                 }
             }
         }

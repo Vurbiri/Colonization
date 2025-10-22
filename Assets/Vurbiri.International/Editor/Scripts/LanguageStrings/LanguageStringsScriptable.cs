@@ -23,7 +23,7 @@ namespace Vurbiri.International.Editor
 
         public void Init()
         {
-            _languages = LoadObjectFromResourceJson<List<LanguageType>>(CONST_L.FILE_LANG);
+            _languages = LoadObjectFromJsonResource<List<LanguageType>>(CONST_L.FILE_LANG);
 
             for(int i = _languages.Count - 1; i >= 0; i--)
                 if(!CheckFolder(_languages[i].Folder, i))
@@ -91,7 +91,7 @@ namespace Vurbiri.International.Editor
                 path = Path.Combine(folder, _languages[i].Folder, _selectFile.Concat(JSON_EXP));
 
                 if (File.Exists(path))
-                    strings[i] = LoadObjectFromResourceJson<Dictionary<string, string>>(Path.Combine(_languages[i].Folder, _selectFile));
+                    strings[i] = LoadObjectFromJsonResource<Dictionary<string, string>>(Path.Combine(_languages[i].Folder, _selectFile));
                 else
                     strings[i] = new();
 

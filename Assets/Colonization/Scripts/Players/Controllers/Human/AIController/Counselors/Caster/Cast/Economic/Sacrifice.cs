@@ -22,9 +22,10 @@ namespace Vurbiri.Colonization
                     {
                         Actor militia = s_militias.Rand();
                         if (militia.Action.CanUseSkill(s_settings.skillId))
+                        {
                             yield return militia.Action.UseSkill(s_settings.skillId);
-
-                        yield return s_settings.waitBeforeSelecting.Restart();
+                            yield return s_settings.waitBeforeSelecting.Restart();
+                        }
 
                         Spell.Cast(_param);
 
@@ -41,7 +42,7 @@ namespace Vurbiri.Colonization
                 [Impl(256)] private static bool FindMilitias(int playerId)
                 {
                     foreach (Actor actor in GameContainer.Actors[playerId])
-                        if (actor.Id == WarriorId.Militia)
+                        if (actor.Id == WarriorId.Militia & actor.IsFullHP & !actor.ZealCharge && !actor.IsInCombat())
                             s_militias.Add(actor);
 
                     return s_militias.Count > 0;

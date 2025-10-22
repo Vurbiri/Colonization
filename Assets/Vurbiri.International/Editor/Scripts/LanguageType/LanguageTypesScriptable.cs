@@ -18,7 +18,7 @@ namespace Vurbiri.International.Editor
 
         public void Load()
         {
-            _languageTypes = LoadObjectFromResourceJson<List<LanguageType>>(FILE_LANG);
+            _languageTypes = LoadObjectFromJsonResource<List<LanguageType>>(FILE_LANG);
         }
 
         public void Save()

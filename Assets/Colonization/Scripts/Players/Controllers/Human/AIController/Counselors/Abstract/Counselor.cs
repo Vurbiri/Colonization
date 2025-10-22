@@ -15,7 +15,7 @@ namespace Vurbiri.Colonization
 
             #region Parent Properties
             protected AIController Human { [Impl(256)] get => _parent; }
-            protected int Id { [Impl(256)] get => _parent._id; }
+            protected int HumanId { [Impl(256)] get => _parent._id; }
             protected Currencies Resources { [Impl(256)] get => _parent._resources; }
             protected int MaxResources { [Impl(256)] get => _parent._abilities[HumanAbilityId.MaxMainResources]; }
             protected ReadOnlyReactiveList<Crossroad> Ports { [Impl(256)] get => _parent._edifices.ports; }
@@ -30,7 +30,6 @@ namespace Vurbiri.Colonization
 
             [Impl(256)] public Counselor(AIController parent) => _parent = parent;
 
-            public abstract IEnumerator Init_Cn();
             public abstract IEnumerator Execution_Cn();
         }
     }

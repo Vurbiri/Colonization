@@ -24,7 +24,7 @@ namespace Vurbiri.International.Editor
 
         public void Load()
         {
-            _files = LoadObjectFromResourceJson<List<string>>(FILE_FILES);
+            _files = LoadObjectFromJsonResource<List<string>>(FILE_FILES);
             LanguageData.SetFiles(_files);
             EditorUtility.SetDirty(this);
         }
@@ -77,7 +77,7 @@ namespace Vurbiri.International.Editor
             //=================================
             void Rename()
             {
-                var folders = LoadObjectFromResourceJson<List<LanguageType>>(FILE_LANG)
+                var folders = LoadObjectFromJsonResource<List<LanguageType>>(FILE_LANG)
                     .Select(l => FileUtil.GetPhysicalPath(OUT_RESOURCE_FOLDER.Concat(l.Folder, "/"))).GroupBy(f => f).Select(g => g.First()).ToArray();
 
                 int count = Mathf.Min(_files.Count, LanguageData.fileCount);

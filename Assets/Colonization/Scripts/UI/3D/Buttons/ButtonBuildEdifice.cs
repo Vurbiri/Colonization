@@ -51,10 +51,10 @@ namespace Vurbiri.Colonization.UI
             for (int i = 0; i < EdificeId.Count; i++)
             {
                 if (i > 0 && _edificeView[i].sprite == null)
-                    _edificeView[i].sprite = EUtility.FindAnyAsset<Sprite>($"SP_Icon{EdificeId.GetName_Ed(i)}");
+                    _edificeView[i].sprite = EUtility.FindAnyAsset<Sprite>($"SP_Icon{EdificeId.Names_Ed[i]}");
 
                 if (string.IsNullOrEmpty(_edificeView[i].keyName))
-                    _edificeView[i].keyName = EdificeId.GetName_Ed(i);
+                    _edificeView[i].keyName = EdificeId.Names_Ed[i];
             }
         }
 #endif

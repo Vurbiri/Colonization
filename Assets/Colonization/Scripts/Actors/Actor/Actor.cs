@@ -22,6 +22,7 @@ namespace Vurbiri.Colonization.Actors
         private Id<ActorTypeId> _typeId;
         private Id<PlayerId> _owner;
         private bool _isPersonTurn;
+        private bool _zealCharge;
 
         #region  --------------- Abilities ---------------
         private AbilitiesSet<ActorAbilityId> _abilities;
@@ -55,9 +56,10 @@ namespace Vurbiri.Colonization.Actors
         public bool CanMove { [Impl(256)] get => _move.IsTrue; }
         public bool CanUseSkills { [Impl(256)] get => _states.IsDefault & _isPersonTurn; }
         public int CurrentHP { [Impl(256)] get => _currentHP.Value; }
+        public bool IsFullHP { [Impl(256)] get => _currentHP.IsMax; }
         public bool IsWounded { [Impl(256)] get => _currentHP.IsNotMax; }
         public bool IsDead { [Impl(256)] get => _currentHP.Value <= 0; }
-        public bool ZealCharge { [Impl(256)] get; [Impl(256)] set; }
+        public bool ZealCharge { [Impl(256)] get => _zealCharge; [Impl(256)] set { _zealCharge = value; _eventChanged.Invoke(this, TypeEvent.Change); } }
         public ActorSkin Skin { [Impl(256)] get => _states.Skin; }
         public Actions Action { [Impl(256)] get => _states; }
         public ReactiveEffects Effects { [Impl(256)] get => _effects; }
@@ -97,8 +99,8 @@ namespace Vurbiri.Colonization.Actors
             #region Abilities
             _abilities = settings.Abilities;
 
-            _currentHP  = _abilities.ReplaceToSub(ActorAbilityId.CurrentHP, ActorAbilityId.MaxHP, ActorAbilityId.HPPerTurn, true);
-            _currentAP  = _abilities.ReplaceToSub(ActorAbilityId.CurrentAP, ActorAbilityId.MaxAP, ActorAbilityId.APPerTurn, _typeId == ActorTypeId.Demon);
+            _currentHP  = _abilities.ReplaceToSub(ActorAbilityId.CurrentHP, ActorAbilityId.MaxHP, ActorAbilityId.HPPerTurn);
+            _currentAP  = _abilities.ReplaceToSub(ActorAbilityId.CurrentAP, ActorAbilityId.MaxAP, ActorAbilityId.APPerTurn);
             _move       = _abilities.ReplaceToBoolean(ActorAbilityId.IsMove);
             _profitMain = _abilities.ReplaceToChance(ActorAbilityId.ProfitMain, _currentAP, _move);
             _profitAdv  = _abilities.ReplaceToChance(ActorAbilityId.ProfitAdv, _currentAP, _move);
@@ -141,7 +143,7 @@ namespace Vurbiri.Colonization.Actors
             _currentAP.Set(data.state.currentAP);
             _move.Set(data.state.move);
 
-            ZealCharge = data.state.zealCharge;
+            _zealCharge = data.state.zealCharge;
 
             for (int i = data.effects.Length - 1; i >= 0; i--)
                 _effects.Add(data.effects[i]);

@@ -57,7 +57,7 @@ namespace Vurbiri.Colonization
 
             private IEnumerator Cast_Cn(Actor target)
             {
-                yield return GameContainer.CameraController.ToPosition(target);
+                yield return GameContainer.CameraController.ToPositionControlled(target);
 
                 target.ApplyEffect(_heal);
                 GameContainer.SFX.Run(s_settings.healSFX, null, target.Skin);

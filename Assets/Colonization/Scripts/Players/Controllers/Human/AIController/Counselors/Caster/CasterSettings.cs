@@ -10,10 +10,7 @@ namespace Vurbiri.Colonization
         public int percentAmountOffset;
         public WaitRealtime waitBeforeSelecting;
         [Header("Order & Blessing & Wrath")]
-        public int resDivider;
-        public float maxUseRes;
-        [Header("Transmutation")]
-        public int minRes;
+        public float useResRatio;
         [Header("Sacrifice")]
         public int skillId;
         [Header("SwapId")]

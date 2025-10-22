@@ -23,7 +23,6 @@ namespace Vurbiri.Colonization
                 protected PerkTree PerkTree { [Impl(256)] get => _caster.PerkTrees; }
                 protected int Mana { [Impl(256)] get => _caster._parent._resources[CurrencyId.Mana]; }
                 protected bool CanPay { [Impl(256)] get => _caster._parent._resources[CurrencyId.Mana] >= SpellBook.Cost[_type][_id]; }
-
                 protected ReadOnlyAbilities<HumanAbilityId> Abilities { [Impl(256)] get => _caster._parent._abilities; }
                 #endregion
 
@@ -48,7 +47,7 @@ namespace Vurbiri.Colonization
 
                 sealed public override string ToString() => GetType().Name;
 
-                [Impl(256)] protected IEnumerator Casting_Cn(int valueA = 0, int valueB = 0)
+                protected IEnumerator Casting_Cn(int valueA = 0, int valueB = 0)
                 {
                     _param.valueA = valueA; _param.valueB = valueB;
                     SpellBook.Cast(_type, _id, _param);
@@ -56,7 +55,7 @@ namespace Vurbiri.Colonization
                     yield return SpellBook.WaitEndCasting;
                 }
 
-                [Impl(256)] protected IEnumerator CanPayOrExchange_Cn(Out<bool> output)
+                protected IEnumerator CanPayOrExchange_Cn(Out<bool> output)
                 {
                     output.Set(CanPay);
                     if (!output && Chance.Rolling(Resources.PercentAmountExCurrency(CurrencyId.Mana) - s_settings.percentAmountOffset))

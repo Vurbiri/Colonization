@@ -2,10 +2,6 @@ using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri
 {
-    public class OutB : Out<bool> { }
-    public class OutI : Out<int> { }
-    public class OutF : Out<float> { }
-
     public class Out<T>
 	{
 		private readonly static Pool s_pool = new();

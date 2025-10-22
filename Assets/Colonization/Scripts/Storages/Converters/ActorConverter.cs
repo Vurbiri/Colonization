@@ -45,7 +45,7 @@ namespace Vurbiri.Colonization.Actors
                 writer.WriteValue(actor._currentHP.Value);
                 writer.WriteValue(actor._currentAP.Value);
                 writer.WriteValue(actor._move.Value);
-                writer.WriteValue(actor.ZealCharge ? 1 : 0);
+                writer.WriteValue(actor._zealCharge ? 1 : 0);
                 writer.WriteEndArray();
             }
 

@@ -2,9 +2,7 @@
   "spellDivider": 3,
   "percentAmountOffset": 10,
   "waitBeforeSelecting": 0.4,
-  "resDivider": 10,
-  "maxUseRes": 0.75,
-  "minRes": 1,
+  "useResRatio": 0.7,
   "skillId": 3,
   "goodIds": [
     5,
@@ -23,9 +21,9 @@
     120,
     190,
     190,
-    90,
+    80,
     40,
-    120
+    100
   ],
   "weightsMilitary": [
     300,

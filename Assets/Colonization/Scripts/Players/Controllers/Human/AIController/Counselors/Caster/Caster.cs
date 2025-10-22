@@ -32,13 +32,9 @@ namespace Vurbiri.Colonization
             {
                 Order.Create(this); Healing.Create(this); Blessing.Create(this); Wrath.Create(this); Summon.Create(this); Transmutation.Create(this); Sacrifice.Create(this);
                 BloodTrade.Create(this); Spying.Create(this); WallBuild.Create(this); Marauding.Create(this); RoadDemolition.Create(this); SwapId.Create(this); Zeal.Create(this);
-            }
 
-            public override IEnumerator Init_Cn()
-            {
                 PerkTrees.GetProgress(EconomicSpellId.Type).Subscribe(OnEconomicProgress);
                 PerkTrees.GetProgress(MilitarySpellId.Type).Subscribe(OnMilitaryProgress);
-                yield break;
             }
 
             public override IEnumerator Execution_Cn()
@@ -52,14 +48,14 @@ namespace Vurbiri.Colonization
                 {
                     current = _current[i]; _current[i] = null;
 
-                    Log.Info($"[Caster] Player {Id} current cast [{current}]");
+                    Log.Info($"[Caster] Player {HumanId} current cast [{current}]");
                     yield return current.TryCasting_Cn();
 
                     _casts.Add(current);
                     yield return s_waitRealtime.Restart();
                 }
 
-                yield return s_waitRealtime.Restart();
+                yield break;
             }
 
             private void OnEconomicProgress(int progress) => OnLeveling(EconomicSpellId.Type, PerkTree.ProgressToLevel(progress));
@@ -71,11 +67,11 @@ namespace Vurbiri.Colonization
                     _casts.Add(cast);
             }
 
-            #region Nested: Perks, Leveling
+            #region Nested: Casts, Leveling
             // **********************************************************
             private class Casts : WeightsList<Cast>
             {
-                public Casts() : base(null) { }
+                public Casts() : base(null, EconomicSpellId.Count + MilitarySpellId.Count) { }
 
                 [Impl(256)] public void Add(Cast cast) => base.Add(cast, cast.Weight);
             }

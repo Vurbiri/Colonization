@@ -29,24 +29,19 @@ namespace Vurbiri.Colonization
             public WaitResult<bool> Receive(int giver, MainCurrencies gift)
 			{
                 int amount = gift.Amount * _ratio;
-                if (GameContainer.Diplomacy.IsHumanGreatFriend(Id, giver))
+                if (GameContainer.Diplomacy.IsHumanGreatFriend(HumanId, giver))
                     amount <<= 1;
-                else if (GameContainer.Diplomacy.IsHumanGreatEnemy(Id, giver))
+                else if (GameContainer.Diplomacy.IsHumanGreatEnemy(HumanId, giver))
                     amount >>= 1;
 
                 bool result = amount > Resources.Amount;
                 if (result)
                 {
                     Resources.Add(gift);
-                    GameContainer.Diplomacy.Gift(Id, giver);
+                    GameContainer.Diplomacy.Gift(HumanId, giver);
                 }
 
                 return _waitGift.SetResult(result);
-            }
-
-            public override IEnumerator Init_Cn()
-            {
-                yield break;
             }
 
             public override IEnumerator Execution_Cn()
@@ -54,13 +49,13 @@ namespace Vurbiri.Colonization
                 for(int i = 0; i < PlayerId.HumansCount; i++)
                     yield return TryGive_Cn(i);
 
-                //Local
+                // ===== Local =====
                 IEnumerator TryGive_Cn(int receiver)
                 {
                     int amount = Resources.Amount;
-                    if (receiver != Id & amount > s_settings.minAmount)
+                    if (receiver != HumanId & amount > s_settings.minAmount)
                     {
-                        if (Chance.Rolling((GameContainer.Diplomacy[receiver, Id] - s_settings.relationOffset) + (amount - MaxResources << s_settings.shiftMax)))
+                        if (Chance.Rolling((GameContainer.Diplomacy[receiver, HumanId] - s_settings.relationOffset) + (amount - MaxResources << s_settings.shiftMax)))
                         {
                             _gift.Clear(); _clone.Import(Resources);
                             int countGift = 1 + UnityEngine.Random.Range(0, amount - s_settings.minAmount >> s_settings.shiftAmount);
@@ -75,11 +70,11 @@ namespace Vurbiri.Colonization
                             if (receiver == PlayerId.Person)
                             {
                                 StringBuilder sb = new(TAG.ALING_CENTER, 256);
-                                sb.Append(GameContainer.UI.PlayerNames[Id]); sb.Append(" "); sb.AppendLine(_msg);
+                                sb.Append(GameContainer.UI.PlayerNames[HumanId]); sb.Append(" "); sb.AppendLine(_msg);
                                 _gift.PlusToStringBuilder(sb); sb.Append(TAG.ALING_OFF);
                                 msg = sb.ToString();
                             }
-                            var wait = GameContainer.Humans[receiver].OnGift(Id, _gift, msg);
+                            var wait = GameContainer.Humans[receiver].OnGift(HumanId, _gift, msg);
                             yield return wait;
                             if (wait) Resources.Remove(_gift);
                         }

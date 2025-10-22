@@ -1,6 +1,5 @@
 using System.Collections;
 using Vurbiri.Colonization.Actors;
-using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization
 {
@@ -18,28 +17,25 @@ namespace Vurbiri.Colonization
                     FindActors(HumanId, out int friends, out int enemies);
                     if (friends > (enemies << 1))
                     {
-                        yield return CanPayOrExchange_Cn(OutB.Get(out int key));
-                        if (OutB.Result(key))
+                        yield return CanPayOrExchange_Cn(Out<bool>.Get(out int key));
+                        if (Out<bool>.Result(key))
                             yield return Casting_Cn();
                     }
 
                     // ====== Local ============
-                    [Impl(256)] static void FindActors(int playerId, out int friends, out int enemies)
+                    static void FindActors(int playerId, out int friends, out int enemies)
                     {
                         friends = enemies = 0;
 
-                        for (int i = 0; i < PlayerId.Count; i++)
+                        for (int i = 0, count = 0; i < PlayerId.Count; i++, count = 0)
                         {
                             foreach (Actor actor in GameContainer.Actors[i])
-                            {
-                                if (actor.IsWounded)
-                                {
-                                    if (actor.IsEnemy(playerId))
-                                        enemies++;
-                                    else
-                                        friends++;
-                                }
-                            }
+                                if (actor.IsWounded) count++;
+
+                            if (GameContainer.Diplomacy.IsEnemy(playerId, i))
+                                enemies += count;
+                            else
+                                friends += count;
                         }
                     }
                 }

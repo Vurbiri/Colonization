@@ -18,12 +18,12 @@ namespace Vurbiri.Colonization
                     // ====== Local ======
                     static bool CheckResources(Currencies resources)
                     {
-                        int count = 0, currency; bool isMin = false;
-                        for (int i = 0; i < CurrencyId.MainCount - 1; i++)
+                        int count = 0; bool isMin = false;
+                        for (int i = 0, currency; i < CurrencyId.MainCount - 1; i++)
                         {
                             currency = resources[i];
                             count += 100 * currency;
-                            isMin |= currency <= s_settings.minRes;
+                            isMin |= currency <= 1;
                         }
 
                         return isMin && Chance.Rolling(count / resources.MaxAmount);

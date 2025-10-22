@@ -14,8 +14,8 @@ namespace Vurbiri.International.Editor
         public static string folder;
         static LanguageData()
 		{
-            folder = Storage.LoadObjectFromResourceJson<LanguageType[]>(CONST_L.FILE_LANG)[0].Folder;
-            fileNames = Storage.LoadObjectFromResourceJson<string[]>(CONST.FILE_FILES);
+            folder = Storage.LoadObjectFromJsonResource<LanguageType[]>(CONST_L.FILE_LANG)[0].Folder;
+            fileNames = Storage.LoadObjectFromJsonResource<string[]>(CONST.FILE_FILES);
             CreateValues();
         }
 
@@ -42,7 +42,7 @@ namespace Vurbiri.International.Editor
         private static void CreateKeys(int idFile)
         {
             string path = string.Concat(folder, "/", fileNames[idFile]);
-            if (!Storage.TryLoadObjectFromResourceJson(path, out Dictionary<string, string> dict, false)) dict = new();
+            if (!Storage.TryLoadObjectFromJsonResource(path, out Dictionary<string, string> dict, false)) dict = new();
 
             keys[idFile] = new string[dict.Count + 1];
 

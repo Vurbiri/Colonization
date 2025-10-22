@@ -80,7 +80,7 @@ namespace Vurbiri.Colonization
 #if UNITY_EDITOR
         public void OnValidate()
         {
-            _nameKeys ??= PlayerId.PositiveNames_Ed;
+            _nameKeys ??= PlayerId.Names_Ed;
         }
 #endif
     }

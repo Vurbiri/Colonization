@@ -64,7 +64,7 @@ namespace Vurbiri.Colonization.UI
 
             for (int i = 0; i < WarriorId.Count; i++)
                 if (_sprites[i] == null)
-                    _sprites[i] = EUtility.FindAnyAsset<Sprite>($"SP_Icon{WarriorId.GetName_Ed(i)}");
+                    _sprites[i] = EUtility.FindAnyAsset<Sprite>($"SP_Icon{WarriorId.Names_Ed[i]}");
         }
 #endif
     }

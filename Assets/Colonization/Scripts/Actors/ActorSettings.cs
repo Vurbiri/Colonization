@@ -46,7 +46,7 @@ namespace Vurbiri.Colonization.Actors
             }
             else
             {
-                string prefabName = $"P_{(TypeId == ActorTypeId.Warrior ? WarriorId.GetName_Ed(_id) : DemonId.GetName_Ed(_id))}Skin";
+                string prefabName = $"P_{(TypeId == ActorTypeId.Warrior ? WarriorId.Names_Ed[_id] : DemonId.Names_Ed[_id])}Skin";
                 _prefabActorSkin = EUtility.FindAnyPrefab<ActorSkin>(prefabName);
             }
         }

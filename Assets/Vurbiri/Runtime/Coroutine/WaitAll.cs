@@ -21,7 +21,7 @@ namespace Vurbiri
                 if (!_coroutines[i].MoveNext())
                     _coroutines.RemoveAt(i);
 
-            return _coroutines.Count != 0;
+            return _coroutines.Count > 0;
         }
 
         public IEnumerator Add(IEnumerator coroutine)

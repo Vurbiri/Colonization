@@ -11,10 +11,6 @@ namespace VurbiriEditor
     {
         private readonly string NAME_VALUE = "_id";
 
-        private Type _type;
-        private string[] _names;
-        private int[] _values;
-
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
             if (!TryGetType(out Type idType))
@@ -22,7 +18,7 @@ namespace VurbiriEditor
                 HelpBox(position, "Failed to determine type", UnityEditor.MessageType.Error); 
                 return;
             }
-            if (!TryGetNamesAndValues(idType))
+            if (!IdCacheEd.Contain(idType))
             {
                 HelpBox(position, $"Error type", UnityEditor.MessageType.Error); 
                 return;
@@ -31,7 +27,7 @@ namespace VurbiriEditor
             SerializedProperty valueProperty = property.FindPropertyRelative(NAME_VALUE);
             label = BeginProperty(position, label, property);
             {
-                valueProperty.intValue = IntPopup(position, label.text, valueProperty.intValue, _names, _values, EditorStyles.popup);
+                valueProperty.intValue = IntPopup(position, label.text, valueProperty.intValue, IdCacheEd.GetNamesNone(idType), IdCacheEd.GetValuesNone(idType));
             }
             EndProperty();
         }
@@ -46,21 +42,6 @@ namespace VurbiriEditor
             idType = idType.GetGenericArguments()[0];
 
             return idType != null;
-        }
-
-        private bool TryGetNamesAndValues(Type idType)
-        {
-            bool isInit = _type == idType & _names != null & _values != null;
-
-            if (!isInit && IdTypesCacheEditor.Contain(idType))
-            {
-                _type = idType;
-                _names = IdTypesCacheEditor.GetDisplayNames(idType);
-                _values = IdTypesCacheEditor.GetValues(idType);
-                isInit = true;
-            }
-
-            return isInit;
         }
     }
 }

@@ -232,7 +232,7 @@ namespace VurbiriEditor.Colonization.Characteristics
                 }
                 else if (usedAbility == ClearEffectsId.Code)
                 {
-                    DrawId<ClearEffectsId>(P_TYPE_OP);
+                    DrawId<ClearEffectsId>(P_TYPE_OP, false);
                     DrawFlatValue(1, 3, 1);
                 }
                 else

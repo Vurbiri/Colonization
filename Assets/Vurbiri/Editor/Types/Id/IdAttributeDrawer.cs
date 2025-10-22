@@ -9,10 +9,6 @@ namespace VurbiriEditor
     [CustomPropertyDrawer(typeof(IdAttribute))]
     public class IdAttributeDrawer : PropertyDrawer
     {
-        private Type _type;
-        private string[] _names;
-        private int[] _values;
-
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
             if (property.propertyType != SerializedPropertyType.Integer)
@@ -20,7 +16,9 @@ namespace VurbiriEditor
                 HelpBox(position, "Field type must be Int32", UnityEditor.MessageType.Error);
                 return;
             }
-            if (!TryGetNamesAndValues())
+
+            Type idType = ((IdAttribute)attribute).type;
+            if (!IdCacheEd.Contain(idType))
             {
                 HelpBox(position, $"Error type", UnityEditor.MessageType.Error);
                 return;
@@ -28,26 +26,9 @@ namespace VurbiriEditor
 
             label = BeginProperty(position, label, property);
             {
-                property.intValue = IntPopup(position, label.text, property.intValue, _names, _values, EditorStyles.popup);
+                property.intValue = IntPopup(position, label.text, property.intValue, IdCacheEd.GetNamesNone(idType), IdCacheEd.GetValuesNone(idType), EditorStyles.popup);
             }
             EndProperty();
-        }
-
-        private bool TryGetNamesAndValues()
-        {
-            Type idType = ((IdAttribute)attribute).type;
-
-            bool isInit = _type == idType & _names != null & _values != null;
-
-            if (!isInit && IdTypesCacheEditor.Contain(idType))
-            {
-                _type = idType;
-                _names = IdTypesCacheEditor.GetDisplayNames(idType);
-                _values = IdTypesCacheEditor.GetValues(idType);
-                isInit = true;
-            }
-
-            return isInit;
         }
     }
 }

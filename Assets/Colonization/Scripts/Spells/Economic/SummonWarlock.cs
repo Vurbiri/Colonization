@@ -74,9 +74,9 @@ namespace Vurbiri.Colonization
 
                 yield return null;
 
-                GameContainer.CameraController.ToPositionControlled(playerId, hexagon);
+                GameContainer.CameraController.ToPositionControlled(playerId, hexagon.Position);
                 ShowSpellName(playerId);
-                yield return Humans[playerId].Recruiting(WarriorId.Warlock, hexagon, _cost);
+                yield return Humans[playerId].Recruiting_Wait(WarriorId.Warlock, hexagon, _cost);
 
                 s_isCasting.False();
             }

@@ -22,10 +22,10 @@ namespace Vurbiri.Colonization
 
             public Builder(AIController parent) : base(parent) { }
 
-            public override IEnumerator Init_Cn()
+            public IEnumerator Landing_Cn()
             {
                 var port = GameContainer.Crossroads.GetRandomPort();
-                yield return GameContainer.CameraController.ToPositionControlled(port);
+                yield return GameContainer.CameraController.ToPositionControlled(port.Position);
                 yield return Human.BuildPort(port).signal;
                 yield return s_waitRealtime.Restart();
             }
@@ -35,8 +35,8 @@ namespace Vurbiri.Colonization
                 if (_currentPlan.Done || !_currentPlan.IsValid)
                     yield return CreatePlan_Cn();
 
-                Log.Info($"[Builder] Player {Id} current plan [{_currentPlan}]");
-                yield return _currentPlan.Execution_Cn();
+                Log.Info($"[Builder] Player {HumanId} current plan [{_currentPlan}]");
+                yield return GameContainer.Shared.StartCoroutine(_currentPlan.Execution_Cn());
             }
 
             private IEnumerator CreatePlan_Cn()
@@ -90,7 +90,6 @@ namespace Vurbiri.Colonization
             private int GetFirstColonyWeight(Crossroad crossroad, int roadCount) => s_settings.penaltyPerHex * crossroad.MaxRepeatProfit + GetRoadWeight(roadCount);
 
             [Impl(256)] private static int GetRoadWeight(int roadCount) => -MathI.Pow(s_settings.penaltyPerRoad, roadCount);
-
 
             // Nested Class
             private class Plans : WeightsList<Plan>

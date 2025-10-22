@@ -17,8 +17,8 @@ namespace Vurbiri.Colonization
                     DeadEndCount(HumanId, out int friends, out int enemies);
                     if ((friends << 1) < enemies)
                     {
-                        yield return CanPayOrExchange_Cn(OutB.Get(out int key));
-                        if (OutB.Result(key))
+                        yield return CanPayOrExchange_Cn(Out<bool>.Get(out int key));
+                        if (Out<bool>.Result(key))
                             yield return Casting_Cn();
                     }
 

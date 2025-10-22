@@ -12,7 +12,7 @@ namespace Vurbiri.International
 
         static Files()
         {
-            s_files = LoadObjectFromResourceJson<string[]>(CONST_L.FILE_FILES);
+            s_files = LoadObjectFromJsonResource<string[]>(CONST_L.FILE_FILES);
             Throw.IfLengthZero(s_files, "s_files");
 
             Count = s_files.Length;
@@ -21,7 +21,7 @@ namespace Vurbiri.International
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool TryLoad(string folder, int fileId, out Dictionary<string, string> load)
         {
-            return TryLoadObjectFromResourceJson(string.Concat(folder, "/", s_files[fileId]), out load);
+            return TryLoadObjectFromJsonResource(string.Concat(folder, "/", s_files[fileId]), out load);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

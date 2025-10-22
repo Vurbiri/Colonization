@@ -9,7 +9,7 @@ using Object = UnityEngine.Object;
 namespace VurbiriEditor.Collections
 {
     [CustomPropertyDrawer(typeof(ReadOnlyIdSet<,>), true)]
-    internal class IdSetDrawer : AIdCollectionDrawer
+    internal class IdSetDrawer : IdCollectionDrawer
     {
         public readonly float BUTTON_RATE_POS = 0.33f, BUTTON_RATE_SIZE = 0.275f, LABEL_SIZE = 100f;
         public readonly string NAME_COUNT = "_count", LABEL_EMPTY = "-----";

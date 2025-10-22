@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using Vurbiri;
@@ -481,16 +480,11 @@ namespace VurbiriEditor
 
         protected (string[] names, int[] values) GetNamesAndValues<T>(bool isNone) where T : IdType<T>
         {
-            if (!isNone)
-                return (IdType<T>.Names_Ed, IdType<T>.Values_Ed);
-
-            List<string> names = new(IdType<T>.Names_Ed);
-            List<int> values = new(IdType<T>.Values_Ed);
-
-            names.Insert(0, "None");
-            values.Insert(0, -1);
-
-            return (names.ToArray(), values.ToArray());
+            var type = typeof(T);
+            if (isNone)
+                return (IdCacheEd.GetNamesNone(type), IdCacheEd.GetValuesNone(type));
+            else
+                return (IdCacheEd.GetNames(type), IdCacheEd.GetValues(type));
         }
 
         protected int IdFromLabel() => IdFromLabel(_label);

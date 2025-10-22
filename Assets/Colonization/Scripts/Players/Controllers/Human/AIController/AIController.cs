@@ -6,13 +6,10 @@ namespace Vurbiri.Colonization
     sealed public partial class AIController : HumanController
     {
         private static readonly AIControllerSettings s_settings;
+        private static readonly WaitAll s_waitAll = new();
 
+        private readonly Counselors _counselors;
         private readonly int _specialization = AbilityTypeId.Economic;
-
-        private readonly Diplomat _diplomat;
-        private readonly Builder _builder;
-        private readonly Scientist _scientist;
-        private readonly Caster _caster;
 
         static AIController() => s_settings = SettingsFile.Load<AIControllerSettings>();
 
@@ -21,10 +18,10 @@ namespace Vurbiri.Colonization
             if (s_settings.militarist == playerId)
                 _specialization = AbilityTypeId.Military;
 
-            _diplomat = new(this); _builder = new(this); _scientist = new(this); _caster = new(this);
+            _counselors = new(this);
         }
 
-        public override WaitResult<bool> OnGift(int giver, MainCurrencies gift, string msg) => _diplomat.Receive(giver, gift);
+        public override WaitResult<bool> OnGift(int giver, MainCurrencies gift, string msg) => _counselors.GiftReceive(giver, gift);
 
         public override void OnLanding()
         {
@@ -32,10 +29,8 @@ namespace Vurbiri.Colonization
 
             IEnumerator OnLanding_Cn()
             {
-                yield return null;
-                yield return _builder.Init_Cn();
-                yield return _scientist.Init_Cn();
-                yield return _caster.Init_Cn();
+                yield return s_settings.waitPlayStart.Restart();
+                yield return _counselors.Landing_Cn();
                 //BuildPort(GameContainer.Crossroads.GetRandomPort());
 
                 GameContainer.GameLoop.EndLanding();
@@ -55,13 +50,12 @@ namespace Vurbiri.Colonization
 
             IEnumerator OnPlay_Cn()
             {
-                yield return s_settings.waitPlay.Restart();
-               
-                yield return _builder.Execution_Cn();
-                yield return _scientist.Execution_Cn();
-                yield return _caster.Execution_Cn();
+                yield return s_settings.waitPlayStart.Restart();
+                //yield return s_waitAll.Add(s_settings.waitPlay.Restart(), _counselors.Execution_Cn());
+                yield return _counselors.Execution_Cn();
 
                 _interactable.False();
+                Log.Info("===================================================");
 
                 GameContainer.GameLoop.EndTurn();
             }
@@ -69,7 +63,7 @@ namespace Vurbiri.Colonization
 
         public override void OnEndTurn()
         {
-            _diplomat.Update();
+            _counselors.Update();
 
             StartCoroutine(OnEndTurn_Cn());
         }

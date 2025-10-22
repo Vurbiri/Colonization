@@ -5,6 +5,7 @@ using TMPro;
 using UnityEngine;
 using Vurbiri.Colonization.Actors;
 using Vurbiri.International;
+using Vurbiri.UI;
 
 namespace Vurbiri.Colonization
 {
@@ -55,6 +56,8 @@ namespace Vurbiri.Colonization
         {
             for (int i = 0; i < PlayerId.HumansCount; i++)
                 GameContainer.Humans[i].Resources.AddBlood(value);
+
+            MessageBox.Open("test", MBButtonId.Ok, MBButtonId.Cancel);
         }
 
         private void Gift()

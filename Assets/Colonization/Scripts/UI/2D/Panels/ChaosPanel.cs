@@ -36,7 +36,6 @@ namespace Vurbiri.Colonization.UI
         private void SetValue(int value)
         {
             _hintText = string.Format(_localizedText, value, _max);
-            Log.Info($"Chaos: {value}");
 
             float progress = Mathf.Clamp01((float) value / _max);
 

@@ -19,8 +19,8 @@ namespace Vurbiri.Colonization
                     IEnumerator casting = null;
                     if (CanPay)
                     {
-                        int wood = Resources[CurrencyId.Wood], ore = Resources[CurrencyId.Ore];
-                        if (Chance.Rolling((100 * (wood + ore) / (s_settings.resDivider << 1))))
+                        int wood = (int)(Resources[CurrencyId.Wood] * s_settings.useResRatio), ore = (int)(Resources[CurrencyId.Ore] * s_settings.useResRatio);
+                        if (Chance.Rolling((5 * (wood + ore))))
                         {
                             FindActors(HumanId, out int friends, out int enemies);
                             if ((friends << 1) < enemies)
@@ -31,32 +31,30 @@ namespace Vurbiri.Colonization
 
                     #region Local FindActors(..), GetRes(..)
                     //===========================================
-                    [Impl(256)] static void FindActors(int playerId, out int friends, out int enemies)
+                    static void FindActors(int playerId, out int friends, out int enemies)
                     {
                         friends = enemies = 0;
 
-                        for (int i = 0, surface; i < PlayerId.Count; i++)
+                        for (int i = 0, surface, count; i < PlayerId.Count; i++)
                         {
+                            count = 0;
                             foreach (Actor actor in GameContainer.Actors[i])
                             {
                                 surface = actor.Hexagon.SurfaceId;
                                 if (surface == SurfaceId.Forest | surface == SurfaceId.Mountain)
-                                {
-                                    if (actor.IsEnemy(playerId))
-                                        enemies++;
-                                    else
-                                        friends++;
-                                }
+                                    count++;
                             }
+                            if (GameContainer.Diplomacy.IsEnemy(playerId, i))
+                                enemies += count;
+                            else
+                                friends += count;
                         }
                     }
                     //===========================================
                     [Impl(256)] static int GetRes(int res)
                     {
-                        int result = 0;
-                        if(res > 0)
-                            Random.Range(1, (int)(res * s_settings.maxUseRes) + 1);
-                        return result;
+                        if(res > 0) res = Random.Range(1, res + 1);
+                        return res;
                     }
                     #endregion
                 }

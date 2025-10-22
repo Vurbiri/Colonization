@@ -18,7 +18,7 @@ namespace Vurbiri.International.Editor
         {
             var language = LanguageTypesScriptable.GetOrCreateSelf();
 
-            var allLang = LoadObjectFromResourceJson<LanguageType[]>(CONST.LANG_LIST);
+            var allLang = LoadObjectFromJsonResource<LanguageType[]>(CONST.LANG_LIST);
             Dictionary<SystemLanguage, LanguageType> langs = new(allLang.Length);
             foreach (var lang in allLang)
                 langs.Add(lang.Id, lang);

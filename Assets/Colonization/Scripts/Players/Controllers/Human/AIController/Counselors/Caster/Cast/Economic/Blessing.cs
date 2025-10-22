@@ -28,18 +28,20 @@ namespace Vurbiri.Colonization
 
                     #region Local FindActors(..), GetRes(..)
                     //===========================================
-                    [Impl(256)] static void FindActors(int playerId, out int friends, out int enemies)
+                    static void FindActors(int playerId, out int friends, out int enemies)
                     {
                         friends = enemies = 0;
 
+                        bool isEnemy;
                         for (int i = 0, surface; i < PlayerId.Count; i++)
                         {
+                            isEnemy = GameContainer.Diplomacy.IsEnemy(playerId, i);
                             foreach (Actor actor in GameContainer.Actors[i])
                             {
                                 surface = actor.Hexagon.SurfaceId;
                                 if (surface == SurfaceId.Village | surface == SurfaceId.Field)
                                 {
-                                    if (actor.IsEnemy(playerId))
+                                    if (isEnemy)
                                         enemies++;
                                     else if (actor.IsInCombat())
                                         friends++;
@@ -48,7 +50,7 @@ namespace Vurbiri.Colonization
                         }
                     }
                     //===========================================
-                    [Impl(256)] int GetRes(int id) => Random.Range(0, (int)(Resources[id] * s_settings.maxUseRes) + 1);
+                    [Impl(256)] int GetRes(int id) => Random.Range(0, (int)(Resources[id] * s_settings.useResRatio) + 1);
                     #endregion
                 }
             }

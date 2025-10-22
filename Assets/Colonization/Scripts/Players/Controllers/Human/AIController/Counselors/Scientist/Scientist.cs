@@ -21,15 +21,11 @@ namespace Vurbiri.Colonization
             {
                 _perks = new(parent._specialization);
                 _leveling = new(PerkTrees.GetLevel(AbilityTypeId.Economic), PerkTrees.GetLevel(AbilityTypeId.Military));
-            }
 
-            public override IEnumerator Init_Cn()
-            {
                 Create(AbilityTypeId.Economic);
                 Create(AbilityTypeId.Military);
-                yield break;
 
-                // === Local ===
+                // ==== Local ====
                 void Create(int type)
                 {
                     if (!PerkTrees.IsAllTreeLearned(type))
@@ -63,7 +59,7 @@ namespace Vurbiri.Colonization
                     if (progress < PerkTree.MAX_PROGRESS && _leveling.TryGet(_perk.Type, PerkTree.ProgressToLevel(progress), out List<Perk> perks))
                         _perks.Add(_perk.Type, perks);
 
-                    Log.Info($"[Scientist] Player {Id} learned a perk [{_perk.Type}].[{_perk.Id}]");
+                    Log.Info($"[Scientist] Player {HumanId} learned a perk [{_perk.Type}].[{_perk.Id}]");
 
                     _perk = null;
                 }
