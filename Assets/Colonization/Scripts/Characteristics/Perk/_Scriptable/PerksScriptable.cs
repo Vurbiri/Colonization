@@ -3,7 +3,7 @@ using UnityEditor;
 using UnityEngine;
 using Vurbiri.Collections;
 
-namespace Vurbiri.Colonization.Characteristics
+namespace Vurbiri.Colonization
 {
 	public class PerksScriptable : ScriptableObjectDisposable
     {

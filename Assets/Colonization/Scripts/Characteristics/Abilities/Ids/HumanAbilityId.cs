@@ -1,4 +1,4 @@
-namespace Vurbiri.Colonization.Characteristics
+namespace Vurbiri.Colonization
 {
     public abstract class HumanAbilityId : AbilityId<HumanAbilityId>
     {

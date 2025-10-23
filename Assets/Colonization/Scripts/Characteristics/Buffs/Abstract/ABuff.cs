@@ -1,6 +1,6 @@
 using Vurbiri.Reactive;
 
-namespace Vurbiri.Colonization.Characteristics
+namespace Vurbiri.Colonization
 {
     public abstract class ABuff
     {

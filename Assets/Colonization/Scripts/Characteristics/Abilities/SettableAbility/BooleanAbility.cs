@@ -1,4 +1,4 @@
-namespace Vurbiri.Colonization.Characteristics
+namespace Vurbiri.Colonization
 {
     sealed public class BooleanAbility<TId> : ASettableAbility<TId> where TId : AbilityId<TId>
     {

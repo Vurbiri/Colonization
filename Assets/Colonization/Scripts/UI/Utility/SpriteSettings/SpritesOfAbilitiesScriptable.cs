@@ -1,6 +1,5 @@
 using UnityEngine;
 using Vurbiri.Collections;
-using Vurbiri.Colonization.Characteristics;
 
 namespace Vurbiri.Colonization.UI
 {

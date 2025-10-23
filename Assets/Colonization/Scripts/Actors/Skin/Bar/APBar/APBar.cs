@@ -1,5 +1,4 @@
 using TMPro;
-using Vurbiri.Colonization.Characteristics;
 
 namespace Vurbiri.Colonization.UI
 {

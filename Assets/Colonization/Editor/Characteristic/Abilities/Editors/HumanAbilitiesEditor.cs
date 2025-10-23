@@ -1,9 +1,9 @@
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
-using Vurbiri.Colonization.Characteristics;
+using Vurbiri.Colonization;
 
-namespace VurbiriEditor.Colonization.Characteristics
+namespace VurbiriEditor.Colonization
 {
     [CustomEditor(typeof(HumanAbilitiesScriptable), true), CanEditMultipleObjects]
     internal class HumanAbilitiesEditor : AEditorGetVE<HumanAbilitiesEditor>

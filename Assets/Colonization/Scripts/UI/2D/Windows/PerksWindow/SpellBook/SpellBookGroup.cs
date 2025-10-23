@@ -1,5 +1,4 @@
 using System;
-using Vurbiri.Colonization.Characteristics;
 using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.UI

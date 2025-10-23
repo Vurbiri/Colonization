@@ -1,5 +1,3 @@
-using Vurbiri.Colonization.Characteristics;
-
 namespace Vurbiri.Colonization
 {
     sealed public partial class BossSkin : ADemonSkin

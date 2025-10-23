@@ -1,7 +1,5 @@
 using TMPro;
 using UnityEngine;
-using Vurbiri.Colonization.Characteristics;
-using Vurbiri.Colonization.UI;
 
 namespace Vurbiri.Colonization.UI
 {

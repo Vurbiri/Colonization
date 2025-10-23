@@ -5,9 +5,7 @@ using System.Text;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using Vurbiri.Colonization.Characteristics;
 using Vurbiri.International;
-using Vurbiri.Reactive;
 using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.UI
@@ -57,6 +55,7 @@ namespace Vurbiri.Colonization.UI
 
             for (int i = 0; i < count; i++)
                 _abilities[i].SetHintText(localization, stringBuilder);
+            
             stringBuilder.AppendLine();
             _level.SetHintText(localization, stringBuilder);
 

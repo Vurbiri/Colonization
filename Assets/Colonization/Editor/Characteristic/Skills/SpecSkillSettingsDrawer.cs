@@ -1,10 +1,9 @@
 using UnityEditor;
 using UnityEngine;
 using Vurbiri.Colonization;
-using Vurbiri.Colonization.Characteristics;
 using static UnityEditor.EditorGUI;
 
-namespace VurbiriEditor.Colonization.Characteristics
+namespace VurbiriEditor.Colonization
 {
 	[CustomPropertyDrawer(typeof(SpecSkillSettings))]
     sealed public class SpecSkillSettingsDrawer : ASkillSettingsDrawer

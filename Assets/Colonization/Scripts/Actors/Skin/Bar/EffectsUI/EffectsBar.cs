@@ -1,7 +1,6 @@
 using System;
 using TMPro;
 using UnityEngine;
-using Vurbiri.Colonization.Characteristics;
 using Vurbiri.Reactive.Collections;
 using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 using Object = UnityEngine.Object;

@@ -1,7 +1,7 @@
 using Vurbiri.Reactive;
 using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
-namespace Vurbiri.Colonization.Characteristics
+namespace Vurbiri.Colonization
 {
     public abstract class Ability : ReactiveValue<int>
     {

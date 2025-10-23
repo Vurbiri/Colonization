@@ -1,4 +1,4 @@
-namespace Vurbiri.Colonization.Characteristics
+namespace Vurbiri.Colonization
 {
     [System.Serializable]
     public class BuffSettings

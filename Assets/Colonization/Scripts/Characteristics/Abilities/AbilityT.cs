@@ -1,7 +1,7 @@
 using System;
 using Vurbiri.Collections;
 
-namespace Vurbiri.Colonization.Characteristics
+namespace Vurbiri.Colonization
 {
     public class Ability<TId> : AAbility<TId> where TId : AbilityId<TId>
     {

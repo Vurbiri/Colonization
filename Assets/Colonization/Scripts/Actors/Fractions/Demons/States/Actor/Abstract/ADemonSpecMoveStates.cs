@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Runtime.CompilerServices;
 using UnityEngine;
-using Vurbiri.Colonization.Characteristics;
 
 namespace Vurbiri.Colonization
 {

@@ -9,7 +9,7 @@ namespace Vurbiri.Colonization
                 private WallBuild(Caster parent) : base(parent, MilitarySpellId.Type, MilitarySpellId.WallBuild, parent.IsEconomist) { }
                 public static void Create(Caster parent) => new WallBuild(parent);
 
-                public override System.Collections.IEnumerator TryCasting_Cn() => Abilities[Characteristics.HumanAbilityId.IsWall].IsTrue ? null : Casting_Cn();
+                public override System.Collections.IEnumerator TryCasting_Cn() => Abilities[HumanAbilityId.IsWall].IsTrue ? null : Casting_Cn();
             }
         }
     }

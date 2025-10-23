@@ -1,6 +1,6 @@
 using System;
 
-namespace Vurbiri.Colonization.Characteristics
+namespace Vurbiri.Colonization
 {
     public abstract class ASettableAbility<TId> : AAbility<TId> where TId : AbilityId<TId>
     {

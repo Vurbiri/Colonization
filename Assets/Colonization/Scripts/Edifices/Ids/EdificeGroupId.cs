@@ -1,8 +1,7 @@
+using System.Runtime.CompilerServices;
+
 namespace Vurbiri.Colonization
 {
-    using Characteristics;
-    using System.Runtime.CompilerServices;
-
     public class EdificeGroupId : IdType<EdificeGroupId>
     {
         public const int Shrine  =  0;

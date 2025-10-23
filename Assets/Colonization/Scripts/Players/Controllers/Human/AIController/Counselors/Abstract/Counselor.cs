@@ -1,5 +1,4 @@
 using System.Collections;
-using Vurbiri.Colonization.Characteristics;
 using Vurbiri.Reactive.Collections;
 using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 

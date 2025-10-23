@@ -1,4 +1,3 @@
-using Vurbiri.Colonization.Characteristics;
 using Vurbiri.International;
 
 namespace Vurbiri.Colonization.UI

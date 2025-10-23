@@ -1,5 +1,4 @@
 using System.Collections;
-using Vurbiri.Colonization.Characteristics;
 
 namespace Vurbiri.Colonization
 {

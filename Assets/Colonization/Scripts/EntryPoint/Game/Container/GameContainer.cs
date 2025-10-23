@@ -1,6 +1,5 @@
 using UnityEngine;
 using Vurbiri.Collections;
-using Vurbiri.Colonization.Characteristics;
 using Vurbiri.Colonization.Controllers;
 using Vurbiri.Colonization.EntryPoint;
 using Vurbiri.Colonization.Storage;

@@ -1,4 +1,4 @@
-namespace Vurbiri.Colonization.Characteristics
+namespace Vurbiri.Colonization
 {
     sealed public class ApplySelfEffect : AApplyHitEffect
     {

@@ -1,7 +1,7 @@
 using System.Runtime.CompilerServices;
 using Vurbiri.Colonization.UI;
 
-namespace Vurbiri.Colonization.Characteristics
+namespace Vurbiri.Colonization
 {
 	public abstract class ClearEffectsId : IdType<ClearEffectsId>
 	{

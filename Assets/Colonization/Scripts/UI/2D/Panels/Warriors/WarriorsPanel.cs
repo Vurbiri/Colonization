@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Vurbiri.Collections;
-using Vurbiri.Colonization.Characteristics;
 using Vurbiri.Reactive.Collections;
 
 namespace Vurbiri.Colonization.UI

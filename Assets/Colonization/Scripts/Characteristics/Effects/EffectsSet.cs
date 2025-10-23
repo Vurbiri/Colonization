@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using Vurbiri.Reactive;
 using Vurbiri.Reactive.Collections;
 
-namespace Vurbiri.Colonization.Characteristics
+namespace Vurbiri.Colonization
 {
     public abstract class ReactiveEffects : IEnumerable<ReactiveEffect>
     {

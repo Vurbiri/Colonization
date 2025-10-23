@@ -2,7 +2,6 @@ using Newtonsoft.Json;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Vurbiri.Colonization.Characteristics;
 using Vurbiri.Colonization.Storage;
 using Vurbiri.Reactive;
 using Impl = System.Runtime.CompilerServices.MethodImplAttribute;

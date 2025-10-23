@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Runtime.CompilerServices;
 using UnityEngine;
-using Vurbiri.Colonization.Characteristics;
 using Vurbiri.International;
 using Vurbiri.UI;
 using static Vurbiri.Colonization.GameContainer;

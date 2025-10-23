@@ -1,5 +1,4 @@
 using UnityEngine;
-using Vurbiri.Colonization.Characteristics;
 using Vurbiri.Colonization.Storage;
 using Vurbiri.Reactive;
 using Vurbiri.Reactive.Collections;

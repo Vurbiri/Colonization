@@ -2,7 +2,7 @@ using System;
 using Vurbiri.Reactive.Collections;
 using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
-namespace Vurbiri.Colonization.Characteristics
+namespace Vurbiri.Colonization
 {
     sealed public partial class ReactiveEffect : AReactiveItem<ReactiveEffect>, IPerk, IEquatable<ReactiveEffect>
     {

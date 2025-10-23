@@ -6,7 +6,7 @@ using UnityEditor.AnimatedValues;
 using UnityEngine;
 using Vurbiri;
 using Vurbiri.Collections;
-using Vurbiri.Colonization.Characteristics;
+using Vurbiri.Colonization;
 using static UnityEditor.EditorGUILayout;
 
 namespace VurbiriEditor.Colonization

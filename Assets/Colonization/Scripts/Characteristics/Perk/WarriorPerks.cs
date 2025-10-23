@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using Vurbiri.Reactive;
 
-namespace Vurbiri.Colonization.Characteristics
+namespace Vurbiri.Colonization
 {
     public class WarriorPerks : IReactive<IPerk>
 	{

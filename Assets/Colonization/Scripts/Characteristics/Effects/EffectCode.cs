@@ -1,6 +1,6 @@
 using System;
 
-namespace Vurbiri.Colonization.Characteristics
+namespace Vurbiri.Colonization
 {
     public readonly struct EffectCode : IEquatable<EffectCode>
 	{

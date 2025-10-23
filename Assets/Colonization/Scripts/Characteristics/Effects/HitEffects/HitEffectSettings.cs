@@ -1,7 +1,7 @@
 using UnityEngine;
 using Vurbiri.Colonization.UI;
 
-namespace Vurbiri.Colonization.Characteristics
+namespace Vurbiri.Colonization
 {
     using static CONST_UI;
 

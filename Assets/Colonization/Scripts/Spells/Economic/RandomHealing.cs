@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using Vurbiri.Colonization.Characteristics;
 using Vurbiri.International;
 
 namespace Vurbiri.Colonization

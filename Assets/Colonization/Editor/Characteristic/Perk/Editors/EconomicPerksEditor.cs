@@ -1,8 +1,8 @@
 using UnityEditor;
 using UnityEngine.UIElements;
-using Vurbiri.Colonization.Characteristics;
+using Vurbiri.Colonization;
 
-namespace VurbiriEditor.Colonization.Characteristics
+namespace VurbiriEditor.Colonization
 {
     [CustomEditor(typeof(PerksScriptable), true)]
     public class EconomicPerksEditor : APerksEditor<EconomicPerksEditor>

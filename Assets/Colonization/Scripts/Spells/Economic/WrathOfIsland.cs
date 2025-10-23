@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Vurbiri.Colonization.Characteristics;
 using Vurbiri.International;
 using static Vurbiri.Colonization.CurrencyId;
 using static Vurbiri.Colonization.GameContainer;

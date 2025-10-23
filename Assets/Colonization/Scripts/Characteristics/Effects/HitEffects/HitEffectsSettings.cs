@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Vurbiri.Colonization.UI;
 
-namespace Vurbiri.Colonization.Characteristics
+namespace Vurbiri.Colonization
 {
     [Serializable]
 	public class HitEffectsSettings

@@ -2,12 +2,11 @@ using UnityEditor;
 using UnityEngine;
 using Vurbiri;
 using Vurbiri.Colonization;
-using Vurbiri.Colonization.Characteristics;
 using Vurbiri.International;
 using static UnityEditor.EditorGUI;
 using static Vurbiri.Colonization.UI.CONST_UI;
 
-namespace VurbiriEditor.Colonization.Characteristics
+namespace VurbiriEditor.Colonization
 {
     [CustomPropertyDrawer(typeof(SkillSettings), false)]
     sealed public class SkillSettingsDrawer : ASkillSettingsDrawer

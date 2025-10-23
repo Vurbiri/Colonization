@@ -3,7 +3,6 @@ using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-using Vurbiri.Colonization.Characteristics;
 using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.UI

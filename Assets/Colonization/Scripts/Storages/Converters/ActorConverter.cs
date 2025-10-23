@@ -1,7 +1,6 @@
 using Newtonsoft.Json;
 using System;
 using System.Runtime.CompilerServices;
-using Vurbiri.Colonization.Characteristics;
 using Vurbiri.Colonization.Storage;
 
 namespace Vurbiri.Colonization

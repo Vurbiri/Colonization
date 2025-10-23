@@ -4,7 +4,7 @@ using Vurbiri.Collections;
 using Vurbiri.Reactive;
 using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
-namespace Vurbiri.Colonization.Characteristics
+namespace Vurbiri.Colonization
 {
     public class ReadOnlyAbilities<TId> : IReadOnlyList<Ability> where TId : AbilityId<TId>
     {

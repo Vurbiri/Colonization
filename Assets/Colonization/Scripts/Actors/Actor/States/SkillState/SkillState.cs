@@ -1,7 +1,5 @@
 using System.Collections;
 using UnityEngine;
-using Vurbiri.Colonization.Characteristics;
-using static Vurbiri.Colonization.CONST;
 
 namespace Vurbiri.Colonization
 {

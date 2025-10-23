@@ -1,6 +1,3 @@
-using System.Collections;
-using Vurbiri.Colonization.Characteristics;
-
 namespace Vurbiri.Colonization
 {
     public abstract partial class Actor
@@ -11,7 +8,7 @@ namespace Vurbiri.Colonization
             {
                 public RangeSkillState(AStates<TActor, TSkin> parent, SkillSettings skill, int id) : base(parent, skill, id) { }
 
-                protected override IEnumerator Actions_Cn()
+                protected override System.Collections.IEnumerator Actions_Cn()
                 {
                     yield return SelectActor_Cn();
 

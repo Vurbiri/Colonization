@@ -10,7 +10,7 @@ namespace Vurbiri.Colonization
 
         public const int WALL_TYPE = ActorTypeId.Demon + 1, SPELL_TYPE = WALL_TYPE + 1;
 
-        public const int WALL_DURATION = 1, WALL_SKIP = 9, WALL_ADD_SHIFT = 3, WALL_SHIFT = Characteristics.ActorAbilityId.SHIFT_ABILITY + WALL_ADD_SHIFT;
+        public const int WALL_DURATION = 1, WALL_SKIP = 9, WALL_ADD_SHIFT = 3, WALL_SHIFT = ActorAbilityId.SHIFT_ABILITY + WALL_ADD_SHIFT;
         public const int BLOCK_DURATION = 1, BLOCK_SKIP = 0;
 
         public const int MAX_CIRCLES = 4;

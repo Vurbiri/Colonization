@@ -1,9 +1,9 @@
 using UnityEditor;
 using UnityEngine;
 using Vurbiri;
-using Vurbiri.Colonization.Characteristics;
+using Vurbiri.Colonization;
 
-namespace VurbiriEditor.Colonization.Characteristics
+namespace VurbiriEditor.Colonization
 {
 	public abstract class APerksWindow<T> : EditorWindow where T : APerksEditor<T>
     {

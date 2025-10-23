@@ -1,7 +1,7 @@
 using System;
 using Vurbiri.Reactive;
 
-namespace Vurbiri.Colonization.Characteristics
+namespace Vurbiri.Colonization
 {
     public abstract class ABuffs<T> : IReactive<IPerk> where T : ABuff
     {

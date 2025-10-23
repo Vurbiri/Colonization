@@ -1,6 +1,6 @@
 using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
-namespace Vurbiri.Colonization.Characteristics
+namespace Vurbiri.Colonization
 {
     sealed public class SatanLeveling : ABuffs<DemonBuff>
     {

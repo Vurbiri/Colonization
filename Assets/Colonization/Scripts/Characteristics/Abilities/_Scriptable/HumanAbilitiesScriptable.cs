@@ -1,7 +1,7 @@
 using UnityEngine;
 using Vurbiri.Collections;
 
-namespace Vurbiri.Colonization.Characteristics
+namespace Vurbiri.Colonization
 {
     //[CreateAssetMenu(fileName = "HumanAbilities", menuName = "Vurbiri/Colonization/Characteristics/HumanAbilities", order = 51)]
     sealed public class HumanAbilitiesScriptable : ScriptableObjectDisposable

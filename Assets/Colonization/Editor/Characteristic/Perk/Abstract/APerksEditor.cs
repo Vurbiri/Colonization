@@ -4,11 +4,10 @@ using UnityEngine;
 using UnityEngine.UIElements;
 using Vurbiri;
 using Vurbiri.Colonization;
-using Vurbiri.Colonization.Characteristics;
 using static UnityEditor.EditorGUI;
 using static UnityEditor.EditorGUILayout;
 
-namespace VurbiriEditor.Colonization.Characteristics
+namespace VurbiriEditor.Colonization
 {
     public abstract class APerksEditor<T> : AEditorGetVE<T> where T : APerksEditor<T>
     {

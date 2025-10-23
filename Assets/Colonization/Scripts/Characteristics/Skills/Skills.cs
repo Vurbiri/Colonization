@@ -3,7 +3,7 @@ using UnityEngine;
 using Vurbiri.Collections;
 using Vurbiri.Colonization.UI;
 
-namespace Vurbiri.Colonization.Characteristics
+namespace Vurbiri.Colonization
 {
     [System.Serializable]
     public class Skills : IDisposable

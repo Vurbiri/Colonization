@@ -1,5 +1,4 @@
 using System.Runtime.CompilerServices;
-using Vurbiri.Colonization.Characteristics;
 
 namespace Vurbiri.Colonization
 {

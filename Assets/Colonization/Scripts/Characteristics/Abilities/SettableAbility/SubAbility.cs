@@ -1,7 +1,7 @@
 using System;
 using Vurbiri.Collections;
 
-namespace Vurbiri.Colonization.Characteristics
+namespace Vurbiri.Colonization
 {
     sealed public class SubAbility<TId> : ASettableAbility<TId> where TId : AbilityId<TId>
     {

@@ -3,7 +3,6 @@ using UnityEngine;
 using Vurbiri;
 using Vurbiri.Collections;
 using Vurbiri.Colonization;
-using Vurbiri.Colonization.Characteristics;
 using static UnityEditor.EditorGUILayout;
 using static VurbiriEditor.Colonization.CONST_EDITOR;
 

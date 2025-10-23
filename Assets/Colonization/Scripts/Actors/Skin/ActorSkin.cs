@@ -1,6 +1,5 @@
 using UnityEngine;
 using Vurbiri.Collections;
-using Vurbiri.Colonization.Characteristics;
 using Vurbiri.FSM;
 using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 

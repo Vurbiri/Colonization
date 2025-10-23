@@ -1,5 +1,5 @@
 using UnityEditor;
-using Vurbiri.Colonization.Characteristics;
+using Vurbiri.Colonization;
 
 namespace VurbiriEditor.Colonization
 {

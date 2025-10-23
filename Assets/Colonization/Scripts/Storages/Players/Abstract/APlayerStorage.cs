@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Vurbiri.Colonization.Characteristics;
 using Vurbiri.Reactive;
 using Vurbiri.Reactive.Collections;
 

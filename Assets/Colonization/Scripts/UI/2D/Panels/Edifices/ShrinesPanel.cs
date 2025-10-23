@@ -1,6 +1,6 @@
 using UnityEngine;
 using Vurbiri.Collections;
-using static Vurbiri.Colonization.Characteristics.HumanAbilityId;
+using static Vurbiri.Colonization.HumanAbilityId;
 
 namespace Vurbiri.Colonization.UI
 {

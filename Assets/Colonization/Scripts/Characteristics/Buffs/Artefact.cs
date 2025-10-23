@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using Vurbiri.Colonization.Storage;
 using Vurbiri.Reactive;
 
-namespace Vurbiri.Colonization.Characteristics
+namespace Vurbiri.Colonization
 {
     sealed public class Artefact : ABuffs<Buff>, IReactive<Artefact>
     {

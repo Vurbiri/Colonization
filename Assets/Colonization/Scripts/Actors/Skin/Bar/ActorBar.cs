@@ -2,9 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Vurbiri.Collections;
-using Vurbiri.Colonization.Characteristics;
 using Vurbiri.Colonization.Controllers;
-using Vurbiri.Colonization.UI;
 using Vurbiri.Reactive.Collections;
 
 namespace Vurbiri.Colonization.UI

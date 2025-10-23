@@ -1,6 +1,6 @@
 using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
-namespace Vurbiri.Colonization.Characteristics
+namespace Vurbiri.Colonization
 {
     public abstract class AAbility<TId> : Ability, IValueId<TId> where TId : AbilityId<TId>
     {

@@ -1,6 +1,6 @@
 using Vurbiri.Reactive;
 
-namespace Vurbiri.Colonization.Characteristics
+namespace Vurbiri.Colonization
 {
     sealed public class DependentAbility<TId> : AAbility<TId> where TId : AbilityId<TId>
     {

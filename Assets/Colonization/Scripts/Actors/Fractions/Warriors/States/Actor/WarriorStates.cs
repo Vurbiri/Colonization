@@ -1,5 +1,3 @@
-using Vurbiri.Colonization.Characteristics;
-
 namespace Vurbiri.Colonization
 {
     public partial class Warrior

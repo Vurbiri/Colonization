@@ -1,5 +1,4 @@
 using System.Text;
-using Vurbiri.Colonization.Characteristics;
 using Vurbiri.Colonization.Storage;
 
 namespace Vurbiri.Colonization

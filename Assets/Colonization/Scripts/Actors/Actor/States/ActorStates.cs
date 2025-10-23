@@ -1,4 +1,3 @@
-using Vurbiri.Colonization.Characteristics;
 using Vurbiri.Colonization.FSMSelectable;
 using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 

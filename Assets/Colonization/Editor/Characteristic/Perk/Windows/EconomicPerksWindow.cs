@@ -1,7 +1,7 @@
 using UnityEditor;
 using static VurbiriEditor.Colonization.CONST_EDITOR;
 
-namespace VurbiriEditor.Colonization.Characteristics
+namespace VurbiriEditor.Colonization
 {
     public class EconomicPerksWindow : APerksWindow<EconomicPerksEditor>
     {

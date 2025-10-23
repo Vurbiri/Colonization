@@ -2,7 +2,7 @@ using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
-using Vurbiri.Colonization.Characteristics;
+using Vurbiri.Colonization;
 using static VurbiriEditor.Colonization.CONST_EDITOR;
 
 namespace VurbiriEditor.Colonization

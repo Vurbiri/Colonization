@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Vurbiri.Colonization.UI;
 
-namespace Vurbiri.Colonization.Characteristics
+namespace Vurbiri.Colonization
 {
     [System.Serializable]
     public class SkillSettings : ASkillSettings

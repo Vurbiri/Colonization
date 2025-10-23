@@ -1,7 +1,7 @@
 using Newtonsoft.Json;
 using System;
 
-namespace Vurbiri.Colonization.Characteristics
+namespace Vurbiri.Colonization
 {
     [JsonConverter(typeof(Converter))]
     public partial class ReactiveEffect
