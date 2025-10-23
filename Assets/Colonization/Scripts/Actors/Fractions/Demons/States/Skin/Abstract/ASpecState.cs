@@ -1,6 +1,6 @@
 using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
-namespace Vurbiri.Colonization.Actors
+namespace Vurbiri.Colonization
 {
     public partial class ADemonSkin
     {

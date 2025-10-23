@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using Vurbiri.Collections;
-using Vurbiri.Colonization.Actors;
 using Vurbiri.Colonization.Characteristics;
 using Vurbiri.Reactive.Collections;
 using Impl = System.Runtime.CompilerServices.MethodImplAttribute;

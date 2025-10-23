@@ -1,7 +1,7 @@
 using UnityEditor;
 using UnityEngine;
 using Vurbiri;
-using Vurbiri.Colonization.Actors;
+using Vurbiri.Colonization;
 using Vurbiri.Colonization.Characteristics;
 using Vurbiri.International;
 using static UnityEditor.EditorGUI;

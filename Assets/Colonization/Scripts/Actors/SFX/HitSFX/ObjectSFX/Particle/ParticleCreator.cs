@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace Vurbiri.Colonization.Actors
+namespace Vurbiri.Colonization
 {
     sealed public class ParticleCreator : AMonoCreatorSFX
     {

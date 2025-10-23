@@ -1,10 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using Vurbiri.Colonization.Characteristics;
 using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
-namespace Vurbiri.Colonization.Actors
+namespace Vurbiri.Colonization
 {
     public abstract partial class Actor
     {
@@ -16,8 +15,9 @@ namespace Vurbiri.Colonization.Actors
                 private WaitSignal _waitActor;
                 private readonly WaitRealtime _waitRealtime = new(0.3f);
                 private readonly Relation _relationTarget;
-                // !!!!!!!!!!!!!!!!!!!!! удалить _relationRealTarget
+#if TEST_ACTOR
                 private readonly Relation _relationRealTarget;
+#endif
 
                 #region Propirties
                 protected Hexagon TargetHex { [Impl(256)] get => _target._currentHex; }
@@ -34,9 +34,11 @@ namespace Vurbiri.Colonization.Actors
                 protected ATargetSkillState(AStates<TActor, TSkin> parent, SkillSettings skill, int id) : base(parent, skill, id)
                 {
                     _relationTarget = skill.Target.ToRelation();
-                    Debug.Log("удалить _relationTarget = Relation.Friend; и _relationRealTarget");
+#if TEST_ACTOR
+                    UnityEngine.Debug.Log("[Actor::AStates::ATargetSkillState] TEST_ACTOR");
                     _relationRealTarget = _relationTarget;
                     _relationTarget = Relation.Friend;
+#endif
                 }
 
                 sealed public override void Enter()
@@ -136,12 +138,16 @@ namespace Vurbiri.Colonization.Actors
                     RotateActors();
                 }
 
-                [Impl(256)]
-                private void RotateActors()
+                [Impl(256)] private void RotateActors()
                 {
                     Rotation = HEX.ROTATIONS[KeyTarget - KeyActor];
+#if TEST_ACTOR
                     if (_relationRealTarget == Relation.Enemy)
                         _target._thisTransform.localRotation = HEX.ROTATIONS[KeyActor - KeyTarget];
+#else
+                    if (_relationTarget == Relation.Enemy)
+                        _target._thisTransform.localRotation = HEX.ROTATIONS[KeyActor - KeyTarget];
+#endif
                 }
             }
         }

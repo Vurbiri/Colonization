@@ -3,7 +3,7 @@ using UnityEngine;
 using Vurbiri.Colonization.Characteristics;
 using static Vurbiri.Colonization.CONST;
 
-namespace Vurbiri.Colonization.Actors
+namespace Vurbiri.Colonization
 {
     public abstract partial class Actor
     {

@@ -3,7 +3,7 @@ using System.Runtime.CompilerServices;
 using UnityEngine;
 using Vurbiri.Colonization.Characteristics;
 
-namespace Vurbiri.Colonization.Actors
+namespace Vurbiri.Colonization
 {
     public partial class Demon
     {

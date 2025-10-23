@@ -6,7 +6,7 @@ using Vurbiri.Reactive.Collections;
 using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 using Object = UnityEngine.Object;
 
-namespace Vurbiri.Colonization.Actors.UI
+namespace Vurbiri.Colonization.UI
 {
     sealed public class EffectsBar : APooledObject<EffectsBar>
     {

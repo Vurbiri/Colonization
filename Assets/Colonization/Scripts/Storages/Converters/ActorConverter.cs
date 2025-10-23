@@ -4,7 +4,7 @@ using System.Runtime.CompilerServices;
 using Vurbiri.Colonization.Characteristics;
 using Vurbiri.Colonization.Storage;
 
-namespace Vurbiri.Colonization.Actors
+namespace Vurbiri.Colonization
 {
     [JsonConverter(typeof(Converter))]
     public abstract partial class Actor

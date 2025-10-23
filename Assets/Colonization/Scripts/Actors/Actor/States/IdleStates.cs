@@ -1,4 +1,4 @@
-namespace Vurbiri.Colonization.Actors
+namespace Vurbiri.Colonization
 {
     public abstract partial class Actor
     {

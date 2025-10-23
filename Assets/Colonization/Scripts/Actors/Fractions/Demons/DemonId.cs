@@ -1,5 +1,5 @@
 
-namespace Vurbiri.Colonization.Actors
+namespace Vurbiri.Colonization
 {
     public abstract class DemonId : ActorId<DemonId>
 	{

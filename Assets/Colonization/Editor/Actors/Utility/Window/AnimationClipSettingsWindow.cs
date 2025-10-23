@@ -3,9 +3,9 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 using Vurbiri;
-using Vurbiri.Colonization.Actors;
+using Vurbiri.Colonization;
 
-namespace VurbiriEditor.Colonization.Actors
+namespace VurbiriEditor.Colonization
 {
     using static CONST_EDITOR;
 

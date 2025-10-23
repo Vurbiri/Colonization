@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-namespace Vurbiri.Colonization.Actors
+namespace Vurbiri.Colonization
 {
     sealed public class IncludeSFX : AIncludeSFX, ISFX
     {

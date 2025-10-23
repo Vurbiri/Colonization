@@ -1,6 +1,6 @@
 using UnityEditor;
 using UnityEngine;
-using Vurbiri.Colonization.Actors;
+using Vurbiri.Colonization;
 using static UnityEditor.EditorGUI;
 
 namespace VurbiriEditor.Colonization

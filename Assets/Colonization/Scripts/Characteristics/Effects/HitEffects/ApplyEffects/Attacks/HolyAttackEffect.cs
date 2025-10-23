@@ -1,5 +1,3 @@
-using Vurbiri.Colonization.Actors;
-
 namespace Vurbiri.Colonization.Characteristics
 {
     using static ActorAbilityId;

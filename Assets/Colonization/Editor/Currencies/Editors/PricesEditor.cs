@@ -3,7 +3,6 @@ using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 using Vurbiri.Colonization;
-using Vurbiri.Colonization.Actors;
 
 namespace VurbiriEditor.Colonization
 {

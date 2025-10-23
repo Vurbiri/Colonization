@@ -2,7 +2,7 @@ using System.Collections;
 using UnityEngine;
 using Vurbiri.Collections;
 
-namespace Vurbiri.Colonization.Actors
+namespace Vurbiri.Colonization
 {
     public class WarriorSFX : ActorSFX
     {

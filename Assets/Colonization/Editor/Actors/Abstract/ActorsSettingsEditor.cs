@@ -2,9 +2,9 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 using Vurbiri;
-using Vurbiri.Colonization.Actors;
+using Vurbiri.Colonization;
 
-namespace VurbiriEditor.Colonization.Actors
+namespace VurbiriEditor.Colonization
 {
     public abstract class ActorsSettingsEditor<T> : AEditorGetVE<T> where T : ActorsSettingsEditor<T>
     {

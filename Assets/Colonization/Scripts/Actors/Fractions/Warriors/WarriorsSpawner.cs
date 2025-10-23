@@ -1,7 +1,7 @@
 using System.Runtime.CompilerServices;
 using Vurbiri.Colonization.Storage;
 
-namespace Vurbiri.Colonization.Actors
+namespace Vurbiri.Colonization
 {
     public class WarriorsSpawner
     {

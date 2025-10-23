@@ -3,7 +3,7 @@ using UnityEngine;
 using Vurbiri.Collections;
 using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
-namespace Vurbiri.Colonization.Actors
+namespace Vurbiri.Colonization
 {
     [RequireComponent(typeof(AudioSource)), DisallowMultipleComponent]
     public abstract class ActorSFX : MonoBehaviour

@@ -1,7 +1,7 @@
 using Vurbiri.Colonization.Characteristics;
 using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
-namespace Vurbiri.Colonization.Actors
+namespace Vurbiri.Colonization
 {
     public abstract partial class Actor
     {

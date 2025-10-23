@@ -4,7 +4,7 @@ using Vurbiri.Colonization.Characteristics;
 using Vurbiri.FSM;
 using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
-namespace Vurbiri.Colonization.Actors
+namespace Vurbiri.Colonization
 {
     [DisallowMultipleComponent]
     public abstract partial class ActorSkin : MonoBehaviour

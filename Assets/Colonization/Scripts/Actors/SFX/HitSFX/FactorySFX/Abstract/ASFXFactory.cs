@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Vurbiri.Colonization.Actors
+namespace Vurbiri.Colonization
 {
     public abstract class ASFXFactory : ScriptableObject
     {

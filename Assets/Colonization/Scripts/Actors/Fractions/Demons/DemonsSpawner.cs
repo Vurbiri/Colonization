@@ -2,7 +2,7 @@ using UnityEngine;
 using Vurbiri.Colonization.Storage;
 using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
-namespace Vurbiri.Colonization.Actors
+namespace Vurbiri.Colonization
 {
     public class DemonsSpawner
 	{

@@ -1,6 +1,6 @@
 using Vurbiri.Colonization.Characteristics;
 
-namespace Vurbiri.Colonization.Actors
+namespace Vurbiri.Colonization
 {
     public partial class Warrior
     {

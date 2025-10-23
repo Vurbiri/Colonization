@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using UnityEngine;
-using Vurbiri.Colonization.Actors;
 using Vurbiri.Colonization.Characteristics;
 using Vurbiri.Reactive;
 using Vurbiri.Reactive.Collections;

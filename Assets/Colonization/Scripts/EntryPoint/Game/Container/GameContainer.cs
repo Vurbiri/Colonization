@@ -1,11 +1,10 @@
 using UnityEngine;
 using Vurbiri.Collections;
-using Vurbiri.Colonization.Actors;
-using Vurbiri.Colonization.Actors.UI;
 using Vurbiri.Colonization.Characteristics;
 using Vurbiri.Colonization.Controllers;
 using Vurbiri.Colonization.EntryPoint;
 using Vurbiri.Colonization.Storage;
+using Vurbiri.Colonization.UI;
 using Vurbiri.UI;
 using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
@@ -49,14 +48,17 @@ namespace Vurbiri.Colonization
  
             public static Pool<EffectsBar> EffectsBar   { [Impl(256)] get => s_content.poolEffectsBar; }
         }
-
-        public GameContainer(GameContent content) => s_content = content;
+        
+#if TEST_LOAD
         public GameContainer(GameContent content, bool isLoad)
         {
             s_content = content;
             GameSettings.IsLoad = isLoad;
-            UnityEngine.Debug.LogWarning("[GameContainer] Удалить этот конструктор");
+            UnityEngine.Debug.LogWarning("[GameContainer] TEST_LOAD");
         }
+#else
+        public GameContainer(GameContent content) => s_content = content;
+#endif
 
         public override void Dispose()
         {

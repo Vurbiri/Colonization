@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using UnityEngine;
-using Vurbiri.Colonization.Actors;
 using Vurbiri.Colonization.UI;
 
 namespace Vurbiri.Colonization.Characteristics

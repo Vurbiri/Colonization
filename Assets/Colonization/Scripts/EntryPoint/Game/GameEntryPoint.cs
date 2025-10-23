@@ -15,11 +15,19 @@ namespace Vurbiri.Colonization.EntryPoint
         [Space]
         [SerializeField] private GameContentInit _contentInit;
         [SerializeField] private Player.Settings _playerSettings;
+#if TEST_LOAD
+        [Header("══════ TEST_LOAD ══════")]
+        [SerializeField] private bool _isLoad;
+#endif
 
         public override void Enter(Loading loading, Transition transition)
         {
             GameContent content = new();
+#if TEST_LOAD
             transition.Setup(new GameContainer(content, _isLoad), _nextScene);
+#else
+            transition.Setup(new GameContainer(content), _nextScene);
+#endif
 
             Localization.Instance.SetFiles(_localizationFiles);
 
@@ -36,10 +44,6 @@ namespace Vurbiri.Colonization.EntryPoint
         }
 
 #if UNITY_EDITOR
-
-        [Space]
-        [Header("══════ TEST ══════")]
-        [SerializeField] private bool _isLoad;
 
         private void OnValidate()
         {

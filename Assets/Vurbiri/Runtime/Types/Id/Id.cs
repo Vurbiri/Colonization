@@ -37,7 +37,7 @@ namespace Vurbiri
 
             return false;
         }
-        [Impl(256)] public override readonly int GetHashCode() => _id.GetHashCode();
+        [Impl(256)] public override readonly int GetHashCode() => _id;
 
         [Impl(256)] public readonly int CompareTo(Id<T> other) => _id - other._id;
         [Impl(256)] public readonly int CompareTo(int value) => _id - value;
@@ -63,6 +63,7 @@ namespace Vurbiri
         [Impl(256)] public static int operator -(int value, Id<T> id) => value - id._id;
     }
 
+    // ******************* Converter *********************
     sealed internal class IdGenericConverter : JsonConverter
     {
         private readonly Type _type = typeof(Id<>);

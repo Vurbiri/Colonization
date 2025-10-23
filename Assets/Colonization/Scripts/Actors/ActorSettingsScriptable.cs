@@ -2,7 +2,7 @@ using UnityEditor;
 using UnityEngine;
 using Vurbiri.Collections;
 
-namespace Vurbiri.Colonization.Actors
+namespace Vurbiri.Colonization
 {
     public abstract class ActorSettingsScriptable<TId, TSettings> : ScriptableObjectDisposable where TId : ActorId<TId> where TSettings : ActorSettings
 	{

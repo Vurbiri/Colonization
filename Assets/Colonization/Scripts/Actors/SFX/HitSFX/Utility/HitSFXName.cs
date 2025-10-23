@@ -1,7 +1,7 @@
 using Newtonsoft.Json;
 using System;
 
-namespace Vurbiri.Colonization.Actors
+namespace Vurbiri.Colonization
 {
 	[Serializable, JsonConverter(typeof(HitSFXName.Converter))]
 	public class HitSFXName : IEquatable<string>

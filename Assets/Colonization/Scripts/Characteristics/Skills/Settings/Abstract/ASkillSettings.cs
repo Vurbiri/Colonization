@@ -1,7 +1,6 @@
 using System;
 using UnityEngine;
 using Vurbiri.Collections;
-using Vurbiri.Colonization.Actors;
 using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization.Characteristics

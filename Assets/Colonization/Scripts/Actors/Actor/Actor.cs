@@ -5,7 +5,7 @@ using Vurbiri.Reactive;
 using Vurbiri.Reactive.Collections;
 using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
-namespace Vurbiri.Colonization.Actors
+namespace Vurbiri.Colonization
 {
     [RequireComponent(typeof(BoxCollider))]
     public abstract partial class Actor : AReactiveItemMono<Actor>, IInteractable

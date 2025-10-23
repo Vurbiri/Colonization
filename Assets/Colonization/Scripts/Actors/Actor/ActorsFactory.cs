@@ -4,7 +4,7 @@ using Vurbiri.Colonization.Storage;
 using Vurbiri.Reactive.Collections;
 using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
-namespace Vurbiri.Colonization.Actors
+namespace Vurbiri.Colonization
 {
     public class ActorsFactory : System.IDisposable
     {

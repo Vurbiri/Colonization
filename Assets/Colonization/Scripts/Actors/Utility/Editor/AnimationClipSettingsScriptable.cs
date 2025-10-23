@@ -3,7 +3,7 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace Vurbiri.Colonization.Actors
+namespace Vurbiri.Colonization
 {
     public class AnimationClipSettingsScriptable : ScriptableObject
     {

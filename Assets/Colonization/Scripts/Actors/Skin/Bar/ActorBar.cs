@@ -7,7 +7,7 @@ using Vurbiri.Colonization.Controllers;
 using Vurbiri.Colonization.UI;
 using Vurbiri.Reactive.Collections;
 
-namespace Vurbiri.Colonization.Actors.UI
+namespace Vurbiri.Colonization.UI
 {
 	public class ActorBar : MonoBehaviour
     {

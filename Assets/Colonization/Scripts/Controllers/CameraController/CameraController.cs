@@ -82,7 +82,7 @@ namespace Vurbiri.Colonization.Controllers
                 return ToPosition(position, true);
             return null;
         }
-        public WaitSignal ToPositionControlled(Actors.Actor actor) => ToPositionControlled(actor.Owner, actor.Position);
+        public WaitSignal ToPositionControlled(Actor actor) => ToPositionControlled(actor.Owner, actor.Position);
         public WaitSignal ToPositionControlled(Vector3 position) => GameContainer.GameSettings.TrackingCamera ? ToPosition(position, true) : null;
 
         private void OnMove(CallbackContext ctx)

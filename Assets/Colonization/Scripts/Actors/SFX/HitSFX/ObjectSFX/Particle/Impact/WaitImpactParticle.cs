@@ -1,7 +1,7 @@
 using System;
 using System.Collections;
 
-namespace Vurbiri.Colonization.Actors
+namespace Vurbiri.Colonization
 {
     sealed public class WaitImpactParticle : AImpactParticle
     {

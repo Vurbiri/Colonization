@@ -37,7 +37,7 @@ namespace Vurbiri.Colonization.Characteristics
         public bool Contains<T>(T code) where T : struct, IEquatable<EffectCode>
         {
             int i = _count;
-            while (i --> 0 && !code.Equals(_values[i].code));
+            while (i --> 0 && !code.Equals(_values[i].Code));
             return i >= 0;
         }
 

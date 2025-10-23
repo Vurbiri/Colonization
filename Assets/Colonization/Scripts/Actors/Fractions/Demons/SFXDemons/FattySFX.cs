@@ -2,7 +2,7 @@ using System.Collections;
 using UnityEngine;
 using Vurbiri.Collections;
 
-namespace Vurbiri.Colonization.Actors
+namespace Vurbiri.Colonization
 {
 	sealed public class FattySFX : ActorSFX
     {

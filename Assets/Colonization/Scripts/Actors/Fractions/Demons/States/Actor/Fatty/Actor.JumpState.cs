@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Vurbiri.Colonization.Characteristics;
 
-namespace Vurbiri.Colonization.Actors
+namespace Vurbiri.Colonization
 {
     sealed public partial class Demon
     {

@@ -1,7 +1,6 @@
 using System;
 using UnityEngine;
 using Vurbiri.Collections;
-using Vurbiri.Colonization.Actors;
 using Vurbiri.Colonization.UI;
 
 namespace Vurbiri.Colonization.Characteristics

@@ -4,7 +4,7 @@ using Vurbiri.Collections;
 using Vurbiri.Colonization.Characteristics;
 using Object = UnityEngine.Object;
 
-namespace Vurbiri.Colonization.Actors
+namespace Vurbiri.Colonization
 {
     [System.Serializable]
     public abstract class ActorSettings : IDisposable

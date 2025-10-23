@@ -1,8 +1,8 @@
 using UnityEditor;
 using UnityEngine.UIElements;
-using Vurbiri.Colonization.Actors;
+using Vurbiri.Colonization;
 
-namespace VurbiriEditor.Colonization.Actors
+namespace VurbiriEditor.Colonization
 {
     [CustomEditor(typeof(WarriorsSettingsScriptable), true)]
     public class WarriorsSettingsEditor : ActorsSettingsEditor<WarriorsSettingsEditor>

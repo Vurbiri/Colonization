@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using Vurbiri.Colonization.Actors;
 using static Vurbiri.Colonization.GameContainer;
 
 namespace Vurbiri.Colonization.UI

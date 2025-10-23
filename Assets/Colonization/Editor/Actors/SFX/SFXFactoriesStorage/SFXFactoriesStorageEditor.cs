@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using Vurbiri;
-using Vurbiri.Colonization.Actors;
+using Vurbiri.Colonization;
 using static UnityEditor.EditorGUILayout;
 
 namespace VurbiriEditor.Colonization

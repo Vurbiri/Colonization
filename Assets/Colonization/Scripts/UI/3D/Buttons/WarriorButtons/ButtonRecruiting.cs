@@ -1,5 +1,3 @@
-using Vurbiri.Colonization.Actors;
-
 namespace Vurbiri.Colonization.UI
 {
     sealed public class ButtonRecruiting : AButtonBuildType<WarriorId>

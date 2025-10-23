@@ -1,6 +1,6 @@
 using System.Collections;
 
-namespace Vurbiri.Colonization.Actors
+namespace Vurbiri.Colonization
 {
     public class ComboSFX : ISFX
     {

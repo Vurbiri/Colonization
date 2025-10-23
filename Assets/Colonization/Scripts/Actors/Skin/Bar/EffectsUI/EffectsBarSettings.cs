@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Vurbiri.Colonization.Actors.UI
+namespace Vurbiri.Colonization.UI
 {
     public class EffectsBarSettings
 	{

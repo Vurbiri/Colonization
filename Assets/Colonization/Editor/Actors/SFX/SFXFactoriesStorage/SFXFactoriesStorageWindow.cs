@@ -1,7 +1,7 @@
 using UnityEditor;
 using UnityEngine;
 using Vurbiri;
-using Vurbiri.Colonization.Actors;
+using Vurbiri.Colonization;
 using static UnityEditor.EditorGUILayout;
 using static VurbiriEditor.Colonization.CONST_EDITOR;
 

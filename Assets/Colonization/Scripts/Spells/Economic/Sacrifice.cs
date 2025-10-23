@@ -1,10 +1,9 @@
 using System.Collections;
 using System.Runtime.CompilerServices;
 using UnityEngine;
-using Vurbiri.Colonization.Actors;
 using Vurbiri.International;
 using Vurbiri.UI;
-using static Vurbiri.Colonization.Actors.Actor;
+using static Vurbiri.Colonization.Actor;
 using static Vurbiri.Colonization.GameContainer;
 
 namespace Vurbiri.Colonization

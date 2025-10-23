@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Vurbiri.Colonization.Actors
+namespace Vurbiri.Colonization
 {
     [CreateAssetMenu(fileName = FILE_NAME, menuName = MENU + "Prefab", order = ORDER)]
     sealed public class SFXPrefabFactory : ASFXFactory

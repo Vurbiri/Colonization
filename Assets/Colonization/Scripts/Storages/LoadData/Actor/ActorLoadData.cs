@@ -1,5 +1,4 @@
 using Newtonsoft.Json;
-using Vurbiri.Colonization.Actors;
 using Vurbiri.Colonization.Characteristics;
 
 namespace Vurbiri.Colonization.Storage

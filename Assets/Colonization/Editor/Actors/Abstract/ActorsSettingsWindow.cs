@@ -2,10 +2,10 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 using Vurbiri;
-using Vurbiri.Colonization.Actors;
+using Vurbiri.Colonization;
 
 
-namespace VurbiriEditor.Colonization.Actors
+namespace VurbiriEditor.Colonization
 {
 	public abstract class ActorsSettingsWindow<TScriptable, TId, TValue> : EditorWindow 
         where TScriptable : ActorSettingsScriptable<TId, TValue> 

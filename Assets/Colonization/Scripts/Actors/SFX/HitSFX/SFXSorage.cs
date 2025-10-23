@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-namespace Vurbiri.Colonization.Actors
+namespace Vurbiri.Colonization
 {
 	public class SFXStorage
 	{

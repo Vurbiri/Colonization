@@ -1,4 +1,4 @@
-namespace Vurbiri.Colonization.Actors
+namespace Vurbiri.Colonization
 {
     sealed public class SpawnBehaviour : AExitBehaviour
     {

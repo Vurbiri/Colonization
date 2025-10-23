@@ -1,5 +1,3 @@
-using Vurbiri.Colonization.Actors;
-
 namespace Vurbiri.Colonization
 {
     public class GameTriggerBus : GameEventBus

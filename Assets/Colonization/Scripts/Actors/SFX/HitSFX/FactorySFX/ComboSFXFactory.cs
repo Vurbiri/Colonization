@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Vurbiri.Colonization.Actors
+namespace Vurbiri.Colonization
 {
     [CreateAssetMenu(fileName = FILE_NAME, menuName = MENU + "ComboSFX", order = ORDER)]
     sealed public class ComboSFXFactory : ASFXFactory

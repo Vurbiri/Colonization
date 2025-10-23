@@ -31,11 +31,16 @@ namespace Vurbiri.Colonization.UI
 
             _canvasSwitcher.Disable();
 
-            UnityEngine.Debug.LogWarning("[DiceWindow] Uncomment 'Roll'");
-        }
+#if TEST_AI
+            UnityEngine.Debug.LogWarning("[DiceWindow] TEST_AI");
+#endif
 
+        }
+#if TEST_AI
         public void Roll(TurnQueue turnQueue, int hexId) => StartCoroutine(Roll_Cn(false));
-        //public void Roll(TurnQueue turnQueue, int hexId) => StartCoroutine(Roll_Cn(turnQueue.IsPerson));
+#else
+        public void Roll(TurnQueue turnQueue, int hexId) => StartCoroutine(Roll_Cn(turnQueue.IsPerson));
+#endif
 
         private IEnumerator Roll_Cn(bool isPerson)
         {

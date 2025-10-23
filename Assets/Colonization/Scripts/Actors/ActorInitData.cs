@@ -2,7 +2,7 @@ using Vurbiri.Collections;
 using Vurbiri.Colonization.Characteristics;
 using Vurbiri.Reactive;
 
-namespace Vurbiri.Colonization.Actors
+namespace Vurbiri.Colonization
 {
     public class ActorInitData
 	{

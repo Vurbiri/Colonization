@@ -8,7 +8,7 @@ namespace Vurbiri.Colonization
         public const int MOVE_SKILL_ID = 5, SPEC_SKILL_ID = 6;
         public const int BLESS_SKILL_ID = 0, WRATH_SKILL_ID = 1;
 
-        public const int WALL_TYPE = Actors.ActorTypeId.Demon + 1, SPELL_TYPE = WALL_TYPE + 1;
+        public const int WALL_TYPE = ActorTypeId.Demon + 1, SPELL_TYPE = WALL_TYPE + 1;
 
         public const int WALL_DURATION = 1, WALL_SKIP = 9, WALL_ADD_SHIFT = 3, WALL_SHIFT = Characteristics.ActorAbilityId.SHIFT_ABILITY + WALL_ADD_SHIFT;
         public const int BLOCK_DURATION = 1, BLOCK_SKIP = 0;

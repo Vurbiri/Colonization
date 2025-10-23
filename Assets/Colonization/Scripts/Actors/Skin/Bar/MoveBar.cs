@@ -2,7 +2,7 @@ using UnityEngine;
 using Vurbiri.Collections;
 using Vurbiri.Colonization.Characteristics;
 
-namespace Vurbiri.Colonization.Actors.UI
+namespace Vurbiri.Colonization.UI
 {
     public class MoveBar : System.IDisposable
     {
