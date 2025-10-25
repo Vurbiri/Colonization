@@ -49,7 +49,7 @@ namespace Vurbiri.Colonization
         public int Profit { [Impl(256)] get => _states.profit; }
         public int Weight { [Impl(256)] get => _weight; }
         public int MaxRepeatProfit { [Impl(256)] get => _maxRepeatProfit; }
-        public bool CanBuildOnShore { [Impl(256)] get => _canBuild & _waterCount > 0; }
+        public bool CanBuildOnCoast { [Impl(256)] get => _canBuild & _waterCount > 0; }
         public Event<Key> BannedBuild { [Impl(256)] get => _bannedBuild; }
         public int WaterCount { [Impl(256)] get => _waterCount; }
         public bool IsGate { [Impl(256)] get => _isGate; }
@@ -81,7 +81,7 @@ namespace Vurbiri.Colonization
         public ReactiveValue<bool> CanCancel { [Impl(256)] get => _canCancel; }
         [Impl(256)] public void Select()
         {
-            //Debug.Log(_key);
+            Debug.Log($"ToHex: {CROSS.ToHex(_key, _type)}");
             if (_interactable.Value)
                 GameContainer.TriggerBus.TriggerCrossroadSelect(this);
         }
@@ -183,6 +183,7 @@ namespace Vurbiri.Colonization
         }
         #endregion
 
+        #region ================== Utilities ============================
         [Impl(256)] public void CaptionHexagonsEnable()
         {
             for (int i = 0; i < HEX_COUNT; i++)
@@ -201,6 +202,15 @@ namespace Vurbiri.Colonization
         [Impl(256)] public int GetDefense(Id<PlayerId> playerId) => (_owner == playerId & _isWall) ? _states.wallDefense : 0;
 
         [Impl(256)] public void AddLink(CrossroadLink link) => _links.Add(link);
+
+        public Key KeyCalculation()
+        {
+            Key key = Key.Zero;
+            for (int i = 0; i < HEX_COUNT; i++)
+                key += _hexagons[i].Key;
+            return new Key(key.x / HEX_COUNT, key.y);
+        }
+        #endregion
 
         #region ================== Profit ============================
         public void ProfitFromPort(MainCurrencies profit, int idHex, int shiftProfit)
@@ -421,10 +431,12 @@ namespace Vurbiri.Colonization
         #endregion
         #endregion
 
+        #region ================== Equals ============================
         [Impl(256)] public bool Equals(ISelectable other) => ReferenceEquals(this, other);
         public bool Equals(Crossroad other) => other is not null && other._key == _key;
         public bool Equals(Key key) => key == _key;
         public override int GetHashCode() => _key.GetHashCode();
+        #endregion
 
         [Impl(256)] private void BanBuild()
         {

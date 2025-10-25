@@ -47,15 +47,15 @@ namespace Vurbiri.Colonization
                     if (!_done)
                     {
                         if (_cursor < _roadsCount)
-                            yield return BuyRoads_Cn();
+                            yield return BuildRoads_Cn();
 
                         if (_cursor == _roadsCount)
-                            yield return BuyCamp_Cn();
+                            yield return BuildCamp_Cn();
                     }
                     yield return s_waitRealtime.Restart();
                 }
 
-                private IEnumerator BuyRoads_Cn()
+                private IEnumerator BuildRoads_Cn()
                 {
                     Step step;
                     bool canRoadBuild = _cursor > 0 || Resources >= _allCost || s_settings.chanceIncomplete.Roll;
@@ -74,7 +74,7 @@ namespace Vurbiri.Colonization
                     }
                 }
 
-                private IEnumerator BuyCamp_Cn()
+                private IEnumerator BuildCamp_Cn()
                 {
                     yield return Human.Exchange_Cn(_edificeCost, Out<bool>.Get(out int key));
                     if (Out<bool>.Result(key))

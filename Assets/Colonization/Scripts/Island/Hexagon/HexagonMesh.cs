@@ -5,8 +5,6 @@ using Vurbiri.CreatingMesh;
 
 namespace Vurbiri.Colonization
 {
-    using static CONST;
-
     public class HexagonMesh : IPrimitive
     {
         public IReadOnlyList<Triangle> Triangles => _triangles;
@@ -100,7 +98,7 @@ namespace Vurbiri.Colonization
             };
 
             for (int i = 1; i <= _settings.coastSteps; i++)
-                positions.Add(positions[i] + (_settings.DOWN * _settings.coastSize[(i + 1) % 2] + direction * _settings.coastSize[i % 2]));
+                positions.Add(positions[i] + (_settings.DOWN * _settings.coastSize[(i + 1) & 1] + direction * _settings.coastSize[i & 1]));
 
             positions.Add(positions[^1] + (_settings.DOWN + direction) * _settings.bevelFinalSize);
 

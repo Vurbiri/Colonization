@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
+using System.Threading;
 using TMPro;
 using UnityEngine;
 using Vurbiri.International;
@@ -114,29 +116,101 @@ namespace Vurbiri.Colonization
 
         public void Testing()
         {
-            RandomSequence test = new(1, 6);
-
-            foreach (var hex in test)
-                print(hex);
-
-            print("=============================================");
-
-            foreach (var hex in test)
-                print(hex);
-
-            print("=============================================");
-
-            foreach (var hex in new RandomSequence(1, 6))
-                print(hex);
+            print($"775 != 775: {MathI.NotEqual(775, 775) < 0}");
+            print($"-75 != 891: {MathI.NotEqual(-75, 891) < 0}");
+            print($"775 != -91: {MathI.NotEqual(775, -91) < 0}");
+            print($"175 != 891: {MathI.NotEqual(175, 891) < 0}");
+            print($"775 != 191: {MathI.NotEqual(775, 191) < 0}");
+            print("===============================================");
+            print($"775 == 775: {MathI.Equal(775, 775) < 0}");
+            print($"-75 == 891: {MathI.Equal(-75, 891) < 0}");
+            print($"775 == -91: {MathI.Equal(775, -91) < 0}");
+            print($"175 == 891: {MathI.Equal(175, 891) < 0}");
+            print($"775 == 191: {MathI.Equal(775, 191) < 0}");
+            print("===============================================");
+            print($"775 <= 775: {MathI.LessOrEqual(775, 775) < 0}");
+            print($"-75 <= 891: {MathI.LessOrEqual(-75, 891) < 0}");
+            print($"775 <= -91: {MathI.LessOrEqual(775, -91) < 0}");
+            print($"175 <= 891: {MathI.LessOrEqual(175, 891) < 0}");
+            print($"775 <= 191: {MathI.LessOrEqual(775, 191) < 0}");
+            print("===============================================");
+            print($"775 > 775: {MathI.Greater(775, 775) < 0}");
+            print($"-75 > 891: {MathI.Greater(-75, 891) < 0}");
+            print($"775 > -91: {MathI.Greater(775, -91) < 0}");
+            print($"175 > 891: {MathI.Greater(175, 891) < 0}");
+            print($"775 > 191: {MathI.Greater(775, 191) < 0}");
+            print("===============================================");
+            print($"775 >= 775: {MathI.GreaterOrEqual(775, 775) < 0}");
+            print($"-75 >= 891: {MathI.GreaterOrEqual(-75, 891) < 0}");
+            print($"775 >= -91: {MathI.GreaterOrEqual(775, -91) < 0}");
+            print($"175 >= 891: {MathI.GreaterOrEqual(175, 891) < 0}");
+            print($"775 >= 191: {MathI.GreaterOrEqual(775, 191) < 0}");
+            print("===============================================");
+            print($"775 < 775: {MathI.Less(775, 775) < 0}");
+            print($"-75 < 891: {MathI.Less(-75, 891) < 0}");
+            print($"775 < -91: {MathI.Less(775, -91) < 0}");
+            print($"175 < 891: {MathI.Less(175, 891) < 0}");
+            print($"775 < 191: {MathI.Less(775, 191) < 0}");
+            print("===============================================");
         }
 
-        public static uint Next1(uint minInclusive, uint maxExclusive, System.Random rnd)
+        public void BinaryPow()
         {
-            return (uint)(rnd.Next((int)(minInclusive + int.MinValue), (int)(maxExclusive + int.MinValue)) - int.MinValue);
-        }
-        public static uint Next2(uint minInclusive, uint maxExclusive, System.Random rnd)
-        {
-            return (uint)(rnd.Next(int.MinValue, int.MaxValue) - int.MinValue) % (maxExclusive - minInclusive) + minInclusive;
+            int count = 10000, q = 0;
+            double test1, test2;
+            Stopwatch stopWatch = new();
+
+            print("===============================================");
+            Thread.Sleep(100);
+            stopWatch.Start();
+            for (int i = 0; i < count; i++)
+            {
+                q = MathI.BinaryPow(2, 20);
+            }
+            stopWatch.Stop();
+            test1 = stopWatch.ElapsedTicks;
+
+            stopWatch.Restart();
+            for (int i = 0; i < count; i++)
+            {
+                q = MathI.BinaryPow(2, 20);
+            }
+            stopWatch.Stop();
+            test2 = stopWatch.ElapsedTicks;
+
+            print("-----------------------------------------------");
+            print($"BinaryPow: {test1}");
+            print($"BinaryPow2: {test2}");
+            print("-----------------------------------------------");
+            print($"BinaryPow/BinaryPow2:  {test1 / test2}");
+            print("===============================================");
+
+            print("===============================================");
+            Thread.Sleep(100);
+            stopWatch.Restart();
+            for (int i = 0; i < count; i++)
+            {
+                q = MathI.BinaryPow(-7, 11);
+            }
+            stopWatch.Stop();
+            test2 = stopWatch.ElapsedTicks;
+            print($"q: {q}");
+
+            stopWatch.Restart();
+            for (int i = 0; i < count; i++)
+            {
+                q = MathI.Pow(-7, 11);
+            }
+            stopWatch.Stop();
+            test1 = stopWatch.ElapsedTicks;
+            print($"q: {q}");
+
+            print("-----------------------------------------------");
+            print($"Pow: {test1}");
+            print($"BinaryPow2: {test2}");
+            print("-----------------------------------------------");
+            print($"Pow/BinaryPow2:  {test1 / test2}");
+            print("===============================================");
         }
     }
 }

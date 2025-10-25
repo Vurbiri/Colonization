@@ -22,11 +22,11 @@ namespace Vurbiri.Colonization
             {
                 for (int i = 0; i < WarriorId.Count; i++)
                 {
-                    int warriorId = i;
+					Id<WarriorId> warriorId = i;
                     Abilities[HumanAbilityId.WarriorToAbility(i)].Subscribe((value) => AddRecruit(warriorId, value > 0));
                 }
 
-                void AddRecruit(int warriorId, bool add)
+                void AddRecruit(Id<WarriorId> warriorId, bool add)
                 {
                     if (add) _recruit.Add(warriorId, s_weights[warriorId]);
                 }

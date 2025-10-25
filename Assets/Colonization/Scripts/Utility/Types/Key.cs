@@ -45,6 +45,9 @@ namespace Vurbiri.Colonization
         [Impl(256)] public static Key operator -(Key a, Key b) => new(a.x - b.x, a.y - b.y);
         [Impl(256)] public static Key operator -(Key a) => new(-a.x, -a.y);
 
+        [Impl(256)] public static Key operator *(Key a, Key b) => new(a.x * b.x, a.y * b.y);
+        [Impl(256)] public static Key operator /(Key a, Key b) => new(a.x / b.x, a.y / b.y);
+
         [Impl(256)] public static bool operator ==(Key a, Key b) => a.x == b.x & a.y == b.y;
         [Impl(256)] public static bool operator !=(Key a, Key b) => a.x != b.x | a.y != b.y;
 

@@ -12,17 +12,20 @@ namespace Vurbiri.Colonization.UI
         [Space]
         [SerializeField] private CanvasGroupSwitcher _canvasSwitcher;
         [Space]
-        [SerializeField] private Dice[] _dices;
         [SerializeField] private VButton _stopButton;
         [SerializeField] private TextMeshProUGUI _result;
+        [Space]
+        [SerializeField] private DiceSettings _diceSettings;
 
+        private readonly Dice[] _dices = new Dice[CONST.DICES_COUNT];
         private readonly WaitRealtime _waitAI = new();
         private readonly WaitSignal _waitPerson = new();
 
         public void Init()
 		{
-            for(int i = 0; i < CONST.DICES_COUNT; i++)
-                _dices[i].Init();
+            for (int i = 0; i < CONST.DICES_COUNT; i++)
+                _dices[i] = new(_diceSettings.labels[i], _diceSettings.time);
+            _diceSettings = null;
 
             _stopButton.Lock = true;
             _stopButton.AddListener(_waitPerson.Send);
@@ -30,11 +33,9 @@ namespace Vurbiri.Colonization.UI
             GameContainer.GameLoop.Subscribe(GameModeId.WaitRoll, Roll);
 
             _canvasSwitcher.Disable();
-
 #if TEST_AI
             UnityEngine.Debug.LogWarning("[DiceWindow] TEST_AI");
 #endif
-
         }
 #if TEST_AI
         public void Roll(TurnQueue turnQueue, int hexId) => StartCoroutine(Roll_Cn(false));
@@ -72,6 +73,22 @@ namespace Vurbiri.Colonization.UI
             GameContainer.GameLoop.Profit();
         }
 
+        // **** Nested ****
+        [System.Serializable] private class DiceSettings
+        {
+            public FloatRnd time;
+            public TextMeshProUGUI[] labels;
+
+#if UNITY_EDITOR
+            public void OnValidate()
+            {
+                labels ??= new TextMeshProUGUI[CONST.DICES_COUNT];
+                if (labels.Length != CONST.DICES_COUNT)
+                    System.Array.Resize(ref labels, CONST.DICES_COUNT);
+            }
+#endif
+        }
+
 #if UNITY_EDITOR
 
         [StartEditor]
@@ -82,7 +99,6 @@ namespace Vurbiri.Colonization.UI
         {
             _canvasSwitcher.OnValidate(this, 6);
 
-            this.SetChildrens(ref _dices, CONST.DICES_COUNT);
             this.SetChildren(ref _stopButton);
             this.SetChildren(ref _result, "Result_TMP");
 
@@ -90,6 +106,8 @@ namespace Vurbiri.Colonization.UI
             this.SetChildren(ref _resultImage, "Result");
             this.SetChildren(ref _stopImage, "StopButton");
             this.SetChildren(ref _buttonCenterImage, "Center");
+
+            _diceSettings.OnValidate();
 
             _resultImage.color = _stopImage.color = _mainImage.color.Brightness(_panelsBrightness);
         }

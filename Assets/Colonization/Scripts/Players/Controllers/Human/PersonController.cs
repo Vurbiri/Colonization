@@ -88,8 +88,7 @@ namespace Vurbiri.Colonization
             {
                 _change = change;
 
-                UnityEngine.Debug.LogWarning("[PersonController.InteractableController] Uncomment");
-                //_isTurn = GameContainer.GameLoop.IsPersonTurn;
+                _isTurn = GameContainer.GameLoop.IsPersonTurn;
                 subscriptions += SpellBook.IsCasting.Subscribe(BindSpells);
                 subscriptions += GameContainer.Actors[PlayerId.Person].Subscribe(BindActors);
             }

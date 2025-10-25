@@ -64,7 +64,7 @@ namespace Vurbiri
             }
         }
 #endif
-        [MethodImpl(MethodImplOptions.NoInlining)]
+        [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
         protected static void ConstructorRun() { }
     }
 

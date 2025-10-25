@@ -36,7 +36,7 @@ namespace Vurbiri.Colonization
                     yield return CreatePlan_Cn();
 
                 Log.Info($"[Builder] Player {HumanId} current plan [{_currentPlan}]");
-                yield return GameContainer.Shared.StartCoroutine(_currentPlan.Execution_Cn());
+                yield return StartCoroutine(_currentPlan.Execution_Cn());
             }
 
             private IEnumerator CreatePlan_Cn()

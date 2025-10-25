@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using Vurbiri.Collections;
 using static Vurbiri.Colonization.CONST;
@@ -10,7 +11,7 @@ namespace Vurbiri.Colonization
 
         public static readonly Key RightDown = new( 1, -1); // Right + Down
         public static readonly Key RightUp   = new( 1,  1); // Right + Up
-        public static readonly Key Up        = new( 0,  2); // Up + Up
+        public static readonly Key Up        = new( 0,  2); // Up    + Up
         public static readonly Key LeftUp    = new(-1,  1); // Left  + Up
         public static readonly Key LeftDown  = new(-1, -1); // Left  + Down
         public static readonly Key Down      = new( 0, -2); // Down  + Down
@@ -21,6 +22,22 @@ namespace Vurbiri.Colonization
 
         public static readonly ReadOnlyArray<Quaternion> LINK_ROTATIONS;
         public static readonly ReadOnlyArray<Quaternion> LINK_MIRROR;
+
+        public static int Distance(Key a, Key b)
+        {
+            int x = Math.Abs(a.x - b.x), y = Math.Abs(a.y - b.y);
+            return (x < y) ? (x + y) >> 1 : x;
+        }
+        public static Key ToHex(Key c, int type)
+        {
+            int offset;
+            if (c.y > 0)
+                offset = (c.y & 1) - ((1 - type) << 1) & MathI.NotEqual(c.y, 2);
+            else
+                offset = (type << 1) - (c.y & 1) & MathI.NotEqual(c.y, -2);
+
+            return new(c.x, (c.y / 4 << 1) + offset);
+        }
 
         static CROSS()
         {

@@ -8,7 +8,7 @@ namespace Vurbiri.Colonization
     public class Crossroads
     {
         private readonly Dictionary<Key, Crossroad> _crossroads = new(CROSS.MAX);
-        private readonly Shore _shore = new();
+        private readonly Coast _coast = new();
 
         private ReadOnlyArray<int> _hexWeight;
         private Transform _container;
@@ -18,7 +18,7 @@ namespace Vurbiri.Colonization
 
         public Crossroad this[Key key] { [Impl(256)] get => _crossroads[key]; }
 
-        public int ShoreCount  { [Impl(256)] get => _shore.Count; }
+        public int CoastCount  { [Impl(256)] get => _coast.Count; }
 
         public Crossroads(Transform container, ReadOnlyIdSet<EdificeId, AEdifice> prefabs)
         {
@@ -56,7 +56,7 @@ namespace Vurbiri.Colonization
                     if (ending)
                     {
                         cross.Setup(_hexWeight);
-                        _shore.Add(cross);
+                        _coast.Add(cross);
                     }
                 }
                 else
@@ -73,10 +73,10 @@ namespace Vurbiri.Colonization
             _vertices = null;
             _angles = null;
 
-            _shore.TrimExcess();
+            _coast.TrimExcess();
         }
 
-        [Impl(256)] public Crossroad GetRandomPort() => _crossroads[_shore.Value];
+        [Impl(256)] public Crossroad GetRandomPort() => _crossroads[_coast.Value];
 
         [Impl(256)] public bool IsDeadEnd(Key start, Key end, Id<PlayerId> playerId) => _crossroads[start].IsDeadEnd(playerId) || _crossroads[end].IsDeadEnd(playerId);
         [Impl(256)] public int DeadEndCount(Key start, Key end, Id<PlayerId> playerId) => (_crossroads[start].IsDeadEnd(playerId) ? 1:0) + (_crossroads[end].IsDeadEnd(playerId) ? 1:0);
@@ -84,13 +84,13 @@ namespace Vurbiri.Colonization
 
         #region Nested: Shore
         //***********************************
-        private class Shore : WeightsList<Key>
+        private class Coast : WeightsList<Key>
         {
-            public Shore() : base(Key.Zero, HEX.SIDES * (CONST.MAX_CIRCLES + HEX.SIDES)) { }
+            public Coast() : base(Key.Zero, HEX.SIDES * (CONST.MAX_CIRCLES + HEX.SIDES)) { }
 
             public void Add(Crossroad crossroad)
             {
-                if (crossroad.CanBuildOnShore && HexagonsValid(crossroad.Hexagons))
+                if (crossroad.CanBuildOnCoast && HexagonsValid(crossroad.Hexagons))
                 {
                     base.Add(crossroad.Key, crossroad.Weight);
                     crossroad.BannedBuild.Add(Remove);

@@ -1,47 +1,44 @@
 using System.Collections;
 using TMPro;
-using UnityEngine;
 
-namespace Vurbiri.Colonization.UI
+namespace Vurbiri.Colonization
 {
-	public class Dice : MonoBehaviour
+	public class Dice
 	{
-		[SerializeField] private FloatRnd _time;
+        private readonly WaitRealtime _waitTime = new();
+        private readonly RandomSequence _roll = new(CONST.DICE);
+        private readonly TextMeshProUGUI _label;
 
-		private readonly WaitRealtime _waitTime = new();
-		private RandomSequence _roll;
-
+        private FloatRnd _time;
         private bool _isPlaying = false;
-        private TextMeshProUGUI _label;
         private int _current;
 
-        public void Init()
+        public Dice(TextMeshProUGUI label, FloatRnd time)
         {
-            _label = GetComponentInChildren<TextMeshProUGUI>();
-			_roll = new(CONST.DICE);
+            _label = label; _time = time;
         }
 
         public void Run()
-		{
+        {
             _isPlaying = true;
-			StartCoroutine(Run_Cn());
+            _label.StartCoroutine(Run_Cn());
 
-			// Local
+            // === Local ===
             IEnumerator Run_Cn()
-			{
-				while (_isPlaying)
-				{
-					_current = _roll.Next;
-					_label.text = CONST.NUMBERS_STR[_current];
-					yield return _waitTime.Restart(_time);
-				}
-			}
-		}
+            {
+                while (_isPlaying)
+                {
+                    _current = _roll.Next;
+                    _label.text = CONST.NUMBERS_STR[_current];
+                    yield return _waitTime.Restart(_time);
+                }
+            }
+        }
 
-		public int Stop()
-		{
-			_isPlaying = false;
-			return _current;
-		}
-	}
+        public int Stop()
+        {
+            _isPlaying = false;
+            return _current;
+        }
+    }
 }

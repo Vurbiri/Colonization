@@ -16,7 +16,7 @@ namespace Vurbiri.Colonization
         public Id<PlayerId> Owner { [Impl(256)] get => _owner; }
         public bool IsOwner { [Impl(256)] get => _owner != PlayerId.None; }
         public bool IsEmpty { [Impl(256)] get => _owner == PlayerId.None; }
-        public bool IsNotShore { [Impl(256)] get => _isNotShore; }
+        public bool IsNotCoast { [Impl(256)] get => _isNotShore; }
         public Key KeyA { [Impl(256)] get => _link[CrossroadType.A]; }
         public Key KeyY { [Impl(256)] get => _link[CrossroadType.Y]; }
         public Vector3 Position { [Impl(256)] get => _middle; }

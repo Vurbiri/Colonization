@@ -1,4 +1,5 @@
 using System.Collections;
+using UnityEngine;
 using Vurbiri.Reactive.Collections;
 using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
@@ -30,6 +31,9 @@ namespace Vurbiri.Colonization
             [Impl(256)] public Counselor(AIController parent) => _parent = parent;
 
             public abstract IEnumerator Execution_Cn();
+
+            [Impl(256)] protected Coroutine StartCoroutine(IEnumerator routine) => GameContainer.Shared.StartCoroutine(routine);
+            [Impl(256)] protected void StopCoroutine(Coroutine coroutine) => GameContainer.Shared.StopCoroutine(coroutine);
         }
     }
 }

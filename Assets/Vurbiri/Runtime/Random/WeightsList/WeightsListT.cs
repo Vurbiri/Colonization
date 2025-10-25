@@ -11,30 +11,7 @@ namespace Vurbiri
 
         public int Count { [Impl(256)] get => _count - 1; }
 
-        public T Value { [Impl(256)] get => _weights[Index].value; }
-        private int Index
-        {
-            get 
-            {
-                int index = 0;
-                if (_count > 1)
-                {
-                    int weight = UnityEngine.Random.Range(0, _max);
-                    int min = 0, max = _count, current;
-                    while (index == 0)
-                    {
-                        current = min + max >> 1;
-                        if (_weights[current] <= weight)
-                            min = current;
-                        else if (_weights[current - 1] > weight)
-                            max = current;
-                        else
-                            index = current;
-                    }
-                }
-                return index;
-            }
-        }
+        public T Value { [Impl(256)] get => _weights[GetIndex()].value; }
 
         [Impl(256)] public WeightsList(T zero) : this(zero, BASE_CAPACITY) { }
         public WeightsList(T zero, int capacity)
@@ -64,7 +41,7 @@ namespace Vurbiri
 
         [Impl(256)] public T Extract()
         {
-            int index = Index;
+            int index = GetIndex();
             T value = _weights[index].value;
             if (index > 0)
                 Remove(index);
@@ -106,15 +83,25 @@ namespace Vurbiri
             _weights = weights;
         }
 
-        public override string ToString()
+        private int GetIndex()
         {
-            System.Text.StringBuilder sb = new();
-            for (int i = 1; i < _count - 1; i++)
+            int index = 0;
+            if (_count > 1)
             {
-                sb.Append((_weights[i] - _weights[i-1]).ToString()); sb.Append("-");
+                int weight = UnityEngine.Random.Range(0, _max);
+                int min = 0, max = _count, current;
+                while (index == 0)
+                {
+                    current = min + max >> 1;
+                    if (_weights[current] <= weight)
+                        min = current;
+                    else if (_weights[current - 1] > weight)
+                        max = current;
+                    else
+                        index = current;
+                }
             }
-            sb.Append((_weights[_count - 1] - _weights[_count - 2]).ToString());
-            return sb.ToString();
+            return index;
         }
 
         private void ReSize(int newCapacity)

@@ -12,7 +12,7 @@ namespace Vurbiri.Colonization
 
                 public static void Create(Builder parent, Plans plans)
                 {
-                    if (parent.Abilities.IsGreater(HumanAbilityId.MaxPort, parent.Ports.Count) && GameContainer.Crossroads.ShoreCount > 0)
+                    if (parent.Abilities.IsGreater(HumanAbilityId.MaxPort, parent.Ports.Count) && GameContainer.Crossroads.CoastCount > 0)
                     {
                         var crossroad = GameContainer.Crossroads.GetRandomPort();
                         var cost = GameContainer.Prices.Edifices[crossroad.NextId];

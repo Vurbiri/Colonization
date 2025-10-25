@@ -51,8 +51,8 @@ namespace Vurbiri.Colonization
             IEnumerator OnPlay_Cn()
             {
                 yield return s_settings.waitPlayStart.Restart();
-                //yield return s_waitAll.Add(s_settings.waitPlay.Restart(), _counselors.Execution_Cn());
-                yield return _counselors.Execution_Cn();
+                yield return s_waitAll.Add(s_settings.waitPlay.Restart(), _counselors.Execution_Cn());
+                //yield return _counselors.Execution_Cn();
 
                 _interactable.False();
                 Log.Info("===================================================");
