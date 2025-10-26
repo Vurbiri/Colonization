@@ -47,7 +47,7 @@ namespace Vurbiri.Colonization
                 {
                     current = _current[i]; _current[i] = null;
 
-                    Log.Info($"[Caster] Player {HumanId} current cast [{current}]");
+                    Log.Info($"[Caster] {HumanId} current cast [{current}]");
                     yield return current.TryCasting_Cn();
 
                     _casts.Add(current);

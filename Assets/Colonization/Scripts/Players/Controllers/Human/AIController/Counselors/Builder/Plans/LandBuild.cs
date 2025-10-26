@@ -69,7 +69,7 @@ namespace Vurbiri.Colonization
                             yield return Human.BuyRoad(step.crossroad.Type, step.link, _roadCost);
                             yield return s_waitRealtime.Restart();
                             canRoadBuild = _cursor < _roadsCount;
-                            Log.Info($"[Builder::LandBuild] Player {HumanId} built Road");
+                            Log.Info($"[Builder::LandBuild] {HumanId} built Road");
                         }
                     }
                 }
@@ -82,7 +82,7 @@ namespace Vurbiri.Colonization
                         var crossroad = _steps[_cursor].crossroad;
                         yield return GameContainer.CameraController.ToPositionControlled(crossroad.Position);
                         yield return Human.BuyEdificeUpgrade(crossroad, _edificeCost); ;
-                        Log.Info($"[Builder::LandBuild] Player {HumanId} built Camp");
+                        Log.Info($"[Builder::LandBuild] {HumanId} built Camp");
                         _done = true;
                     }
                 }

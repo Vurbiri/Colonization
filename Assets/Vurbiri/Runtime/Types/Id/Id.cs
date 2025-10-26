@@ -24,6 +24,7 @@ namespace Vurbiri
         }
 
         [Impl(256)] public bool Next() => ++_id < IdType<T>.Count;
+        [Impl(256)] public bool Next(int max) => ++_id < max;
         [Impl(256)] public void Clamp() => _id -= IdType<T>.Count;
 
 

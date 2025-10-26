@@ -1,8 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using Vurbiri.Collections;
-using Vurbiri.Reactive.Collections;
-using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization
 {
@@ -41,35 +39,15 @@ namespace Vurbiri.Colonization
                 {
                     var cost = GameContainer.Prices.Warriors[_current];
                     yield return Human.Exchange_Cn(cost, Out<bool>.Get(out int key));
-                    if(Out<bool>.Result(key) && TrySetSpawn(Ports))
+                    if(Out<bool>.Result(key) && Warrior.AI.TrySetSpawn(s_spawns, Human))
                     {
                         Hexagon hexagon = s_spawns.Rand(); s_spawns.Clear();
 
                         yield return GameContainer.CameraController.ToPositionControlled(hexagon.Position);
                         yield return Human.Recruiting_Wait(_current, hexagon, cost);
-                        Log.Info($"[Recruiter] Player {HumanId} recruiting [{_current}]");
+
+                        Log.Info($"[Recruiter] {HumanId} recruiting [{_current}]");
                         _current = WarriorId.None;
-                    }
-                }
-
-                // ======== Local =========
-                static bool TrySetSpawn(ReadOnlyReactiveList<Crossroad> ports)
-                {
-                    for (int i = 0; i < ports.Count; i++)
-                        SetSpawn(ports[i].Hexagons);
-
-                    return s_spawns.Count > 0;
-
-                    // ----- local ------
-                    [Impl(256)] static void SetSpawn(ReadOnlyArray<Hexagon> hexagons)
-                    {
-                        Hexagon hexagon;
-                        for (int i = 0; i < Crossroad.HEX_COUNT; i++)
-                        {
-                            hexagon = hexagons[i];
-                            if(hexagon.CanWarriorEnter)
-                                s_spawns.Add(hexagon);
-                        }
                     }
                 }
             }

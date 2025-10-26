@@ -29,7 +29,7 @@ namespace Vurbiri.Colonization
                         {
                             yield return GameContainer.CameraController.ToPositionControlled(_crossroad.Position);
                             yield return _build(_crossroad, _cost);
-                            Log.Info($"[Builder::{this}] Player {HumanId} {_build.Method.Name}");
+                            Log.Info($"[Builder::{this}] {HumanId} {_build.Method.Name}");
                             _done = true;
                         }
                     }

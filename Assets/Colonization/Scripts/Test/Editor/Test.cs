@@ -44,7 +44,7 @@ namespace Vurbiri.Colonization
             {
                 case 0: Spawn(); break;
                 case 1: Gift(); break;
-                case 2: person.Artefact.Next(UnityEngine.Random.Range(90, 100)); ; break;
+                case 2: person.Artefact.Next(UnityEngine.Random.Range(5, 10)); ; break;
                 case 3: Vurbiri.EntryPoint.Transition.Exit(); break;
                 case 4: Localization.Instance.SwitchLanguage(SystemLanguage.English); break;
                 case 5: GameContainer.Humans[PlayerId.AI_01].BuyEdificeUpgrade(GameContainer.Crossroads[CROSS.NEAR[0]]); break;
@@ -90,12 +90,12 @@ namespace Vurbiri.Colonization
             person.SpawnTest(WarriorId.Knight, HEX.LeftUp);
 
             //person.SpawnTest(WarriorId.Knight, HEX.Left);
-            person.SpawnDemonTest(DemonId.Fatty, Key.Zero);
+            //person.SpawnDemonTest(DemonId.Fatty, Key.Zero);
 
             //person.SpawnDemonTest(DemonId.Imp, HEX.RightUp);
             //person.SpawnDemonTest(DemonId.Bomb, HEX.Right);
             //person.SpawnDemonTest(DemonId.Grunt, HEX.LeftDown);
-            person.SpawnDemonTest(DemonId.Fatty, HEX.Left);
+            //person.SpawnDemonTest(DemonId.Fatty, HEX.Left);
             //person.SpawnDemonTest(DemonId.Boss, HEX.LeftUp);
 
             //person.SpawnTest(WarriorId.Knight, 2);

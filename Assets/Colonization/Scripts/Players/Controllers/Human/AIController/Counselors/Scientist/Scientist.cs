@@ -58,7 +58,7 @@ namespace Vurbiri.Colonization
                     if (progress < PerkTree.MAX_PROGRESS && _leveling.TryGet(_perk.Type, PerkTree.ProgressToLevel(progress), out List<Perk> perks))
                         _perks.Add(_perk.Type, perks);
 
-                    Log.Info($"[Scientist] Player {HumanId} learned a perk [{_perk.Type}].[{_perk.Id}]");
+                    Log.Info($"[Scientist] {HumanId} learned a perk {_perk}");
 
                     _perk = null;
                 }

@@ -14,7 +14,7 @@ namespace Vurbiri.Colonization
 
                 #region Parent Properties
                 protected AIController Human { [Impl(256)] get => _builder._parent; }
-                protected int HumanId { [Impl(256)] get => _builder._parent._id; }
+                protected Id<PlayerId> HumanId { [Impl(256)] get => _builder._parent._id; }
                 protected Currencies Resources { [Impl(256)] get => _builder._parent._resources; }
                 protected int FreeRoadCount { [Impl(256)] get => _builder.FreeRoadCount; }
                 #endregion

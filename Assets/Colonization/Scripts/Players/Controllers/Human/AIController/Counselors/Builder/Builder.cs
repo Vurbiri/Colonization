@@ -35,7 +35,7 @@ namespace Vurbiri.Colonization
                 if (_currentPlan.Done || !_currentPlan.IsValid)
                     yield return CreatePlan_Cn();
 
-                Log.Info($"[Builder] Player {HumanId} current plan [{_currentPlan}]");
+                Log.Info($"[Builder] {HumanId} current plan [{_currentPlan}]");
                 yield return StartCoroutine(_currentPlan.Execution_Cn());
             }
 

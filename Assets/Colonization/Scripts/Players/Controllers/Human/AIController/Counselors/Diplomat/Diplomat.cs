@@ -46,7 +46,7 @@ namespace Vurbiri.Colonization
 
             public override IEnumerator Execution_Cn()
             {
-                for (Id<PlayerId> id = PlayerId.None; id.Next();)
+                for (Id<PlayerId> id = PlayerId.None; id.Next(PlayerId.HumansCount);)
                     yield return TryGive_Cn(id);
 
                 // ===== Local =====

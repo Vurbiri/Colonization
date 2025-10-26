@@ -11,6 +11,7 @@ namespace Vurbiri.Colonization
             private const int COUNT = 5;
 
             private readonly RandomSequence _sequence = new(COUNT);
+            private readonly WaitSignal _waitExecution = new();
             private readonly Counselor[] _counselors;
             private readonly Diplomat _diplomat;
             private readonly Builder _builder;
@@ -25,10 +26,18 @@ namespace Vurbiri.Colonization
 
             [Impl(256)] public void Update() => _diplomat.Update();
 
-            public IEnumerator Execution_Cn()
+            public WaitSignal Execution_Wait()
             {
-                foreach(int index in _sequence)
+                StartCoroutine(Execution_Cn());
+                return _waitExecution.Restart();
+            }
+
+            private IEnumerator Execution_Cn()
+            {
+                foreach (int index in _sequence)
                     yield return StartCoroutine(_counselors[index].Execution_Cn());
+
+                _waitExecution.Send();
             }
 
             [Impl(256)] private Coroutine StartCoroutine(IEnumerator routine) => GameContainer.Shared.StartCoroutine(routine);

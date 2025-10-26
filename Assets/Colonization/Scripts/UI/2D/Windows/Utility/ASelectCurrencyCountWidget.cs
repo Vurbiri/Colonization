@@ -86,6 +86,10 @@ namespace Vurbiri.Colonization.UI
         protected void InternalSetValue(int value)
         {
             _count = value;
+#if UNITY_EDITOR
+            if (_count < 0)
+                Debug.LogWarning($"[CurrencyCountWidget] value = {_count}");
+#endif
             ValueToString();
 
             _leftButton.Interactable  = (value - _step) >= 0 & _interactable;

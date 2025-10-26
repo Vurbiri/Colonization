@@ -85,6 +85,8 @@ namespace Vurbiri.Colonization.UI
                 labels ??= new TextMeshProUGUI[CONST.DICES_COUNT];
                 if (labels.Length != CONST.DICES_COUNT)
                     System.Array.Resize(ref labels, CONST.DICES_COUNT);
+                if (time.Min == 0f && time.Max == 0f)
+                    time = new(0.175f, 2.5f);
             }
 #endif
         }
