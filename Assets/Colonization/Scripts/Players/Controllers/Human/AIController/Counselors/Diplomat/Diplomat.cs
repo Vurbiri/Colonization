@@ -29,9 +29,9 @@ namespace Vurbiri.Colonization
             public WaitResult<bool> Receive(int giver, MainCurrencies gift)
 			{
                 int amount = gift.Amount * _ratio;
-                if (GameContainer.Diplomacy.IsHumanGreatFriend(HumanId, giver))
+                if (GameContainer.Diplomacy.IsGreatFriend(HumanId, giver))
                     amount <<= 1;
-                else if (GameContainer.Diplomacy.IsHumanGreatEnemy(HumanId, giver))
+                else if (GameContainer.Diplomacy.IsGreatEnemy(HumanId, giver))
                     amount >>= 1;
 
                 bool result = amount > Resources.Amount;
@@ -46,11 +46,11 @@ namespace Vurbiri.Colonization
 
             public override IEnumerator Execution_Cn()
             {
-                for(int i = 0; i < PlayerId.HumansCount; i++)
-                    yield return TryGive_Cn(i);
+                for (Id<PlayerId> id = PlayerId.None; id.Next();)
+                    yield return TryGive_Cn(id);
 
                 // ===== Local =====
-                IEnumerator TryGive_Cn(int receiver)
+                IEnumerator TryGive_Cn(Id<PlayerId> receiver)
                 {
                     int amount = Resources.Amount;
                     if (receiver != HumanId & amount > s_settings.minAmount)

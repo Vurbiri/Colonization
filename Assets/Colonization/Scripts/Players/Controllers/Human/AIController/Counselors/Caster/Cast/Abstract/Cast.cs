@@ -15,7 +15,7 @@ namespace Vurbiri.Colonization
 
                 #region Parent Properties
                 protected AIController Human { [Impl(256)] get => _caster._parent; }
-                protected int HumanId { [Impl(256)] get => _param.playerId; }
+                protected Id<PlayerId> HumanId { [Impl(256)] get => _param.playerId; }
                 protected SpellBook SpellBook { [Impl(256)] get => _caster._parent._spellBook; }
                 protected SpellBook.ASpell Spell { [Impl(256)] get => _caster._parent._spellBook[_type, _id]; }
                 protected Currencies Resources { [Impl(256)] get => _caster._parent._resources; }

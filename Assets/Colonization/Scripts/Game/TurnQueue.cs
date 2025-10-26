@@ -11,7 +11,7 @@ namespace Vurbiri.Colonization
         public readonly bool IsNotPerson { [Impl(256)] get => currentId != PlayerId.Person; }
         public readonly bool IsSatan { [Impl(256)] get => currentId == PlayerId.Satan; }
 
-        public TurnQueue(int current)
+        public TurnQueue(Id<PlayerId> current)
         {
             this.currentId = current;
             this.turn = 0;
@@ -25,8 +25,11 @@ namespace Vurbiri.Colonization
 
         [Impl(256)]public void Next()
         {
-            if (currentId.Next() == 0) 
+            if (!currentId.Next())
+            {
+                currentId.Clamp();
                 turn++;
+            }
         }
     }
 }

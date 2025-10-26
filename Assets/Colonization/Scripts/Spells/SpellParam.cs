@@ -2,22 +2,22 @@ namespace Vurbiri.Colonization
 {
 	public struct SpellParam
 	{
-        public int playerId;
+        public Id<PlayerId> playerId;
         public int valueA;
         public int valueB;
 
-        public SpellParam(int playerId)
+        public SpellParam(Id<PlayerId> playerId)
         {
             this.playerId = playerId;
             valueA = valueB = 0;
         }
-        public SpellParam(int playerId, int valueA)
+        public SpellParam(Id<PlayerId> playerId, int valueA)
         {
             this.playerId = playerId;
             this.valueA = valueA;
             valueB = 0;
         }
-        public SpellParam(int playerId, int valueA, int valueB)
+        public SpellParam(Id<PlayerId> playerId, int valueA, int valueB)
         {
             this.playerId = playerId;
             this.valueA = valueA;

@@ -23,7 +23,7 @@ namespace Vurbiri.Collections
         #endregion
 
         public static implicit operator IdArray<TId, TValue>(TValue[] value) => new(value);
-        public static implicit operator IdArray<TId, TValue>(List<TValue> value) => new(value);
+        public static implicit operator IdArray<TId, TValue>(Roster<TValue> value) => new(value);
 
         public static implicit operator ReadOnlyArray<TValue>(IdArray<TId, TValue> self) => new(self._values);
         public static implicit operator Array<TValue>(IdArray<TId, TValue> self) => new(self._values);

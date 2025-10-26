@@ -23,24 +23,24 @@ namespace Vurbiri
             _id = id;
         }
 
-        [Impl(256)] public int Next() => _id = ++_id % IdType<T>.Count;
+        [Impl(256)] public bool Next() => ++_id < IdType<T>.Count;
+        [Impl(256)] public void Clamp() => _id -= IdType<T>.Count;
 
+
+#if UNITY_EDITOR
+        [Impl(256)] public override readonly string ToString() => IdType<T>.NamesNone_Ed[_id + 1];
+#else
         [Impl(256)] public override readonly string ToString() => _id.ToString();
+#endif
+
         [Impl(256)] public readonly bool Equals(Id<T> other) => _id == other._id;
         [Impl(256)] public readonly bool Equals(int value) => _id == value;
-        public override readonly bool Equals(object obj)
-        {
-            if (obj is null) return false;
+        
+        public override readonly bool Equals(object obj) => obj is not null && ((obj is Id<T> id && _id == id._id) || (obj is int i && _id == i));
+        public override readonly int GetHashCode() => _id;
 
-            if (obj is Id<T> id) return _id == id._id;
-            if (obj is int i) return _id == i;
-
-            return false;
-        }
-        [Impl(256)] public override readonly int GetHashCode() => _id;
-
-        [Impl(256)] public readonly int CompareTo(Id<T> other) => _id - other._id;
-        [Impl(256)] public readonly int CompareTo(int value) => _id - value;
+        public readonly int CompareTo(Id<T> other) => _id - other._id;
+        public readonly int CompareTo(int value) => _id - value;
 
         [Impl(256)] public static implicit operator int(Id<T> id) => id._id;
         [Impl(256)] public static implicit operator Id<T>(int value) => new(value);
@@ -48,13 +48,25 @@ namespace Vurbiri
         [Impl(256)] public static bool operator ==(Id<T> a, Id<T> b) => a._id == b._id;
         [Impl(256)] public static bool operator !=(Id<T> a, Id<T> b) => a._id != b._id;
 
+        [Impl(256)] public static bool operator >(Id<T> a, Id<T> b) => a._id > b._id;
+        [Impl(256)] public static bool operator <(Id<T> a, Id<T> b) => a._id < b._id;
+        [Impl(256)] public static bool operator >=(Id<T> a, Id<T> b) => a._id >= b._id;
+        [Impl(256)] public static bool operator <=(Id<T> a, Id<T> b) => a._id <= b._id;
+
         [Impl(256)] public static bool operator ==(Id<T> id, int value) => id._id == value;
         [Impl(256)] public static bool operator !=(Id<T> id, int value) => id._id != value;
+        [Impl(256)] public static bool operator ==(int value, Id<T> id) => value == id._id;
+        [Impl(256)] public static bool operator !=(int value, Id<T> id) => value != id._id;
 
         [Impl(256)] public static bool operator >(Id<T> id, int value) => id._id > value;
         [Impl(256)] public static bool operator <(Id<T> id, int value) => id._id < value;
         [Impl(256)] public static bool operator >=(Id<T> id, int value) => id._id >= value;
         [Impl(256)] public static bool operator <=(Id<T> id, int value) => id._id <= value;
+
+        [Impl(256)] public static bool operator >(int value, Id<T> id) => value > id._id;
+        [Impl(256)] public static bool operator <(int value, Id<T> id) => value < id._id;
+        [Impl(256)] public static bool operator >=(int value, Id<T> id) => value >= id._id;
+        [Impl(256)] public static bool operator <=(int value, Id<T> id) => value <= id._id;
 
         [Impl(256)] public static int operator +(Id<T> id, int value) => id._id + value;
         [Impl(256)] public static int operator +(int value, Id<T> id) => value + id._id;

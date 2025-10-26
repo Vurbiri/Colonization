@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
@@ -14,7 +13,7 @@ namespace Vurbiri.Colonization.UI
         {
             base.Init(crossroad, index, sprite, isOn);
 
-            List<Hexagon> hexagons = crossroad.Hexagons;
+            var hexagons = crossroad.Hexagons;
             for (int i = 0; i < Crossroad.HEX_COUNT; i++)
             {
                 int temp = i;

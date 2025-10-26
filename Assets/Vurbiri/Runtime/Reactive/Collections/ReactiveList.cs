@@ -10,7 +10,6 @@ namespace Vurbiri.Reactive.Collections
     public abstract class ReadOnlyReactiveList<T> : IReadOnlyList<T> where T : IEquatable<T>
     {
         protected T[] _values;
-        protected int _capacity;
         protected readonly RInt _count = new(0);
 
         protected readonly VAction<int, T, TypeEvent> _changeEvent = new();
@@ -51,6 +50,7 @@ namespace Vurbiri.Reactive.Collections
     public class ReactiveList<T> : ReadOnlyReactiveList<T>, IList<T> where T : IEquatable<T>
     {
         private const int BASE_CAPACITY = 7;
+        private int _capacity;
 
         public bool IsReadOnly => false;
 
@@ -121,7 +121,7 @@ namespace Vurbiri.Reactive.Collections
             if (_count == _capacity)
                 GrowArray();
 
-            for (int i = _count - 1; i > index; i--)
+            for (int i = _count; i > index; i--)
                 _values[i] = _values[i - 1];
 
             _values[index] = item;
@@ -174,7 +174,7 @@ namespace Vurbiri.Reactive.Collections
         {
             _capacity = _capacity << 1 | BASE_CAPACITY;
 
-            T[] array = new T[_capacity];
+            var array = new T[_capacity];
             for(int i = 0; i < _count; i++)
                 array[i] = _values[i];
             _values = array;

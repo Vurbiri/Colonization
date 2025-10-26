@@ -44,7 +44,7 @@ namespace Vurbiri.Colonization
                         for (int playerId = 0; playerId < PlayerId.HumansCount; playerId++)
                         {
                             actors = allActors[playerId];
-                            if (actors.Count > 0 & GameContainer.Diplomacy.IsHumanEnemy(param.playerId, playerId))
+                            if (actors.Count > 0 & GameContainer.Diplomacy.IsEnemy(param.playerId, playerId))
                             {
                                 if(_target == null || Chance.Rolling())
                                     _target = actors.Random;

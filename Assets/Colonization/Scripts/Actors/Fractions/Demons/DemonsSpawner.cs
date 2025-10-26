@@ -22,7 +22,7 @@ namespace Vurbiri.Colonization
 
         public bool TryCreate(out Actor demon)
         {
-            if (_potential == 0 | _startHex.IsOwner)
+            if (_potential == 0 | _startHex.IsOwned)
             {
                 demon = null;
                 return false;

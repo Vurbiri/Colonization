@@ -29,7 +29,7 @@ namespace Vurbiri.Colonization
         private readonly VAction<Key> _bannedBuild = new();
         private readonly WaitResultSource<Hexagon> _waitHexagon = new(false);
 
-        private readonly List<Hexagon> _hexagons = new(HEX_COUNT);
+        private readonly Roster<Hexagon> _hexagons = new(HEX_COUNT);
         private readonly IdSet<LinkId, CrossroadLink> _links = new();
 
         private int _countFreeLink = 0, _waterCount = 0;
@@ -60,7 +60,7 @@ namespace Vurbiri.Colonization
         public bool IsWall { [Impl(256)] get => _isWall; }
         public bool IsUpgrade { [Impl(256)] get => _states.isUpgrade; }
         public ReadOnlyIdSet<LinkId, CrossroadLink> Links { [Impl(256)] get => _links; }
-        public List<Hexagon> Hexagons { [Impl(256)] get => _hexagons; }
+        public ReadOnlyArray<Hexagon> Hexagons { [Impl(256)] get => _hexagons; }
         #endregion
 
         public Crossroad(int type, Key key, Transform container, Vector3 position, Quaternion rotation)
@@ -81,7 +81,7 @@ namespace Vurbiri.Colonization
         public ReactiveValue<bool> CanCancel { [Impl(256)] get => _canCancel; }
         [Impl(256)] public void Select()
         {
-            Debug.Log($"ToHex: {CROSS.ToHex(_key, _type)}");
+            //Debug.Log($"ToHex: {CROSS.ToHex(_key, _type)}");
             if (_interactable.Value)
                 GameContainer.TriggerBus.TriggerCrossroadSelect(this);
         }
@@ -118,13 +118,14 @@ namespace Vurbiri.Colonization
             bool result = _waterCount < HEX_COUNT;
             if (result)
             {
+                hexagon.CrossroadAdd(this);
                 _hexagons.Add(hexagon);
                 _isGate |= hexagon.IsGate;
             }
             else
             {
                 for (int i = _hexagons.Count - 1; i >= 0; i--)
-                    _hexagons[i].Crossroads.Remove(this);
+                    _hexagons[i].CrossroadRemove(this);
 
                 Object.Destroy(_edifice.gameObject);
             }
@@ -182,8 +183,28 @@ namespace Vurbiri.Colonization
             }
         }
         #endregion
+       
+        #region ================== IsOwned ============================
+        [Impl(256)] public bool IsOwnedColony(Id<PlayerId> playerId) => _owner == playerId & _states.groupId == EdificeGroupId.Colony;
+        [Impl(256)] public bool IsOwnedPort(Id<PlayerId> playerId) => _owner == playerId & _states.groupId == EdificeGroupId.Port;
+        #endregion
 
-        #region ================== Utilities ============================
+        public bool IsEnemyNear(Id<PlayerId> playerId)
+        {
+            for (int i = 0; i < HEX_COUNT; i++)
+                if(_hexagons[i].IsEnemy(playerId))
+                    return true;
+            return false;
+        }
+        public bool IsEmptyNear(Id<PlayerId> playerId)
+        {
+            for (int i = 0; i < HEX_COUNT; i++)
+                if (_hexagons[i].IsOwner(playerId))
+                    return false;
+            return true;
+        }
+
+        #region ================== Caption ============================
         [Impl(256)] public void CaptionHexagonsEnable()
         {
             for (int i = 0; i < HEX_COUNT; i++)
@@ -194,22 +215,11 @@ namespace Vurbiri.Colonization
             for (int i = 0; i < HEX_COUNT; i++)
                 _hexagons[i].CaptionDisable();
         }
+        #endregion
 
-        [Impl(256)] public bool IsOwnedColony(int playerId) => _owner == playerId & _states.groupId == EdificeGroupId.Colony;
-        [Impl(256)] public bool IsOwnedPort(int playerId) => _owner == playerId & _states.groupId == EdificeGroupId.Port;
-
+        #region ================== Defense ============================
         [Impl(256)] public int GetDefense() => _isWall ? _states.wallDefense : 0;
         [Impl(256)] public int GetDefense(Id<PlayerId> playerId) => (_owner == playerId & _isWall) ? _states.wallDefense : 0;
-
-        [Impl(256)] public void AddLink(CrossroadLink link) => _links.Add(link);
-
-        public Key KeyCalculation()
-        {
-            Key key = Key.Zero;
-            for (int i = 0; i < HEX_COUNT; i++)
-                key += _hexagons[i].Key;
-            return new Key(key.x / HEX_COUNT, key.y);
-        }
         #endregion
 
         #region ================== Profit ============================
@@ -302,13 +312,13 @@ namespace Vurbiri.Colonization
             //===================================
             [Impl(256)] void ResetWeightNeighborsForPorts()
             {
-                List<Crossroad> crossroads;
+                ReadOnlyArray<Crossroad> crossroads;
                 for (int i = 0; i < HEX_COUNT; i++)
                 {
                     if (_hexagons[i].IsWater)
                     {
                         crossroads = _hexagons[i].Crossroads;
-                        for (int j = crossroads.Count - 1; j >= 0; j--)
+                        for (int j = 0; j < crossroads.Count; j++)
                             crossroads[j].BanBuild();
                     }
                 }
@@ -330,7 +340,7 @@ namespace Vurbiri.Colonization
             {
                 _states.isBuildWall = !(_isWall = true);
                 for (int i = 0; i < _hexagons.Count; i++)
-                    _hexagons[i].BuildWall(playerId);
+                    _hexagons[i].AddWallDefenceEffect(playerId);
             }
 
             return returnSignal;
@@ -431,12 +441,17 @@ namespace Vurbiri.Colonization
         #endregion
         #endregion
 
-        #region ================== Equals ============================
-        [Impl(256)] public bool Equals(ISelectable other) => ReferenceEquals(this, other);
-        public bool Equals(Crossroad other) => other is not null && other._key == _key;
-        public bool Equals(Key key) => key == _key;
-        public override int GetHashCode() => _key.GetHashCode();
-        #endregion
+
+        #region ================== Utilities ============================
+        [Impl(256)] public void AddLink(CrossroadLink link) => _links.Add(link);
+
+        public Key KeyCalculation()
+        {
+            Key key = Key.Zero;
+            for (int i = 0; i < HEX_COUNT; i++)
+                key += _hexagons[i].Key;
+            return new Key(key.x / HEX_COUNT, key.y);
+        }
 
         [Impl(256)] private void BanBuild()
         {
@@ -446,6 +461,14 @@ namespace Vurbiri.Colonization
                 _bannedBuild.InvokeOneShot(_key);
             }
         }
+        #endregion
+
+        #region ================== Equals ============================
+        [Impl(256)] public bool Equals(ISelectable other) => ReferenceEquals(this, other);
+        public bool Equals(Crossroad other) => other is not null && other._key == _key;
+        public bool Equals(Key key) => key == _key;
+        public override int GetHashCode() => _key.GetHashCode();
+        #endregion
     }
 }
 

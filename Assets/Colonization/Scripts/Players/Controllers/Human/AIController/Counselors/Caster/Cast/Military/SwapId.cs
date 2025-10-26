@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Vurbiri.Collections;
 
 namespace Vurbiri.Colonization
 {
@@ -37,7 +38,7 @@ namespace Vurbiri.Colonization
                     yield break;
                 }
 
-                private static bool FindHexagons(int playerId)
+                private static bool FindHexagons(Id<PlayerId> playerId)
                 {
                     if (GameContainer.Actors[playerId].Count >= 2)
                     {
@@ -62,7 +63,7 @@ namespace Vurbiri.Colonization
                     return s_good.Count > 0 & s_bad.Count > 0;
 
                     // ===== Local =====
-                    static bool IsOwnedColony(int playerId, List<Crossroad> crossroads)
+                    static bool IsOwnedColony(Id<PlayerId> playerId, ReadOnlyArray<Crossroad> crossroads)
                     {
                         int index = crossroads.Count;
                         while (index --> 0 && !crossroads[index].IsOwnedColony(playerId));

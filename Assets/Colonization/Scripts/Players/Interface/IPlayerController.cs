@@ -4,7 +4,7 @@ namespace Vurbiri.Colonization
 {
 	public interface IPlayerController : System.IDisposable
 	{
-        public int Id { get; }
+        public Id<PlayerId> Id { get; }
 
         ReadOnlyReactiveSet<Actor> Actors { get; }
 

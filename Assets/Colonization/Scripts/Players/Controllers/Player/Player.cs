@@ -12,12 +12,12 @@ namespace Vurbiri.Colonization
         protected static RInt s_shrinesCount = new();
         public static ReactiveValue<int> ShrinesCount { [Impl(256)] get => s_shrinesCount; }
 
-        protected readonly int _id;
+        protected readonly Id<PlayerId> _id;
         protected readonly bool _isPerson;
         protected readonly RBool _interactable = new(false);
         protected Subscription _subscription;
 
-        public int Id { [Impl(256)] get => _id; }
+        public Id<PlayerId> Id { [Impl(256)] get => _id; }
         public ReadOnlyReactiveSet<Actor> Actors { [Impl(256)] get => GameContainer.Actors[_id]; }
         public ReactiveValue<bool> Interactable { [Impl(256)] get => _interactable; }
 

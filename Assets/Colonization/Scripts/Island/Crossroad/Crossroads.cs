@@ -52,7 +52,6 @@ namespace Vurbiri.Colonization
 
                 if (cross.AddHexagon(hex, out bool ending))
                 {
-                    hex.Crossroads.Add(cross);
                     if (ending)
                     {
                         cross.Setup(_hexWeight);
@@ -97,7 +96,7 @@ namespace Vurbiri.Colonization
                 }
             }
 
-            private bool HexagonsValid(List<Hexagon> hexagons)
+            private bool HexagonsValid(ReadOnlyArray<Hexagon> hexagons)
             {
                 const int maxX = CONST.MAX_CIRCLES << 1; Key key;
                 for (int i = 0; i < Crossroad.HEX_COUNT; i++)

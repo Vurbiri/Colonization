@@ -58,12 +58,10 @@ namespace Vurbiri.Colonization
 
         [Impl(256)] public int GetRelationToPerson(int id) => _values[id - 1];
 
-        [Impl(256)] public bool IsHumanFriend(int idA, int idB) => idA == idB || _values[GetIndex(idA, idB)] > 0;
-        [Impl(256)] public bool IsHumanGreatFriend(int idA, int idB) => idA == idB || _values[GetIndex(idA, idB)] > _settings.great;
-        [Impl(256)] public bool IsHumanEnemy(int idA, int idB) => idA != idB && _values[GetIndex(idA, idB)] <= 0;
-        [Impl(256)] public bool IsHumanGreatEnemy(int idA, int idB) => idA != idB && _values[GetIndex(idA, idB)] <= -_settings.great;
-        
-        [Impl(256)] public bool IsEnemy(int idA, int idB) => idA != idB && ((idA == PlayerId.Satan | idB == PlayerId.Satan) || _values[GetIndex(idA, idB)] <= 0);
+        [Impl(256)] public bool IsFriend(Id<PlayerId> idA, Id<PlayerId> idB) => Validate(idA, idB) && (idA == idB || (IsNotSatan(idA, idB) && this[idA, idB] > 0));
+        [Impl(256)] public bool IsGreatFriend(Id<PlayerId> idA, Id<PlayerId> idB) => Validate(idA, idB) && (idA == idB || (IsNotSatan(idA, idB) && this[idA, idB] > _settings.great));
+        [Impl(256)] public bool IsEnemy(Id<PlayerId> idA, Id<PlayerId> idB) => Validate(idA, idB) & idA != idB && (IsSatan(idA, idB) || this[idA, idB] <= 0);
+        [Impl(256)] public bool IsGreatEnemy(Id<PlayerId> idA, Id<PlayerId> idB) => Validate(idA, idB) & idA != idB && (IsSatan(idA, idB) || this[idA, idB] <= -_settings.great);
 
         public Relation GetRelation(Id<PlayerId> idA, Id<PlayerId> idB)
         {
@@ -79,46 +77,34 @@ namespace Vurbiri.Colonization
             return this[idA, idB] > 0 ? Relation.Friend : Relation.Enemy;
         }
 
-        public bool IsCanActorsInteraction(Id<PlayerId> idA, Id<PlayerId> idB, Relation typeAction, out bool isFriendly)
-        {
-            isFriendly = typeAction == Relation.Friend;
-            if (idA == PlayerId.None | idB == PlayerId.None | typeAction == Relation.None)
-                return false;
-
-            if (idA == idB)
-                return isFriendly;
-
-            if (idA == PlayerId.Satan | idB == PlayerId.Satan)
-                return !isFriendly;
-
-            int value = this[idA, idB];
-            if (value <= 0)
-                return !isFriendly;
-
-            return isFriendly = true;
-        }
-
         [Impl(256)] public void Gift(int id, int giver) => Set(id, giver, id == PlayerId.Person ? _settings.rewardForGift >> 1 : _settings.rewardForGift);
         [Impl(256)] public void Marauding(int idA, int idB) => Set(idA, idB, _settings.penaltyForMarauding);
 
-        public void ActorsInteraction(int idA, int idB, Relation targetAttack)
-        {
-            if (Validate(idA, idB) & targetAttack != Relation.None)
-            {
-                int index = GetIndex(idA, idB);
-                int value = _values[index];
-
-                if (targetAttack == Relation.Enemy)
-                    this[index] = value + (value <= 0 ? _settings.penaltyForFireOnEnemy : _settings.penaltyForFriendlyFire);
-                else
-                    this[index] = value + _settings.rewardForBuff;
-
-                _eventChanged.Invoke(this);
-            }
-        }
-
         [Impl(256)] public Subscription Subscribe(Action<Diplomacy> action, bool instantGetValue = true) => _eventChanged.Add(action, instantGetValue, this);
 
+        #region ================== ActorsInteraction ============================
+        public bool IsCanActorsInteraction(Id<PlayerId> idA, Id<PlayerId> idB, Relation typeAction, out bool isFriendly)
+        {
+            bool valid = Validate(idA, idB) & typeAction != Relation.None;
+            isFriendly = typeAction == Relation.Friend;
+            return valid && (idA == idB ? isFriendly : IsSatan(idA, idB) ? !isFriendly : this[idA, idB] <= 0 ? !isFriendly : isFriendly = true); ;
+        }
+
+        public void ActorsInteraction(Id<PlayerId> idA, Id<PlayerId> idB, Relation targetAttack)
+        {
+            int index = GetIndex(idA, idB);
+            int value = _values[index];
+
+            if (targetAttack == Relation.Enemy)
+                this[index] = value + (value <= 0 ? _settings.penaltyForFireOnEnemy : _settings.penaltyForFriendlyFire);
+            else
+                this[index] = value + _settings.rewardForBuff;
+
+            _eventChanged.Invoke(this);
+        }
+        #endregion
+
+        #region ================== Utilities ============================
         private void OnGamePlay(TurnQueue turnQueue, int dice)
         {
             int currentId = turnQueue.currentId.Value;
@@ -132,8 +118,7 @@ namespace Vurbiri.Colonization
             }
         }
 
-        [Impl(256)]
-        private void Set(int idA, int idB, int value)
+        [Impl(256)] private void Set(int idA, int idB, int value)
         {
             int index = GetIndex(idA, idB);
             this[index] = _values[index] + value;
@@ -141,8 +126,12 @@ namespace Vurbiri.Colonization
             _eventChanged.Invoke(this);
         }
 
-        [Impl(256)] private int GetIndex(int idA, int idB) => idA + idB - 1;
+        [Impl(256)] private static int GetIndex(int idA, int idB) => idA + idB - 1;
 
-        [Impl(256)] private bool Validate(int idA, int idB) => idA != idB & idA > PlayerId.None & idB > PlayerId.None & idA < PlayerId.Satan & idB < PlayerId.Satan;
+        [Impl(256)] private static bool Validate(Id<PlayerId> idA, Id<PlayerId> idB) => idA != PlayerId.None & idB != PlayerId.None;
+        [Impl(256)] private static bool IsSatan(Id<PlayerId> idA, Id<PlayerId> idB) => idA == PlayerId.Satan | idB == PlayerId.Satan;
+        [Impl(256)] private static bool IsNotSatan(Id<PlayerId> idA, Id<PlayerId> idB) => idA != PlayerId.Satan & idB != PlayerId.Satan;
+
+        #endregion
     }
 }

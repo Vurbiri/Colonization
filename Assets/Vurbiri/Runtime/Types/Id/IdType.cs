@@ -17,8 +17,9 @@ namespace Vurbiri
 
         public static string[] Names_Ed => _data.names;
         public static string[] DisplayNames_Ed => _data.displayNames;
+        public static string[] NamesNone_Ed => _data.namesNone;
         public static int[] Values_Ed => _data.values;
-
+        
         static IdType()
         {
             Type typeId = typeof(T), typeInt = typeof(int), typeAttribute = typeof(NotIdAttribute);

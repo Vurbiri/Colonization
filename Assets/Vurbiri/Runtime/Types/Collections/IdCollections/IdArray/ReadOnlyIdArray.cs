@@ -48,7 +48,7 @@ namespace Vurbiri.Collections
         IEnumerator IEnumerable.GetEnumerator() => new ArrayEnumerator<TValue>(_values, IdType<TId>.Count);
 
         public static implicit operator ReadOnlyIdArray<TId, TValue>(TValue[] value) => new(value);
-        public static implicit operator ReadOnlyIdArray<TId, TValue>(List<TValue> value) => new(value);
+        public static implicit operator ReadOnlyIdArray<TId, TValue>(Roster<TValue> value) => new(value);
 
         public static implicit operator ReadOnlyArray<TValue>(ReadOnlyIdArray<TId, TValue> self) => new(self._values);
     }

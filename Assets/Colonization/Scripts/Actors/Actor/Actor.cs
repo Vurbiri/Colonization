@@ -158,8 +158,6 @@ namespace Vurbiri.Colonization
             return _states.IsAvailable & GameContainer.Diplomacy.IsCanActorsInteraction(id, _owner, typeAction, out isFriendly);
         }
 
-        [Impl(256)] public bool IsEnemy(Id<PlayerId> id) => GameContainer.Diplomacy.IsEnemy(_owner, id);
-
         public bool IsInCombat()
         {
             foreach (var hex in _currentHex.Neighbors)
@@ -167,6 +165,13 @@ namespace Vurbiri.Colonization
                     return true;
             return false;
         }
+
+        #region ---------------- Diplomacy ----------------
+        [Impl(256)] public bool IsFriend(Id<PlayerId> id) => GameContainer.Diplomacy.IsFriend(_owner, id);
+        [Impl(256)] public bool IsGreatFriend(Id<PlayerId> id) => GameContainer.Diplomacy.IsGreatFriend(_owner, id);
+        [Impl(256)] public bool IsEnemy(Id<PlayerId> id) => GameContainer.Diplomacy.IsEnemy(_owner, id);
+        [Impl(256)] public bool IsGreatEnemy(Id<PlayerId> id) => GameContainer.Diplomacy.IsGreatEnemy(_owner, id);
+        #endregion
 
         #region ---------------- HexSwap ----------------
         [Impl(256)] public void SetHexagonSelectable()

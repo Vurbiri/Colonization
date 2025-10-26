@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Text;
+using Vurbiri.Collections;
 using Vurbiri.International;
 using Vurbiri.UI;
 
@@ -29,17 +30,17 @@ namespace Vurbiri.Colonization
                     var human = Humans[param.playerId];
                     if (human.IsPay(_cost) & human.Actors.Count > 0)
                     {
-                        List<Hexagon> hexagons;
+                        ReadOnlyArray<Hexagon> hexagons;
                         for (int playerId = 0; playerId < PlayerId.HumansCount; playerId++)
                         {
-                            if (GameContainer.Diplomacy.IsHumanEnemy(param.playerId, playerId))
+                            if (GameContainer.Diplomacy.IsEnemy(param.playerId, playerId))
                             {
                                 var colonies = Humans[playerId].GetEdifices(EdificeGroupId.Colony);
                                 for (int c = colonies.Count - 1; c >= 0; c--)
                                 {
                                     hexagons = colonies[c].Hexagons;
                                     for (int h = 0; h < Crossroad.HEX_COUNT; h++)
-                                        if (hexagons[h].IsOwner)
+                                        if (hexagons[h].IsOwned)
                                             _occupations.Push(new(hexagons[h].Owner, colonies[c]));
                                 }
                             }

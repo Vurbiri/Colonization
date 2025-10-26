@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Vurbiri.Collections;
 using Vurbiri.Colonization.UI;
 using Vurbiri.EntryPoint;
 using Vurbiri.Reactive;
@@ -28,7 +29,7 @@ namespace Vurbiri.Colonization
         private Actor _owner = null;
         private Id<PlayerId> _ownerId = PlayerId.None;
 
-        private readonly List<Crossroad> _crossroads = new(HEX.SIDES);
+        private readonly Roster<Crossroad> _crossroads = new(HEX.SIDES);
         private readonly HashSet<Hexagon> _neighbors = new(HEX.SIDES);
         #endregion
 
@@ -40,12 +41,12 @@ namespace Vurbiri.Colonization
         public bool IsWater => _isWater;
         public bool IsGround => !_isGate & !_isWater;
         public Actor Owner => _owner;
-        public bool IsOwner => _ownerId != PlayerId.None;
+        public bool IsOwned => _ownerId != PlayerId.None;
         public bool IsWarrior => _ownerId != PlayerId.None && _owner.IsWarrior;
         public bool CanDemonEnter => !_isWater & _ownerId == PlayerId.None;
         public bool CanWarriorEnter => !_isGate & !_isWater & _ownerId == PlayerId.None;
         public Vector3 Position { get; private set; }
-        public List<Crossroad> Crossroads => _crossroads;
+        public ReadOnlyArray<Crossroad> Crossroads => _crossroads;
         public HashSet<Hexagon> Neighbors => _neighbors;
         public HexagonCaption Caption => _hexagonCaption;
         #endregion
@@ -103,6 +104,8 @@ namespace Vurbiri.Colonization
                 }
             }
         }
+        [Impl(256)] public void CrossroadAdd(Crossroad crossroad) => _crossroads.Add(crossroad);
+        [Impl(256)] public void CrossroadRemove(Crossroad crossroad) => _crossroads.Remove(crossroad);
         #endregion
 
         #region ================== ISelectable ============================
@@ -111,7 +114,7 @@ namespace Vurbiri.Colonization
         [Impl(256)] public bool Equals(ISelectable other) => System.Object.ReferenceEquals(this, other);
         #endregion
 
-        public Subscription Subscribe(Action<int> action, bool instantGetValue = true) => _changeID.Add(action, instantGetValue, _id);
+        [Impl(256)] public Subscription Subscribe(Action<int> action, bool instantGetValue = true) => _changeID.Add(action, instantGetValue, _id);
 
         #region ================== Caption ============================
         [Impl(256)] public void CaptionEnable(bool isWater, bool isGate) => _hexagonCaption.SetActive(!(isWater ^ _isWater | isGate));
@@ -173,10 +176,15 @@ namespace Vurbiri.Colonization
             _ownerId = PlayerId.None;
         }
 
+        [Impl(256)] public bool IsFriend(Id<PlayerId> id) => GameContainer.Diplomacy.IsFriend(_ownerId, id);
+        [Impl(256)] public bool IsEnemy(Id<PlayerId> id) => GameContainer.Diplomacy.IsEnemy(_ownerId, id);
+        [Impl(256)] public bool IsOwner(Id<PlayerId> id) => _ownerId == id;
+
+        #region ---------------- Defense ----------------
         public int GetMaxDefense()
         {
             if (_isGate) return 0;
-            
+
             int max = int.MinValue;
             for (int i = _crossroads.Count - 1; i >= 0; i--)
                 max = Mathf.Max(_crossroads[i].GetDefense(_ownerId), max);
@@ -184,13 +192,12 @@ namespace Vurbiri.Colonization
             return max;
         }
 
-        [Impl(256)] public void BuildWall(Id<PlayerId> playerId)
+        [Impl(256)] public void AddWallDefenceEffect(Id<PlayerId> playerId)
         {
             if (_ownerId == playerId)
                 _owner.AddWallDefenceEffect(GetMaxDefense());
         }
-
-        [Impl(256)] public bool IsEnemy(Id<PlayerId> id) => _owner != null && _owner.IsEnemy(id);
+        #endregion
         #endregion
 
         #region ================== Mark ============================
@@ -226,12 +233,13 @@ namespace Vurbiri.Colonization
 
         [Impl(256)] public bool TrySetOwnerSelectable(Id<PlayerId> id, Relation typeAction)
         {
-            if (_isWater | _ownerId == PlayerId.None || !_owner.IsCanApplySkill(id, typeAction, out bool isFriendly))
-                return false;
-
-            _mark = s_poolMarks.Get(_thisTransform, false).View(isFriendly);
-            _owner.RaycastTarget = true;
-            return true;
+            bool isFriendly = false, result = (!_isWater & _ownerId != PlayerId.None) && _owner.IsCanApplySkill(id, typeAction, out isFriendly);
+            if (result)
+            {
+                _mark = s_poolMarks.Get(_thisTransform, false).View(isFriendly);
+                _owner.RaycastTarget = true;
+            }
+            return result;
         }
         [Impl(256)] public void SetOwnerUnselectable()
         {

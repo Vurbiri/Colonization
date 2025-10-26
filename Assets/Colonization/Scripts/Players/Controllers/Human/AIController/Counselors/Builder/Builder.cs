@@ -1,5 +1,5 @@
 using System.Collections;
-using System.Collections.Generic;
+using Vurbiri.Collections;
 using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization
@@ -78,7 +78,7 @@ namespace Vurbiri.Colonization
             [Impl(256)] private int GetCostWeight(ReadOnlyMainCurrencies cost) => Resources.Deficit(cost) * s_settings.costWeight;
             [Impl(256)] private static int GetEdificeWeight(int id) => s_settings.edificeWeight[id];
 
-            private int GetProfitWeight(List<Hexagon> hexagons)
+            private int GetProfitWeight(ReadOnlyArray<Hexagon> hexagons)
             {
                 int weight = 0;
                 for (int i = 0; i < Crossroad.HEX_COUNT; i++)

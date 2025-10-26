@@ -61,7 +61,7 @@ namespace Vurbiri.Colonization
                     return s_spawns.Count > 0;
 
                     // ----- local ------
-                    [Impl(256)] static void SetSpawn(List<Hexagon> hexagons)
+                    [Impl(256)] static void SetSpawn(ReadOnlyArray<Hexagon> hexagons)
                     {
                         Hexagon hexagon;
                         for (int i = 0; i < Crossroad.HEX_COUNT; i++)

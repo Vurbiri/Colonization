@@ -29,7 +29,7 @@ namespace Vurbiri.Colonization
 
                         for (int i = 0; i < PlayerId.HumansCount; i++)
                         {
-                            if (GameContainer.Diplomacy.IsHumanEnemy(playerId, i))
+                            if (GameContainer.Diplomacy.IsEnemy(playerId, i))
                                 enemies += GameContainer.Humans[i].Roads.DeadEndCount();
                             else
                                 friends += GameContainer.Humans[i].Roads.DeadEndCount();
