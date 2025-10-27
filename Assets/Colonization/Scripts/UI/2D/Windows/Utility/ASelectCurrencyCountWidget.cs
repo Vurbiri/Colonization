@@ -60,7 +60,7 @@ namespace Vurbiri.Colonization.UI
 
         public void SetMax(int value)
         {
-            _max = value;
+            _max = System.Math.Max(value, 0);
             CrossFadeColor();
 
             if (_count > _max)
@@ -72,7 +72,7 @@ namespace Vurbiri.Colonization.UI
 
         public void SetStep(int value)
         {
-            _step = value;
+            _step = System.Math.Max(value, 1);
             CrossFadeColor();
 
             value = _count - (_count % _step);
@@ -86,17 +86,14 @@ namespace Vurbiri.Colonization.UI
         protected void InternalSetValue(int value)
         {
             _count = value;
-#if UNITY_EDITOR
-            if (_count < 0)
-                Debug.LogWarning($"[CurrencyCountWidget] value = {_count}");
-#endif
+
             ValueToString();
 
             _leftButton.Interactable  = (value - _step) >= 0 & _interactable;
             _rightButton.Interactable = (value + _step) <= _max & _interactable;
         }
 
-        protected virtual void ValueToString() => _textValue.text = CONST.NUMBERS_STR[_count];
+        protected virtual void ValueToString() => _textValue.text = _count.ToStr();
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         protected void CrossFadeColor()

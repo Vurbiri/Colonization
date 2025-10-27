@@ -12,8 +12,8 @@ namespace Vurbiri.Colonization.UI
 
         protected void SetCurrentMax(int current, int max)
         {
-            _valueTMP.text = string.Format(COUNT, CONST.NUMBERS_STR[current], CONST.NUMBERS_STR[max]);
-            _hintText = string.Format(_localizedText, CONST.NUMBERS_STR[current], CONST.NUMBERS_STR[max]);
+            _valueTMP.text = string.Format(COUNT, current.ToStr(), max.ToStr());
+            _hintText = string.Format(_localizedText, current.ToStr(), max.ToStr());
         }
 
         protected override void SetLocalizationText(Localization localization)

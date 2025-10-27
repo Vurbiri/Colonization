@@ -47,7 +47,7 @@ namespace Vurbiri.Colonization.UI
         private void SetCurrentValue(int value)
         {
             value = Mathf.Max(value, 1);
-            _currentValueTMP.text = value.ToString();
+            _currentValueTMP.text = value.ToStr();
 
             float width = SP_WIDTH * value / _maxValue;
             _barSprite.size = new(width, SP_HIGHT);

@@ -40,6 +40,13 @@ namespace Vurbiri.Collections
             _count++;
         }
 
+        public bool TryAdd(TValue item)
+        {
+            bool result = !Contains(item);
+            if (result) Add(item); 
+            return result;
+        }
+
         public void Insert(int index, TValue item)
         {
             Throw.IfIndexOutOfRange(index, _count);

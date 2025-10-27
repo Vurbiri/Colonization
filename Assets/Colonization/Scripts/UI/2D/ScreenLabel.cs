@@ -2,7 +2,6 @@ using System.Collections;
 using TMPro;
 using UnityEngine;
 using Vurbiri.International;
-using Vurbiri.Reactive;
 
 namespace Vurbiri.Colonization.UI
 {
@@ -38,7 +37,7 @@ namespace Vurbiri.Colonization.UI
 
         public IEnumerator StartTurn_Cn(int turn, int id)
         {
-            yield return Label_Cn(string.Format(_startTurnText, turn, GameContainer.UI.PlayerColorNames[id]));
+            yield return Label_Cn(string.Format(_startTurnText, turn.ToStr(), GameContainer.UI.PlayerColorNames[id]));
         }
 
         private IEnumerator Label_Cn(string text)

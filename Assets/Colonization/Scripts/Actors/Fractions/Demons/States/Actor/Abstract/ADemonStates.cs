@@ -13,19 +13,19 @@ namespace Vurbiri.Colonization
 
             protected static bool NearNoWarriors(Hexagon hexagon)
             {
-                foreach (var neighbor in hexagon.Neighbors)
-                    if (neighbor.IsWarrior)
+                var neighbors = hexagon.Neighbors;
+                for (int i = 0; i < neighbors.Count; i++)
+                    if (neighbors[i].IsWarrior)
                         return false;
-
                 return true;
             }
 
             protected static bool NearWarriors(Hexagon hexagon)
             {
-                foreach (var neighbor in hexagon.Neighbors)
-                    if (neighbor.IsWarrior)
+                var neighbors = hexagon.Neighbors;
+                for (int i = 0; i < neighbors.Count; i++)
+                    if (neighbors[i].IsWarrior)
                         return true;
-
                 return false;
             }
         }

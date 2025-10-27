@@ -62,7 +62,7 @@ namespace Vurbiri.Colonization.UI
             int result = 0;
             for (int i = 0; i < CONST.DICES_COUNT; i++)
                 result += _dices[i].Stop();
-            _result.text = CONST.NUMBERS_STR[result];
+            _result.text = result.ToStr();
 
             GameContainer.GameLoop.Roll(result);
 

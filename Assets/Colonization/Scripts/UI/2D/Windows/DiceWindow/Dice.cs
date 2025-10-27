@@ -29,7 +29,7 @@ namespace Vurbiri.Colonization
                 while (_isPlaying)
                 {
                     _current = _roll.Next;
-                    _label.text = CONST.NUMBERS_STR[_current];
+                    _label.text = _current.ToStr();
                     yield return _waitTime.Restart(_time);
                 }
             }

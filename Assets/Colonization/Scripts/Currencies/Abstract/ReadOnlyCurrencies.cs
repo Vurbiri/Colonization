@@ -28,6 +28,31 @@ namespace Vurbiri.Colonization
         sealed public override int this[int index] { [Impl(256)] get => _values[index].Value; }
         sealed public override int this[Id<CurrencyId> id] { [Impl(256)] get => _values[id.Value].Value; }
 
+        #region Min/Max
+        public int MinIndex
+        {
+            get
+            {
+                int minId = 0;
+                for (int i = 1; i < MainCount; i++)
+                    if (_values[i] < _values[minId])
+                        minId = i;
+                return minId;
+            }
+        }
+        public int MaxIndex
+        {
+            get
+            {
+                int maxId = 0;
+                for (int i = 1; i < MainCount; i++)
+                    if (_values[i] > _values[maxId])
+                        maxId = i;
+                return maxId;
+            }
+        }
+        #endregion
+
         #region Constructions
         protected ReadOnlyCurrencies(ACurrencies other, Ability maxMainValue, Ability maxBloodValue)
         {

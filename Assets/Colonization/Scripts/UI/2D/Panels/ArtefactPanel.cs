@@ -87,7 +87,7 @@ namespace Vurbiri.Colonization.UI
         {
             if(profit != 0)
             {
-                tmp.text = CONST.NUMBERS_STR[profit];
+                tmp.text = profit.ToStr();
                 StartCoroutine(ShowProfit_Cn(tmp.canvasRenderer, _timers.Pop()));
             }
         }
@@ -144,7 +144,7 @@ namespace Vurbiri.Colonization.UI
 
             public void SetHintValue(int level, StringBuilder stringBuilder)
             {
-                var strLevel = CONST.NUMBERS_STR[level];
+                var strLevel = level.ToStr();
 
                 _level = level;
                 _levelTMP.text = strLevel;
@@ -196,7 +196,7 @@ namespace Vurbiri.Colonization.UI
             {
                 int newValue = level * _baseValue;
                 
-                _valueTMP.text = CONST.NUMBERS_STR[newValue];
+                _valueTMP.text = newValue.ToStr();
 
                 stringBuilder.AppendFormat(_hintText, newValue);
                 stringBuilder.AppendLine();

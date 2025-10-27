@@ -68,13 +68,13 @@ namespace Vurbiri.Colonization.UI
 
             if (value > 0)
             {
-                _valueTMP.text = $"+{value}";
+                _valueTMP.text = string.Concat("+", value.ToStr());
                 start = _colorPlusStart;
                 end = _colorPlusEnd;
             }
             else
             {
-                _valueTMP.text = value.ToString();
+                _valueTMP.text = value.ToStr();
                 start = _colorMinusStart;
                 end = _colorMinusEnd;
             }

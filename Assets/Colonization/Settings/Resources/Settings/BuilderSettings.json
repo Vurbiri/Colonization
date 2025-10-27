@@ -16,5 +16,5 @@
   "searchDepth": 3,
   "penaltyPerRoad": 10,
   "penaltyPerHex": 1111,
-  "chanceIncomplete": 20
+  "chanceIncomplete": 9
 }

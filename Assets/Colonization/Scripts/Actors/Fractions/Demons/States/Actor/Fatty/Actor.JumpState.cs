@@ -21,9 +21,10 @@ namespace Vurbiri.Colonization
                         _targets.Clear();
                         if(base.CanUse)
                         {
-                            foreach (var hex in CurrentHex.Neighbors)
-                                if (hex.IsWarrior)
-                                    _targets.Add(hex.Owner);
+                            var neighbors = CurrentHex.Neighbors;
+                            for (int i = 0; i < neighbors.Count; i++)
+                                if (neighbors[i].IsWarrior)
+                                    _targets.Add(neighbors[i].Owner);
                         }
 
                         return _canUse = Chance.Rolling(_baseChance * _targets.Count - 1); 

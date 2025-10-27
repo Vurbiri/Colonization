@@ -22,11 +22,12 @@ namespace Vurbiri.Colonization
                     yield return Skin.SpecSpawn();
 
                     Actor target;
-                    foreach (var hex in CurrentHex.Neighbors)
+                    var neighbors = CurrentHex.Neighbors;
+                    for (int i = 0; i < neighbors.Count; i++)
                     {
-                        if (hex.IsWarrior)
+                        if (neighbors[i].IsWarrior)
                         {
-                            target = hex.Owner;
+                            target = neighbors[i].Owner;
                             _effects.Apply(Actor, target);
                             target.Skin.Impact(null);
                         }

@@ -30,25 +30,25 @@ namespace Vurbiri.Colonization
         private Id<PlayerId> _ownerId = PlayerId.None;
 
         private readonly Roster<Crossroad> _crossroads = new(HEX.SIDES);
-        private readonly HashSet<Hexagon> _neighbors = new(HEX.SIDES);
+        private readonly Roster<Hexagon> _neighbors = new(HEX.SIDES);
         #endregion
 
         #region ================== Properties ========================
-        public Key Key => _key;
-        public int Id => _id;
-        public int SurfaceId => _surfaceId;
-        public bool IsGate => _isGate;
-        public bool IsWater => _isWater;
-        public bool IsGround => !_isGate & !_isWater;
-        public Actor Owner => _owner;
-        public bool IsOwned => _ownerId != PlayerId.None;
-        public bool IsWarrior => _ownerId != PlayerId.None && _owner.IsWarrior;
-        public bool CanDemonEnter => !_isWater & _ownerId == PlayerId.None;
-        public bool CanWarriorEnter => !_isGate & !_isWater & _ownerId == PlayerId.None;
-        public Vector3 Position { get; private set; }
-        public ReadOnlyArray<Crossroad> Crossroads => _crossroads;
-        public HashSet<Hexagon> Neighbors => _neighbors;
-        public HexagonCaption Caption => _hexagonCaption;
+        public Key Key { [Impl(256)] get => _key; }
+        public int Id { [Impl(256)] get => _id; }
+        public int SurfaceId { [Impl(256)] get => _surfaceId; }
+        public bool IsGate { [Impl(256)] get => _isGate; }
+        public bool IsWater { [Impl(256)] get => _isWater; }
+        public bool IsGround { [Impl(256)] get => !_isGate & !_isWater; }
+        public Actor Owner { [Impl(256)] get => _owner; }
+        public bool IsOwned { [Impl(256)] get => _ownerId != PlayerId.None; }
+        public bool IsWarrior { [Impl(256)] get => _ownerId != PlayerId.None && _owner.IsWarrior; }
+        public bool CanDemonEnter { [Impl(256)] get => !_isWater & _ownerId == PlayerId.None; }
+        public bool CanWarriorEnter { [Impl(256)] get => !_isGate & !_isWater & _ownerId == PlayerId.None; }
+        public Vector3 Position { [Impl(256)] get; [Impl(256)] private set; }
+        public ReadOnlyArray<Crossroad> Crossroads { [Impl(256)] get => _crossroads; }
+        public ReadOnlyArray<Hexagon> Neighbors { [Impl(256)] get => _neighbors; }
+        public HexagonCaption Caption { [Impl(256)] get => _hexagonCaption; }
         #endregion
 
         #region ================== Setup ============================
@@ -81,7 +81,7 @@ namespace Vurbiri.Colonization
 
         public void AddNeighborAndCreateCrossroadLink(Hexagon neighbor)
         {
-            if (_neighbors.Add(neighbor) & !(_isWater & neighbor._isWater) & !(_isGate | neighbor._isGate))
+            if (_neighbors.TryAdd(neighbor) & !(_isWater & neighbor._isWater) & !(_isGate | neighbor._isGate))
             {
                 List<Crossroad> link = new(2); Crossroad crossroad;
                 for (int i = _crossroads.Count - 1; i >= 0; i--)
@@ -104,6 +104,7 @@ namespace Vurbiri.Colonization
                 }
             }
         }
+
         [Impl(256)] public void CrossroadAdd(Crossroad crossroad) => _crossroads.Add(crossroad);
         [Impl(256)] public void CrossroadRemove(Crossroad crossroad) => _crossroads.Remove(crossroad);
         #endregion

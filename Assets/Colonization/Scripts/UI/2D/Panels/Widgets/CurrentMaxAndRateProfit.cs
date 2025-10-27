@@ -19,9 +19,10 @@ namespace Vurbiri.Colonization.UI
 
         private void SetCurrentMaxRateProfit(int current, int max, int rate)
         {
-            _profitTMP.text = string.Format(RATE, CONST.NUMBERS_STR[++rate]);
-            _valueTMP.text = string.Format(COUNT, CONST.NUMBERS_STR[current], CONST.NUMBERS_STR[max]);
-            _hintText = string.Format(_localizedText, CONST.NUMBERS_STR[current], CONST.NUMBERS_STR[max], CONST.NUMBERS_STR[rate]);
+            ++rate;
+            _profitTMP.text = string.Format(RATE, rate.ToStr());
+            _valueTMP.text = string.Format(COUNT, current.ToStr(), max.ToStr());
+            _hintText = string.Format(_localizedText, current.ToStr(), max.ToStr(), rate.ToStr());
         }
 
 #if UNITY_EDITOR

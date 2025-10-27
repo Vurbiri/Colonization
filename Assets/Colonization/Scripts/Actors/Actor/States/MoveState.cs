@@ -63,9 +63,10 @@ namespace Vurbiri.Colonization
                 private IEnumerator PersonSelectHexagon_Cn()
                 {
                     List<Hexagon> empty = new(HEX.SIDES);
-                    foreach (var hex in CurrentHex.Neighbors)
-                        if (hex.TrySetSelectableFree())
-                            empty.Add(hex);
+                    var neighbors = CurrentHex.Neighbors;
+                    for (int i = 0; i < neighbors.Count; i++)
+                        if (neighbors[i].TrySetSelectableFree())
+                            empty.Add(neighbors[i]);
 
                     if (empty.Count == 0)
                     {

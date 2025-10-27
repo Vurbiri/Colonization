@@ -26,7 +26,7 @@ namespace Vurbiri.Colonization.UI
         private void SetValue(int value)
         {
             value >>= _shift;
-            _valueTMP.text = value.ToString();
+            _valueTMP.text = value.ToStr();
 
             _popup.Run(value - _currentValue, _sprite);
             _currentValue = value;

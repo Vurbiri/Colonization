@@ -116,13 +116,16 @@ namespace Vurbiri.Colonization
 
         public void Testing()
         {
-            for(Id<PlayerId> id = PlayerId.None; id.Next(); )
-                print(id);
+            print(CONST.ToStr(-122));
+            print(CONST.ToStr(64));
+            StringTest(); StringTest();
+            print(CONST.ToStr(CONST.MIN_NUMBERS_STR));
+            print(CONST.ToStr(CONST.MAX_NUMBERS_STR));
         }
 
-        public void BinaryPow()
+        public void StringTest()
         {
-            int count = 10000, q = 0;
+            int count = 100;
             double test1, test2;
             Stopwatch stopWatch = new();
 
@@ -130,53 +133,56 @@ namespace Vurbiri.Colonization
             Thread.Sleep(100);
             stopWatch.Start();
             for (int i = 0; i < count; i++)
-            {
-                q = MathI.BinaryPow(2, 20);
-            }
+                ToString();
             stopWatch.Stop();
             test1 = stopWatch.ElapsedTicks;
 
             stopWatch.Restart();
             for (int i = 0; i < count; i++)
-            {
-                q = MathI.BinaryPow(2, 20);
-            }
+                Cache();
             stopWatch.Stop();
             test2 = stopWatch.ElapsedTicks;
 
             print("-----------------------------------------------");
-            print($"BinaryPow: {test1}");
-            print($"BinaryPow2: {test2}");
+            print($"ToString: {test1}");
+            print($"Cache: {test2}");
             print("-----------------------------------------------");
-            print($"BinaryPow/BinaryPow2:  {test1 / test2}");
+            print($"ToString/Cache:  {test1 / test2}");
             print("===============================================");
 
             print("===============================================");
             Thread.Sleep(100);
             stopWatch.Restart();
             for (int i = 0; i < count; i++)
-            {
-                q = MathI.BinaryPow(-7, 11);
-            }
+                Cache();
             stopWatch.Stop();
             test2 = stopWatch.ElapsedTicks;
-            print($"q: {q}");
 
             stopWatch.Restart();
             for (int i = 0; i < count; i++)
-            {
-                q = MathI.Pow(-7, 11);
-            }
+                ToString();
             stopWatch.Stop();
             test1 = stopWatch.ElapsedTicks;
-            print($"q: {q}");
 
             print("-----------------------------------------------");
-            print($"Pow: {test1}");
-            print($"BinaryPow2: {test2}");
+            print($"ToString: {test1}");
+            print($"Cache: {test2}");
             print("-----------------------------------------------");
-            print($"Pow/BinaryPow2:  {test1 / test2}");
+            print($"ToString/Cache:  {test1 / test2}");
             print("===============================================");
+
+            void ToString()
+            {
+                string test;
+                for(int i = CONST.MIN_NUMBERS_STR; i <= CONST.MAX_NUMBERS_STR; i++)
+                    test = i.ToString();
+            }
+            void Cache()
+            {
+                string test;
+                for (int i = CONST.MIN_NUMBERS_STR; i <= CONST.MAX_NUMBERS_STR; i++)
+                    test = i.ToStr();
+            }
         }
 
         public void MathITesting()

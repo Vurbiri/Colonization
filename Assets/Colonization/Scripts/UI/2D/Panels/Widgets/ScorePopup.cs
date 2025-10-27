@@ -25,10 +25,11 @@ namespace Vurbiri.Colonization.UI
             int score = values[PlayerId.Person];
             if (score != _score)
             {
+                var strValue = _score.ToStr();
                 _popup.ForceRun(score - _score);
                 _score = score;
-                _valueTMP.text = _score.ToString();
-                _hintText = string.Format(_localizedText, score, GameContainer.GameSettings.MaxScore);
+                _valueTMP.text = strValue;
+                _hintText = string.Format(_localizedText, strValue, GameContainer.GameSettings.MaxScore);
             }
         }
 

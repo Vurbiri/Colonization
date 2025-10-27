@@ -33,7 +33,7 @@ namespace Vurbiri.Colonization
             public override IEnumerator Execution_Cn()
             {
                 if(_current == WarriorId.None & !Human.IsMaxWarriors & Colonies.Count > 0)
-                    _current = _recruit.Value;
+                    _current = _recruit.Roll;
 
                 if(_current != WarriorId.None)
                 {

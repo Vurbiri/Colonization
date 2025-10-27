@@ -127,9 +127,10 @@ namespace Vurbiri.Colonization
             //===================================================
             static Key GetNearGroundHexOffset(Hexagon hexagon)
             {
-                foreach (var neighbor in hexagon.Neighbors)
-                    if (neighbor.IsWater)
-                        return hexagon.Key - neighbor.Key;
+                var neighbors = hexagon.Neighbors;
+                for (int i = 0; i < neighbors.Count; i++)
+                     if (neighbors[i].IsWater)
+                        return hexagon.Key - neighbors[i].Key;
 
                 return HEX.NEAR.Rand();
             }
@@ -160,8 +161,9 @@ namespace Vurbiri.Colonization
 
         public bool IsInCombat()
         {
-            foreach (var hex in _currentHex.Neighbors)
-                if (hex.IsEnemy(_owner))
+            var neighbors = _currentHex.Neighbors;
+            for (int i = 0; i < neighbors.Count; i++)
+                if (neighbors[i].IsEnemy(_owner))
                     return true;
             return false;
         }
@@ -247,7 +249,7 @@ namespace Vurbiri.Colonization
         {
             bool isSet = GameContainer.Diplomacy.IsCanActorsInteraction(initiator, _owner, relation, out _) && _states.ToTarget();
             if(isSet)
-                GameContainer.Diplomacy.ActorsInteraction(_owner, initiator, relation);
+                GameContainer.Diplomacy.ActorsInteraction(_owner, initiator, relation, IsInCombat());
             return isSet;
         }
         public void FromTargetState()

@@ -40,10 +40,10 @@ namespace Vurbiri.Colonization.UI
 
         private void SetValues(Satan satan)
         {
-            _hintText = string.Format(_localizedText, satan.Curse, satan.MaxCurse, satan.Level, satan.MaxLevel);
+            _hintText = string.Format(_localizedText, satan.Curse.ToStr(), satan.MaxCurse.ToStr(), satan.Level.ToStr(), satan.MaxLevel.ToStr());
 
             _bar.fillAmount = satan.CursePercent;
-            _levelTMP.text = CONST.NUMBERS_STR[satan.Level];
+            _levelTMP.text = satan.Level.ToStr();
         }
 
         private void OnDestroy()

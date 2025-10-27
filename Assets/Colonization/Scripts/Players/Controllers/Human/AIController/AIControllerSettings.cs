@@ -1,3 +1,5 @@
+using UnityEngine;
+
 namespace Vurbiri.Colonization
 {
 	[System.Serializable]
@@ -5,10 +7,13 @@ namespace Vurbiri.Colonization
 	{
         public WaitRealtime waitPlayStart;
         public WaitRealtime waitPlay;
-        [UnityEngine.Space]
+        [Space]
         public Id<PlayerId> militarist;
-        [UnityEngine.Space]
+        [Space]
         public int percentBloodOffset;
         public int minExchangeBlood;
+        [Header("Cheat")]
+        public int minPercentRes;
+        public int addRes;
     }
 }

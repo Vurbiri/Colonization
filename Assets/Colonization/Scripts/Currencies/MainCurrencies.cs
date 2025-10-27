@@ -83,7 +83,7 @@ namespace Vurbiri.Colonization
                 {
                     resource = _values[i];
                     if (resource != 0)
-                        sb.AppendFormat(TAG.COLOR_CURRENCY, CONST.NUMBERS_STR[i], resource.ToString("+#;-#;0"), resource > 0 ? hexPlusColor : hexMinusColor);
+                        sb.AppendFormat(TAG.COLOR_CURRENCY, i.ToStr(), resource.ToString("+#;-#;0"), resource > 0 ? hexPlusColor : hexMinusColor);
                 }
                 sb.Append(TAG.COLOR_OFF);
             }
@@ -101,7 +101,7 @@ namespace Vurbiri.Colonization
                 {
                     resource = _values[i];
                     if (resource > 0)
-                        sb.AppendFormat(TAG.CURRENCY, CONST.NUMBERS_STR[i], CONST.NUMBERS_STR[resource]);
+                        sb.AppendFormat(TAG.CURRENCY, i.ToStr(), resource.ToStr());
                 }
             }
         }

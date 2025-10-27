@@ -3,5 +3,7 @@
   "waitPlay": 4.0,
   "militarist": 1,
   "percentBloodOffset": 10,
-  "minExchangeBlood": 3
+  "minExchangeBlood": 3,
+  "minPercentRes": 50,
+  "addRes": 2
 }

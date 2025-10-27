@@ -66,7 +66,7 @@ namespace Vurbiri.Colonization.UI
         {
             _gift[id] = value;
 
-            _playerAmount.text = CONST.NUMBERS_STR[_gift.Amount];
+            _playerAmount.text = _gift.Amount.ToStr();
             _resetButton.Unlock = _applyButton.Unlock = _gift.Amount > 0;
         }
 
@@ -93,7 +93,7 @@ namespace Vurbiri.Colonization.UI
             }
             _gift.ResetAmount();
 
-            _playerAmount.text = CONST.NUMBERS_STR[0];
+            _playerAmount.text = 0.ToStr();
             _resetButton.Lock = _applyButton.Lock = true;
         }
 

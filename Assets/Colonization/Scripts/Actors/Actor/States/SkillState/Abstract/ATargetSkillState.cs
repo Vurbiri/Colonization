@@ -103,9 +103,10 @@ namespace Vurbiri.Colonization
                 private IEnumerator PersonSelectActor_Cn()
                 {
                     List<Hexagon> targets = new(HEX.SIDES);
-                    foreach (var hex in CurrentHex.Neighbors)
-                        if (hex.TrySetOwnerSelectable(Owner, _relationTarget))
-                            targets.Add(hex);
+                    var neighbors = CurrentHex.Neighbors;
+                    for (int i = 0; i < neighbors.Count; i++)
+                        if (neighbors[i].TrySetOwnerSelectable(Owner, _relationTarget))
+                            targets.Add(neighbors[i]);
 
                     if (targets.Count == 0)
                         yield break;

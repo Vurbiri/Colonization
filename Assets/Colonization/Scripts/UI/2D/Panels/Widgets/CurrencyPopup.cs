@@ -18,7 +18,7 @@ namespace Vurbiri.Colonization.UI
             _subscription += currency.SubscribeDelta(_popup.Run);
         }
 
-        private void SetValue(int value) => _valueTMP.text = CONST.NUMBERS_STR[value];
+        private void SetValue(int value) => _valueTMP.text = value.ToStr();
 
         protected override void SetLocalizationText(Localization localization)
         {

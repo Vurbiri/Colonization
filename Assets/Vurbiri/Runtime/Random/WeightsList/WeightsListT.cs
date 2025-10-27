@@ -11,7 +11,7 @@ namespace Vurbiri
 
         public int Count { [Impl(256)] get => _count - 1; }
 
-        public T Value { [Impl(256)] get => _weights[GetIndex()].value; }
+        public T Roll { [Impl(256)] get => _weights[GetIndex()].value; }
 
         [Impl(256)] public WeightsList(T zero) : this(zero, BASE_CAPACITY) { }
         public WeightsList(T zero, int capacity)

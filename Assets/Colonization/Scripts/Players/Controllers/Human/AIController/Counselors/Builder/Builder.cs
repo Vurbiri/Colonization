@@ -59,7 +59,7 @@ namespace Vurbiri.Colonization
 
                 yield return LandBuild.Create_Cn(this, plans);
 
-                _currentPlan = plans.Value;
+                _currentPlan = plans.Roll;
 
                 yield break;
 

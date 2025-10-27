@@ -50,9 +50,11 @@ namespace Vurbiri.Colonization
 
             IEnumerator OnPlay_Cn()
             {
+                if (_resources.PercentAmount < s_settings.minPercentRes)
+                    _resources.AddToMin(s_settings.addRes);
+
                 yield return s_settings.waitPlayStart.Restart();
                 yield return s_waitAll.Add(s_settings.waitPlay.Restart(), _counselors.Execution_Wait());
-                //yield return _counselors.Execution_Cn();
 
                 _interactable.False();
                 Log.Info("===================================================");
@@ -87,7 +89,7 @@ namespace Vurbiri.Colonization
                 {
                     int need = needed[exchangeIndex], current = _resources[exchangeIndex], delta = need - current;
                     int exchange = _exchange[exchangeIndex], exchangeValue = delta * exchange;
-                    if (((_resources.Amount - current) - (needed.Amount - need)) >= exchangeValue && Chance.Rolling((int)(6.251f * (20 - exchange * exchange))))
+                    if (((_resources.Amount - current) - (needed.Amount - need)) > exchangeValue && Chance.Rolling((int)(6.251f * (20 - exchange * exchange))))
                     {
                         MainCurrencies pay = new(), diff = _resources - needed;
                         pay.Remove(exchangeIndex, delta);

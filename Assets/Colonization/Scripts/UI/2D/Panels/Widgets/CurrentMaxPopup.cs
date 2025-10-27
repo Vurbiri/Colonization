@@ -22,7 +22,7 @@ namespace Vurbiri.Colonization.UI
         {
             _localizedText = localization.GetText(_getText.id, _getText.key);
             if(_reactiveCurrentMax != null)
-                _hintText = string.Format(_localizedText, CONST.NUMBERS_STR[_reactiveCurrentMax.ValueA], CONST.NUMBERS_STR[_reactiveCurrentMax.ValueB]);
+                _hintText = string.Format(_localizedText, _reactiveCurrentMax.ValueA.ToStr(), _reactiveCurrentMax.ValueB.ToStr());
         }
 
 

@@ -70,13 +70,13 @@ namespace Vurbiri.Colonization.UI
             if (relation > 0)
             {
                 sb.Append(GameContainer.UI.Colors.TextPositiveTag);
-                sb.Append(relation); sb.Append(SEPARATOR); sb.Append(_max);
+                sb.Append(relation.ToStr()); sb.Append(SEPARATOR); sb.Append(_max.ToStr());
                 _diplomacy.sprite = _friend;
             }
             else
             {
                 sb.Append(GameContainer.UI.Colors.TextNegativeTag);
-                sb.Append(relation - 1); sb.Append(SEPARATOR); sb.Append(_min);
+                sb.Append((relation - 1).ToStr()); sb.Append(SEPARATOR); sb.Append(_min.ToStr());
                 _diplomacy.sprite = _enemy;
             }
             
