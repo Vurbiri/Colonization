@@ -15,7 +15,7 @@ namespace Vurbiri.Colonization
 
         private void Awake()
 		{
-            _thisTransform = transform;
+            _thisTransform = GetComponent<Transform>();
             _particleSystem = GetComponent<ParticleSystem>();
             _audioSource = GetComponent<AudioSource>();
             _whatTime = new(Mathf.Max(_particleSystem.main.duration, _removeClip.length));

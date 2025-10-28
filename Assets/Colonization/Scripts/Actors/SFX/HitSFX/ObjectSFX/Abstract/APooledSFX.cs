@@ -16,7 +16,7 @@ namespace Vurbiri.Colonization
         {
             a_deactivate = deactivate;
 
-            _transform  = creator.transform;
+            _transform  = creator.GetComponent<Transform>();
             _gameObject = creator.gameObject;
 
             Disable();

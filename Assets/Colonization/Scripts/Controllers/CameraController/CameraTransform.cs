@@ -35,7 +35,7 @@ namespace Vurbiri.Colonization.Controllers
         {
             _camera = camera;
 
-            _cameraTransform = camera.transform;
+            _cameraTransform = camera.GetComponent<Transform>();
             _parentTransform = _cameraTransform.parent;
 
             _cameraTransform.LookAt(_parentTransform);

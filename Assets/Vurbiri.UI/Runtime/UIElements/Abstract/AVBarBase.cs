@@ -158,7 +158,7 @@ namespace Vurbiri.UI
         #region Calls ..
         private void Awake()
         {
-            _thisRectTransform = (RectTransform)transform;
+            _thisRectTransform = GetComponent<RectTransform>();
             UpdateFillRectReferences();
             UpdateDirection(_direction, false);
         }

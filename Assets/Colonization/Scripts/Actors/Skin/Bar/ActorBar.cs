@@ -19,7 +19,6 @@ namespace Vurbiri.Colonization.UI
         private int _selfOrderLevel;
         private Actor _actor;
         private Transform _thisTransform, _actorTransform;
-        private GameObject _thisGameObject;
         private Vector3 _cameraForward;
         private bool _isActive;
         private SpriteRenderer _renderer;
@@ -28,16 +27,15 @@ namespace Vurbiri.Colonization.UI
         private void Awake()
         {
             _actor = GetComponentInParent<Actor>();
-            _actorTransform = _actor.transform;
-            _thisTransform = transform;
-            _thisGameObject = gameObject;
+            _actorTransform = _actor.Transform;
+            _thisTransform = GetComponent<Transform>();
 
             _settings.Init(this, _actor);
 
             _actor.Skin.EventStart += OnStart;
 
             _settings = null;
-            _thisGameObject.SetActive(_isActive = false);
+            gameObject.SetActive(_isActive = false);
         }
 
         private void Update()
@@ -50,7 +48,7 @@ namespace Vurbiri.Colonization.UI
         {
             bool isActive = transform.position.y < CameraController.heightShow;
             if (_isActive != isActive)
-                _thisGameObject.SetActive(_isActive = isActive);
+                gameObject.SetActive(_isActive = isActive);
 
             _cameraForward = transform.forward;
         }
@@ -63,7 +61,7 @@ namespace Vurbiri.Colonization.UI
         private void OnRemoveActor(Actor actor, TypeEvent type)
         {
             if (type == TypeEvent.Remove)
-                Destroy(_thisGameObject);
+                Destroy(gameObject);
         }
 
         private void OnDestroy()
@@ -79,9 +77,6 @@ namespace Vurbiri.Colonization.UI
 
         private void OnStart()
         {
-            //_isActive = GameContainer.CameraTransform.CameraPosition.y < CameraController.heightShow;
-            //_thisGameObject.SetActive(_isActive);
-
             _subscription += GameContainer.CameraTransform.Subscribe(OnChangeCamera);
             _subscription += _actor.Subscribe(OnRemoveActor, false);
             _subscription += _actor.Effects.Subscribe(OnAddEffect);

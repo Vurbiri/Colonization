@@ -53,13 +53,15 @@ namespace Vurbiri.Colonization
 
                 public override void Unselect(ISelectable newSelectable)
                 {
-                    if (_waitHexagon == null)
-                        return;
-
-                    _targetHex = newSelectable as Hexagon;
-                    _waitHexagon.Send();
+                    if (_waitHexagon != null)
+                    {
+                        _targetHex = newSelectable as Hexagon;
+                        _waitHexagon.Send();
+                    }
                 }
-                
+
+                sealed public override void Cancel() => Unselect(null);
+
                 private IEnumerator PersonSelectHexagon_Cn()
                 {
                     List<Hexagon> empty = new(HEX.SIDES);

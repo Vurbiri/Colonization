@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using static Vurbiri.Colonization.GameContainer;
+using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization.UI
 {
@@ -18,7 +19,8 @@ namespace Vurbiri.Colonization.UI
         [Space]
         [SerializeField] private ButtonCancel _buttonCancel;
 
-        private bool _enable, _lookAtEnabled;
+        private bool _lookAtEnabled;
+        private Enable _enable;
         private IMenu _currentOpenMenu;
 
         public void Init()
@@ -55,7 +57,7 @@ namespace Vurbiri.Colonization.UI
 
         private void OnSelectCrossroad(Crossroad crossroad)
         {
-            if (_enable & !SpellBook.IsCasting & crossroad.Interactable & _currentOpenMenu == null)
+            if (_enable & crossroad.Interactable & _currentOpenMenu == null)
             {
                 CameraTransform.TransformToLocalPosition(_menusTransform, _canvasTransform, crossroad.Position);
                 _crossroadMenu.Open(crossroad);
@@ -64,7 +66,7 @@ namespace Vurbiri.Colonization.UI
         }
         private void OnInitCrossroad(Crossroad crossroad)
         {
-            if (_enable & !SpellBook.IsCasting & crossroad.Interactable & _currentOpenMenu == null)
+            if (_enable & crossroad.Interactable & _currentOpenMenu == null)
             {
                 CameraTransform.TransformToLocalPosition(_menusTransform, _canvasTransform, crossroad.Position);
                 _initMenu.Open(crossroad);
@@ -74,7 +76,7 @@ namespace Vurbiri.Colonization.UI
 
         private void OnSelectWarrior(Actor actor)
         {
-            if (_enable & !SpellBook.IsCasting & actor.CanUseSkills & _currentOpenMenu == null)
+            if (_enable & actor.CanUseSkills & _currentOpenMenu == null)
             {
                 CameraTransform.TransformToLocalPosition(_menusTransform, _canvasTransform, actor.Position);
                 _warriorsMenu.Open(actor);
@@ -89,21 +91,21 @@ namespace Vurbiri.Colonization.UI
         }
         private void OnEndTurn(TurnQueue turnQueue, int dice)
         {
-            _enable = false;
+            _enable.value = false;
             OnClose(false);
         }
         private void OnGamePlay(TurnQueue turnQueue, int dice)
         {
-            _enable = turnQueue.IsPerson;
+            _enable.value = turnQueue.IsPerson;
         }
         private void OnInit(TurnQueue turnQueue, int dice)
         {
-            _enable = turnQueue.IsPerson;
+            _enable.value = turnQueue.IsPerson;
         }
 
         private void OnEndInit(TurnQueue turnQueue, int dice)
         {
-            _enable = false;
+            _enable.value = false;
 
             GameContainer.GameEvents.Unsubscribe(GameModeId.Landing, OnInit);
             GameContainer.GameEvents.Unsubscribe(GameModeId.EndLanding, OnEndInit);
@@ -134,6 +136,14 @@ namespace Vurbiri.Colonization.UI
             }
         }
 
+        // ********* Nested ********
+        private struct Enable
+        {
+            public bool value;
+
+            [Impl(256)] public static implicit operator bool(Enable self) => self.value & !SpellBook.IsCasting;
+        }
+
 #if UNITY_EDITOR
         [StartEditor]
         [SerializeField, Range(3f, 8f)] private float _buttonDistance = 5f;
@@ -162,8 +172,6 @@ namespace Vurbiri.Colonization.UI
             _crossroadMenu.SetButtonPosition(_buttonDistance);
             _recruitingMenu.SetButtonPosition(_buttonDistance);
             _warriorsMenu.SetButtonPosition(_buttonDistance);
-
-            _buttonCancel.transform.localScale = Vector3.zero;
         }
 #endif
     }

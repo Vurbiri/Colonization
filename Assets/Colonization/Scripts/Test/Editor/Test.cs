@@ -37,7 +37,7 @@ namespace Vurbiri.Colonization
                 "BayShrine",
                 "AddBlood",
             });
-            _dropdown.value = 6;
+            _dropdown.value = 0;
         }
 
         public void RunTest()

@@ -246,7 +246,7 @@ namespace Vurbiri.Colonization.UI
             for (int i = 0; i < settings.Count; i++)
                 _abilities[i].Init_Editor(settings[i], this, colors);
 
-            RectTransform thisRectTransform = (RectTransform)transform;
+            var thisRectTransform = GetComponent<RectTransform>();
             thisRectTransform.sizeDelta = new(side, side);
 
             return thisRectTransform;

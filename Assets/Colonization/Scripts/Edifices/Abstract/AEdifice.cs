@@ -21,8 +21,8 @@ namespace Vurbiri.Colonization
 
         public virtual WaitSignal Init(Id<PlayerId> playerId, bool isWall, IReadOnlyList<CrossroadLink> links, AEdifice oldEdifice, bool isSFX)
         {
-            _graphicTransform = _graphic.transform;
-            Transform thisTransform = transform, oldTransform = oldEdifice.transform;
+            _graphicTransform = _graphic.GetComponent<Transform>();
+            Transform thisTransform = GetComponent<Transform>(), oldTransform = oldEdifice.GetComponent<Transform>();
 
             _key = oldEdifice._key;
             thisTransform.SetParent(oldTransform.parent);

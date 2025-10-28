@@ -130,7 +130,7 @@ namespace Vurbiri.UI
 #if UNITY_EDITOR
             if (!Application.isPlaying) return;
 #endif
-            _thisRectTransform = (RectTransform)transform;
+            _thisRectTransform = GetComponent<RectTransform>();
 
             for (int i = _targetGraphics.Count - 1; i >= 0; i--)
                 if (!_targetGraphics[i].Validate()) 

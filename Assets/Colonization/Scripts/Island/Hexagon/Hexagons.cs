@@ -30,7 +30,7 @@ namespace Vurbiri.Colonization
             GameContainer.GameEvents.Subscribe(GameModeId.EndTurn, OnEndTurn);
             GameContainer.GameEvents.Subscribe(GameModeId.Roll, OnRoll);
 
-            Hexagon.Init(poolMarks);
+            HexagonView.Init(poolMarks);
         }
 
         public Hexagon Add(Key key, int id, Hexagon hex)

@@ -2,34 +2,26 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Vurbiri.Collections;
-using Vurbiri.Colonization.UI;
-using Vurbiri.EntryPoint;
 using Vurbiri.Reactive;
 using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization
 {
-    public partial class Hexagon : MonoBehaviour, ISelectable, IPositionable, IReactive<int>
+    public partial class Hexagon : ISelectable, IPositionable, IReactive<int>
     {
-        [SerializeField] private HexagonCaption _hexagonCaption;
-        [SerializeField] private Collider _thisCollider;
-
         #region ================== Fields ============================
-        private static Pool<HexagonMark> s_poolMarks;
-
-        private Key _key;
         private int _id;
-        private int _surfaceId;
-        private Transform _thisTransform;
-        private HexagonMark _mark;
-        private IProfit _profit;
-        private bool _isGate, _isWater;
+        private readonly Key _key;
+        private readonly int _surfaceId;
+        private readonly HexagonView _view;
+        private readonly IProfit _profit;
+        private readonly bool _isGate, _isWater;
         private readonly VAction<int> _changeID = new();
 
         private Actor _owner = null;
         private Id<PlayerId> _ownerId = PlayerId.None;
 
-        private readonly Roster<Crossroad> _crossroads = new(HEX.SIDES);
+        private readonly Roster<Crossroad> _crossroads = new(HEX.VERTICES);
         private readonly Roster<Hexagon> _neighbors = new(HEX.SIDES);
         #endregion
 
@@ -48,38 +40,23 @@ namespace Vurbiri.Colonization
         public Vector3 Position { [Impl(256)] get; [Impl(256)] private set; }
         public ReadOnlyArray<Crossroad> Crossroads { [Impl(256)] get => _crossroads; }
         public ReadOnlyArray<Hexagon> Neighbors { [Impl(256)] get => _neighbors; }
-        public HexagonCaption Caption { [Impl(256)] get => _hexagonCaption; }
+        public HexagonCaption Caption { [Impl(256)] get => _view.Caption; }
         #endregion
 
         #region ================== Setup ============================
-        public void Setup(Key key, int id, SurfaceType surface)
+        public Hexagon(Key key, int id, SurfaceType surface, HexagonView view)
         {
-            _thisTransform = transform; Position = _thisTransform.localPosition;
+            _view = view;
             _key = key;
             _id = id;
 
-            _surfaceId = surface.Id.Value;
+            Position = view.Init(key, id, surface);
+
+            _surfaceId = surface.Id;
             _profit = surface.Profit;
 
             _isGate = surface.IsGate;
             _isWater = surface.IsWater;
-
-            surface.Create(_thisTransform);
-
-            if (_isWater)
-            {
-                Destroy(_thisCollider); _thisCollider = null;
-            }
-            else
-            {
-                _thisCollider.enabled = false;
-            }
-        }
-
-        public static void Init(Pool<HexagonMark> poolMarks)
-        {
-            s_poolMarks = poolMarks;
-            Transition.OnExit.Add(() => s_poolMarks = null);
         }
 
         public void AddNeighborAndCreateCrossroadLink(Hexagon neighbor)
@@ -116,25 +93,19 @@ namespace Vurbiri.Colonization
         public void Select(MouseButton button) => GameContainer.TriggerBus.TriggerHexagonSelect(this);
         public void Unselect(ISelectable newSelectable) { }
         [Impl(256)] public bool Equals(ISelectable other) => System.Object.ReferenceEquals(this, other);
-
+        #endregion
         #region ================== Set(Un)Selectable ============================
         [Impl(256)] public bool TrySetSelectableFree()
         {
             bool result = !_isGate & !_isWater & _ownerId == PlayerId.None;
             if (result)
-            {
-                _mark = s_poolMarks.Get(_thisTransform, false).View(true);
-                _thisCollider.enabled = true;
-            }
+                _view.SetSelectable(true);
             return result;
         }
         [Impl(256)] public void SetUnselectable()
         {
-            if (_mark != null & !_isWater)
-            {
-                s_poolMarks.Return(_mark); _mark = null;
-                _thisCollider.enabled = false;
-            }
+            if (!_isWater)
+                _view.SetUnselectable();
         }
 
         [Impl(256)] public bool TrySetOwnerSelectable(Id<PlayerId> id, Relation typeAction)
@@ -142,55 +113,37 @@ namespace Vurbiri.Colonization
             bool isFriendly = false, result = (!_isWater & _ownerId != PlayerId.None) && _owner.IsCanApplySkill(id, typeAction, out isFriendly);
             if (result)
             {
-                _mark = s_poolMarks.Get(_thisTransform, false).View(isFriendly);
+                ShowMark(isFriendly);
                 _owner.SetLeftSelectable();
             }
             return result;
         }
         [Impl(256)] public void SetOwnerUnselectable()
         {
-            if (_mark != null & !_isWater & _ownerId != PlayerId.None)
+            if (!_isWater & _ownerId != PlayerId.None)
             {
-                s_poolMarks.Return(_mark); _mark = null;
+                HideMark();
                 _owner.ResetLeftSelectable();
             }
         }
 
-        [Impl(256)] public void SetSelectableForSwap()
-        {
-            _mark = s_poolMarks.Get(_thisTransform, false).View(true);
-            _thisCollider.enabled = true;
-            _hexagonCaption.SetActive(true);
-        }
-        [Impl(256)] public void SetSelectedForSwap(Color color)
-        {
-            _mark.View(false);
-            _thisCollider.enabled = false;
-            _hexagonCaption.SetColor(color);
-        }
-        
-        [Impl(256)] public void SetUnselectableForSwap()
-        {
-            s_poolMarks.Return(_mark);
-            _thisCollider.enabled = false;
-            _hexagonCaption.SetActive(false);
-            _mark = null;
-        }
-        #endregion
+        [Impl(256)] public void SetSelectableForSwap() => _view.SetSelectableForSwap();
+        [Impl(256)] public void SetSelectedForSwap(Color color) => _view.SetSelectedForSwap(color);
+        [Impl(256)] public void SetUnselectableForSwap() => _view.SetUnselectableForSwap();
         #endregion
 
         [Impl(256)] public Subscription Subscribe(Action<int> action, bool instantGetValue = true) => _changeID.Add(action, instantGetValue, _id);
 
         #region ================== Caption ============================
-        [Impl(256)] public void CaptionEnable(bool isWater, bool isGate) => _hexagonCaption.SetActive(!(isWater ^ _isWater | isGate));
-        [Impl(256)] public void CaptionDisable() => _hexagonCaption.SetActive(false);
+        [Impl(256)] public void CaptionEnable(bool isWater, bool isGate) => _view.SetCaptionActive(!(isWater ^ _isWater | isGate));
+        [Impl(256)] public void CaptionDisable() => _view.SetCaptionActive(false);
 
-        [Impl(256)] public void ResetCaptionColor() => _hexagonCaption.ResetColor();
+        [Impl(256)] public void ResetCaptionColor() => Caption.ResetColor();
 
         [Impl(256)] public void NewId(int id, Color color, float showTime)
         {
             _id = id;
-            _hexagonCaption.NewId(id, color, showTime);
+            Caption.NewId(id, color, showTime);
             _changeID.Invoke(id);
         }
         #endregion
@@ -202,7 +155,7 @@ namespace Vurbiri.Colonization
 
             if (!_isWater)
             {
-                _hexagonCaption.Profit();
+                Caption.Profit();
 
                 if (!_isGate)
                 {
@@ -216,10 +169,10 @@ namespace Vurbiri.Colonization
                 return false;
             }
 
-            _hexagonCaption.Profit(_profit.Value);
+            Caption.Profit(_profit.Value);
             return false;
         }
-        [Impl(256)] public void ResetProfit() => _hexagonCaption.ResetProfit();
+        [Impl(256)] public void ResetProfit() => Caption.ResetProfit();
 
         [Impl(256)] public int GetProfit() => _profit.Value;
         [Impl(256)] public bool TryGetProfit(int hexId, bool isPort, out int currencyId)
@@ -268,25 +221,8 @@ namespace Vurbiri.Colonization
         #endregion
 
         #region ================== Mark ============================
-        [Impl(256)] public void ShowMark(bool isGreenMark) => _mark ??= s_poolMarks.Get(_thisTransform, false).View(isGreenMark);
-        [Impl(256)] public void HideMark()
-        {
-            if (_mark != null)
-            {
-                s_poolMarks.Return(_mark); 
-                _mark = null;
-            }
-        }
+        [Impl(256)] public void ShowMark(bool isGreenMark) => _view.ShowMark(isGreenMark);
+        [Impl(256)] public void HideMark() => _view.HideMark();
         #endregion
-
-        
-
-#if UNITY_EDITOR
-        private void OnValidate()
-        {
-            this.SetChildren(ref _hexagonCaption);
-            this.SetComponent(ref _thisCollider);
-        }
-#endif
     }
 }

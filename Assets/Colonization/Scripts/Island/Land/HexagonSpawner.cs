@@ -7,7 +7,7 @@ namespace Vurbiri.Colonization
     [System.Serializable]
     public class HexagonSpawner : System.IDisposable
     {
-        [SerializeField] private Hexagon _prefabHex;
+        [SerializeField] private HexagonView _prefabHex;
         [SerializeField] private SurfacesScriptable _surfaces;
         [Space]
         [SerializeField] private LandMesh _landMesh;
@@ -16,7 +16,7 @@ namespace Vurbiri.Colonization
 
         public HexagonSpawner Init()
         {
-            _landContainer = _landMesh.transform;
+            _landContainer = _landMesh.GetComponent<Transform>();
             _landMesh.Init();
             _surfaces.Init();
 
@@ -25,13 +25,7 @@ namespace Vurbiri.Colonization
 
         public Hexagon Spawn(Key key, int id, int surfaceId, Vector3 position)
         {
-            SurfaceType surface = _surfaces[surfaceId];
-            Hexagon hex = Object.Instantiate(_prefabHex, position, Quaternion.identity, _landContainer);
-            hex.Setup(key, id, surface);
-            hex.Caption.Init(id, surface.Currencies);
-#if UNITY_EDITOR
-            hex.Caption.SetKey_Ed(key);
-#endif
+            Hexagon hex = new(key, id, _surfaces[surfaceId], Object.Instantiate(_prefabHex, position, Quaternion.identity, _landContainer));
 
             _landMesh.AddHexagon(key, position, surfaceId);
 

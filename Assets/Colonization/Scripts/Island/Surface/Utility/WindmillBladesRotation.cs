@@ -11,7 +11,7 @@ namespace Vurbiri.Colonization
         
         private void Awake()
         {
-            _thisTransform = transform;
+            _thisTransform = GetComponent<Transform>();
             _rotation = Quaternion.Euler(0f, 0f, _speed * Time.fixedDeltaTime);
         }
 

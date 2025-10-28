@@ -20,7 +20,7 @@ namespace Vurbiri.Colonization.UI
         public HPBar(SpriteRenderer barSprite, TextMeshPro maxValue, TextMeshPro currentValue, PopupWidget3D popup, Sprite sprite, ReadOnlyAbilities<ActorAbilityId> abilities)
         {
             _barSprite = barSprite;
-            _barTransform = barSprite.transform;
+            _barTransform = barSprite.GetComponent<Transform>();
 
             _maxValueTMP = maxValue;
             _currentValueTMP = currentValue;

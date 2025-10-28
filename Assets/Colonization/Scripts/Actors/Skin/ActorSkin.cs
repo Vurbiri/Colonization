@@ -23,7 +23,6 @@ namespace Vurbiri.Colonization
 
         private readonly VAction _start = new();
 
-        protected Transform _thisTransform;
         protected ActorSFX _sfx;
 
         protected readonly StateMachine _stateMachine = new();
@@ -51,7 +50,6 @@ namespace Vurbiri.Colonization
 
         [Impl(256)] protected void InitInternal(ReadOnlyArray<AnimationTime> timings, ActorSFX sfx)
         {
-            _thisTransform = transform;
             _sfx = sfx;
 
             _stateMachine.AssignDefaultState(new BoolSwitchState(s_idIdle, this));
@@ -93,7 +91,7 @@ namespace Vurbiri.Colonization
         [Impl(256)] public float GetFirsHitTime(int skillId) => _skillStates[skillId].FirsHitTime;
 
         [Impl(256)] public void Play(AudioClip clip) => _sfx.Play(clip);
-        [Impl(256)] public Vector3 GetPosition(float heightRate) => _thisTransform.position.OffsetY(_bounds.extents.y * heightRate);
+        [Impl(256)] public Vector3 GetPosition(float heightRate) => _sfx.Position.OffsetY(_bounds.extents.y * heightRate);
 
         [Impl(256)] public float SetupCollider(BoxCollider collider)
         {

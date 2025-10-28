@@ -1,26 +1,29 @@
 using System.Collections;
-using System.Runtime.CompilerServices;
 using System.Text;
 using TMPro;
 using UnityEngine;
 using Vurbiri.Colonization.Controllers;
+using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
-namespace Vurbiri.Colonization.UI
+namespace Vurbiri.Colonization
 {
-    public class HexagonCaption : MonoBehaviour
+    [System.Serializable]
+    public class HexagonCaption
     {
         private const float ANGLE_X = 90f;
 
+        [SerializeField] private Transform _thisTransform;
+        [SerializeField] private GameObject _thisGameObject;
+        [Space]
         [SerializeField] private TextMeshPro _currencyText;
         [SerializeField] private TextMeshPro _idText;
         [Space]
-        [SerializeField, MinMax(1f, 30f)] private WaitRealtime _timeShowProfit = 25f;
-        [SerializeField, MinMax(1f, 30f)] private WaitRealtime _timeShowNewId = 10f;
-        [SerializeField, Range(0.1f, 20f)] private float _fadeSpeed = 8f;
+        [SerializeField, MinMax(1f, 30f)] private WaitRealtime _timeShowProfit; // = 20f;
+        [SerializeField, MinMax(1f, 30f)] private WaitRealtime _timeShowNewId; // = 10f;
+        [SerializeField, Range(0.1f, 20f)] private float _fadeSpeed; //= 8f;
 
+        private MonoBehaviour _mono;
         private Visible _visible = new(true);
-        private GameObject _thisGameObject;
-        private Transform _thisTransform;
         private Color _profitColor, _prevColor;
         private float _lastAngle;
         private string _defaultCurrencyText;
@@ -28,13 +31,11 @@ namespace Vurbiri.Colonization.UI
         private Coroutine _fadeCoroutine, _profitCoroutine, _newIdCoroutine;
         private Subscription _subscription;
 
-        public void Init(int id, IdFlags<CurrencyId> flags)
+        public void Init(int id, IdFlags<CurrencyId> flags, MonoBehaviour mono)
         {
-            _thisGameObject = gameObject;
-            _thisTransform = transform;
-
             _currencyTextRenderer = _currencyText.GetComponent<Renderer>();
             _idTextRenderer = _idText.GetComponent<Renderer>();
+            _mono = mono;
 
             _prevColor = GameContainer.UI.Colors.TextDefault;
             _profitColor =  GameContainer.UI.Colors.GetTextColor(id != HEX.GATE);
@@ -81,14 +82,12 @@ namespace Vurbiri.Colonization.UI
             #endregion
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void SetColor(Color value)
+        [Impl(256)] public void SetColor(Color value)
         {
             _prevColor = _idText.color;
             _idText.color = value;
         }
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void ResetColor() => _idText.color = _prevColor;
+        [Impl(256)] public void ResetColor() => _idText.color = _prevColor;
 
         public void Profit()
         {
@@ -113,14 +112,12 @@ namespace Vurbiri.Colonization.UI
             #endregion
 
         }
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void Profit(int currency)
+        [Impl(256)] public void Profit(int currency)
         {
             _currencyText.text = string.Format(TAG.SPRITE, currency.ToStr());
             Profit();
         }
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void ResetProfit()
+        [Impl(256)] public void ResetProfit()
         {
             _visible.profit = false;
             _currencyText.text = _defaultCurrencyText;
@@ -128,20 +125,18 @@ namespace Vurbiri.Colonization.UI
             SetActive();
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void SetActive(bool isActive)
+        [Impl(256)] public void SetActive(bool isActive)
         {
             _visible.mode = isActive;
             SetActive();
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private void SetActive()
+        [Impl(256)] private void SetActive()
         {
             if (_visible) Show(); else Hide();
         }
 
-        private void OnCaptionEnable(bool value)
+        [Impl(256)] private void OnCaptionEnable(bool value)
         {
             _visible.enable = value;
             SetActive();
@@ -205,20 +200,18 @@ namespace Vurbiri.Colonization.UI
             #endregion
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private void StartCoroutine(ref Coroutine coroutine, IEnumerator rutune)
+        [Impl(256)] private void StartCoroutine(ref Coroutine coroutine, IEnumerator rutune)
         {
             if (coroutine != null)
-                StopCoroutine(coroutine);
+                _mono.StopCoroutine(coroutine);
 
-            coroutine = StartCoroutine(rutune);
+            coroutine = _mono.StartCoroutine(rutune);
         }
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private void StopCoroutine(ref Coroutine coroutine)
+        [Impl(256)] private void StopCoroutine(ref Coroutine coroutine)
         {
             if (coroutine != null)
             {
-                StopCoroutine(coroutine);
+                _mono.StopCoroutine(coroutine);
                 coroutine = null;
             }
         }
@@ -237,7 +230,7 @@ namespace Vurbiri.Colonization.UI
                 _thisTransform.localRotation = Quaternion.Euler(ANGLE_X, _lastAngle, 0f);
         }
 
-        private void OnDestroy()
+        public void OnDestroy()
         {
             _subscription?.Dispose();
         }
@@ -260,8 +253,7 @@ namespace Vurbiri.Colonization.UI
                 mode = profit = distance = newId = false;
             }
 
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static implicit operator bool(Visible self) => (self.mode | self.profit | self.distance | self.newId) & self.enable;
+            [Impl(256)] public static implicit operator bool(Visible self) => (self.mode | self.profit | self.distance | self.newId) & self.enable;
         }
 
 #if UNITY_EDITOR
@@ -269,12 +261,14 @@ namespace Vurbiri.Colonization.UI
         [StartEditor]
         [SerializeField] private TextMeshPro _keyText;
 
-        private void OnValidate()
+        public void OnValidate(Component parent)
         {
-            this.SetChildren(ref _currencyText, "Currency_Text(TMP)");
-            this.SetChildren(ref _idText, "Id_Text(TMP)");
+            parent.SetChildren(ref _thisTransform, "Caption");
+            parent.SetChildren(ref _currencyText, "Currency_Text(TMP)");
+            parent.SetChildren(ref _idText, "Id_Text(TMP)");
 
-            transform.localRotation = Quaternion.Euler(ANGLE_X, 0f, 0f);
+            _thisGameObject = _thisTransform.gameObject;
+            _thisTransform.localRotation = Quaternion.Euler(ANGLE_X, 0f, 0f);
         }
 
         public void SetKey_Ed(Key key)

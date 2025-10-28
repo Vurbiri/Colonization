@@ -16,7 +16,7 @@ namespace Vurbiri.UI
         protected void InternalInit(AHint hint, float heightRatio = 0.5263f)
         {
             _hint = hint;
-            _thisRectTransform = (RectTransform)transform;
+            _thisRectTransform = GetComponent<RectTransform>();
             _hintOffset = AHint.GetOffsetHint(_thisRectTransform, heightRatio);
         }
 

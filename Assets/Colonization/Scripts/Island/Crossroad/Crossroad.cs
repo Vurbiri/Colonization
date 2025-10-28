@@ -53,7 +53,7 @@ namespace Vurbiri.Colonization
         public Event<Key> BannedBuild { [Impl(256)] get => _bannedBuild; }
         public int WaterCount { [Impl(256)] get => _waterCount; }
         public bool IsGate { [Impl(256)] get => _isGate; }
-        public bool IsShore { [Impl(256)] get => _waterCount > 0; }
+        public bool IsCoast { [Impl(256)] get => _waterCount > 0; }
         public bool IsPort { [Impl(256)] get => _states.groupId == EdificeGroupId.Port; }
         public bool IsColony { [Impl(256)] get => _states.groupId == EdificeGroupId.Colony; }
         public bool IsShrine { [Impl(256)] get => _states.groupId == EdificeGroupId.Shrine; }
@@ -208,7 +208,7 @@ namespace Vurbiri.Colonization
         [Impl(256)] public void CaptionHexagonsEnable()
         {
             for (int i = 0; i < HEX_COUNT; i++)
-                _hexagons[i].CaptionEnable(IsShore, _isGate);
+                _hexagons[i].CaptionEnable(IsCoast, _isGate);
         }
         [Impl(256)] public void CaptionHexagonsDisable()
         {
@@ -253,7 +253,7 @@ namespace Vurbiri.Colonization
 
             return profit;
         }
-        public void AddNetProfit(MainCurrencies profit)
+        public void GetNetProfit(MainCurrencies profit)
         {
             for (int i = 0; i < HEX_COUNT; i++)
                 profit.Add(_hexagons[i].GetProfit(), _states.profit);

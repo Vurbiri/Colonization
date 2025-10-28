@@ -14,7 +14,7 @@ namespace Vurbiri.Colonization.UI
             image.color = colors.PanelBack;
             image.pixelsPerUnitMultiplier = pixelsPerUnit;
 
-            RectTransform thisRectTransform = (RectTransform)transform;
+            var thisRectTransform = GetComponent<RectTransform>();
             thisRectTransform.sizeDelta = _widget.Size + padding * 2f;
 
             _widget.Init_Editor(colors);

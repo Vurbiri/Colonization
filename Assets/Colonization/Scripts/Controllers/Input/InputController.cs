@@ -36,8 +36,8 @@ namespace Vurbiri.Colonization.Controllers
 
             SpectatorMode(true);
 
-            _inputActions.Gameplay.RightClick.performed += OnClickRight;
-            _inputActions.Gameplay.LeftClick.performed += OnClickLeft;
+            _inputActions.Gameplay.RightClick.performed += OnRightClick;
+            _inputActions.Gameplay.LeftClick.performed += OnLeftClick;
 
             events.Subscribe(GameModeId.Play, SpectatorMode);
             events.Subscribe(GameModeId.Landing, SpectatorMode);
@@ -96,19 +96,15 @@ namespace Vurbiri.Colonization.Controllers
             }
         }
 
-        private void OnClickRight(CallbackContext ctx) => OnClick(ctx.ReadValue<Vector2>(), LayersMask.SelectableRight, MouseButton.Right);
-        private void OnClickLeft(CallbackContext ctx) => OnClick(ctx.ReadValue<Vector2>(), LayersMask.SelectableLeft, MouseButton.Left);
+        private void OnRightClick(CallbackContext ctx) => OnClick(ctx.ReadValue<Vector2>(), LayersMask.SelectableRight, MouseButton.Right);
+        private void OnLeftClick(CallbackContext ctx) => OnClick(ctx.ReadValue<Vector2>(), LayersMask.SelectableLeft, MouseButton.Left);
 
-
-        private void OnClick(Vector2 point, int mask, MouseButton button)
+        private void OnClick(Vector3 point, int mask, MouseButton button)
         {
-            Ray ray = _camera.ScreenPointToRay(point);
-
-            if (Physics.Raycast(ray, out RaycastHit hit, _distance, mask) && TryGetSelectable(hit.collider, out ISelectable selectObj))
+            if (Physics.Raycast(_camera.ScreenPointToRay(point), out RaycastHit hit, _distance, mask) && TryGetSelectable(hit.collider, out ISelectable selectObj))
                 Select(selectObj, button);
 
-            #region Local: TryGetSelectable(..)
-            //=================================
+            //=========== Local ================
             static bool TryGetSelectable(Collider collider, out ISelectable selectObj)
             {
                 if (!collider.TryGetComponent(out selectObj) && collider.TryGetComponent(out ISelectableReference selectRef))
@@ -116,7 +112,6 @@ namespace Vurbiri.Colonization.Controllers
 
                 return selectObj != null;
             }
-            #endregion
         }
 
 

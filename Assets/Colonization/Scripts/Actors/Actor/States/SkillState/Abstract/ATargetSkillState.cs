@@ -118,8 +118,6 @@ namespace Vurbiri.Colonization
                     for (int i = targets.Count - 1; i >= 0; i--)
                         targets[i].SetOwnerUnselectable();
 
-
-
                     if (_target == null)
                         yield break;
 

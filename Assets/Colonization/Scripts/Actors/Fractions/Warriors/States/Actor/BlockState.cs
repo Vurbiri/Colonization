@@ -31,14 +31,10 @@ namespace Vurbiri.Colonization
                         ActorEffects.Add(new(_effectCode, ActorAbilityId.Defense, TypeModifierId.Addition, _value, CONST.BLOCK_DURATION, CONST.BLOCK_SKIP));
                         Pay();
                     }
-
-                    //Actor.Interactable = true;
                 }
 
                 public override void Exit()
                 {
-                    //Actor.Interactable = false;
-
                     if (!IsApplied)
                         Skin.Block(false);
                 }

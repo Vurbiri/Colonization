@@ -69,7 +69,7 @@ namespace Vurbiri.Colonization
                     _profitWeights.Clear();
                     var colonies = Colonies;
                     for (int i = 0; i < colonies.Count; i++)
-                        colonies[i].AddNetProfit(_profitWeights);
+                        colonies[i].GetNetProfit(_profitWeights);
 
                     _profitWeights.Normalize(s_settings.profitWeight);
                 }

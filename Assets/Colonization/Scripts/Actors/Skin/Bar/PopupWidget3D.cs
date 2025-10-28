@@ -19,7 +19,6 @@ namespace Vurbiri.Colonization.UI
         [SerializeField, Range(0.05f, 1f)] private float _startHide = 0.7f;
 
         private Transform _thisTransform;
-        private GameObject _thisGameObject;
         private CoroutinesQueue _queue;
 
         private float _scaleColorSpeed;
@@ -36,9 +35,8 @@ namespace Vurbiri.Colonization.UI
             _sprite.sortingOrder += orderLevel;
             _valueTMP.sortingOrder += orderLevel;
 
-            _thisTransform = transform;
-            _thisGameObject = gameObject;
-            _queue = new(this, () => _thisGameObject.SetActive(false));
+            _thisTransform = GetComponent<Transform>();
+            _queue = new(this, () => gameObject.SetActive(false));
 
             _colorPlusStart = _colorPlusEnd = colors.TextPositive;
             _colorMinusStart = _colorMinusEnd = colors.TextNegative;
@@ -49,14 +47,14 @@ namespace Vurbiri.Colonization.UI
             _positionStart = _thisTransform.localPosition;
             _positionEnd = _positionStart + new Vector3(0f, _distance, 0f);
 
-            _thisGameObject.SetActive(false);
+            gameObject.SetActive(false);
         }
 
         public void Run(int delta, Sprite sprite)
         {
             if (delta != 0 & delta > MIN_VALUE)
             {
-                _thisGameObject.SetActive(true);
+                gameObject.SetActive(true);
                 _queue.Enqueue(Run_Cn(delta, sprite));
             }
         }

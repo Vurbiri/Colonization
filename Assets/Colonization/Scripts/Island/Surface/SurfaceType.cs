@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization
 {
@@ -14,11 +15,11 @@ namespace Vurbiri.Colonization
         private bool _isWater, _isGate;
         private IProfit _profit;
 
-        public Id<SurfaceId> Id => _id;
-        public bool IsWater => _isWater;
-        public bool IsGate => _isGate;
-        public IdFlags<CurrencyId> Currencies => _profits;
-        public IProfit Profit => _profit.Instance;
+        public Id<SurfaceId> Id { [Impl(256)] get => _id; }
+        public bool IsWater { [Impl(256)] get => _isWater; }
+        public bool IsGate { [Impl(256)] get => _isGate; }
+        public IdFlags<CurrencyId> Currencies { [Impl(256)] get => _profits; }
+        public IProfit Profit { [Impl(256)] get => _profit.Instance; }
 
         public void Init()
         {
@@ -28,7 +29,7 @@ namespace Vurbiri.Colonization
             _profit = _isWater ? new ProfitArray(_profits) : new ProfitSingle(_profits);
         }
 
-        public void Create(Transform parent)
+        [Impl(256)] public void Create(Transform parent)
         {
             if (_prefabSurface != null)
                 UnityEngine.Object.Instantiate(_prefabSurface, parent);

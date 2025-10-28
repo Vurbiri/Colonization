@@ -14,12 +14,15 @@ namespace Vurbiri.Colonization
         private readonly WaitSignal _waitProfit = new();
 
         protected ReadOnlyArray<string> _hitSFX;
+        protected Transform _thisTransform;
         protected AudioSource _audioSource;
 
-        public virtual Transform TargetTransform => transform;
+        public virtual Transform TargetTransform => _thisTransform;
+        public virtual Vector3 Position { [Impl(256)] get => _thisTransform.position; }
 
         [Impl(256)] protected void InitInternal(ReadOnlyArray<string> hitSFX)
 		{
+            _thisTransform = GetComponent<Transform>();
             _audioSource = GetComponent<AudioSource>();
             _hitSFX = hitSFX;
         }
@@ -47,12 +50,11 @@ namespace Vurbiri.Colonization
             //Local
             IEnumerator Death_Cn(float height)
             {
-                var thisTransform = transform;
-                Vector3 position = thisTransform.localPosition;
+                Vector3 position = _thisTransform.localPosition;
                 while (position.y > height)
                 {
                     position.y -= 3f * Time.unscaledDeltaTime;
-                    thisTransform.localPosition = position;
+                    _thisTransform.localPosition = position;
                     yield return null;
                 }
             }
@@ -61,7 +63,7 @@ namespace Vurbiri.Colonization
         private IEnumerator Profit_Cn(bool isPerson, ActorSkin target, string name)
         {
             if (isPerson | GameContainer.GameSettings.TrackingCamera)
-                yield return GameContainer.CameraController.ToPosition(transform.position, true);
+                yield return GameContainer.CameraController.ToPosition(_thisTransform.position, true);
 
             yield return GameContainer.SFX.Run(name, this, target);
 

@@ -59,6 +59,7 @@ namespace Vurbiri.Colonization
         public bool IsWounded { [Impl(256)] get => _currentHP.IsNotMax; }
         public bool IsDead { [Impl(256)] get => _currentHP.Value <= 0; }
         public bool ZealCharge { [Impl(256)] get => _zealCharge; [Impl(256)] set { _zealCharge = value; _eventChanged.Invoke(this, TypeEvent.Change); } }
+        public Transform Transform { [Impl(256)] get => _thisTransform; }
         public ActorSkin Skin { [Impl(256)] get => _states.Skin; }
         public Actions Action { [Impl(256)] get => _states; }
         public ReactiveEffects Effects { [Impl(256)] get => _effects; }
@@ -95,7 +96,7 @@ namespace Vurbiri.Colonization
 
         public void Setup(ActorSettings settings, ActorInitData initData, Hexagon startHex)
         {
-            _thisTransform = transform;
+            _thisTransform = GetComponent<Transform>();
             _thisCollider = GetComponent<BoxCollider>();
 
             _typeId = settings.TypeId;

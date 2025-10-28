@@ -17,7 +17,7 @@ namespace Vurbiri.UI
         {
             _hint = hint;
             if (_thisRectTransform == null)
-                _thisRectTransform = (RectTransform)transform;
+                _thisRectTransform = GetComponent<RectTransform>();
 
             _hintOffset = AHint.GetOffsetHint(_thisRectTransform, heightRatio);
         }
