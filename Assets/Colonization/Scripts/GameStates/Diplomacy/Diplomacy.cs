@@ -92,18 +92,21 @@ namespace Vurbiri.Colonization
 
         public void ActorsInteraction(Id<PlayerId> idA, Id<PlayerId> idB, Relation targetAttack, bool isCombat)
         {
-            int index = GetIndex(idA, idB);
-            int value = _values[index];
+            if (idA != idB & IsNotSatan(idA, idB))
+            {
+                int index = GetIndex(idA, idB);
+                int value = _values[index];
 
-            if (targetAttack == Relation.Enemy)
-            {
-                this[index] = value + (value <= 0 ? _settings.penaltyForFireOnEnemy : _settings.penaltyForFriendlyFire);
-                _eventChanged.Invoke(this);
-            }
-            else if (isCombat)
-            {
-                this[index] = value + _settings.rewardForBuff;
-                _eventChanged.Invoke(this);
+                if (targetAttack == Relation.Enemy)
+                {
+                    this[index] = value + (value <= 0 ? _settings.penaltyForFireOnEnemy : _settings.penaltyForFriendlyFire);
+                    _eventChanged.Invoke(this);
+                }
+                else if (isCombat)
+                {
+                    this[index] = value + _settings.rewardForBuff;
+                    _eventChanged.Invoke(this);
+                }
             }
         }
         #endregion

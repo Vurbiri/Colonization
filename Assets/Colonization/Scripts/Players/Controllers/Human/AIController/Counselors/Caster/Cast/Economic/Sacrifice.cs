@@ -30,7 +30,7 @@ namespace Vurbiri.Colonization
 
                         yield return s_settings.waitBeforeSelecting.Restart();
 
-                        militia.Select();
+                        militia.Select(MouseButton.Left);
 
                         yield return SpellBook.WaitEndCasting;
                     }

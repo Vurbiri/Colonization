@@ -25,11 +25,11 @@ namespace Vurbiri.Colonization
 
                             yield return s_settings.waitBeforeSelecting.Restart();
 
-                            s_good.Rand().Select();
+                            s_good.Rand().Select(MouseButton.Left);
 
                             yield return s_settings.waitBeforeSelecting.Restart();
 
-                            s_bad.Rand().Select();
+                            s_bad.Rand().Select(MouseButton.Left);
 
                             yield return SpellBook.WaitEndCasting;
                         }

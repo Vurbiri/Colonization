@@ -17,6 +17,9 @@ namespace Vurbiri.Colonization
         [Button("Testing"), Range(-10f, 10f)]
         public float value;
 
+        public LayerMask layerMaskRight;
+        public LayerMask layerMaskLeft;
+
         private TMP_Dropdown _dropdown;
 
         private void Start()
@@ -116,11 +119,9 @@ namespace Vurbiri.Colonization
 
         public void Testing()
         {
-            print(CONST.ToStr(-122));
-            print(CONST.ToStr(64));
-            StringTest(); StringTest();
-            print(CONST.ToStr(CONST.MIN_NUMBERS_STR));
-            print(CONST.ToStr(CONST.MAX_NUMBERS_STR));
+            print(layerMaskRight.value);
+            print(layerMaskLeft.value);
+            print(gameObject.layer);
         }
 
         public void StringTest()

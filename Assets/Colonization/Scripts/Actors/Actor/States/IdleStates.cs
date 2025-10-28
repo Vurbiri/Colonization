@@ -19,7 +19,13 @@ namespace Vurbiri.Colonization
                     Actor.Interactable = false;
                 }
 
-                public override void Select() => GameContainer.TriggerBus.TriggerActorSelect(Actor);
+                public override void Select(MouseButton button)
+                {
+                    if (button == MouseButton.Right)
+                        GameContainer.TriggerBus.TriggerActorRightSelect(Actor);
+                    else
+                        GameContainer.TriggerBus.TriggerActorLeftSelect(Actor);
+                }
                 public override void Unselect(ISelectable newSelectable) => GameContainer.TriggerBus.TriggerUnselect(Actor.Equals(newSelectable));
             }
         }

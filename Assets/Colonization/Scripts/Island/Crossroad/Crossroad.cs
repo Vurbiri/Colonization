@@ -79,7 +79,7 @@ namespace Vurbiri.Colonization
         public ReactiveValue<bool> InteractableReactive { [Impl(256)] get => _interactable; }
         public bool Interactable { [Impl(256)] get => _interactable.Value; [Impl(256)] set => _interactable.Value = value; }
         public ReactiveValue<bool> CanCancel { [Impl(256)] get => _canCancel; }
-        [Impl(256)] public void Select()
+        [Impl(256)] public void Select(MouseButton button)
         {
             //Debug.Log($"ToHex: {CROSS.ToHex(_key, _type)}");
             if (_interactable.Value)

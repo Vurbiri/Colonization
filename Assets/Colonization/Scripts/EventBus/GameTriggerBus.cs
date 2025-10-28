@@ -4,7 +4,8 @@ namespace Vurbiri.Colonization
     {
         public void TriggerHexagonSelect(Hexagon hexagon) => _hexagonSelect.Invoke(hexagon);
         public void TriggerCrossroadSelect(Crossroad crossroad) => _crossroadSelect.Invoke(crossroad);
-        public void TriggerActorSelect(Actor actor) => _actorSelect.Invoke(actor);
+        public void TriggerActorRightSelect(Actor actor) => _actorRightSelect.Invoke(actor);
+        public void TriggerActorLeftSelect(Actor actor) => _actorLeftSelect.Invoke(actor);
         public void TriggerActorKill(Id<PlayerId> killer, Id<ActorTypeId> deadType, int deadId) => _actorKill.Invoke(killer, deadType, deadId);
         public void TriggerUnselect(bool isEquals) => _unselect.Invoke(isEquals);
 

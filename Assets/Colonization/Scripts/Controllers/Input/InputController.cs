@@ -2,6 +2,7 @@ using System;
 using UnityEngine;
 using Vurbiri.Reactive;
 using static UnityEngine.InputSystem.InputAction;
+using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization.Controllers
 {
@@ -9,7 +10,6 @@ namespace Vurbiri.Colonization.Controllers
     public class InputController : IDisposable
     {
         private readonly Camera _camera;
-        private readonly int _layerMaskRight;
         private readonly float _distance;
         private readonly InputControlAction _inputActions;
         private readonly RBool _windowMode = new(false);
@@ -20,13 +20,12 @@ namespace Vurbiri.Colonization.Controllers
         private InputControlAction.UIActions _UIMap;
         private bool _spectatorMode;
 
-        public InputControlAction.CameraActions CameraActions => _cameraMap;
-        public RBool IsWindowMode => _windowMode;
+        public InputControlAction.CameraActions CameraActions { [Impl(256)] get => _cameraMap; }
+        public RBool IsWindowMode { [Impl(256)] get => _windowMode; }
 
         public InputController(GameEvents events, Camera camera, Settings settings)
         {
             _camera = camera;
-            _layerMaskRight = settings.layerMaskRight;
             _distance = settings.distance;
 
             _inputActions = new();
@@ -38,14 +37,15 @@ namespace Vurbiri.Colonization.Controllers
             SpectatorMode(true);
 
             _inputActions.Gameplay.RightClick.performed += OnClickRight;
+            _inputActions.Gameplay.LeftClick.performed += OnClickLeft;
 
             events.Subscribe(GameModeId.Play, SpectatorMode);
             events.Subscribe(GameModeId.Landing, SpectatorMode);
             events.Subscribe(GameModeId.EndTurn, SpectatorModeOn);
         }
 
-        public void Enable() => _inputActions.Enable();
-        public void Disable() => _inputActions.Disable();
+        [Impl(256)] public void Enable() => _inputActions.Enable();
+        [Impl(256)] public void Disable() => _inputActions.Disable();
 
         public void WindowMode(bool enable)
         {
@@ -64,14 +64,14 @@ namespace Vurbiri.Colonization.Controllers
             }
         }
 
-        public void Select(ISelectable selectObj)
+        [Impl(256)] public void Select(ISelectable selectObj, MouseButton button)
         {
             _selectObj?.Unselect(selectObj);
             _selectObj = selectObj;
-            _selectObj.Select();
+            _selectObj.Select(button);
         }
 
-        public void Unselect()
+        [Impl(256)] public void Unselect()
         {
             _selectObj?.Unselect(null);
             _selectObj = null;
@@ -96,12 +96,16 @@ namespace Vurbiri.Colonization.Controllers
             }
         }
 
-        private void OnClickRight(CallbackContext ctx) 
-        {
-            Ray ray = _camera.ScreenPointToRay(ctx.ReadValue<Vector2>());
+        private void OnClickRight(CallbackContext ctx) => OnClick(ctx.ReadValue<Vector2>(), LayersMask.SelectableRight, MouseButton.Right);
+        private void OnClickLeft(CallbackContext ctx) => OnClick(ctx.ReadValue<Vector2>(), LayersMask.SelectableLeft, MouseButton.Left);
 
-            if (Physics.Raycast(ray, out RaycastHit hit, _distance, _layerMaskRight) && TryGetSelectable(hit.collider, out ISelectable selectObj))
-                Select(selectObj);
+
+        private void OnClick(Vector2 point, int mask, MouseButton button)
+        {
+            Ray ray = _camera.ScreenPointToRay(point);
+
+            if (Physics.Raycast(ray, out RaycastHit hit, _distance, mask) && TryGetSelectable(hit.collider, out ISelectable selectObj))
+                Select(selectObj, button);
 
             #region Local: TryGetSelectable(..)
             //=================================
@@ -115,15 +119,12 @@ namespace Vurbiri.Colonization.Controllers
             #endregion
         }
 
-        #region Nested: Settings
-        //***********************************
-        [Serializable]
-        public class Settings
+
+        //************* Nested ****************
+        [Serializable] public class Settings
         {
-            public LayerMask layerMaskRight;
             public float distance = 900f;
         }
-        #endregion
     }
 }
 

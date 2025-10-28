@@ -34,7 +34,7 @@ namespace Vurbiri.Colonization
             [Impl(256)] public void ToDefault() => _stateMachine.ToDefaultState();
 
             [Impl(256)] public void Cancel() => _stateMachine.Cancel();
-            [Impl(256)] public void Select() => _stateMachine.Select();
+            [Impl(256)] public void Select(MouseButton button) => _stateMachine.Select(button);
             [Impl(256)] public void Unselect(ISelectable newSelectable) => _stateMachine.Unselect(newSelectable);
 
             [Impl(256)] public bool ToTarget() => _stateMachine.SetState(_targetState, true);

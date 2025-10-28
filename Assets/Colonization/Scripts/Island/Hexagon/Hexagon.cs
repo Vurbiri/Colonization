@@ -64,12 +64,15 @@ namespace Vurbiri.Colonization
             _isGate = surface.IsGate;
             _isWater = surface.IsWater;
 
-            surface.Create(transform);
+            surface.Create(_thisTransform);
 
             if (_isWater)
             {
-                Destroy(_thisCollider);
-                _thisCollider = null;
+                Destroy(_thisCollider); _thisCollider = null;
+            }
+            else
+            {
+                _thisCollider.enabled = false;
             }
         }
 
@@ -110,9 +113,70 @@ namespace Vurbiri.Colonization
         #endregion
 
         #region ================== ISelectable ============================
-        public void Select() => GameContainer.TriggerBus.TriggerHexagonSelect(this);
+        public void Select(MouseButton button) => GameContainer.TriggerBus.TriggerHexagonSelect(this);
         public void Unselect(ISelectable newSelectable) { }
         [Impl(256)] public bool Equals(ISelectable other) => System.Object.ReferenceEquals(this, other);
+
+        #region ================== Set(Un)Selectable ============================
+        [Impl(256)] public bool TrySetSelectableFree()
+        {
+            bool result = !_isGate & !_isWater & _ownerId == PlayerId.None;
+            if (result)
+            {
+                _mark = s_poolMarks.Get(_thisTransform, false).View(true);
+                _thisCollider.enabled = true;
+            }
+            return result;
+        }
+        [Impl(256)] public void SetUnselectable()
+        {
+            if (_mark != null & !_isWater)
+            {
+                s_poolMarks.Return(_mark); _mark = null;
+                _thisCollider.enabled = false;
+            }
+        }
+
+        [Impl(256)] public bool TrySetOwnerSelectable(Id<PlayerId> id, Relation typeAction)
+        {
+            bool isFriendly = false, result = (!_isWater & _ownerId != PlayerId.None) && _owner.IsCanApplySkill(id, typeAction, out isFriendly);
+            if (result)
+            {
+                _mark = s_poolMarks.Get(_thisTransform, false).View(isFriendly);
+                _owner.SetLeftSelectable();
+            }
+            return result;
+        }
+        [Impl(256)] public void SetOwnerUnselectable()
+        {
+            if (_mark != null & !_isWater & _ownerId != PlayerId.None)
+            {
+                s_poolMarks.Return(_mark); _mark = null;
+                _owner.ResetLeftSelectable();
+            }
+        }
+
+        [Impl(256)] public void SetSelectableForSwap()
+        {
+            _mark = s_poolMarks.Get(_thisTransform, false).View(true);
+            _thisCollider.enabled = true;
+            _hexagonCaption.SetActive(true);
+        }
+        [Impl(256)] public void SetSelectedForSwap(Color color)
+        {
+            _mark.View(false);
+            _thisCollider.enabled = false;
+            _hexagonCaption.SetColor(color);
+        }
+        
+        [Impl(256)] public void SetUnselectableForSwap()
+        {
+            s_poolMarks.Return(_mark);
+            _thisCollider.enabled = false;
+            _hexagonCaption.SetActive(false);
+            _mark = null;
+        }
+        #endregion
         #endregion
 
         [Impl(256)] public Subscription Subscribe(Action<int> action, bool instantGetValue = true) => _changeID.Add(action, instantGetValue, _id);
@@ -120,6 +184,8 @@ namespace Vurbiri.Colonization
         #region ================== Caption ============================
         [Impl(256)] public void CaptionEnable(bool isWater, bool isGate) => _hexagonCaption.SetActive(!(isWater ^ _isWater | isGate));
         [Impl(256)] public void CaptionDisable() => _hexagonCaption.SetActive(false);
+
+        [Impl(256)] public void ResetCaptionColor() => _hexagonCaption.ResetColor();
 
         [Impl(256)] public void NewId(int id, Color color, float showTime)
         {
@@ -213,65 +279,7 @@ namespace Vurbiri.Colonization
         }
         #endregion
 
-        #region ================== Set(Un)Selectable ============================
-        [Impl(256)] public bool TrySetSelectableFree()
-        {
-            if(_isGate | _isWater | _owner != null)
-                return false;
-
-            _mark = s_poolMarks.Get(_thisTransform, false).View(true);
-            _thisCollider.enabled = true;
-            return true;
-        }
-        [Impl(256)] public void SetUnselectable()
-        {
-            if (_mark != null & !_isWater)
-            {
-                s_poolMarks.Return(_mark); _mark = null;
-                _thisCollider.enabled = false;
-            }
-        }
-
-        [Impl(256)] public bool TrySetOwnerSelectable(Id<PlayerId> id, Relation typeAction)
-        {
-            bool isFriendly = false, result = (!_isWater & _ownerId != PlayerId.None) && _owner.IsCanApplySkill(id, typeAction, out isFriendly);
-            if (result)
-            {
-                _mark = s_poolMarks.Get(_thisTransform, false).View(isFriendly);
-                _owner.RaycastTarget = true;
-            }
-            return result;
-        }
-        [Impl(256)] public void SetOwnerUnselectable()
-        {
-            if (_mark != null & !_isWater & _ownerId != PlayerId.None)
-            {
-                s_poolMarks.Return(_mark); _mark = null;
-                _owner.RaycastTarget = false;
-            }
-        }
         
-        [Impl(256)] public void SetSelectableForSwap()
-        {
-            _mark = s_poolMarks.Get(_thisTransform, false).View(true);
-            _thisCollider.enabled = true;
-            _hexagonCaption.SetActive(true);
-        }
-        [Impl(256)] public void SetSelectedForSwap(Color color)
-        {
-            _mark.View(false);
-            _thisCollider.enabled = false;
-            _hexagonCaption.SetColor(color);
-        }
-        [Impl(256)] public void ResetCaptionColor() => _hexagonCaption.ResetColor();
-        [Impl(256)] public void SetUnselectableForSwap()
-        {
-            s_poolMarks.Return(_mark);
-            _thisCollider.enabled = false;
-            _hexagonCaption.SetActive(false);
-            _mark = null;
-        }
-        #endregion
 
 #if UNITY_EDITOR
         private void OnValidate()

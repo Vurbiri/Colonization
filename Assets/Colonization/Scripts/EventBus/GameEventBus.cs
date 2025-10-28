@@ -4,7 +4,8 @@ namespace Vurbiri.Colonization
     {
         protected readonly VAction<Hexagon> _hexagonSelect = new();
         protected readonly VAction<Crossroad> _crossroadSelect = new();
-        protected readonly VAction<Actor> _actorSelect = new();
+        protected readonly VAction<Actor> _actorRightSelect = new();
+        protected readonly VAction<Actor> _actorLeftSelect = new();
         protected readonly VAction<Id<PlayerId>, Id<ActorTypeId>, int> _actorKill = new();
         protected readonly VAction<bool> _unselect = new();
 
@@ -12,7 +13,8 @@ namespace Vurbiri.Colonization
 
         public Event<Hexagon> EventHexagonSelect => _hexagonSelect;
         public Event<Crossroad> EventCrossroadSelect => _crossroadSelect;
-        public Event<Actor> EventActorSelect => _actorSelect;
+        public Event<Actor> EventActorRightSelect => _actorRightSelect;
+        public Event<Actor> EventActorLeftSelect => _actorRightSelect;
         public Event<Id<PlayerId>, Id<ActorTypeId>, int> EventActorKill => _actorKill;
         public Event<bool> EventUnselect => _unselect;
 

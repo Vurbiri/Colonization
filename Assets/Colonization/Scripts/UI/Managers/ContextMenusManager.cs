@@ -36,7 +36,7 @@ namespace Vurbiri.Colonization.UI
             game.Subscribe(GameModeId.Play, OnGamePlay);
 
             EventBus.EventUnselect.Add(OnClose);
-            EventBus.EventActorSelect.Add(OnSelectWarrior);
+            EventBus.EventActorRightSelect.Add(OnSelectWarrior);
 
             if (game.GameMode == GameModeId.Landing)
             {

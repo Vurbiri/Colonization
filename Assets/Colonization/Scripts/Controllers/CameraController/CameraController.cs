@@ -52,7 +52,7 @@ namespace Vurbiri.Colonization.Controllers
             cameraActions.Zoom.performed     += OnZoom;
 
             eventBus.EventCrossroadSelect.Add(OnMoveToPosition);
-            eventBus.EventActorSelect.Add(OnMoveToPosition);
+            eventBus.EventActorRightSelect.Add(OnMoveToPosition);
 
             inputController.IsWindowMode.Subscribe(OnWindowMode, false);
             #endregion

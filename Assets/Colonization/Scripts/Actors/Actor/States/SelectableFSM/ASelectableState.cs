@@ -17,7 +17,7 @@ namespace Vurbiri.Colonization.FSMSelectable
         public virtual void Exit() { }
 
         public virtual void Cancel() { }
-        public virtual void Select() { }
+        public virtual void Select(MouseButton button) { }
         public virtual void Unselect(ISelectable newSelectable) { }
 
 

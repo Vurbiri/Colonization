@@ -2,7 +2,6 @@ using System.Collections;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.UI;
-using Vurbiri.Reactive;
 using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.UI
@@ -98,7 +97,7 @@ namespace Vurbiri.Colonization.UI
             if(_attach != null)
                 interactable = !value & _attach.Interactable;
         } 
-        private void OnSelect() => GameContainer.InputController.Select(_attach);
+        private void OnSelect() => GameContainer.InputController.Select(_attach, MouseButton.Right);
 
         protected override void OnDisable()
         {

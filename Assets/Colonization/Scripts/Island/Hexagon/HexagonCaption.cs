@@ -12,43 +12,39 @@ namespace Vurbiri.Colonization.UI
         private const float ANGLE_X = 90f;
 
         [SerializeField] private TextMeshPro _currencyText;
-        [SerializeField] private Renderer _currencyTextRenderer;
-        [Space]
         [SerializeField] private TextMeshPro _idText;
-        [SerializeField] private Renderer _idTextRenderer;
         [Space]
-        [SerializeField, MinMax(1f, 60f)] private WaitRealtime _timeShowProfit = 25f;
-        [SerializeField, Range(0.1f, 100f)] private float _fadeSpeed = 10f;
-
-        private readonly WaitRealtime _timeShowNewId = new(10f);
+        [SerializeField, MinMax(1f, 30f)] private WaitRealtime _timeShowProfit = 25f;
+        [SerializeField, MinMax(1f, 30f)] private WaitRealtime _timeShowNewId = 10f;
+        [SerializeField, Range(0.1f, 20f)] private float _fadeSpeed = 8f;
 
         private Visible _visible = new(true);
         private GameObject _thisGameObject;
-        private Color _profitColor, _prevColor;
         private Transform _thisTransform;
+        private Color _profitColor, _prevColor;
         private float _lastAngle;
         private string _defaultCurrencyText;
+        private Renderer _currencyTextRenderer, _idTextRenderer;
         private Coroutine _fadeCoroutine, _profitCoroutine, _newIdCoroutine;
         private Subscription _subscription;
-
-        public int Id { set => _idText.text = value.ToString(); }
 
         public void Init(int id, IdFlags<CurrencyId> flags)
         {
             _thisGameObject = gameObject;
             _thisTransform = transform;
 
+            _currencyTextRenderer = _currencyText.GetComponent<Renderer>();
+            _idTextRenderer = _idText.GetComponent<Renderer>();
+
             _prevColor = GameContainer.UI.Colors.TextDefault;
             _profitColor =  GameContainer.UI.Colors.GetTextColor(id != HEX.GATE);
 
             StringBuilder sb = new(TAG.TAG_SPRITE_LENGTH * CurrencyId.Count);
-
             for (int i = 0; i < CurrencyId.Count; i++)
-                if (flags[i]) sb.AppendFormat(TAG.SPRITE, i);
-
+                if (flags[i]) sb.AppendFormat(TAG.SPRITE, i.ToStr());
             _currencyText.text = _defaultCurrencyText = sb.ToString();
 
-            _idText.text = id.ToString();
+            _idText.text = id.ToStr();
             _idText.color = GameContainer.UI.Colors.TextDefault;
 
             SetActive();
@@ -64,7 +60,7 @@ namespace Vurbiri.Colonization.UI
             _visible.profit = false;
             _visible.newId = true;
 
-            _idText.text = id.ToString();
+            _idText.text = id.ToStr();
             _idText.color = color;
 
             _timeShowNewId.Restart(showTime);
@@ -120,7 +116,7 @@ namespace Vurbiri.Colonization.UI
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Profit(int currency)
         {
-            _currencyText.text = string.Format(TAG.SPRITE, currency);
+            _currencyText.text = string.Format(TAG.SPRITE, currency.ToStr());
             Profit();
         }
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -275,16 +271,8 @@ namespace Vurbiri.Colonization.UI
 
         private void OnValidate()
         {
-            if (_currencyText == null || _currencyTextRenderer == null)
-            {
-                _currencyText = this.GetComponentInChildren<TextMeshPro>("Currency_Text(TMP)");
-                _currencyTextRenderer = _currencyText.renderer;
-            }
-            if (_idText == null || _idTextRenderer == null)
-            {
-                _idText = this.GetComponentInChildren<TextMeshPro>("Id_Text(TMP)");
-                _idTextRenderer = _idText.renderer;
-            }
+            this.SetChildren(ref _currencyText, "Currency_Text(TMP)");
+            this.SetChildren(ref _idText, "Id_Text(TMP)");
 
             transform.localRotation = Quaternion.Euler(ANGLE_X, 0f, 0f);
         }

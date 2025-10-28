@@ -32,18 +32,22 @@ namespace Vurbiri.Colonization
                         Pay();
                     }
 
-                    Actor.Interactable = true;
+                    //Actor.Interactable = true;
                 }
 
                 public override void Exit()
                 {
-                    Actor.Interactable = false;
+                    //Actor.Interactable = false;
 
                     if (!IsApplied)
                         Skin.Block(false);
                 }
 
-                public override void Select() => GameContainer.TriggerBus.TriggerActorSelect(Actor);
+                public override void Select(MouseButton button)
+                {
+                    if (button == MouseButton.Left)
+                        GameContainer.TriggerBus.TriggerActorLeftSelect(Actor);
+                }
                 public override void Unselect(ISelectable newSelectable) => GameContainer.TriggerBus.TriggerUnselect(Actor.Equals(newSelectable));
             }
         }

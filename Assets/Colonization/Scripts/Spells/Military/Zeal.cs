@@ -80,7 +80,7 @@ namespace Vurbiri.Colonization
                     Banner.Open(_strName, MessageTypeId.Warning, 6f);
                 }
 
-                EventBus.EventActorSelect.Add(SetActor);
+                EventBus.EventActorLeftSelect.Add(SetActor);
                 yield return _waitActor.Restart();
 
                 EndSelect();
@@ -100,7 +100,7 @@ namespace Vurbiri.Colonization
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             private void EndSelect()
             {
-                EventBus.EventActorSelect.Remove(SetActor);
+                EventBus.EventActorLeftSelect.Remove(SetActor);
                 if (_currentPlayer == PlayerId.Person)
                 {
                     _waitButton.Reset();

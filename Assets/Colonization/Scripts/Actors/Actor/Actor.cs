@@ -68,16 +68,26 @@ namespace Vurbiri.Colonization
         #endregion
 
         #region  ================== IInteractable =====================
-        public Vector3 Position => _thisTransform.position;
+        public Vector3 Position { [Impl(256)] get => _thisTransform.position; }
         public ReactiveValue<bool> CanCancel => _canCancel;
         public ReactiveValue<bool> InteractableReactive => _interactable;
-        public bool Interactable { get => _interactable.Value; set => _thisCollider.enabled = _interactable.Value = _isPersonTurn & value; }
-        public bool RaycastTarget { get => _thisCollider.enabled; set => _thisCollider.enabled = _isPersonTurn | value; }
-        public bool IsPersonTurn { set => _isPersonTurn = value; }
+        public bool Interactable { [Impl(256)] get => _interactable.Value; [Impl(256)] set => _thisCollider.enabled = _interactable.Value = _isPersonTurn & value; }
+        public bool IsPersonTurn { [Impl(256)] set => _isPersonTurn = value; }
        
-        public void Select() => _states.Select();
+        public void Select(MouseButton button) => _states.Select(button);
         public void Unselect(ISelectable newSelectable) => _states.Unselect(newSelectable);
         public void Cancel() => _states.Cancel();
+
+        [Impl(256)] public void SetLeftSelectable()
+        {
+            _thisCollider.enabled = true;
+            gameObject.layer = Layers.SelectableLeft;
+        }
+        [Impl(256)] public void ResetLeftSelectable()
+        {
+            _thisCollider.enabled = _isPersonTurn;
+            gameObject.layer = Layers.SelectableRight;
+        }
         #endregion
 
         #region ================== Setup ============================
