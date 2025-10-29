@@ -12,8 +12,16 @@ namespace Vurbiri.Collections
 
         public new TValue this[int index]
         {
-            [Impl(256)] get => _values[index];
-            [Impl(256)] set => _values[index] = value;
+            [Impl(256)] get
+            {
+                Throw.IfIndexOutOfRange(index, _count);
+                return _values[index];
+            }
+            [Impl(256)] set
+            {
+                Throw.IfIndexOutOfRange(index, _count);
+                _values[index] = value;
+            }
         }
 
         public int Capacity { [Impl(256)] get => _capacity; }
@@ -36,8 +44,7 @@ namespace Vurbiri.Collections
             if (_count == _capacity)
                 GrowArray();
 
-            _values[_count] = item;
-            _count++;
+            _values[_count++] = item;
         }
 
         public bool TryAdd(TValue item)
@@ -61,18 +68,20 @@ namespace Vurbiri.Collections
             _count++;
         }
 
-
         public bool Remove(TValue item)
         {
-            int index = IndexOf(item);
-            if (index >= 0)
+            int index = -1;
+            while (++index < _count && !_values[index].Equals(item));
+            if (index < _count)
                 RemoveAt(index);
 
-            return index >= 0;
+            return index < _count;
         }
 
         public void RemoveAt(int index)
         {
+            Throw.IfIndexOutOfRange(index, _count);
+
             _count--;
             for (int i = index; i < _count; i++)
                 _values[i] = _values[i + 1];

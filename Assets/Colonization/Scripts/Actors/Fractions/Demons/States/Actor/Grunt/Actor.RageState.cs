@@ -22,8 +22,8 @@ namespace Vurbiri.Colonization
                     if (_canUse)
                     {
                         _canUse = false;
-                        for (int i = 0; i < HEX.SIDES; i++)
-                            if (IsEnter(ref targetHex, direction = HEX.NEAR[_indexes[i]]))
+                        foreach (var key in HEX.NEAR_RND)
+                            if (IsEnter(ref targetHex, direction = key))
                                 break;
                     }
 
@@ -39,7 +39,6 @@ namespace Vurbiri.Colonization
                             if (NearWarriors(temp))
                             {
                                 targetHex = temp;
-                                _indexes.Shuffle();
                                 return true;
                             }
 

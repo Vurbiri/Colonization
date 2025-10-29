@@ -26,6 +26,9 @@ namespace Vurbiri.Colonization
 
 
 #if UNITY_EDITOR
+
+        public AnimationTime(float time) => _remainingTime = time;
+
         public AnimationTime(AnimationClipSettingsScriptable clipSettings)
         {
             if (clipSettings == null || clipSettings.hitTimes == null || clipSettings.hitTimes.Length == 0)

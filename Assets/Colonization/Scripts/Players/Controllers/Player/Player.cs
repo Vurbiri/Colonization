@@ -27,6 +27,13 @@ namespace Vurbiri.Colonization
             _isPerson = playerId == PlayerId.Person;
         }
 
+        #region ---------------- Diplomacy ----------------
+        [Impl(256)] public bool IsFriend(Id<PlayerId> id) => GameContainer.Diplomacy.IsFriend(_id, id);
+        [Impl(256)] public bool IsGreatFriend(Id<PlayerId> id) => GameContainer.Diplomacy.IsGreatFriend(_id, id);
+        [Impl(256)] public bool IsEnemy(Id<PlayerId> id) => GameContainer.Diplomacy.IsEnemy(_id, id);
+        [Impl(256)] public bool IsGreatEnemy(Id<PlayerId> id) => GameContainer.Diplomacy.IsGreatEnemy(_id, id);
+        #endregion
+
         [Impl(256)] protected Coroutine StartCoroutine(IEnumerator routine) => GameContainer.Shared.StartCoroutine(routine);
         [Impl(256)] protected void StopCoroutine(Coroutine coroutine) => GameContainer.Shared.StopCoroutine(coroutine);
 

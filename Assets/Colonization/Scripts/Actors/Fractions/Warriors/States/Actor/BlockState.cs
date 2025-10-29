@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Runtime.CompilerServices;
 
 namespace Vurbiri.Colonization
@@ -27,9 +28,16 @@ namespace Vurbiri.Colonization
                 {
                     if (!IsApplied)
                     {
-                        Skin.Block(true);
                         ActorEffects.Add(new(_effectCode, ActorAbilityId.Defense, TypeModifierId.Addition, _value, CONST.BLOCK_DURATION, CONST.BLOCK_SKIP));
                         Pay();
+                        StartCoroutine(Apply_Cn());
+                    }
+
+                    // ======== Local ==========
+                    IEnumerator Apply_Cn()
+                    {
+                        yield return Skin.Block(true);
+                        signal.Send();
                     }
                 }
 

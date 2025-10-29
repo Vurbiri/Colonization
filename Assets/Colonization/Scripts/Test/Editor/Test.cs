@@ -175,13 +175,13 @@ namespace Vurbiri.Colonization
             void ToString()
             {
                 string test;
-                for(int i = CONST.MIN_NUMBERS_STR; i <= CONST.MAX_NUMBERS_STR; i++)
+                for(int i = IntToStr.MIN_NUMBERS_STR; i <= IntToStr.MAX_NUMBERS_STR; i++)
                     test = i.ToString();
             }
             void Cache()
             {
                 string test;
-                for (int i = CONST.MIN_NUMBERS_STR; i <= CONST.MAX_NUMBERS_STR; i++)
+                for (int i = IntToStr.MIN_NUMBERS_STR; i <= IntToStr.MAX_NUMBERS_STR; i++)
                     test = i.ToStr();
             }
         }

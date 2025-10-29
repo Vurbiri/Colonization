@@ -67,21 +67,21 @@ namespace Vurbiri
 
         [Impl(256)] public void TrimExcess() => ReSize(_count);
 
-        public void Shuffle()
-        {
-            int newIndex = 1, maxWeight = 0;
-            var weights = new Weight[_capacity];
-            Weight temp;
+        //public void Shuffle()
+        //{
+        //    int newIndex = 1, maxWeight = 0;
+        //    var weights = new Weight[_capacity];
+        //    Weight temp;
 
-            weights[0] = _weights[0];
-            foreach (int oldIndex in new RandomSequence(1, _count))
-            {
-                temp = _weights[oldIndex];
-                maxWeight += temp - _weights[oldIndex - 1];
-                weights[newIndex++] = new(temp.value, maxWeight);
-            }
-            _weights = weights;
-        }
+        //    weights[0] = _weights[0];
+        //    foreach (int oldIndex in new RandomSequence(1, _count))
+        //    {
+        //        temp = _weights[oldIndex];
+        //        maxWeight += temp - _weights[oldIndex - 1];
+        //        weights[newIndex++] = new(temp.value, maxWeight);
+        //    }
+        //    _weights = weights;
+        //}
 
         private int GetIndex()
         {

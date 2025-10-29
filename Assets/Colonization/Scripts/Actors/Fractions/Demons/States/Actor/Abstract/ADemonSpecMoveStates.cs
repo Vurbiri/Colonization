@@ -18,7 +18,6 @@ namespace Vurbiri.Colonization
                 private readonly ScaledMoveUsingLerp _move;
                 private readonly float _speed;
                 private readonly HitEffects _effectsHint;
-                protected readonly RandomSequence _indexes = new(HEX.SIDES);
                 protected Coroutine _coroutine;
 
                 public ASpecMoveState(SpecSkillSettings specSkill, float speed, ADemonSpecMoveStates parent) : base(parent, CONST.SPEC_SKILL_ID, specSkill.Cost)

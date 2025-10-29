@@ -45,6 +45,8 @@ namespace Vurbiri.Colonization
             return hex;
         }
 
+        [Impl(256)] public bool TryGet(Key key, out Hexagon hex) => _hexagons.TryGetValue(key, out hex);
+
         public void SwapId(Hexagon hexA, Hexagon hexB, UnityEngine.Color color, float showTime)
         {
             int idA = hexA.Id, idB = hexB.Id;
@@ -61,7 +63,7 @@ namespace Vurbiri.Colonization
             _eventChanged.Invoke(hexA); _eventChanged.Invoke(hexB);
         }
 
-        public Subscription Subscribe(Action<Hexagon> action, bool instantGetValue = true) => _eventChanged.Add(action);
+        [Impl(256)] public Subscription Subscribe(Action<Hexagon> action, bool instantGetValue = true) => _eventChanged.Add(action);
 
         private void OnEndTurn(TurnQueue turnQueue, int id)
         {

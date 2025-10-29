@@ -14,7 +14,8 @@ namespace Vurbiri.Colonization
 
             public override WaitSignal UseSpecSkill()
             {
-                Block(); return null;
+                _stateMachine.SetState(_blockState); 
+                return _blockState.signal.Restart();
             }
 
             public override void AddSpecSkillState(SpecSkillSettings specSkill, float runSpeed, float walkSpeed) => _blockState = new(specSkill, this);
@@ -24,11 +25,9 @@ namespace Vurbiri.Colonization
                 if (_blockState.IsApplied)
                 {
                     _skin.EventStart -= _stateMachine.ToDefaultState;
-                    _skin.EventStart += Block;
+                    _skin.EventStart += () => _stateMachine.SetState(_blockState);
                 }
             }
-
-            private void Block() => _stateMachine.SetState(_blockState);
         }
     }
 }

@@ -2,6 +2,7 @@ using System;
 using UnityEngine;
 using Vurbiri.Collections;
 using Vurbiri.Colonization.UI;
+using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization
 {
@@ -19,11 +20,11 @@ namespace Vurbiri.Colonization
 
         [NonSerialized] private Array<SkillUI> _skillsUI;
 
-        public ReadOnlyArray<SkillUI> SkillsUI => _skillsUI;
-        public ReadOnlyArray<string> HitSfxNames => _hitSfxNames;
-        public ReadOnlyArray<AnimationTime> Timings => _timings;
+        public ReadOnlyArray<SkillUI> SkillsUI { [Impl(256)] get => _skillsUI; }
+        public ReadOnlyArray<string> HitSfxNames { [Impl(256)] get => _hitSfxNames; }
+        public ReadOnlyArray<AnimationTime> Timings { [Impl(256)] get => _timings; }
 
-        public SpecSkillSettings Spec => _specSkillSettings;
+        public SpecSkillSettings Spec { [Impl(256)] get => _specSkillSettings; }
 
         public void Init(int actorType, int actorId)
         {

@@ -16,15 +16,15 @@ namespace Vurbiri.Colonization
 
             base.InitInternal(skills.Timings, sfx);
 
-            _blockState = new(this, sfx);
+            _blockState = new(this, sfx, skills.Spec.Timing.WaitEnd);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)] 
-        public void Block(bool isActive)
+        public Enumerator Block(bool isActive)
         {
             if (isActive)
                 _stateMachine.SetState(_blockState);
-            _blockState.SfxEnable(isActive);
+            return _blockState.Enable(isActive);
         }
     }
 }

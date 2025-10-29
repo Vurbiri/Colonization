@@ -37,6 +37,8 @@ namespace Vurbiri.Colonization
         public static readonly ReadOnlyArray<Key> NEAR_TWO;
         public static readonly ReadOnlyArray<Key> NEAR_THREE;
 
+        public static readonly RandomSequence<Key> NEAR_RND = new(NEAR);
+
         public static readonly HearHexagons NEARS;
 
         public static readonly ReadOnlyArray<float> COS = new(new float[] { COS_00, COS_60, -COS_60, -COS_00, -COS_60, COS_60 });

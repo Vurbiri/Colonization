@@ -23,9 +23,9 @@ namespace Vurbiri.Colonization
                     {
                         Key currentKey = CurrentHex.Key;
                         Hexagon temp;
-                        for (int i = 0; i < HEX.SIDES; i++)
+                        foreach (var key in HEX.NEAR_RND)
                         {
-                            direction = HEX.NEAR[_indexes[i]];
+                            direction = key;
                             temp = GameContainer.Hexagons[currentKey + direction];
                             if (temp.CanDemonEnter)
                             {
@@ -33,7 +33,6 @@ namespace Vurbiri.Colonization
                                 if (temp.CanDemonEnter && NearNoWarriors(temp))
                                 {
                                     targetHex = temp;
-                                    _indexes.Shuffle();
                                     break;
                                 }
                             }

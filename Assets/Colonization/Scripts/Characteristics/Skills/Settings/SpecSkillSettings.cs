@@ -84,7 +84,12 @@ namespace Vurbiri.Colonization
 
         public void UpdateAnimation_Ed(AnimatorOverrideController animator)
         {
-            if(typeActor_ed == ActorTypeId.Warrior || nonClip.Contains(_actorId_Ed))
+            if(typeActor_ed == ActorTypeId.Warrior)
+            {
+                clipSettings_ed = null;
+                _timing = new(animator["A_Block"].length * 1.1f);
+            }
+            else if (nonClip.Contains(_actorId_Ed))
             {
                 clipSettings_ed = null;
                 _timing = new();

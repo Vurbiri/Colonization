@@ -178,6 +178,15 @@ namespace Vurbiri.Colonization
                     return true;
             return false;
         }
+        public int GetEnemiesNear()
+        {
+            int count = 0;
+            var neighbors = _currentHex.Neighbors;
+            for (int i = 0; i < neighbors.Count; i++)
+                if (neighbors[i].IsEnemy(_owner))
+                    count++;
+            return count;
+        }
 
         #region ---------------- Diplomacy ----------------
         [Impl(256)] public bool IsFriend(Id<PlayerId> id) => GameContainer.Diplomacy.IsFriend(_owner, id);
@@ -239,7 +248,7 @@ namespace Vurbiri.Colonization
 
         #region ================== ReactiveItem ============================
         public bool Equals(ISelectable other) => System.Object.ReferenceEquals(this, other);
-        sealed public override bool Equals(Actor other) => System.Object.ReferenceEquals(this, other);
+        sealed public override bool Equals(Actor other) => other == this;
         sealed public override void Removing()
         {
             _currentHex.ActorExit();

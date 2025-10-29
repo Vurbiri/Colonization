@@ -14,7 +14,14 @@ namespace Vurbiri.Reactive.Collections
 
         protected readonly VAction<int, T, TypeEvent> _changeEvent = new();
 
-        public T this[int index] { [Impl(256)] get => _values[index]; }
+        public T this[int index] 
+        {
+            [Impl(256)] get
+            {
+                Throw.IfIndexOutOfRange(index, _count);
+                return _values[index];
+            }
+        }
 
         public int Count { [Impl(256)] get => _count.Value; }
         public ReactiveValue<int> CountReactive { [Impl(256)] get => _count; }
@@ -56,9 +63,14 @@ namespace Vurbiri.Reactive.Collections
 
         public new T this[int index] 
         {
-            [Impl(256)] get => _values[index];
+            [Impl(256)] get
+            {
+                Throw.IfIndexOutOfRange(index, _count);
+                return _values[index];
+            }
             [Impl(256)] set
             {
+                Throw.IfIndexOutOfRange(index, _count);
                 if (!_values[index].Equals(value))
                 {
                     _values[index] = value;
@@ -85,7 +97,11 @@ namespace Vurbiri.Reactive.Collections
         }
         #endregion
 
-        public void Signal(int index) => _changeEvent.Invoke(index, _values[index], TypeEvent.Change);
+        public void Signal(int index)
+        {
+            Throw.IfIndexOutOfRange(index, _count);
+            _changeEvent.Invoke(index, _values[index], TypeEvent.Change);
+        }
         public void Signal(T item)
         {
             int index = IndexOf(item);
@@ -128,11 +144,11 @@ namespace Vurbiri.Reactive.Collections
             _changeEvent.Invoke(index, item, TypeEvent.Insert);
             _count.Increment();
         }
-        
+
         public bool Remove(T item)
         {
             int index = IndexOf(item);
-            if(index >= 0)
+            if (index >= 0)
                 RemoveAt(index);
 
             return index >= 0;
@@ -140,6 +156,8 @@ namespace Vurbiri.Reactive.Collections
 
         public void RemoveAt(int index)
         {
+            Throw.IfIndexOutOfRange(index, _count);
+
             T temp = _values[index];
             
             _count.SilentValue--;

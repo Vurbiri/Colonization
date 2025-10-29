@@ -200,6 +200,12 @@ namespace Vurbiri.Colonization
         [Impl(256)] public bool IsEnemy(Id<PlayerId> id) => GameContainer.Diplomacy.IsEnemy(_ownerId, id);
         [Impl(256)] public bool IsOwner(Id<PlayerId> id) => _ownerId == id;
 
+        [Impl(256)] public bool TryGetEnemy(Id<PlayerId> id, out Actor actor)
+        {
+            actor = _owner;
+            return GameContainer.Diplomacy.IsEnemy(_ownerId, id);
+        }
+
         #region ---------------- Defense ----------------
         public int GetMaxDefense()
         {

@@ -3,9 +3,9 @@ using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization
 {
-    sealed public class MilitiaAI : Warrior.AI
+    sealed public class SolderAI : Warrior.AI
     {
-        [Impl(256)] public MilitiaAI(Actor actor) : base(actor)
+        [Impl(256)] public SolderAI(Actor actor) : base(actor)
         {
         }
 

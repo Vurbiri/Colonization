@@ -8,17 +8,14 @@ namespace Vurbiri.Colonization
     {
         private class Counselors
         {
-            private const int COUNT = 5;
-
-            private readonly RandomSequence _sequence = new(COUNT);
             private readonly WaitSignal _waitExecution = new();
-            private readonly Counselor[] _counselors;
+            private readonly RandomSequence<Counselor> _counselors;
             private readonly Diplomat _diplomat;
             private readonly Builder _builder;
 
             public Counselors(AIController parent)
             {
-                _counselors = new Counselor[] { _diplomat = new(parent), _builder = new(parent), new Scientist(parent), new Caster(parent), new Recruiter(parent) };
+                _counselors = new( _diplomat = new(parent), _builder = new(parent), new Scientist(parent), new Caster(parent), new Recruiter(parent));
             }
 
             [Impl(256)] public IEnumerator Landing_Cn() => _builder.Landing_Cn();
@@ -34,8 +31,8 @@ namespace Vurbiri.Colonization
 
             private IEnumerator Execution_Cn()
             {
-                foreach (int index in _sequence)
-                    yield return StartCoroutine(_counselors[index].Execution_Cn());
+                foreach (var counsel in _counselors)
+                    yield return StartCoroutine(counsel.Execution_Cn());
 
                 _waitExecution.Send();
             }

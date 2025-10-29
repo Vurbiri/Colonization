@@ -2,11 +2,11 @@ namespace Vurbiri.Colonization
 {
     public abstract class WarriorId : ActorId<WarriorId>
     {
-        public const int Militia    = 0;
-        public const int Solder     = 1;
-        public const int Wizard     = 2;
-        public const int Warlock    = 3;
-        public const int Knight     = 4;
+        public const int Militia = 0;
+        public const int Solder  = 1;
+        public const int Wizard  = 2;
+        public const int Warlock = 3;
+        public const int Knight  = 4;
 
         static WarriorId() => ConstructorRun();
 
