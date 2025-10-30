@@ -132,6 +132,8 @@ namespace Vurbiri.Colonization
         [Impl(256)] public void SetUnselectableForSwap() => _view.SetUnselectableForSwap();
         #endregion
 
+        [Impl(256)] public int Distance(Hexagon other) => HEX.Distance(_key, other._key);
+
         [Impl(256)] public Subscription Subscribe(Action<int> action, bool instantGetValue = true) => _changeID.Add(action, instantGetValue, _id);
 
         #region ================== Caption ============================

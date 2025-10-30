@@ -72,7 +72,7 @@ namespace Vurbiri.Colonization
                 protected IEnumerator SelectActor_Cn()
                 {
                     _target = null;
-                    if (_isPerson)
+                    if (IsPerson)
                         yield return PersonSelectActor_Cn();
                     else
                         yield return AISelectActor_Cn();

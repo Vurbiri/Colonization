@@ -4,6 +4,6 @@ namespace Vurbiri.Colonization
     public class WarriorAISettings
 	{
 		public int maxDistanceSiege;
-
+        public int maxDistanceEmpty;
     }
 }

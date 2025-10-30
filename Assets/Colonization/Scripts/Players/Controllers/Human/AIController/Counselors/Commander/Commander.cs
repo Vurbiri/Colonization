@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using Vurbiri.Reactive.Collections;
 using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
@@ -9,7 +8,7 @@ namespace Vurbiri.Colonization
     {
         sealed private class Commander : Counselor
         {
-            private readonly Dictionary<int, Warrior.AI> _ai = new(CONST.DEFAULT_MAX_WARRIOR);
+            private readonly RandomSequenceList<Warrior.AI> _warriorsAI = new(CONST.DEFAULT_MAX_WARRIOR);
             
             public Commander(AIController parent) : base(parent)
             {
@@ -18,15 +17,16 @@ namespace Vurbiri.Colonization
 
             public override IEnumerator Execution_Cn()
             {
-                yield break;
+                foreach (var warrior in _warriorsAI)
+                    yield return StartCoroutine(warrior.Execution_Cn());
             }
 
             private void OnActor(Actor actor, TypeEvent type)
             {
                 if (type == TypeEvent.Subscribe | type == TypeEvent.Add)
-                    _ai.Add(actor.Index, Create(actor));
+                    _warriorsAI.Add(Create(actor));
                 else if (type == TypeEvent.Remove)
-                    _ai.Remove(actor.Index);
+                    _warriorsAI.Remove(actor, Warrior.AI.Equals);
 
                 // ====== Local ======
                 [Impl(256)] static Warrior.AI Create(Actor actor) => actor.Id switch

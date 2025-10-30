@@ -20,13 +20,10 @@ namespace Vurbiri.Colonization
                     _steps = new Step[] { new(crossroad) };
                     _edificeCost = cost;
                 }
-                private LandBuild(Builder parent, List<Step> steps, ReadOnlyMainCurrencies edificeCost, ReadOnlyMainCurrencies roadCost, ReadOnlyMainCurrencies allCost) : base(parent)
+                private LandBuild(Builder parent, Stack<Step> steps, ReadOnlyMainCurrencies edificeCost, ReadOnlyMainCurrencies roadCost, ReadOnlyMainCurrencies allCost) : base(parent)
                 {
-                    _roadsCount = steps.Count - 1;
-                    _steps = new Step[_roadsCount + 1];
-                    for(int i = _roadsCount, j = 0; i >= 0; i--, j++)
-                        _steps[i] = steps[j];
-
+                    _steps = steps.MoveToArray();
+                    _roadsCount = _steps.Length - 1;
                     _edificeCost = edificeCost; _roadCost = roadCost; _allCost = allCost;
                 }
 
@@ -82,7 +79,7 @@ namespace Vurbiri.Colonization
                         var crossroad = _steps[_cursor].crossroad;
                         yield return GameContainer.CameraController.ToPositionControlled(crossroad.Position);
                         yield return Human.BuyEdificeUpgrade(crossroad, _edificeCost); ;
-                        Log.Info($"[Builder::LandBuild] {HumanId} built Camp");
+                        Log.Info($"[Builder::LandBuild] {HumanId} built {crossroad.Id}");
                         _done = true;
                     }
                 }
@@ -151,7 +148,7 @@ namespace Vurbiri.Colonization
                         yield return null;
 
                         var prices = GameContainer.Prices.Edifices;
-                        List<Step> steps = new(); int weight, roadCount; bool repeat = false;
+                        Stack<Step> steps = new(); int weight, roadCount; bool repeat = false;
                         ReadOnlyMainCurrencies allCost, edificeCost, roadCost = GameContainer.Prices.Road;
                         System.Func<Crossroad, int, int> GetWeight = parent.Colonies.Count == 0 ? parent.GetFirstColonyWeight : parent.GetColonyWeight;
 
@@ -259,15 +256,15 @@ namespace Vurbiri.Colonization
                         }
                     }
 
-                    public void CreateSteps(Crossroad crossroad, List<Step> steps)
+                    public void CreateSteps(Crossroad crossroad, Stack<Step> steps)
                     {
                         steps.Clear();
-                        steps.Add(new(crossroad));
+                        steps.Push(new(crossroad));
 
                         while (_links.TryGetValue(crossroad, out CrossroadLink link))
                         {
                             crossroad = link.GetOtherCrossroad(crossroad.Type);
-                            steps.Add(new(crossroad, link));
+                            steps.Push(new(crossroad, link));
                         }
                     }
                 }

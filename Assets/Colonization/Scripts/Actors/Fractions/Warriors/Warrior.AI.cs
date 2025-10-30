@@ -13,6 +13,7 @@ namespace Vurbiri.Colonization
             protected enum State { Defence, Attack, Combat }
             
             protected static readonly WarriorAISettings s_settings;
+
             static AI() => s_settings = SettingsFile.Load<WarriorAISettings>();
 
             protected State _state = State.Defence;
@@ -29,9 +30,35 @@ namespace Vurbiri.Colonization
 
                 if (_actor.IsInCombat())
                 {
-                    _state = State.Combat;
                     yield return StartCoroutine(Combat_Cn());
                     yield break;
+                }
+
+                if (_action.CanUseMoveSkill())
+                {
+                    var colonies = GameContainer.Players.Humans[_playerId].Colonies;
+                    bool moving = FindSiegedEnemy(colonies, out Hexagon next);
+
+                    if (!moving)
+                    {
+                        yield return null;
+                        moving = FindEmptyColony(colonies, out next);
+                    }
+
+                    if(moving)
+                    {
+                        var wait = _action.UseMoveSkill();
+
+                        yield return s_waitBeforeSelecting;
+                        _actor.Unselect(next);
+
+                        yield return wait;
+
+                        if (_actor.IsInCombat())
+                            yield return StartCoroutine(Combat_Cn());
+
+                        yield break;
+                    }
                 }
 
                 Key current = _actor.Hexagon.Key;
@@ -43,17 +70,70 @@ namespace Vurbiri.Colonization
                     yield break;
                 }
 
-                #region Local: IsEnemyComing(..), TryGetNearFreeHexagon(..)
+                #region Local: FindSiegedEnemy(..), IsEnemyComing(..)
+                // ====================================
+                bool FindSiegedEnemy(ReadOnlyReactiveList<Crossroad> colonies, out Hexagon next)
+                {
+                    Hexagon current, start = _actor.Hexagon; next = null;
+                    ReadOnlyArray<Hexagon> hexagons;
+                    int distance = s_settings.maxDistanceSiege, temp;
+
+                    for (int c = 0; c < colonies.Count; c++)
+                    {
+                        hexagons = colonies[c].Hexagons;
+                        for (int i = 0; i < Crossroad.HEX_COUNT; i++)
+                        {
+                            current = hexagons[i];
+                            if (current.IsEnemy(_playerId) && TryGetNextHexagon(start, current, out current, out temp) && temp < distance)
+                            {
+                                distance = temp;
+                                next = current;
+                            }
+                        }
+                    }
+                    return next != null;
+                }
+                // ====================================
+                bool FindEmptyColony(ReadOnlyReactiveList<Crossroad> colonies, out Hexagon next)
+                {
+                    bool find = true; next = null;
+                    Hexagon start = _actor.Hexagon;
+                     for (int i = 0; find & i < HEX.VERTICES; i++)
+                        if (start.Crossroads[i].GetGuardCount(_playerId) == 1)
+                            find = false;
+
+                    if (find)
+                    {
+                        Hexagon current;
+                        ReadOnlyArray<Hexagon> hexagons;
+                        int distance = s_settings.maxDistanceEmpty, temp;
+
+                        for (int i = 0; i < colonies.Count; i++)
+                        {
+                            if (colonies[i].IsEmptyNear(_playerId))
+                            {
+                                hexagons = colonies[i].Hexagons;
+                                foreach (int index in s_haxIndexes)
+                                {
+                                    if (TryGetNextHexagon(start, hexagons[index], out current, out temp) && temp < distance)
+                                    {
+                                        distance = temp;
+                                        next = current;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    return next != null;
+                }
                 // ====================================
                 bool IsEnemyComing(Key current)
                 {
-                    bool result = _state == State.Defence;
-                    if (result)
-                    {
-                        Hexagon hex; result = false;
-                        for (int i = 0; !result & i < HEX.NEAR_TWO.Count; i++)
-                            result = GameContainer.Hexagons.TryGet(current + HEX.NEAR_TWO[i], out hex) && hex.IsEnemy(_playerId);
-                    }
+                    bool result = false; Hexagon hex;
+
+                    for (int i = 0; !result & i < HEX.NEAR_TWO.Count; i++)
+                        result = GameContainer.Hexagons.TryGet(current + HEX.NEAR_TWO[i], out hex) && hex.IsEnemy(_playerId);
+
                     return result;
                 }
                 // ====================================
@@ -95,7 +175,7 @@ namespace Vurbiri.Colonization
 
                 return output.Count > 0;
 
-                #region Local: GetNearPort(..), TryGetNearFreeHexagon(..)
+                #region Local: GetNearPort(..), TryGetNearFreeHexagon(..), SetFreeHexagons(..)
                 // ====================================
                 static Crossroad GetNearPort(Key colony, ReadOnlyReactiveList<Crossroad> ports)
                 {
@@ -125,7 +205,7 @@ namespace Vurbiri.Colonization
                         {
                             for (int t = 0; t < Crossroad.HEX_COUNT; t++)
                             {
-                                temp = HEX.Distance(current.Key, target.Hexagons[t].Key);
+                                temp = current.Distance(target.Hexagons[t]);
                                 if (temp < distance)
                                 {
                                     distance = temp;
@@ -138,56 +218,18 @@ namespace Vurbiri.Colonization
                     return output != null;
                 }
                 // ====================================
-                #endregion
-            }
-
-            protected void FindSieged(ReadOnlyReactiveList<Crossroad> colonies, List<Hexagon> output)
-            {
-                Key startHexagon = _actor.Hexagon.Key;
-                ReadOnlyArray<Hexagon> hexagons; Hexagon hexagon;
-
-                for (int c = 0; c < colonies.Count; c++)
+                static void SetFreeHexagons(Crossroad crossroad, List<Hexagon> output)
                 {
-                    hexagons = colonies[c].Hexagons;
+                    Hexagon hexagon;
                     for (int i = 0; i < Crossroad.HEX_COUNT; i++)
                     {
-                        hexagon = hexagons[i];
-                        if(hexagon.IsEnemy(_actor.Owner) && HEX.Distance(startHexagon, hexagon.Key) <= s_settings.maxDistanceSiege)
+                        hexagon = crossroad.Hexagons[i];
+                        if (hexagon.CanWarriorEnter)
                             output.Add(hexagon);
                     }
                 }
-            }
-
-            protected static bool TryGetNearFreeHexagon(Key startHexagon, Crossroad target, out Hexagon output)
-            {
-                Hexagon current; output = null;
-
-                for (int i = 0, temp, distance = int.MaxValue; i < Crossroad.HEX_COUNT; i++)
-                {
-                    current = target.Hexagons[i];
-                    if (current.CanWarriorEnter)
-                    {
-                        temp = HEX.Distance(startHexagon, current.Key);
-                        if (temp < distance)
-                        {
-                            distance = temp;
-                            output = current;
-                        }
-                    }
-                }
-
-                return output != null;
-            }
-
-            protected static void SetFreeHexagons(Crossroad crossroad, List<Hexagon> output)
-            {
-                Hexagon hexagon;
-                for (int i = 0; i < Crossroad.HEX_COUNT; i++)
-                {
-                    hexagon = crossroad.Hexagons[i];
-                    if (hexagon.CanWarriorEnter)
-                        output.Add(hexagon);
-                }
+                // ====================================
+                #endregion
             }
         }
     }

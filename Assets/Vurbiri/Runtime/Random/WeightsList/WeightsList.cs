@@ -6,12 +6,12 @@ namespace Vurbiri
 	{
         private const int BASE_CAPACITY = 7;
 
-        private int[] _weights;
-        private int _count, _capacity;
+        protected int[] _weights;
+        protected int _count, _capacity;
 
         public int Count { [Impl(256)] get => _count - 1; }
 
-        public int Value
+        public int Next
         {
             get
             {

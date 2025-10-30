@@ -1,3 +1,4 @@
 {
-  "maxDistanceSiege": 3
+  "maxDistanceSiege": 3,
+  "maxDistanceEmpty": 3
 }

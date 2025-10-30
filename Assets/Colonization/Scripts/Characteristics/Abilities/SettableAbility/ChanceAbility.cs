@@ -2,18 +2,17 @@ namespace Vurbiri.Colonization
 {
     sealed public class ChanceAbility<TId> : Ability<TId> where TId : AbilityId<TId>
     {
-        private readonly Ability _ratioA, _ratioB;
+        private readonly Ability _ratio;
         private Chance _chance;
 
-        public ChanceAbility(AAbility<TId> other, Ability ratioA, Ability ratioB) : base(other.Id, other.Value)
+        public ChanceAbility(AAbility<TId> other, Ability ratio) : base(other.Id, other.Value)
         {
-            _ratioA = ratioA;
-            _ratioB = ratioB;
+            _ratio = ratio;
         }
 
         public bool Next()
         {
-            _chance.Value = _value * (_ratioA.Value + _ratioB.Value);
+            _chance.Value = _value * _ratio.Value;
             return _chance.Roll;
         }
     }

@@ -13,15 +13,14 @@ namespace Vurbiri.Colonization
             protected abstract class AState : ASelectableState
             {
                 protected readonly AStates<TActor, TSkin> _parent;
-                protected readonly bool _isPerson;
 
                 #region Propirties
                 protected TActor Actor { [Impl(256)] get => _parent._actor; }
                 protected TSkin Skin { [Impl(256)] get => _parent._skin; }
                 protected BooleanAbility<ActorAbilityId> Moving { [Impl(256)] get => _parent._actor._move; }
                 protected RBool IsCancel { [Impl(256)] get => _parent._actor._canCancel; }
+                protected bool IsPerson { [Impl(256)] get => _parent._actor._isPersonTurn; }
 
-                
                 protected Hexagon CurrentHex
                 {
                     [Impl(256)] get => _parent._actor._currentHex;
@@ -44,7 +43,6 @@ namespace Vurbiri.Colonization
                 public AState(AStates<TActor, TSkin> parent) : base(parent._stateMachine)
                 {
                     _parent = parent;
-                    _isPerson = parent._actor._owner == PlayerId.Person;
                 }
 
                 [Impl(256)] protected Coroutine StartCoroutine(IEnumerator routine) => _parent._actor.StartCoroutine(routine);

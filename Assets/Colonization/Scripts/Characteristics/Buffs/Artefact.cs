@@ -59,7 +59,7 @@ namespace Vurbiri.Colonization
             if (count > 0)
             {
                 for (int i = 0; i < count; i++)
-                    _add[_rIndex.Next()]++;
+                    _add[_rIndex.Next]++;
 
                 for (int i = 0, add; i < _count; i++)
                 {
@@ -82,35 +82,17 @@ namespace Vurbiri.Colonization
             return _changeLevels.Add(action, instantGetValue, this);
         }
 
-        #region Nested class RandomIndex
-        private class RandomIndex
+        //=========== Nested ========================
+        private class RandomIndex : WeightsList
         {
-            private readonly int[] _weights;
-            private readonly int _maxWeight;
-            private readonly int _count;
-
-            public RandomIndex(List<BuffSettings> settings)
+            public RandomIndex(List<BuffSettings> settings) : base(settings.Count)
             {
-                _count = settings.Count;
-                _weights = new int[_count];
-                _weights[0] = settings[0].advance;
-                for (int i = 1; i < _count; i++)
-                    _weights[i] = _weights[i - 1] + settings[i].advance;
-
-                _maxWeight = _weights[^1];
-            }
-
-            public int Next()
-            {
-                int weight = UnityEngine.Random.Range(0, _maxWeight);
-
-                for (int i = 0; i < _count; i++)
-                    if (weight < _weights[i])
-                        return i;
-
-                return -1;
+                for (int i = 0, count = _capacity - 1; i < count; i++)
+                {
+                    _weights[_count] = _weights[_count - 1] + settings[i].advance;
+                    _count++;
+                }
             }
         }
-        #endregion
     }
 }

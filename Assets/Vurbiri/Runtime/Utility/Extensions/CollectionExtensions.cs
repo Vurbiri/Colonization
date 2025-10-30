@@ -32,6 +32,15 @@ namespace Vurbiri
             return array;
         }
 
+        public static T[] MoveToArray<T>(this Stack<T> self)
+        {
+            int index = 0;
+            T[] array = new T[self.Count];
+            while (self.Count > 0)
+                array[index++] = self.Pop();
+            return array;
+        }
+
         [Impl(256)] public static T Any<T>(this IEnumerable<T> self)
         {
             using IEnumerator<T> enumerator = self.GetEnumerator();
@@ -40,7 +49,7 @@ namespace Vurbiri
             return enumerator.Current;
         }
 
-        [Impl(256)] public static void Shuffle<T>(this List<T> self)
+        public static void Shuffle<T>(this List<T> self)
         {
             for (int i = self.Count - 1, j; i > 0; i--)
             {

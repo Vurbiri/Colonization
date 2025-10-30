@@ -12,6 +12,7 @@ namespace Vurbiri
 
         public bool MoveNext() => _isWait;
         public void Send() => _isWait = false;
+        public void Cancel() => _isWait = false;
         public void Reset() => _isWait = true;
         public WaitSignal Restart()
         {

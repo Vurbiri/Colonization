@@ -48,9 +48,9 @@ namespace Vurbiri.Colonization
         }
 
         public BooleanAbility<TId> ReplaceToBoolean(Id<TId> id) => ReplaceTo(id, new BooleanAbility<TId>(_abilities[id]));
-        public ChanceAbility<TId> ReplaceToChance(Id<TId> id, Ability ratioA, Ability ratioB)
+        public ChanceAbility<TId> ReplaceToChance(Id<TId> id, Ability ratio)
         {
-            return ReplaceTo(id, new ChanceAbility<TId>(_abilities[id], ratioA, ratioB));
+            return ReplaceTo(id, new ChanceAbility<TId>(_abilities[id], ratio));
         }
         public SubAbility<TId> ReplaceToSub(Id<TId> id, Id<TId> max, Id<TId> restore)
         {

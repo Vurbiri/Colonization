@@ -187,6 +187,19 @@ namespace Vurbiri.Colonization
         #region ================== IsOwned ============================
         [Impl(256)] public bool IsOwnedColony(Id<PlayerId> playerId) => _owner == playerId & _states.groupId == EdificeGroupId.Colony;
         [Impl(256)] public bool IsOwnedPort(Id<PlayerId> playerId) => _owner == playerId & _states.groupId == EdificeGroupId.Port;
+
+        public int GetGuardCount(Id<PlayerId> playerId)
+        {
+            int count = -1;
+            if (IsOwnedColony(playerId))
+            {
+                count = 0;
+                for (int i = 0; i < HEX_COUNT; i++)
+                    if (_hexagons[i].IsOwner(playerId))
+                        count++;
+            }
+            return count;
+        }
         #endregion
 
         public bool IsEnemyNear(Id<PlayerId> playerId)

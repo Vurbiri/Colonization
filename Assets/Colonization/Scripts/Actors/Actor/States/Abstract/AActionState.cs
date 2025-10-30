@@ -32,7 +32,7 @@ namespace Vurbiri.Colonization
                 {
                     Moving.Off();
                     AP.RemoveModifier(_costAP);
-                    Actor.Signal();
+                    Actor.ChangeSignal();
                 }
             }
         }

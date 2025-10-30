@@ -12,8 +12,8 @@ namespace Vurbiri.Colonization
             sealed protected class MoveState : AActionState
             {
                 private readonly ScaledMoveUsingLerp _move;
+                private readonly WaitSignal _waitHexagon = new();
                 private Coroutine _coroutine;
-                private WaitSignal _waitHexagon;
                 private Hexagon _targetHex;
 
                 public new bool CanUse { [Impl(256)] get => base.CanUse & Actor._move.IsTrue; }
@@ -22,7 +22,7 @@ namespace Vurbiri.Colonization
 
                 public override void Enter()
                 {
-                    if (_isPerson)
+                    if (IsPerson)
                         _coroutine = StartCoroutine(PersonSelectHexagon_Cn());
                     else
                         _coroutine = StartCoroutine(AISelectHexagon_Cn());
@@ -37,8 +37,7 @@ namespace Vurbiri.Colonization
                     }
 
                     _move.Skip();
-
-                    _waitHexagon = null;
+                    _waitHexagon.Cancel();
                     _targetHex = null;
 
                     signal.Send();
@@ -53,7 +52,7 @@ namespace Vurbiri.Colonization
 
                 public override void Unselect(ISelectable newSelectable)
                 {
-                    if (_waitHexagon != null)
+                    if (_waitHexagon.IsWait)
                     {
                         _targetHex = newSelectable as Hexagon;
                         _waitHexagon.Send();
@@ -75,7 +74,7 @@ namespace Vurbiri.Colonization
                     }
 
                     IsCancel.True();
-                    yield return _waitHexagon = new();
+                    yield return _waitHexagon.Restart();
                     IsCancel.False();
 
                     for (int i = empty.Count - 1; i >= 0; i--)
@@ -86,7 +85,7 @@ namespace Vurbiri.Colonization
 
                 private IEnumerator AISelectHexagon_Cn()
                 {
-                    yield return _waitHexagon = new();
+                    yield return _waitHexagon.Restart();
 
                     Move();
                 }

@@ -13,9 +13,12 @@ namespace Vurbiri.Colonization
             private readonly Diplomat _diplomat;
             private readonly Builder _builder;
 
+            private readonly Commander _commander;
+
             public Counselors(AIController parent)
             {
                 _counselors = new( _diplomat = new(parent), _builder = new(parent), new Scientist(parent), new Caster(parent), new Recruiter(parent));
+                _commander = new(parent);
             }
 
             [Impl(256)] public IEnumerator Landing_Cn() => _builder.Landing_Cn();
@@ -33,6 +36,8 @@ namespace Vurbiri.Colonization
             {
                 foreach (var counsel in _counselors)
                     yield return StartCoroutine(counsel.Execution_Cn());
+
+                yield return StartCoroutine(_commander.Execution_Cn());
 
                 _waitExecution.Send();
             }

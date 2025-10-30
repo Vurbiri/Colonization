@@ -52,13 +52,13 @@ namespace Vurbiri.Colonization
         public Id<PlayerId> Owner { [Impl(256)] get => _owner; }
         public Hexagon Hexagon { [Impl(256)] get => _currentHex; }
         public int ActionPoint { [Impl(256)] get => _currentAP.Value; }
-        public bool CanMove { [Impl(256)] get => _move.IsTrue; }
         public bool CanUseSkills { [Impl(256)] get => _states.IsDefault & _isPersonTurn; }
         public int CurrentHP { [Impl(256)] get => _currentHP.Value; }
+        public int PercentHP { [Impl(256)] get => _currentHP.Percent; }
         public bool IsFullHP { [Impl(256)] get => _currentHP.IsMax; }
         public bool IsWounded { [Impl(256)] get => _currentHP.IsNotMax; }
         public bool IsDead { [Impl(256)] get => _currentHP.Value <= 0; }
-        public bool ZealCharge { [Impl(256)] get => _zealCharge; [Impl(256)] set { _zealCharge = value; _eventChanged.Invoke(this, TypeEvent.Change); } }
+        public bool ZealCharge { [Impl(256)] get => _zealCharge; [Impl(256)] set { _zealCharge = value; ChangeSignal(); } }
         public Transform Transform { [Impl(256)] get => _thisTransform; }
         public ActorSkin Skin { [Impl(256)] get => _states.Skin; }
         public Actions Action { [Impl(256)] get => _states; }
@@ -112,8 +112,8 @@ namespace Vurbiri.Colonization
             _currentHP  = _abilities.ReplaceToSub(ActorAbilityId.CurrentHP, ActorAbilityId.MaxHP, ActorAbilityId.HPPerTurn);
             _currentAP  = _abilities.ReplaceToSub(ActorAbilityId.CurrentAP, ActorAbilityId.MaxAP, ActorAbilityId.APPerTurn);
             _move       = _abilities.ReplaceToBoolean(ActorAbilityId.IsMove);
-            _profitMain = _abilities.ReplaceToChance(ActorAbilityId.ProfitMain, _currentAP, _move);
-            _profitAdv  = _abilities.ReplaceToChance(ActorAbilityId.ProfitAdv, _currentAP, _move);
+            _profitMain = _abilities.ReplaceToChance(ActorAbilityId.ProfitMain, _currentAP);
+            _profitAdv  = _abilities.ReplaceToChance(ActorAbilityId.ProfitAdv, _currentAP);
 
             for (int i = 0; i < initData.buffs.Count; i++)
                 _subscription += initData.buffs[i].Subscribe(OnBuff);
@@ -216,7 +216,7 @@ namespace Vurbiri.Colonization
             int delta = _abilities.AddPerk(effect);
 
             if(delta != 0 & _currentHP.IsTrue)
-                _eventChanged.Invoke(this, TypeEvent.Change);
+                ChangeSignal();
 
             return delta;
         }
@@ -275,7 +275,7 @@ namespace Vurbiri.Colonization
         public void FromTargetState()
         {
             if (_currentHP.IsTrue && _states.FromTarget())
-                _eventChanged.Invoke(this, TypeEvent.Change);
+                ChangeSignal();
         }
         #endregion
 
@@ -289,7 +289,8 @@ namespace Vurbiri.Colonization
         private void OnDeath(int hp) { if (hp <= 0) _states.Death(); }
 
         private void RedirectEvents(ReactiveEffect item, TypeEvent type) => _eventChanged.Invoke(this, TypeEvent.Change);
-        private void Signal() => _eventChanged.Invoke(this, TypeEvent.Change);
+        
+        [Impl(256)] private void ChangeSignal() => _eventChanged.Invoke(this, TypeEvent.Change);
         #endregion
     }
 }
