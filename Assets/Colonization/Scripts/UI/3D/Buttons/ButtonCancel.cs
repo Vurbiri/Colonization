@@ -11,7 +11,7 @@ namespace Vurbiri.Colonization.UI
 
         public Event<IMenu, bool> Init()
         {
-            base.InternalInit(GameContainer.UI.WorldHint, OnClick, false);
+            base.InternalInit(OnClick, false);
             _unLanguage = Localization.Instance.Subscribe(SetText);
             
             return _changeEvent;

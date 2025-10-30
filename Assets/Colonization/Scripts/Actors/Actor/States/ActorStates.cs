@@ -8,11 +8,12 @@ namespace Vurbiri.Colonization
         public abstract class Actions
         {
             public abstract bool CanUseSkill(int id);
+            public abstract bool CanUseMoveSkill();
             public abstract bool CanUseSpecSkill();
 
             public abstract SkillCode GetSkillCode(int id);
 
-            public abstract WaitSignal Move();
+            public abstract WaitSignal UseMoveSkill();
             public abstract WaitSignal UseSkill(int id);
             public abstract WaitSignal UseSpecSkill();
             public abstract WaitStateSource<DeathStage> Death();
@@ -67,10 +68,11 @@ namespace Vurbiri.Colonization
             }
 
             sealed public override bool CanUseSkill(int id) => _skillState[id].CanUse;
+            sealed public override bool CanUseMoveSkill() => _moveState.CanUse;
 
             sealed public override SkillCode GetSkillCode(int id) => _skillState[id].code;
 
-            sealed public override WaitSignal Move()
+            sealed public override WaitSignal UseMoveSkill()
             {
                 _stateMachine.SetState(_moveState, true);
                 return _moveState.signal.Restart();
@@ -88,7 +90,7 @@ namespace Vurbiri.Colonization
                 return _deathState.stage;
             }
 
-            [Impl(256)] public void AddMoveState(float speed) => _moveState = new(speed, this);
+            [Impl(256)] public void AddMoveSkillState(float speed) => _moveState = new(speed, this);
 
             [Impl(256)] public void SetCountState(int count) => _skillState = new ASkillState[_skillsCount = count];
             [Impl(256)] public void AddSkillState(SkillSettings skill, float speedRun, int id) => _skillState[id] = ASkillState.Create(skill, speedRun, id, this);

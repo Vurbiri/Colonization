@@ -5,6 +5,7 @@ namespace Vurbiri.Colonization
 {
     public static class CONST
     {
+        public const int MOVE_SKILL_COST = 1;
         public const int MOVE_SKILL_ID = 5, SPEC_SKILL_ID = 6;
         public const int BLESS_SKILL_ID = 0, WRATH_SKILL_ID = 1;
 

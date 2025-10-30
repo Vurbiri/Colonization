@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using UnityEngine;
+using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization
 {
@@ -9,16 +9,16 @@ namespace Vurbiri.Colonization
     {
         public abstract partial class AStates<TActor, TSkin>
         {
-            sealed protected class MoveState : AState
+            sealed protected class MoveState : AActionState
             {
                 private readonly ScaledMoveUsingLerp _move;
                 private Coroutine _coroutine;
                 private WaitSignal _waitHexagon;
                 private Hexagon _targetHex;
 
-                public readonly WaitSignal signal = new();
+                public new bool CanUse { [Impl(256)] get => base.CanUse & Actor._move.IsTrue; }
 
-                public MoveState(float speed, AStates<TActor, TSkin> parent) : base(parent) => _move = new(Actor._thisTransform, speed);
+                public MoveState(float speed, AStates<TActor, TSkin> parent) : base(parent, CONST.MOVE_SKILL_ID, CONST.MOVE_SKILL_COST) => _move = new(Actor._thisTransform, speed);
 
                 public override void Enter()
                 {
@@ -44,7 +44,7 @@ namespace Vurbiri.Colonization
                     signal.Send();
                 }
 
-                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                [Impl(256)]
                 private void ToExit()
                 {
                     _coroutine = null;
@@ -59,8 +59,6 @@ namespace Vurbiri.Colonization
                         _waitHexagon.Send();
                     }
                 }
-
-                sealed public override void Cancel() => Unselect(null);
 
                 private IEnumerator PersonSelectHexagon_Cn()
                 {
@@ -93,7 +91,7 @@ namespace Vurbiri.Colonization
                     Move();
                 }
 
-                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                [Impl(256)]
                 private void Move()
                 {
                     if (_targetHex == null)
@@ -109,7 +107,8 @@ namespace Vurbiri.Colonization
                     CurrentHex.ActorExit();
                     CurrentHex = _targetHex;
 
-                    Moving.Off(); Skin.Move();
+                    Pay();
+                    Skin.Move();
 
                     Rotation = HEX.ROTATIONS[_targetHex.Key - currentHex.Key];
                     yield return _move.Run(currentHex.Position, _targetHex.Position);

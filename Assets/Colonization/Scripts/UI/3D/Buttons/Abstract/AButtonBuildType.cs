@@ -19,7 +19,7 @@ namespace Vurbiri.Colonization.UI
 
         public virtual void Init(ReadOnlyMainCurrencies cost, AWorldMenu parent)
         {
-            base.InternalInit(GameContainer.UI.WorldHint, OnClick, true);
+            base.InternalInit(OnClick, true);
             
             _cost = cost;
             _cash = GameContainer.Players.Person.Resources;

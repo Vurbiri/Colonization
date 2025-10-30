@@ -19,8 +19,11 @@ namespace Vurbiri.Colonization
         [SerializeField] private Array<AnimationTime> _timings;
 
         [NonSerialized] private Array<SkillUI> _skillsUI;
+        private MoveUI _moveUI;
 
         public ReadOnlyArray<SkillUI> SkillsUI { [Impl(256)] get => _skillsUI; }
+        public MoveUI MoveUI { [Impl(256)] get => _moveUI; }
+
         public ReadOnlyArray<string> HitSfxNames { [Impl(256)] get => _hitSfxNames; }
         public ReadOnlyArray<AnimationTime> Timings { [Impl(256)] get => _timings; }
 
@@ -29,20 +32,20 @@ namespace Vurbiri.Colonization
         public void Init(int actorType, int actorId)
         {
             int countSkills = _skillsSettings.Length;
-
-            _skillsUI = new (countSkills);
             var colors = GameContainer.UI.Colors;
             var separator = new SeparatorEffectUI(colors);
 
+            _skillsUI = new(countSkills);
             for (int i = 0; i < countSkills; i++)
                 _skillsUI[i] = _skillsSettings[i].Init(colors, separator, actorType, actorId, i);
+            _moveUI = new(separator);
 
             _specSkillSettings.Init(separator, actorType, actorId);
         }
 
         public void CreateStates<TActor, TSkin>(Actor.AStates<TActor, TSkin> states) where TActor : Actor where TSkin : ActorSkin
         {
-            states.AddMoveState(_walkSpeed);
+            states.AddMoveSkillState(_walkSpeed);
             states.AddSpecSkillState(_specSkillSettings, _runSpeed, _walkSpeed);
 
             int countSkills = _skillsSettings.Length;
@@ -53,12 +56,13 @@ namespace Vurbiri.Colonization
 
         public void Dispose()
         {
-            _specSkillSettings.Dispose();
-
             if (_skillsUI != null)
             {
                 for (int i = 0; i < _skillsUI.Count; i++)
                     _skillsUI[i].Dispose();
+
+                _moveUI.Dispose();
+                _specSkillSettings.Dispose();
             }
         }
 

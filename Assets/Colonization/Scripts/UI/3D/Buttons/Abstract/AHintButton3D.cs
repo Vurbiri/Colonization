@@ -8,9 +8,9 @@ namespace Vurbiri.Colonization.UI
     {
         protected GameObject _thisGameObject;
 
-        protected virtual void InternalInit(WorldHint hint, Action action, bool active)
+        protected virtual void InternalInit(Action action, bool active)
         {
-            base.InternalInit(hint, action, 0.505f);
+            base.InternalInit(GameContainer.UI.WorldHint, action, 0.505f);
 
             _thisGameObject = gameObject;
             _thisGameObject.SetActive(active);

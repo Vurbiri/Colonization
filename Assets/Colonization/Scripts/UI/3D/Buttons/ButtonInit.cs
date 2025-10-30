@@ -3,7 +3,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using Vurbiri.Colonization.UI;
 using Vurbiri.International;
-using Vurbiri.UI;
 
 namespace Vurbiri.Colonization
 {
@@ -17,7 +16,7 @@ namespace Vurbiri.Colonization
 
         public void Init(Action action)
         {
-            base.InternalInit(GameContainer.UI.WorldHint, action, false);
+            base.InternalInit(action, false);
         }
 
         public void Setup(bool isEnable, int edificeId)

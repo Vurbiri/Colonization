@@ -33,7 +33,7 @@ namespace Vurbiri.Colonization
                         return new RangeSkillState(parent, skill, id);
 
                     if (skill.Distance < 0.01f)
-                        return new SkillState(parent, skill, speedRun, id);
+                        return new MeleeSkillState(parent, skill, speedRun, id);
 
                     return new MovementSkillState(parent, skill, speedRun, id);
                 }
@@ -54,12 +54,6 @@ namespace Vurbiri.Colonization
                 {
                     _coroutineAction = null;
                     GetOutOfThisState();
-                }
-
-                sealed protected override void Pay()
-                {
-                    base.Pay();
-                    Actor.Signal();
                 }
 
                 protected abstract IEnumerator Actions_Cn();

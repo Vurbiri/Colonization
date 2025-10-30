@@ -18,7 +18,7 @@ namespace Vurbiri.Colonization
                 protected SubAbility<ActorAbilityId> AP { [Impl(256)] get => _parent._actor._currentAP; }
                 protected EffectsSet ActorEffects { [Impl(256)] get => _parent._actor._effects; }
                 public bool CanUse { [Impl(256)] get => AP >= _costAP.Value; }
-                 #endregion
+                #endregion
 
                 public AActionState(AStates<TActor, TSkin> parent, int id, int cost) : base(parent)
                 {
@@ -28,10 +28,11 @@ namespace Vurbiri.Colonization
 
                 sealed public override void Cancel() => Unselect(null);
 
-                protected virtual void Pay()
+                protected void Pay()
                 {
                     Moving.Off();
                     AP.RemoveModifier(_costAP);
+                    Actor.Signal();
                 }
             }
         }

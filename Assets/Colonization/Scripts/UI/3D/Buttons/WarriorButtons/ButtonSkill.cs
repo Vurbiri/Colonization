@@ -14,7 +14,7 @@ namespace Vurbiri.Colonization.UI
 
         public void Init(AWorldMenu parent)
         {
-            InternalInit(GameContainer.UI.WorldHint, OnClick, false);
+            InternalInit(OnClick, false);
 
             _parent = parent;
         }

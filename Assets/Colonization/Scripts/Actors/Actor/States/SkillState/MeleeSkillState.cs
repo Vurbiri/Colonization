@@ -7,12 +7,12 @@ namespace Vurbiri.Colonization
     {
         public abstract partial class AStates<TActor, TSkin>
         {
-            protected class SkillState : ATargetSkillState
+            protected class MeleeSkillState : ATargetSkillState
             {
                 protected readonly float _speedRun;
                 protected readonly float _rangeSkill;
 
-                public SkillState(AStates<TActor, TSkin> parent, SkillSettings skill, float speedRun, int id) : base(parent, skill, id)
+                public MeleeSkillState(AStates<TActor, TSkin> parent, SkillSettings skill, float speedRun, int id) : base(parent, skill, id)
                 {
                     _speedRun = speedRun;
                     _rangeSkill = skill.Range;

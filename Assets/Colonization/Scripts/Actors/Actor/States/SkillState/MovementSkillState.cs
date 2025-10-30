@@ -7,7 +7,7 @@ namespace Vurbiri.Colonization
     {
         public abstract partial class AStates<TActor, TSkin>
         {
-            sealed protected class MovementSkillState : SkillState
+            sealed protected class MovementSkillState : MeleeSkillState
             {
                 private readonly float _distanceMove;
                 private readonly float _timeToHit;

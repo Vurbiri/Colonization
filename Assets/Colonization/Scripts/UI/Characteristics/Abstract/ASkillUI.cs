@@ -10,9 +10,9 @@ namespace Vurbiri.Colonization.UI
         protected readonly SeparatorEffectUI _separator;
         protected string _textMain, _textAP;
 
-        public ASkillUI(SeparatorEffectUI separator, int cost)
+        protected ASkillUI(SeparatorEffectUI separator, int cost)
         {
-            _cost = cost.ToString();
+            _cost = cost.ToStr();
             _separator = separator;
         }
 

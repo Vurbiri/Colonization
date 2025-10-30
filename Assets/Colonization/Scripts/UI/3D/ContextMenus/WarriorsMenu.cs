@@ -8,8 +8,8 @@ namespace Vurbiri.Colonization.UI
         [Space]
         [SerializeField] private WorldHintButton _buttonClose;
         [Space]
-        [SerializeField] private WorldHintButton _buttonMovement;
-        [SerializeField] private ButtonBlock _buttonBlock;
+        [SerializeField] private SpecButton _buttonMove;
+        [SerializeField] private SpecButton _buttonBlock;
         [SerializeField] private ButtonSkill[] _buttonsSkill;
         [SerializeField] private Positions[] _buttonPositions;
 
@@ -20,7 +20,7 @@ namespace Vurbiri.Colonization.UI
         {
             _buttonClose.Init(Close);
 
-            _buttonMovement.Init(OnMovement);
+            _buttonMove.Init(OnMovement);
             _buttonBlock.Init(OnBlock);
 
             _countButtonsSkill = _buttonsSkill.Length;
@@ -37,8 +37,8 @@ namespace Vurbiri.Colonization.UI
             _currentWarrior = actor;
             var skills = GameContainer.Actors.GetSkills(actor);
 
-            _buttonMovement.Setup(true, _currentWarrior.CanMove);
-            _buttonBlock.Setup(actor, skills.Spec.UI);
+            _buttonMove.Setup(actor.Action.CanUseMoveSkill(), skills.MoveUI);
+            _buttonBlock.Setup(actor.Action.CanUseSpecSkill(), skills.Spec.UI);
 
             int index = 0; var skillsUI = skills.SkillsUI;
             for (int count = skillsUI.Count; index < count; index++)
@@ -53,7 +53,7 @@ namespace Vurbiri.Colonization.UI
         private void OnMovement()
         {
             base.Close();
-            _currentWarrior.Action.Move();
+            _currentWarrior.Action.UseMoveSkill();
         }
 
         public void OnBlock()
@@ -89,7 +89,7 @@ namespace Vurbiri.Colonization.UI
             _buttonClose.transform.localPosition = Vector3.zero;
 
             Vector3 distance = new(0f, buttonDistance, 0f);
-            _buttonMovement.transform.localPosition = -distance;
+            _buttonMove.transform.localPosition = -distance;
             _buttonBlock.transform.localPosition = distance;
 
             CreatePositionButtons(distance);
@@ -126,7 +126,8 @@ namespace Vurbiri.Colonization.UI
             if (_buttonsSkill == null || _buttonsSkill.Length == 0)
                 _buttonsSkill = GetComponentsInChildren<ButtonSkill>();
 
-            this.SetChildren(ref _buttonBlock);
+            this.SetChildren(ref _buttonMove, "ButtonMove");
+            this.SetChildren(ref _buttonBlock, "ButtonBlock");
         }
 #endif
     }

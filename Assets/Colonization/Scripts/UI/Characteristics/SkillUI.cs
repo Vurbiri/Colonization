@@ -15,7 +15,6 @@ namespace Vurbiri.Colonization.UI
         public string Key => _settings.keySkillName;
         public Sprite Sprite => _settings.sprite;
 
-
         public SkillUI(SeparatorEffectUI separator, int cost, Settings settings, AEffectUI[] effectsTarget, AEffectUI[] effectsSelf) : base(separator, cost)
         {
             _settings = settings;

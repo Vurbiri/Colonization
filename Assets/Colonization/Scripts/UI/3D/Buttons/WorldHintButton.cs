@@ -1,8 +1,6 @@
 using System;
 using UnityEngine;
 using Vurbiri.International;
-using Vurbiri.Reactive;
-using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.UI
 {
@@ -14,7 +12,7 @@ namespace Vurbiri.Colonization.UI
 
         public void Init(Action action)
         {
-            base.InternalInit(GameContainer.UI.WorldHint, action, true);
+            base.InternalInit(action, true);
 
             _subscription = Localization.Instance.Subscribe(SetLocalizationText);
         }
