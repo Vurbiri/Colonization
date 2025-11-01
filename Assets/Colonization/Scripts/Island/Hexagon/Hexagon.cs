@@ -7,7 +7,7 @@ using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization
 {
-    public partial class Hexagon : ISelectable, IPositionable, IReactive<int>
+    public partial class Hexagon : ISelectable, IPositionable, IReactive<int>, IEquatable<Key>
     {
         #region ================== Fields ============================
         private int _id;
@@ -232,5 +232,7 @@ namespace Vurbiri.Colonization
         [Impl(256)] public void ShowMark(bool isGreenMark) => _view.ShowMark(isGreenMark);
         [Impl(256)] public void HideMark() => _view.HideMark();
         #endregion
+
+        [Impl(256)] public bool Equals(Key key) =>  _key == key;
     }
 }

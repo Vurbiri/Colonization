@@ -23,16 +23,28 @@ namespace Vurbiri.Collections
         public TValue this[Id<TId> id] { [Impl(256)] get => _values[id.Value]; }
 
         public ReadOnlyIdSet() { }
+
         [JsonConstructor]
         public ReadOnlyIdSet(IReadOnlyList<TValue> list)
         {
             TValue value;
             for (int i = list.Count - 1; i >= 0; i--)
             {
-                value = list[i];
-                if (value != null)
+                if ((value = list[i]) != null)
                 {
-                    _values[value.Id.Value] = list[i];
+                    _values[value.Id.Value] = value;
+                    _count++;
+                }
+            }
+        }
+        public ReadOnlyIdSet(params TValue[] values)
+        {
+            TValue value;
+            for (int i = values.Length - 1; i >= 0; i--)
+            {
+                if ((value = values[i]) != null)
+                {
+                    _values[value.Id.Value] = value;
                     _count++;
                 }
             }
@@ -42,32 +54,8 @@ namespace Vurbiri.Collections
         [Impl(256)] public bool ContainsKey(Id<TId> id) => _values[id.Value] != null;
         [Impl(256)] public bool Contains(TValue value) => _values[value.Id.Value] != null;
 
-        [Impl(256)] public bool TryGet(int index, out TValue value)
-        {
-            value = _values[index];
-            return value != null;
-        }
-        [Impl(256)] public bool TryGet(Id<TId> id, out TValue value)
-        {
-            value = _values[id];
-            return value != null;
-        }
-
-        public TValue Next(int index)
-        {
-            TValue value;
-            int start = index;
-            do
-            {
-                index = (index + 1) % _capacity;
-                value = _values[index];
-                if (value != null)
-                    return value;
-            }
-            while (index != start);
-
-            return null;
-        }
+        [Impl(256)] public bool TryGet(int index, out TValue value) => (value = _values[index]) != null;
+        [Impl(256)] public bool TryGet(Id<TId> id, out TValue value) => (value = _values[id.Value]) != null;
 
         public IEnumerator<TValue> GetEnumerator() => new SetEnumerator<TValue>(_values, IdType<TId>.Count);
         IEnumerator IEnumerable.GetEnumerator() => new SetEnumerator<TValue>(_values, IdType<TId>.Count);

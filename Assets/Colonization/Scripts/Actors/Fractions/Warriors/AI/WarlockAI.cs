@@ -3,7 +3,7 @@ using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization
 {
-    sealed public class WarlockAI : Warrior.AI
+    sealed public class WarlockAI : WarriorAI
     {
 		[Impl(256)] public WarlockAI(Actor actor) : base(actor)
         {

@@ -12,8 +12,11 @@ namespace Vurbiri.Collections
         public new TValue this[Id<TId> id] { [Impl(256)] get => _values[id.Value]; [Impl(256)] set => Replace(value); }
 
         public IdSet() { }
-        [JsonConstructor]
+
+        [Impl(256), JsonConstructor]
         public IdSet(IReadOnlyList<TValue> list) : base(list) { }
+        [Impl(256)]
+        public IdSet(params TValue[] values) : base(values) { }
 
         [Impl(256)] public bool TryAdd(TValue value)
         {
@@ -40,7 +43,7 @@ namespace Vurbiri.Collections
             _values[value.Id] = value;
         }
 
-        public void ReplaceRange(IEnumerable<TValue> collection)
+        [Impl(256)] public void ReplaceRange(IEnumerable<TValue> collection)
         {
             foreach (TValue value in collection)
                 Replace(value);

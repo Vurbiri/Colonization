@@ -39,7 +39,7 @@ namespace Vurbiri.Colonization
                 {
                     var cost = GameContainer.Prices.Warriors[_current];
                     yield return Human.Exchange_Cn(cost, Out<bool>.Get(out int key));
-                    if(Out<bool>.Result(key) && Warrior.AI.TrySetSpawn(Human, s_spawns))
+                    if(Out<bool>.Result(key) && WarriorAI.TrySetSpawn(Human, s_spawns))
                     {
                         Hexagon hexagon = s_spawns.Rand(); s_spawns.Clear();
 

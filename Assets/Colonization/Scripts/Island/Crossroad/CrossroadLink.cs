@@ -37,7 +37,7 @@ namespace Vurbiri.Colonization
             Crossroad crossA = crossroads[0], crossB = crossroads[1];
             int id = CROSS.NEAR.IndexOf(crossB.Key - crossA.Key) % LinkId.Count;
 
-            if (!(crossA.Links.ContainsKey(id) && crossB.Links.ContainsKey(id)))
+            if (!(crossA.Links.ContainsKey(id) & crossB.Links.ContainsKey(id)))
             {
                 CrossroadLink link = new(id, crossA, crossB, !isShore);
                 crossA.AddLink(link);

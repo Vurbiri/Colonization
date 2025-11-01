@@ -45,36 +45,66 @@ namespace Vurbiri.Colonization
                 s_links.Clear(); 
 
                 return pathLength >= 0;
+            }
 
-                // ========== Local =================
-                static bool Find(Hexagon start, Hexagon end, int distance)
+            protected static bool TryGetDistance(Hexagon start, Hexagon end, out int pathLength)
+            {
+                int distance = start.Distance(end);
+                pathLength = -1;
+
+                if (distance > (end.CanWarriorEnter ? 0 : 1) && Find(start, end, distance))
                 {
-                    bool found = false;
-                    int depth = distance + 1;
-                    Hexagon current, near;
-
-                    s_finds.Enqueue(end);
-                    while (!found & s_finds.Count > 0)
+                    pathLength = 0;
+                    while (s_links.TryGetValue(start, out end))
                     {
-                        current = s_finds.Dequeue();
-
-                        for(int index = 0; !found & index < HEX.SIDES; index++)
-                        {
-                            near = current.Neighbors[index];
-                            if (found = near == start)
-                                s_links.Add(near, current);
-                            if ((!found & near != end & near.CanWarriorEnter) && near.Distance(end) < depth && near.Distance(start) < depth && s_links.TryAdd(near, current))
-                                s_finds.Enqueue(near);
-                        }
+                        start = end;
+                        pathLength++;
                     }
-                    s_finds.Clear();
-
-                    return found;
                 }
+                s_links.Clear();
+
+                return pathLength >= 0;
+            }
+
+            protected static bool TryGetNextHexagon(Hexagon start, Hexagon end, out Hexagon next)
+            {
+                next = null;
+
+                int distance = start.Distance(end);
+                if (distance > (end.CanWarriorEnter ? 0 : 1) && Find(start, end, distance))
+                    next = s_links[start];
+                s_links.Clear();
+
+                return next != null;
             }
 
             [Impl(256)] protected Coroutine StartCoroutine(IEnumerator routine) => _actor.StartCoroutine(routine);
             [Impl(256)] protected void StopCoroutine(Coroutine coroutine) => _actor.StopCoroutine(coroutine);
+
+            private static bool Find(Hexagon start, Hexagon end, int distance)
+            {
+                bool found = false;
+                int depth = distance + 1;
+                Hexagon current, near;
+
+                s_finds.Enqueue(end);
+                while (!found & s_finds.Count > 0)
+                {
+                    current = s_finds.Dequeue();
+
+                    for (int index = 0; !found & index < HEX.SIDES; index++)
+                    {
+                        near = current.Neighbors[index];
+                        if (found = near == start)
+                            s_links.Add(near, current);
+                        if ((!found & near != end & near.CanWarriorEnter) && near.Distance(end) < depth && near.Distance(start) < depth && s_links.TryAdd(near, current))
+                            s_finds.Enqueue(near);
+                    }
+                }
+                s_finds.Clear();
+
+                return found;
+            }
         }
     }
 }

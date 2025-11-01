@@ -204,6 +204,8 @@ namespace Vurbiri.Colonization
                 // *********************************************************************************
                 private class Finder
                 {
+                    private static readonly RandomSequence s_indexes = new(LinkId.Count);
+
                     private readonly Dictionary<Crossroad, CrossroadLink> _links = new();
                     private readonly HashSet<Crossroad> _ending = new();
                     private readonly int _maxDepth;
@@ -222,7 +224,7 @@ namespace Vurbiri.Colonization
                         var crossroads = GameContainer.Crossroads;
                         Queue<Crossroad> queue = new(starting);
 
-                        Crossroad current, linked;
+                        Crossroad current, linked; CrossroadLink link;
                         while (queue.Count > 0)
                         {
                             current = queue.Dequeue();
@@ -231,9 +233,10 @@ namespace Vurbiri.Colonization
 
                             if (IsDepth(current))
                             {
-                                foreach (var link in current.Links)
+                                foreach (int index in s_indexes)
                                 {
-                                    if (link.IsEmpty)
+                                    link = current.Links[index];
+                                    if (link != null && link.IsEmpty)
                                     {
                                         linked = crossroads[link.GetOther(current.Type)];
                                         if (!starting.Contains(linked) && _links.TryAdd(linked, link))

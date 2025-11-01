@@ -182,8 +182,10 @@ namespace Vurbiri.Colonization
                 }
             }
         }
+
+        [Impl(256)] public void AddLink(CrossroadLink link) => _links.Add(link);
         #endregion
-       
+
         #region ================== IsOwned ============================
         [Impl(256)] public bool IsOwnedColony(Id<PlayerId> playerId) => _owner == playerId & _states.groupId == EdificeGroupId.Colony;
         [Impl(256)] public bool IsOwnedPort(Id<PlayerId> playerId) => _owner == playerId & _states.groupId == EdificeGroupId.Port;
@@ -456,8 +458,6 @@ namespace Vurbiri.Colonization
 
 
         #region ================== Utilities ============================
-        [Impl(256)] public void AddLink(CrossroadLink link) => _links.Add(link);
-
         public Key KeyCalculation()
         {
             Key key = Key.Zero;
