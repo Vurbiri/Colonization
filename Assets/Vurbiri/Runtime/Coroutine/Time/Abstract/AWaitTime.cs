@@ -12,7 +12,7 @@ namespace Vurbiri
         private readonly Timer _timer;
         private bool _isWait;
 
-        public float Time => _waitTime;
+        public float Time { [Impl(256)] get => _waitTime; [Impl(256)] set => _waitTime = value; } 
         public Enumerator CurrentTimer => _timer;
 
         protected AWaitTime(Func<float> applicationTime) => _timer = new(applicationTime);

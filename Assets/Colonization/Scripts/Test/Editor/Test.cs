@@ -119,9 +119,7 @@ namespace Vurbiri.Colonization
 
         public void Testing()
         {
-            print(layerMaskRight.value);
-            print(layerMaskLeft.value);
-            print(gameObject.layer);
+            StringTest(); StringTest();
         }
 
         public void StringTest()
@@ -134,55 +132,55 @@ namespace Vurbiri.Colonization
             Thread.Sleep(100);
             stopWatch.Start();
             for (int i = 0; i < count; i++)
-                ToString();
+                MathMin();
             stopWatch.Stop();
             test1 = stopWatch.ElapsedTicks;
 
             stopWatch.Restart();
             for (int i = 0; i < count; i++)
-                Cache();
+                MathMinI();
             stopWatch.Stop();
             test2 = stopWatch.ElapsedTicks;
 
             print("-----------------------------------------------");
-            print($"ToString: {test1}");
-            print($"Cache: {test2}");
+            print($"Math: {test1}");
+            print($"MathI: {test2}");
             print("-----------------------------------------------");
-            print($"ToString/Cache:  {test1 / test2}");
+            print($"Math/MathI:  {test1 / test2}");
             print("===============================================");
 
             print("===============================================");
             Thread.Sleep(100);
             stopWatch.Restart();
             for (int i = 0; i < count; i++)
-                Cache();
+                MathMinI();
             stopWatch.Stop();
             test2 = stopWatch.ElapsedTicks;
 
             stopWatch.Restart();
             for (int i = 0; i < count; i++)
-                ToString();
+                MathMin();
             stopWatch.Stop();
             test1 = stopWatch.ElapsedTicks;
 
             print("-----------------------------------------------");
-            print($"ToString: {test1}");
-            print($"Cache: {test2}");
+            print($"Math: {test1}");
+            print($"MathI: {test2}");
             print("-----------------------------------------------");
-            print($"ToString/Cache:  {test1 / test2}");
+            print($"Math/MathI:  {test1 / test2}");
             print("===============================================");
 
-            void ToString()
+            void MathMin()
             {
-                string test;
-                for(int i = IntToStr.MIN_NUMBERS_STR; i <= IntToStr.MAX_NUMBERS_STR; i++)
-                    test = i.ToString();
+                int test;
+                for(int i = IntToStr.MIN_NUMBERS_STR; i <= IntToStr.MAX_NUMBERS_STR << 5; i++)
+                    test = Math.Min(i, 444);
             }
-            void Cache()
+            void MathMinI()
             {
-                string test;
-                for (int i = IntToStr.MIN_NUMBERS_STR; i <= IntToStr.MAX_NUMBERS_STR; i++)
-                    test = i.ToStr();
+                int test;
+                for (int i = IntToStr.MIN_NUMBERS_STR; i <= IntToStr.MAX_NUMBERS_STR << 5; i++)
+                    test = Math.Min(i, 444);
             }
         }
 

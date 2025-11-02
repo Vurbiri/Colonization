@@ -13,7 +13,7 @@ namespace Vurbiri.Colonization
 
         static AIController() => s_settings = SettingsFile.Load<AIControllerSettings>();
 
-        public AIController(int playerId, Settings settings) : base(playerId, settings) 
+        public AIController(int playerId, Settings settings) : base(playerId, settings, false) 
         {
             if (s_settings.militarist == playerId)
                 _specialization = AbilityTypeId.Military;

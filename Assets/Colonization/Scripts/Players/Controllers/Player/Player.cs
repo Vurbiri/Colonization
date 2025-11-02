@@ -18,13 +18,14 @@ namespace Vurbiri.Colonization
         protected Subscription _subscription;
 
         public Id<PlayerId> Id { [Impl(256)] get => _id; }
+        public bool IsPerson { [Impl(256)] get => _isPerson; }
         public ReadOnlyReactiveSet<Actor> Actors { [Impl(256)] get => GameContainer.Actors[_id]; }
         public ReactiveValue<bool> Interactable { [Impl(256)] get => _interactable; }
 
-        protected Player(int playerId)
+        protected Player(int playerId, bool isPerson)
         {
             _id = playerId;
-            _isPerson = playerId == PlayerId.Person;
+            _isPerson = isPerson;
         }
 
         #region ---------------- Diplomacy ----------------

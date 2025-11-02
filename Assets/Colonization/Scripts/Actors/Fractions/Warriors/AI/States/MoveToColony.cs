@@ -1,6 +1,5 @@
 using System.Collections;
 using Vurbiri.Collections;
-using Vurbiri.Reactive.Collections;
 
 namespace Vurbiri.Colonization
 {
@@ -10,42 +9,39 @@ namespace Vurbiri.Colonization
         {
             public MoveToColony(WarriorAI parent) : base(parent) { }
 
-            public override bool TryEnter() => Action.CanUseMoveSkill() && FindEmptyColony(Actor, Colonies, out _target);
+            public override bool TryEnter() => Action.CanUseMoveSkill() && FindEmptyColony();
 
             public override IEnumerator Execution_Cn(Out<bool> isContinue) => Execution_Cn(isContinue, 0);
 
-            private static bool FindEmptyColony(Actor actor, ReadOnlyReactiveList<Crossroad> colonies, out Hexagon target)
+            private bool FindEmptyColony()
             {
-                bool find = true; target = null;
-                Hexagon start = actor.Hexagon;
-                for (int i = 0; find & i < HEX.VERTICES; i++)
-                    if (start.Crossroads[i].GetGuardCount(actor.Owner) == 1)
-                        find = false;
+                _target = null;
 
-                if (find)
+                if (!Status.isGuard || Status.minGuard > 1)
                 {
                     Hexagon current;
                     ReadOnlyArray<Hexagon> hexagons;
-                    int distance = s_settings.maxDistanceEmpty, temp;
+                    int distance = s_settings.maxDistanceEmpty;
+                    var colonies = Colonies;
 
                     for (int i = 0; i < colonies.Count; i++)
                     {
-                        if (colonies[i].IsEmptyNear(actor.Owner))
+                        if (colonies[i].IsEmptyNear(Actor.Owner))
                         {
                             hexagons = colonies[i].Hexagons;
-                            foreach (int index in s_haxIndexes)
+                            foreach (int index in s_hexIndexes)
                             {
                                 current = hexagons[index];
-                                if (TryGetDistance(start, current, out temp) && temp < distance)
+                                if (TryGetDistance(Actor.Hexagon, current, out int temp) && temp < distance)
                                 {
                                     distance = temp;
-                                    target = current;
+                                    _target = current;
                                 }
                             }
                         }
                     }
                 }
-                return target != null;
+                return _target != null;
             }
         }
     }

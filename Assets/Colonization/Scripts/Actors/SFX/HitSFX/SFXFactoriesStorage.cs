@@ -90,21 +90,21 @@ namespace Vurbiri.Colonization
 
         private void OnValidate()
         {
-            if (!Application.isPlaying)
+            if (!UnityEditor.EditorApplication.isPlayingOrWillChangePlaymode)
                 UpdateAsync_Ed();
         }
 
         private async void UpdateAsync_Ed()
         {
             await System.Threading.Tasks.Task.Delay(1);
-            if (!Application.isPlaying)
+            if (!UnityEditor.EditorApplication.isPlayingOrWillChangePlaymode)
                 UpdateS_Ed();
         }
 
         private async static void SetStaticField_Ed()
         {
             await System.Threading.Tasks.Task.Delay(2);
-            if (!Application.isPlaying)
+            if (!UnityEditor.EditorApplication.isPlayingOrWillChangePlaymode)
             {
                 s_self_ed = EUtility.FindAnyScriptable<SFXFactoriesStorage>();
                 while (s_self_ed == null)

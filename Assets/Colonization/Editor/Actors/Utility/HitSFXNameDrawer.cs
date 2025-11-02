@@ -19,7 +19,7 @@ namespace VurbiriEditor.Colonization
             var name = nameProperty.stringValue;
             var index = names.Length;
 
-            while (index --> 1 & names[index] != name);
+            while (index --> 1 && names[index] != name);
 
             label = BeginProperty(position, label, mainProperty);
             {

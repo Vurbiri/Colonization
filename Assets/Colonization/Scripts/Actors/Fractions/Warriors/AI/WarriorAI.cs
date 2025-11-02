@@ -13,6 +13,7 @@ namespace Vurbiri.Colonization
 
         private readonly GoalSetting _goalSetting;
         private AIState _current;
+        private Status _status = new(false);
 
         protected Id<PlayerId> _playerId;
 
@@ -38,6 +39,8 @@ namespace Vurbiri.Colonization
             do
             {
                 Log.Info($"[WarriorAI] {_playerId} state [{_current}]");
+
+                _status.Update(_actor);
                 yield return StartCoroutine(_current.Execution_Cn(Out<bool>.Get(out key)));
             }
             while (Out<bool>.Result(key));
@@ -133,6 +136,46 @@ namespace Vurbiri.Colonization
             }
             // ====================================
             #endregion
+        }
+
+        // ******* Nested *******
+        private struct Status
+        {
+            public bool isInCombat;
+            public readonly List<ActorCode> enemies;
+            public bool isGuard;
+            public int minGuard;
+
+            public Status(bool dummy)
+            {
+                isInCombat = isGuard = false;
+                minGuard = int.MaxValue;
+                enemies = new(3);
+            }
+
+            public void Update(Actor actor)
+            {
+                var hex = actor.Hexagon;
+                var near = hex.Neighbors;
+                var crossroads = hex.Crossroads;
+
+                enemies.Clear();
+                for (int i = 0; i < HEX.SIDES; i++)
+                    if (near[i].TryGetEnemy(actor.Owner, out Actor enemy))
+                        enemies.Add(enemy);
+                isInCombat = enemies.Count > 0;
+
+                minGuard = int.MaxValue;
+                for (int i = 0, count; i < HEX.VERTICES; i++)
+                {
+                    count = crossroads[i].GetGuardCount(actor.Owner);
+                    if (count > 0)
+                    {
+                        isGuard = true;
+                        minGuard = System.Math.Min(minGuard, count);
+                    }
+                }
+            }
         }
     }
 }

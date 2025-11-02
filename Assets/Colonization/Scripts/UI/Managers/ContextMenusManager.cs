@@ -96,11 +96,11 @@ namespace Vurbiri.Colonization.UI
         }
         private void OnGamePlay(TurnQueue turnQueue, int dice)
         {
-            _enable.value = turnQueue.IsPerson;
+            _enable.value = turnQueue.isPerson;
         }
         private void OnInit(TurnQueue turnQueue, int dice)
         {
-            _enable.value = turnQueue.IsPerson;
+            _enable.value = turnQueue.isPerson;
         }
 
         private void OnEndInit(TurnQueue turnQueue, int dice)

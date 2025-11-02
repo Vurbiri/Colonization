@@ -41,7 +41,7 @@ namespace Vurbiri.Colonization
         public SpellBook SpellBook { [Impl(256)] get => _spellBook; }
         #endregion
 
-        public Human(int playerId, Settings settings) : base(playerId)
+        public Human(int playerId, Settings settings, bool isPerson) : base(playerId, isPerson)
         {
             var storage = GameContainer.Storage.Humans[playerId];
             var loadData = storage.LoadData;

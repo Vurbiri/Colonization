@@ -15,7 +15,8 @@ namespace Vurbiri.Colonization.UI
         [SerializeField] private VButton _stopButton;
         [SerializeField] private TextMeshProUGUI _result;
         [Space]
-        [SerializeField] private DiceSettings _diceSettings;
+        [SerializeField] private FloatRnd _delayDice;
+        [SerializeField] private TextMeshProUGUI[] _labelsDice;
 
         private readonly Dice[] _dices = new Dice[CONST.DICES_COUNT];
         private readonly WaitRealtime _waitAI = new();
@@ -24,8 +25,8 @@ namespace Vurbiri.Colonization.UI
         public void Init()
 		{
             for (int i = 0; i < CONST.DICES_COUNT; i++)
-                _dices[i] = new(_diceSettings.labels[i], _diceSettings.time);
-            _diceSettings = null;
+                _dices[i] = new(_labelsDice[i]);
+            _labelsDice = null;
 
             _stopButton.Lock = true;
             _stopButton.AddListener(_waitPerson.Send);
@@ -33,15 +34,9 @@ namespace Vurbiri.Colonization.UI
             GameContainer.GameLoop.Subscribe(GameModeId.WaitRoll, Roll);
 
             _canvasSwitcher.Disable();
-#if TEST_AI
-            UnityEngine.Debug.LogWarning("[DiceWindow] TEST_AI");
-#endif
         }
-#if TEST_AI
-        public void Roll(TurnQueue turnQueue, int hexId) => StartCoroutine(Roll_Cn(false));
-#else
-        public void Roll(TurnQueue turnQueue, int hexId) => StartCoroutine(Roll_Cn(turnQueue.IsPerson));
-#endif
+
+        public void Roll(TurnQueue turnQueue, int hexId) => StartCoroutine(Roll_Cn(turnQueue.isPerson));
 
         private IEnumerator Roll_Cn(bool isPerson)
         {
@@ -50,7 +45,7 @@ namespace Vurbiri.Colonization.UI
             _result.text = string.Empty;
 
             for (int i = 0; i < CONST.DICES_COUNT; i++)
-                _dices[i].Run();
+                _dices[i].Run(_delayDice.Roll);
 
             _stopButton.InteractableAndUnlock(isPerson, isPerson);
 
@@ -73,24 +68,6 @@ namespace Vurbiri.Colonization.UI
             GameContainer.GameLoop.Profit();
         }
 
-        // **** Nested ****
-        [System.Serializable] private class DiceSettings
-        {
-            public FloatRnd time;
-            public TextMeshProUGUI[] labels;
-
-#if UNITY_EDITOR
-            public void OnValidate()
-            {
-                labels ??= new TextMeshProUGUI[CONST.DICES_COUNT];
-                if (labels.Length != CONST.DICES_COUNT)
-                    System.Array.Resize(ref labels, CONST.DICES_COUNT);
-                if (time.Min == 0f && time.Max == 0f)
-                    time = new(0.175f, 2.5f);
-            }
-#endif
-        }
-
 #if UNITY_EDITOR
 
         [StartEditor]
@@ -109,7 +86,11 @@ namespace Vurbiri.Colonization.UI
             this.SetChildren(ref _stopImage, "StopButton");
             this.SetChildren(ref _buttonCenterImage, "Center");
 
-            _diceSettings.OnValidate();
+            _labelsDice ??= new TextMeshProUGUI[CONST.DICES_COUNT];
+            if (_labelsDice.Length != CONST.DICES_COUNT)
+                System.Array.Resize(ref _labelsDice, CONST.DICES_COUNT);
+            if (_delayDice.Min == 0f && _delayDice.Max == 0f)
+                _delayDice = new(0.175f, 0.25f);
 
             _resultImage.color = _stopImage.color = _mainImage.color.Brightness(_panelsBrightness);
         }

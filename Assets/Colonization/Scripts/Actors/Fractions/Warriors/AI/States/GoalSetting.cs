@@ -36,8 +36,6 @@ namespace Vurbiri.Colonization
 
                 isContinue.Set(false);
             }
-
-            
         }
     }
 }

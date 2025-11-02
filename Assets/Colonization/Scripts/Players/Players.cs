@@ -21,7 +21,7 @@ namespace Vurbiri.Colonization
             UnityEngine.Debug.LogWarning("[Players] TEST_AI");
             _humans[PlayerId.Person] = new AIController(PlayerId.Person, settings);
 #else
-            _humans[PlayerId.Person] = new PersonController(settings);
+            _humans[PlayerId.Person] = new PersonController(PlayerId.Person, settings);
 #endif
             for (int i = PlayerId.AI_01; i < PlayerId.HumansCount; i++)
                 _humans[i] = new AIController(i, settings);

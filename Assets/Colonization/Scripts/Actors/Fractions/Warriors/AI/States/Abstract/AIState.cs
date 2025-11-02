@@ -14,6 +14,7 @@ namespace Vurbiri.Colonization
 
             #region Parent Properties
             protected Actor Actor { [Impl(256)] get => _parent._actor; }
+            protected Status Status { [Impl(256)] get => _parent._status; }
             protected bool ActorInCombat { [Impl(256)] get => _parent._actor.IsInCombat(); }
             protected Warrior.WarriorStates Action { [Impl(256)] get => _parent._action; }
             protected ReadOnlyReactiveList<Crossroad> Colonies { [Impl(256)] get => GameContainer.Players.Humans[_playerId].Colonies; }

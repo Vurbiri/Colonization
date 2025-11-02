@@ -2,6 +2,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Reactive.Collections
 {
@@ -16,9 +17,12 @@ namespace Vurbiri.Reactive.Collections
 
         protected readonly VAction<T, TypeEvent> _changeEvent = new();
 
-        public int Capacity => _capacity;
-        public int Count => _count.Value;
-        public ReactiveValue<int> CountReactive => _count;
+        public T this[int index] { [Impl(256)] get => _values[index]; }
+
+        public int Capacity { [Impl(256)] get => _capacity; }
+
+        public int Count { [Impl(256)] get => _count.Value; }
+        public ReactiveValue<int> CountReactive { [Impl(256)] get => _count; }
 
         public T First
         {

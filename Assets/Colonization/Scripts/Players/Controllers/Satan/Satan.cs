@@ -22,7 +22,7 @@ namespace Vurbiri.Colonization
         public int MaxCurse { [Impl(256)] get => _maxCurse / _parameters.maxCursePerLevel; }
         public float CursePercent { [Impl(256)] get => (float)_curse/_maxCurse; }
 
-        protected Satan(Settings settings) : base(PlayerId.Satan)
+        protected Satan(Settings settings) : base(PlayerId.Satan, false)
         {
             var storage = GameContainer.Storage.Satan;
             _parameters = SettingsFile.Load<SatanAbilities>();

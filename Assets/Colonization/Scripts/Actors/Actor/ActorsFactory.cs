@@ -14,6 +14,8 @@ namespace Vurbiri.Colonization
         protected readonly ReactiveSet<Actor>[] _actors = new ReactiveSet<Actor>[PlayerId.Count];
 
         public ReadOnlyReactiveSet<Actor> this[int playerId] { [Impl(256)] get => _actors[playerId]; }
+        public Actor this[int playerId, int index] { [Impl(256)] get => _actors[playerId][index]; }
+        public Actor this[ActorCode code] { [Impl(256)] get => _actors[code.owner][code.index]; }
 
         public ActorsFactory(Settings settings) 
         {
@@ -25,8 +27,9 @@ namespace Vurbiri.Colonization
             _prefabs [ActorTypeId.Demon]   = settings.demonPrefab;
             _settings[ActorTypeId.Demon]   = settings.demonsSettings.Init();
 
-            for (int i = 0; i < PlayerId.Count; i++)
-                _actors[i] = new();
+            for (int i = 0; i < PlayerId.HumansCount; i++)
+                _actors[i] = new(CONST.DEFAULT_MAX_WARRIOR);
+            _actors[PlayerId.Satan] = new(CONST.DEFAULT_MAX_DEMONS);
         }
 
         [Impl(256)] public Actor Create(int type, int id, ActorInitData initData, Hexagon startHex)

@@ -66,7 +66,7 @@ namespace Vurbiri.Colonization
                     yield return wait; wait.Reset();
                     var resources = GameContainer.Humans[colony.Owner].Resources;
                     resources.RandomDecrement();
-                    if (!colony.IsWall & resources.Amount > 0)
+                    if (!colony.IsWall && resources.Amount > 0)
                     {
                         resources.RandomDecrement();
                         countBuff = 2;

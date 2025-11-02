@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using Vurbiri.Colonization.Storage;
 using Vurbiri.Reactive;
@@ -7,7 +8,7 @@ using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 namespace Vurbiri.Colonization
 {
     [RequireComponent(typeof(BoxCollider))]
-    public abstract partial class Actor : AReactiveItemMono<Actor>, IInteractable
+    public abstract partial class Actor : MonoBehaviour, IReactiveItem<Actor>, IInteractable, IEquatable<ActorCode>
     {
         public enum DeathStage
         {
@@ -22,6 +23,9 @@ namespace Vurbiri.Colonization
         private Id<PlayerId> _owner;
         private bool _isPersonTurn;
         private bool _zealCharge;
+        private int _force;
+
+        protected readonly VAction<Actor, TypeEvent> _eventChanged = new();
 
         #region  --------------- Abilities ---------------
         private AbilitiesSet<ActorAbilityId> _abilities;
@@ -46,8 +50,8 @@ namespace Vurbiri.Colonization
         #endregion
 
         #region ================== Properties ========================
-        public Id<ActorTypeId> TypeId { [Impl(256)] get => _typeId; }
         public int Id { [Impl(256)] get => _id; }
+        public Id<ActorTypeId> TypeId { [Impl(256)] get => _typeId; }
         public bool IsWarrior { [Impl(256)] get => _typeId == ActorTypeId.Warrior; }
         public Id<PlayerId> Owner { [Impl(256)] get => _owner; }
         public Hexagon Hexagon { [Impl(256)] get => _currentHex; }
@@ -59,6 +63,8 @@ namespace Vurbiri.Colonization
         public bool IsWounded { [Impl(256)] get => _currentHP.IsNotMax; }
         public bool IsDead { [Impl(256)] get => _currentHP.Value <= 0; }
         public bool ZealCharge { [Impl(256)] get => _zealCharge; [Impl(256)] set { _zealCharge = value; ChangeSignal(); } }
+        public int Force { [Impl(256)] get => _force; }
+        public int CurrentForce { [Impl(256)] get => _force * _currentHP.Percent / 100; }
         public Transform Transform { [Impl(256)] get => _thisTransform; }
         public ActorSkin Skin { [Impl(256)] get => _states.Skin; }
         public Actions Action { [Impl(256)] get => _states; }
@@ -66,6 +72,7 @@ namespace Vurbiri.Colonization
         public ReadOnlyAbilities<ActorAbilityId> Abilities { [Impl(256)] get => _abilities; }
         public ReturnSignal IsMainProfit => _profitMain.Next() ? _states.Skin.MainProfit(_isPersonTurn) : false;
         public ReturnSignal IsAdvProfit => _profitAdv.Next() ? _states.Skin.AdvProfit(_isPersonTurn) : false;
+
         #endregion
 
         #region  ================== IInteractable =====================
@@ -90,6 +97,41 @@ namespace Vurbiri.Colonization
             gameObject.layer = Layers.SelectableRight;
         }
         #endregion
+        #region ================== ReactiveItem ============================
+        public int Index { [Impl(256)] get; [Impl(256)] private set; }
+        public ActorCode Code { [Impl(256)] get; [Impl(256)] private set; }
+
+        public void Adding(Action<Actor, TypeEvent> action, int index)
+        {
+            Index = index;
+            Code = new(_owner, index);
+
+            action(this, TypeEvent.Add);
+            _eventChanged.Add(action);
+        }
+
+        public Subscription Subscribe(Action<Actor, TypeEvent> action, bool instantGetValue = true)
+        {
+            if (instantGetValue)
+                action(this, TypeEvent.Subscribe);
+            return _eventChanged.Add(action);
+        }
+        public void Unsubscribe(Action<Actor, TypeEvent> action) => _eventChanged.Remove(action);
+        public void UnsubscribeAll() => _eventChanged.Clear();
+
+        public void Removing()
+        {
+            _currentHex.ActorExit();
+            _subscription?.Dispose();
+
+            _eventChanged.Invoke(this, TypeEvent.Remove);
+            _eventChanged.Clear();
+
+            _effects.Dispose();
+        }
+
+        public void Dispose() { }
+        #endregion
 
         #region ================== Setup ============================
         protected abstract AStates StatesCreate(ActorSettings settings);
@@ -101,6 +143,7 @@ namespace Vurbiri.Colonization
 
             _typeId = settings.TypeId;
             _id = settings.Id;
+            _force = settings.Force;
             _owner = initData.owner;
             _currentHex = startHex;
             IsPersonTurn = false;
@@ -173,7 +216,7 @@ namespace Vurbiri.Colonization
         public bool IsInCombat()
         {
             var neighbors = _currentHex.Neighbors;
-            for (int i = 0; i < neighbors.Count; i++)
+            for (int i = 0; i < HEX.SIDES; i++)
                 if (neighbors[i].IsEnemy(_owner))
                     return true;
             return false;
@@ -246,24 +289,6 @@ namespace Vurbiri.Colonization
         [Impl(256)] public void RemoveWallDefenceEffect() => _effects.Remove(ReactiveEffectsFactory.WallEffectCode);
         #endregion
 
-        #region ================== ReactiveItem ============================
-        public bool Equals(ISelectable other) => System.Object.ReferenceEquals(this, other);
-        sealed public override bool Equals(Actor other) => other == this;
-        sealed public override void Removing()
-        {
-            _currentHex.ActorExit();
-            _subscription?.Dispose();
-
-            _eventChanged.Invoke(this, TypeEvent.Remove);
-            _eventChanged.Clear();
-            _index = -1;
-
-            _effects.Dispose();
-        }
-
-        sealed public override void Dispose() { }
-        #endregion
-
         #region ================== Target ============================
         public bool ToTargetState(Id<PlayerId> initiator, Relation relation)
         {
@@ -292,5 +317,13 @@ namespace Vurbiri.Colonization
         
         [Impl(256)] private void ChangeSignal() => _eventChanged.Invoke(this, TypeEvent.Change);
         #endregion
+
+        #region ================== Equals ============================
+        [Impl(256)] public bool Equals(ISelectable other) => System.Object.ReferenceEquals(this, other);
+        [Impl(256)] public bool Equals(Actor other) => other == this;
+        [Impl(256)] public bool Equals(ActorCode code) => _owner == code.owner && Index == code.index;
+        #endregion
+
+        [Impl(256)] public static implicit operator ActorCode(Actor self) => self.Code;
     }
 }

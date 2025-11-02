@@ -16,7 +16,7 @@ namespace Vurbiri.Colonization
 
             protected IEnumerator Execution_Cn(Out<bool> isContinue, int distance, bool isExit = false)
             {
-                isExit = isExit || ActorInCombat;
+                isExit = isExit | Status.isInCombat;
                 if (!isExit && Action.CanUseMoveSkill())
                 {
                     isExit = !TryGetNextHexagon(Actor.Hexagon, _target, out Hexagon next);

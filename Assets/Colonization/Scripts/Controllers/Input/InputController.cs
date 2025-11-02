@@ -80,7 +80,7 @@ namespace Vurbiri.Colonization.Controllers
         public void Dispose() => _inputActions.Dispose();
 
         private void SpectatorModeOn(TurnQueue turnQueue, int hexId) => SpectatorMode(true);
-        private void SpectatorMode(TurnQueue turnQueue, int hexId) => SpectatorMode(turnQueue.IsNotPerson);
+        private void SpectatorMode(TurnQueue turnQueue, int hexId) => SpectatorMode(!turnQueue.isPerson);
         private void SpectatorMode(bool enable)
         {
             if (_spectatorMode != enable)

@@ -30,13 +30,13 @@ namespace Vurbiri.Colonization
 
         private void OnLanding(TurnQueue turnQueue, int hexId)
         {
-            if (!turnQueue.IsSatan)
+            if (turnQueue.currentId != PlayerId.Satan)
                 _label.Landing(turnQueue.currentId.Value);
         }
 
         private void OnEndLanding(TurnQueue turnQueue, int hexId)
         {
-            _mono.StartCoroutine(OnEndLanding_Cn(turnQueue.IsPerson));
+            _mono.StartCoroutine(OnEndLanding_Cn(turnQueue.isPerson));
 
             //Local
             IEnumerator OnEndLanding_Cn(bool isPlayer)

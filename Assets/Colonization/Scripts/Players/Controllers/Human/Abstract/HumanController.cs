@@ -6,7 +6,7 @@ namespace Vurbiri.Colonization
 	{
         protected readonly WaitResultSource<bool> _waitGift = new();
 
-        protected HumanController(int playerId, Settings settings) : base(playerId, settings) { }
+        protected HumanController(int playerId, Settings settings, bool isPerson) : base(playerId, settings, isPerson) { }
 
         public void ActorKill(Id<ActorTypeId> type, int id)
         {

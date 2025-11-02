@@ -9,18 +9,18 @@ namespace Vurbiri.Colonization
         private readonly RandomSequence _roll = new(CONST.DICE);
         private readonly TextMeshProUGUI _label;
 
-        private FloatRnd _time;
         private bool _isPlaying = false;
         private int _current;
 
-        public Dice(TextMeshProUGUI label, FloatRnd time)
+        public Dice(TextMeshProUGUI label)
         {
-            _label = label; _time = time;
+            _label = label; 
         }
 
-        public void Run()
+        public void Run(float time)
         {
             _isPlaying = true;
+            _waitTime.Time = time;
             _label.StartCoroutine(Run_Cn());
 
             // === Local ===
@@ -30,7 +30,7 @@ namespace Vurbiri.Colonization
                 {
                     _current = _roll.Next;
                     _label.text = _current.ToStr();
-                    yield return _waitTime.Restart(_time);
+                    yield return _waitTime.Restart();
                 }
             }
         }

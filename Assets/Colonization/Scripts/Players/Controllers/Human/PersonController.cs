@@ -10,9 +10,9 @@ namespace Vurbiri.Colonization
     {
         private readonly InteractableController _iController;
 
-        public PersonController(Settings settings) : base(PlayerId.Person, settings)
+        public PersonController(int playerId, Settings settings) : base(playerId, settings, true)
         {
-            _iController = new(_interactable, _subscription);
+            _iController = new(_interactable, GameContainer.GameLoop.IsPersonTurn(playerId), _subscription);
             _abilities.ReplaceToDependent(HumanAbilityId.MaxShrine, s_shrinesCount, _edifices.shrines.CountReactive);
         }
 
@@ -84,11 +84,11 @@ namespace Vurbiri.Colonization
                 }
             }
 
-            public InteractableController(RBool change, Subscription subscriptions)
+            public InteractableController(RBool change, bool isTurn, Subscription subscriptions)
             {
                 _change = change;
+                _isTurn = isTurn; 
 
-                _isTurn = GameContainer.GameLoop.IsPersonTurn;
                 subscriptions += SpellBook.IsCasting.Subscribe(BindSpells);
                 subscriptions += GameContainer.Actors[PlayerId.Person].Subscribe(BindActors);
             }

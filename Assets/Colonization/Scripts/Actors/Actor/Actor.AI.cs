@@ -13,7 +13,7 @@ namespace Vurbiri.Colonization
             private static readonly Dictionary<Hexagon, Hexagon> s_links = new();
             private static readonly Queue<Hexagon> s_finds = new();
 
-            protected static readonly RandomSequence s_haxIndexes = new(Crossroad.HEX_COUNT);
+            protected static readonly RandomSequence s_hexIndexes = new(Crossroad.HEX_COUNT);
             protected static readonly WaitFrames s_waitBeforeSelecting = new(10);
 
             protected readonly Actor _actor;
@@ -97,7 +97,7 @@ namespace Vurbiri.Colonization
                         near = current.Neighbors[index];
                         if (found = near == start)
                             s_links.Add(near, current);
-                        if ((!found & near != end & near.CanWarriorEnter) && near.Distance(end) < depth && near.Distance(start) < depth && s_links.TryAdd(near, current))
+                        if ((!found && near != end && near.CanWarriorEnter) && near.Distance(end) < depth && near.Distance(start) < depth && s_links.TryAdd(near, current))
                             s_finds.Enqueue(near);
                     }
                 }
