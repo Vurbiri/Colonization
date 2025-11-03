@@ -12,7 +12,7 @@ namespace Vurbiri.Colonization
 
             public override bool TryEnter() => Action.CanUseSpecSkill() && IsEnemyComing(_playerId, Actor.Hexagon.Key);
 
-            protected override void OnExit() { }
+            public override void Dispose() { }
 
             public override IEnumerator Execution_Cn(Out<bool> isContinue)
             {

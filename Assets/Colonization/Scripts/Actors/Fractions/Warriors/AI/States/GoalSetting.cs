@@ -20,7 +20,7 @@ namespace Vurbiri.Colonization
             }
 
             public override bool TryEnter() => true;
-            protected override void OnExit() { }
+            public override void Dispose() { }
 
             public override IEnumerator Execution_Cn(Out<bool> isContinue)
             {

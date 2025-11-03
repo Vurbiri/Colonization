@@ -21,9 +21,9 @@ namespace Vurbiri.Colonization
 
         private Id<ActorTypeId> _typeId;
         private Id<PlayerId> _owner;
+        private int _force;
         private bool _isPersonTurn;
         private bool _zealCharge;
-        private int _force;
 
         protected readonly VAction<Actor, TypeEvent> _eventChanged = new();
 

@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using Vurbiri.Collections;
+using static Vurbiri.Colonization.ActorAbilityId;
 using Object = UnityEngine.Object;
 
 namespace Vurbiri.Colonization
@@ -16,7 +17,7 @@ namespace Vurbiri.Colonization
 
         public abstract int TypeId { get; }
         public int Id => _id;
-        public AbilitiesSet<ActorAbilityId> Abilities => new(_abilities, ActorAbilityId.SHIFT_ABILITY, ActorAbilityId.MAX_ID_SHIFT_ABILITY);
+        public AbilitiesSet<ActorAbilityId> Abilities => new(_abilities, SHIFT_ABILITY, MAX_ID_SHIFT_ABILITY);
         public Skills Skills => _skills;
         public int Force => _force;
 
@@ -47,19 +48,29 @@ namespace Vurbiri.Colonization
             }
             else
             {
-                string prefabName = $"P_{(TypeId == ActorTypeId.Warrior ? WarriorId.Names_Ed[_id] : DemonId.Names_Ed[_id])}Skin";
+                string prefabName = $"P_{ActorTypeId.GetName(TypeId, _id)}Skin";
                 _prefabActorSkin = EUtility.FindAnyPrefab<ActorSkin>(prefabName);
             }
-            _force = Math.Max(500, _force);
+
+            _force = Formulas.ActorForce(_abilities);
         }
+
         public bool UpdateName_Ed(string oldName, string newName)
         {
             return _prefabActorSkin ? _skills.UpdateName_Ed(oldName, newName) : false;
         }
+
         public void UpdateAnimation_Ed()
         {
             if(_prefabActorSkin)
                 _skills.UpdateAnimation_Ed(_prefabActorSkin.GetComponent<Animator>().runtimeAnimatorController as AnimatorOverrideController);
+        }
+
+        public void PrintForce_Ed() => Debug.Log($"{ActorTypeId.GetName(TypeId, _id)}: {_force}");
+        public void PrintProfit_Ed(int main, int adv)
+        {
+            int ap = _abilities[MaxAP] + 1;
+            Debug.Log($"[{ActorTypeId.GetName(TypeId, _id)}] Main: {_abilities[ProfitMain] * ap * main / 10000}. Adv: {_abilities[ProfitAdv] * ap * adv / 10000}");
         }
 #endif
     }

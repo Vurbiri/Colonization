@@ -36,10 +36,10 @@ namespace Vurbiri
             RemoveAt(index);
         }
 
-        public void Remove<U>(U item, Func<T, U, bool> equals)
+        public void Remove<U>(U item) where U : IEquatable<T> 
         {
             int index = -1;
-            while (++index < _count && !equals(_values[index], item)) ;
+            while (++index < _count && !item.Equals(_values[index])) ;
 
             RemoveAt(index);
         }

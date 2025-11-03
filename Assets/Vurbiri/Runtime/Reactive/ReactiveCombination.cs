@@ -7,6 +7,7 @@ namespace Vurbiri.Reactive
         public void Signal();
     }
 
+    #region ============== ReactiveCombination<TA, TB> ==============================
     public class ReactiveCombination<TA, TB> : IReactiveValue<TA, TB>, ICombination
     {
         private TA _valueA;
@@ -41,7 +42,9 @@ namespace Vurbiri.Reactive
             _subscription.Dispose();
         }
     }
-    //=======================================================================================
+    #endregion
+
+    #region ============== ReactiveCombination<TA, TB, TC> ==========================
     public class ReactiveCombination<TA, TB, TC> : IReactiveValue<TA, TB, TC>, ICombination
     {
         private TA _valueA;
@@ -102,7 +105,9 @@ namespace Vurbiri.Reactive
             _subscription.Dispose();
         }
     }
-    //=======================================================================================
+    #endregion
+
+    #region ============== ReactiveCombination<TA, TB, TC, TD> ======================
     public class ReactiveCombination<TA, TB, TC, TD> : IReactiveValue<TA, TB, TC, TD>, ICombination
     {
         private TA _valueA;
@@ -166,4 +171,5 @@ namespace Vurbiri.Reactive
             subscription.Dispose();
         }
     }
+    #endregion
 }

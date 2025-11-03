@@ -1,4 +1,3 @@
-using UnityEditor;
 using UnityEngine;
 using Vurbiri.Collections;
 
@@ -41,9 +40,22 @@ namespace Vurbiri.Colonization
             for (int i = 0; i < ActorId<TId>.Count; i++)
                 _settings[i].UpdateAnimation_Ed();
 
-
             UnityEditor.EditorUtility.SetDirty(this);
-            AssetDatabase.SaveAssets();
+            UnityEditor.AssetDatabase.SaveAssets();
+        }
+
+        public void PrintForce_Ed()
+        {
+            Debug.Log("==== Actor Force ====");
+            for (int i = 0; i < ActorId<TId>.Count; i++)
+                _settings[i].PrintForce_Ed();
+        }
+
+        public void PrintProfit_Ed(int main, int adv)
+        {
+            Debug.Log("==== Actor Profit ====");
+            for (int i = 0; i < ActorId<TId>.Count; i++)
+                _settings[i].PrintProfit_Ed(main, adv);
         }
 #endif
     }

@@ -22,19 +22,19 @@ namespace VurbiriEditor.Colonization
             var container = root.Q<VisualElement>(U_CONTAINER);
 
             serializedObject.Update();
-            SerializedProperty propertyValues = serializedObject.FindProperty(P_SETTINGS).FindPropertyRelative(P_ARRAY);
+            var settingsProperty = serializedObject.FindProperty(P_SETTINGS).FindPropertyRelative(P_ARRAY);
 
-            SerializedProperty propertyValue, propertySkills;
+            SerializedProperty sttProperty, skillsProperty;
             VisualElement element;
             for (int i = 0; i < IdType<TId>.Count; i++)
             {
-                propertyValue = propertyValues.GetArrayElementAtIndex(i);
-                propertyValue.FindPropertyRelative(P_ID).intValue = i;
-                propertySkills = propertyValue.FindPropertyRelative(P_SKILLS);
+                sttProperty = settingsProperty.GetArrayElementAtIndex(i);
+                sttProperty.FindPropertyRelative(P_ID).intValue = i;
+                skillsProperty = sttProperty.FindPropertyRelative(P_SKILLS);
 
-                element = _treeActorSettings.Instantiate(propertyValue.propertyPath);
+                element = _treeActorSettings.Instantiate(sttProperty.propertyPath);
                 element.Q<Foldout>(U_LABEL).text = IdType<TId>.Names_Ed[i];
-                element.Q<VisualElement>(U_SKILLS).Add(_treeSkillsVT.Instantiate(propertySkills.propertyPath));
+                element.Q<VisualElement>(U_SKILLS).Add(_treeSkillsVT.Instantiate(skillsProperty.propertyPath));
                 container.Add(element);
             }
 

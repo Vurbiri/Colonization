@@ -17,7 +17,7 @@ namespace Vurbiri.Colonization
 
             public override bool TryEnter() => ActorInCombat;
 
-            protected override void OnExit()
+            public override void Dispose()
             {
                 
             }

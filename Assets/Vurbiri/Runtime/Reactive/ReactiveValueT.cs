@@ -19,17 +19,10 @@ namespace Vurbiri.Reactive
 
         public bool Equals(T other) => _value.Equals(other);
         public bool Equals(ReactiveValue<T> other) => other is not null && _value.Equals(other._value);
+        sealed public override bool Equals(object other) => other is not null && ((other is T t && _value.Equals(t)) || (other is ReactiveValue<T> r && _value.Equals(r._value)));
 
         public int CompareTo(T other) => _value.CompareTo(other);
         public int CompareTo(ReactiveValue<T> other) => _value.CompareTo(other._value);
-
-        sealed public override bool Equals(object other)
-        {
-            if (other is null) return false;
-            if (other is T tValue) return _value.Equals(tValue);
-            if (other is ReactiveValue<T> rValue) return _value.Equals(rValue._value);
-            return false;
-        }
 
         public override int GetHashCode() => _value.GetHashCode();
         public override string ToString() => _value.ToString();

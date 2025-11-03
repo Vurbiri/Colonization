@@ -27,7 +27,7 @@ namespace Vurbiri.Colonization
             }
 
             public abstract bool TryEnter();
-            protected abstract void OnExit();
+            public abstract void Dispose();
             public abstract IEnumerator Execution_Cn(Out<bool> isContinue);
 
             public override string ToString() => GetType().Name;
@@ -42,7 +42,7 @@ namespace Vurbiri.Colonization
 
             [Impl(256)] protected void Exit()
             {
-                OnExit();
+                Dispose();
                 _parent._current = _parent._goalSetting;
             }
         }

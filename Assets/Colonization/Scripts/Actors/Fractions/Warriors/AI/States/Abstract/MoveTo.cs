@@ -12,7 +12,7 @@ namespace Vurbiri.Colonization
             {
             }
 
-            protected override void OnExit() => _target = null;
+            public override void Dispose() => _target = null;
 
             protected IEnumerator Execution_Cn(Out<bool> isContinue, int distance, bool isExit = false)
             {
@@ -27,8 +27,7 @@ namespace Vurbiri.Colonization
                     }
                 }
                 isContinue.Set(isExit);
-                if (isExit)
-                    Exit();
+                if (isExit) Exit();
             }
 
             protected IEnumerator Move_Cn(Hexagon target)

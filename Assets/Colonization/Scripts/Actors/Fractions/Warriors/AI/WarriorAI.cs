@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Vurbiri.Reactive.Collections;
@@ -5,31 +6,28 @@ using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization
 {
-    public abstract partial class WarriorAI : Actor.AI<Warrior.WarriorStates>
+    public partial class WarriorAI : Actor.AI<Warrior.WarriorStates>, IDisposable
     {
         protected static readonly WarriorAISettings s_settings;
 
         static WarriorAI() => s_settings = SettingsFile.Load<WarriorAISettings>();
 
+        private readonly Status _status = new();
         private readonly GoalSetting _goalSetting;
         private AIState _current;
-        private Status _status = new(false);
-
-        protected Id<PlayerId> _playerId;
 
         [Impl(256)] protected WarriorAI(Actor actor) : base(actor) 
         {
-            _playerId = actor.Owner;
             _current = _goalSetting = new(this);
         }
 
         public static WarriorAI Create(Actor actor) => actor.Id switch
         {
-            WarriorId.Militia => new MilitiaAI(actor),
-            WarriorId.Solder  => new SolderAI(actor),
-            WarriorId.Wizard  => new WizardAI(actor),
-            WarriorId.Warlock => new WarlockAI(actor),
-            WarriorId.Knight  => new KnightAI(actor),
+            WarriorId.Militia => new WarriorAI(actor),
+            WarriorId.Solder  => new WarriorAI(actor),
+            WarriorId.Wizard  => new WarriorAI(actor),
+            WarriorId.Warlock => new WarriorAI(actor),
+            WarriorId.Knight  => new WarriorAI(actor),
             _ => null
         };
 
@@ -38,15 +36,13 @@ namespace Vurbiri.Colonization
             int key;
             do
             {
-                Log.Info($"[WarriorAI] {_playerId} state [{_current}]");
+                Log.Info($"[WarriorAI] {_actor.Owner} state [{_current}]");
 
                 _status.Update(_actor);
                 yield return StartCoroutine(_current.Execution_Cn(Out<bool>.Get(out key)));
             }
             while (Out<bool>.Result(key));
         }
-
-        public abstract IEnumerator Combat_Cn();
 
         public static bool TrySetSpawn(Human human, List<Hexagon> output)
         {
@@ -138,44 +134,6 @@ namespace Vurbiri.Colonization
             #endregion
         }
 
-        // ******* Nested *******
-        private struct Status
-        {
-            public bool isInCombat;
-            public readonly List<ActorCode> enemies;
-            public bool isGuard;
-            public int minGuard;
-
-            public Status(bool dummy)
-            {
-                isInCombat = isGuard = false;
-                minGuard = int.MaxValue;
-                enemies = new(3);
-            }
-
-            public void Update(Actor actor)
-            {
-                var hex = actor.Hexagon;
-                var near = hex.Neighbors;
-                var crossroads = hex.Crossroads;
-
-                enemies.Clear();
-                for (int i = 0; i < HEX.SIDES; i++)
-                    if (near[i].TryGetEnemy(actor.Owner, out Actor enemy))
-                        enemies.Add(enemy);
-                isInCombat = enemies.Count > 0;
-
-                minGuard = int.MaxValue;
-                for (int i = 0, count; i < HEX.VERTICES; i++)
-                {
-                    count = crossroads[i].GetGuardCount(actor.Owner);
-                    if (count > 0)
-                    {
-                        isGuard = true;
-                        minGuard = System.Math.Min(minGuard, count);
-                    }
-                }
-            }
-        }
+        public void Dispose() => _current.Dispose();
     }
 }

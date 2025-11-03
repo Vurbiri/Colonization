@@ -233,8 +233,8 @@ namespace Vurbiri.Colonization
         [Impl(256)] public void HideMark() => _view.HideMark();
         #endregion
 
-        [Impl(256)] public bool Equals(Key key) =>  _key == key;
+        [Impl(256)] public bool Equals(Key key) => _key == key;
 
-        [Impl(256)] public static implicit operator Key(Hexagon self) => self._key;
+        [Impl(256)] public static implicit operator Key(Hexagon self) => self?._key ?? Key.Zero;
     }
 }

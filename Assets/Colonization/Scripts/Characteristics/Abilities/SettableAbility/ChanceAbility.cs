@@ -12,7 +12,7 @@ namespace Vurbiri.Colonization
 
         public bool Next()
         {
-            _chance.Value = _value * _ratio.Value;
+            _chance.Value = _value * _ratio.Value / 100;
             return _chance.Roll;
         }
     }

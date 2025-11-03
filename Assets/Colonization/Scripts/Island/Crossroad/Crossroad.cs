@@ -483,7 +483,7 @@ namespace Vurbiri.Colonization
         public override int GetHashCode() => _key.GetHashCode();
         #endregion
 
-        [Impl(256)] public static implicit operator Key(Crossroad self) => self._key;
+        [Impl(256)] public static implicit operator Key(Crossroad self) => self?._key ?? Key.Zero;
     }
 }
 
