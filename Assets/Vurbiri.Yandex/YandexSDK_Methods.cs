@@ -2,7 +2,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections;
 
-namespace Vurbiri
+namespace Vurbiri.Yandex
 {
     public partial class YandexSDK
     {

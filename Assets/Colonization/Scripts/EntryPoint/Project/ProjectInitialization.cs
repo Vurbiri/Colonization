@@ -4,6 +4,7 @@ using Vurbiri.Colonization.UI;
 using Vurbiri.EntryPoint;
 using Vurbiri.International;
 using Vurbiri.UI;
+using Vurbiri.Web;
 
 namespace Vurbiri.Colonization.EntryPoint
 {
@@ -28,6 +29,8 @@ namespace Vurbiri.Colonization.EntryPoint
 
         public void Init(ProjectContent content, Loading loading, MonoBehaviour mono)
         {
+            Log.Create<WebLog>();
+
             AsyncOperation operation = SceneManager.LoadSceneAsync(_startScene);
             operation.allowSceneActivation = false;
 

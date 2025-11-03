@@ -1,4 +1,4 @@
-namespace Vurbiri
+namespace Vurbiri.Yandex
 {
     public enum AvatarSize
     {

@@ -3,7 +3,7 @@
 using System.IO;
 using UnityEngine;
 
-namespace Vurbiri
+namespace Vurbiri.Web
 {
     public static partial class UtilityJS
     {

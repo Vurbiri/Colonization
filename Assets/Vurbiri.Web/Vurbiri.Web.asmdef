@@ -1,0 +1,16 @@
+{
+    "name": "Vurbiri.Web",
+    "rootNamespace": "Vurbiri.Web",
+    "references": [
+        "GUID:8d796b54c349a5e4e9e760d782ae9adf"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

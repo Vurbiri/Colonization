@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using Vurbiri.Colonization.Storage;
 using Vurbiri.EntryPoint;
+using Vurbiri.Web;
+using Vurbiri.Yandex;
 
 namespace Vurbiri.Colonization.EntryPoint
 {

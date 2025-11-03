@@ -1,6 +1,6 @@
 using System;
 
-namespace Vurbiri
+namespace Vurbiri.Yandex
 {
     public partial class YandexSDK
     {

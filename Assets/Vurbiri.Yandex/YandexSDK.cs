@@ -4,7 +4,7 @@ using System.Collections;
 
 using UnityEngine;
 
-namespace Vurbiri
+namespace Vurbiri.Yandex
 {
     public partial class YandexSDK
     {

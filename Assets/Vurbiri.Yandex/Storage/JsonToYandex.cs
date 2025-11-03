@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-namespace Vurbiri
+namespace Vurbiri.Yandex
 {
     sealed public class JsonToYandex : AStorageOneFile
     {

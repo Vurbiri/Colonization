@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Vurbiri
+namespace Vurbiri.Web
 {
     sealed public class JsonToLocalStorage : AJsonToLocal
     {

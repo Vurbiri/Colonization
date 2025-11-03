@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using Vurbiri.Yandex;
 
 namespace Vurbiri.Colonization.EntryPoint
 {

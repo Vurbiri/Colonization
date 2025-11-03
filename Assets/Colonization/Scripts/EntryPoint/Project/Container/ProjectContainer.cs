@@ -1,5 +1,6 @@
 using Vurbiri.Colonization.UI;
 using Vurbiri.EntryPoint;
+using Vurbiri.Yandex;
 using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization.EntryPoint

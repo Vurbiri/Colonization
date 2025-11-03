@@ -1,6 +1,7 @@
 using Vurbiri.Colonization.Storage;
 using Vurbiri.Colonization.UI;
 using Vurbiri.EntryPoint;
+using Vurbiri.Yandex;
 
 namespace Vurbiri.Colonization.EntryPoint
 {

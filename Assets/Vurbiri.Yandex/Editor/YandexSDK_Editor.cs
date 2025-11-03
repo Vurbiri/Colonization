@@ -5,7 +5,7 @@ using System.IO;
 using UnityEngine;
 using Result = Vurbiri.WaitResult;
 
-namespace Vurbiri
+namespace Vurbiri.Yandex
 {
     public partial class YandexSDK
     {

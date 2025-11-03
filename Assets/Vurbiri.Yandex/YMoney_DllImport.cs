@@ -1,6 +1,6 @@
 using System.Runtime.InteropServices;
 
-namespace Vurbiri
+namespace Vurbiri.Yandex
 {
     public partial class YMoney
     {
