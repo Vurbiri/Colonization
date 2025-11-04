@@ -120,25 +120,25 @@ namespace Vurbiri.Colonization
         #endregion
 
 
-        public void GetDeadEnds(HashSet<Crossroad> deadEnds)
+        public void GetDeadEnds(List<Crossroad> deadEnds)
         {
             for (int i = _roadsLists.Count - 1; i >= 0; i--)
                 TryAddLine(deadEnds, _roadsLists[i]);
 
             #region Local
-            [Impl(256)] void TryAddLine(HashSet<Crossroad> deadEnds, Road line)
+            [Impl(256)] void TryAddLine(List<Crossroad> deadEnds, Road line)
             {
                 TryAdd(deadEnds, line.StartCrossroad);
                 TryAdd(deadEnds, line.EndCrossroad);
             }
-            [Impl(256)] void TryAdd(HashSet<Crossroad> deadEnds, Crossroad crossroad)
+            [Impl(256)] void TryAdd(List<Crossroad> deadEnds, Crossroad crossroad)
             {
                 if (crossroad.IsDeadEnd(_id)) deadEnds.Add(crossroad);
             }
             #endregion
         }
 
-        public void GetCrossroads(HashSet<Crossroad> points)
+        public void GetCrossroads(List<Crossroad> points)
         {
             var crossroads = GameContainer.Crossroads;
             Road line;

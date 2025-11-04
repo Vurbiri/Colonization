@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using Vurbiri.Collections;
 using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
@@ -11,16 +10,13 @@ namespace Vurbiri.Colonization
         {
             private static readonly CasterSettings s_settings;
             private static readonly ReadOnlyIdArray<AbilityTypeId, ReadOnlyArray<int>> s_weights;
-            private static readonly HashSet<int> s_goodIds, s_badIds;
 
             static Caster()
             {
                 s_settings = SettingsFile.Load<CasterSettings>();
                 s_weights = new(s_settings.weightsEconomic, s_settings.weightsMilitary);
-                s_goodIds = new(s_settings.goodIds); s_badIds = new(s_settings.badIds);
 
                 s_settings.weightsEconomic = null; s_settings.weightsMilitary = null;
-                s_settings.goodIds = null; s_badIds = null;
             }
 
             private readonly Casts _casts = new();

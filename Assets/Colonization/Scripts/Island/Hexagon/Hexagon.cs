@@ -235,6 +235,6 @@ namespace Vurbiri.Colonization
 
         [Impl(256)] public bool Equals(Key key) => _key == key;
 
-        [Impl(256)] public static implicit operator Key(Hexagon self) => self?._key ?? Key.Zero;
+        [Impl(256)] public static implicit operator Key(Hexagon self) => self._key;
     }
 }

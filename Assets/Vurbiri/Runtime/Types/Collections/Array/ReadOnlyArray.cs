@@ -10,6 +10,8 @@ namespace Vurbiri.Collections
     [Serializable, JsonArray]
     public class ReadOnlyArray<TValue> : IReadOnlyList<TValue>, ISerializationCallbackReceiver
     {
+        protected static readonly IEqualityComparer<TValue> s_comparer = EqualityComparer<TValue>.Default;
+
         [SerializeField] protected TValue[] _values;
         protected int _count;
 
@@ -27,11 +29,6 @@ namespace Vurbiri.Collections
             _values = values;
             _count = values.Length;
         }
-        [Impl(256)] public ReadOnlyArray(Roster<TValue> values)
-        {
-            _values = values.ToArray();
-            _count = values.Count;
-        }
         [JsonConstructor]
         public ReadOnlyArray(IReadOnlyList<TValue> list)
         {
@@ -45,7 +42,7 @@ namespace Vurbiri.Collections
         public int IndexOf(TValue item)
         {
             int i = _count;
-            while (i --> 0 && !_values[i].Equals(item));
+            while (i --> 0 && !s_comparer.Equals(_values[i], item));
             return i;
         }
         [Impl(256)] public bool Contains(TValue item) => IndexOf(item) >= 0;

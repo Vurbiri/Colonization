@@ -1,4 +1,12 @@
 {
-  "maxDistanceSiege": 3,
-  "maxDistanceEmpty": 3
+  "maxDistanceUnsiege": 4,
+  "maxDistanceSupport": 3,
+  "maxDistanceEmpty": 3,
+  "supports": [
+    false,
+    false,
+    true,
+    true,
+    false
+  ]
 }

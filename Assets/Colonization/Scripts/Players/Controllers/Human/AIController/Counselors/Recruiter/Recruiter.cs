@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Vurbiri.Collections;
+using Vurbiri.Reactive.Collections;
 
 namespace Vurbiri.Colonization
 {
@@ -32,22 +33,38 @@ namespace Vurbiri.Colonization
 
             public override IEnumerator Execution_Cn()
             {
-                if(_current == WarriorId.None & !Human.IsMaxWarriors & Colonies.Count > 0)
+                if(_current == WarriorId.None && !Human.IsMaxWarriors && Colonies.Count > 0)
                     _current = _recruit.Roll;
 
                 if(_current != WarriorId.None)
                 {
                     var cost = GameContainer.Prices.Warriors[_current];
                     yield return Human.Exchange_Cn(cost, Out<bool>.Get(out int key));
-                    if(Out<bool>.Result(key) && WarriorAI.TrySetSpawn(Human, s_spawns))
+                    if(Out<bool>.Result(key))
                     {
-                        Hexagon hexagon = s_spawns.Rand(); s_spawns.Clear();
+                        if (WarriorAI.TrySetSpawn(Human, s_spawns))
+                        {
+                            Hexagon hexagon = s_spawns.Rand(); s_spawns.Clear();
 
-                        yield return GameContainer.CameraController.ToPositionControlled(hexagon.Position);
-                        yield return Human.Recruiting_Wait(_current, hexagon, cost);
+                            yield return GameContainer.CameraController.ToPositionControlled(hexagon.Position);
+                            yield return Human.Recruiting_Wait(_current, hexagon, cost);
 
-                        Log.Info($"[Recruiter] {HumanId} recruiting [{_current}]");
-                        _current = WarriorId.None;
+                            Log.Info($"[Recruiter] {HumanId} recruiting [{_current}]");
+                            _current = WarriorId.None;
+                        }
+                    }
+                    else if(IsSiege(HumanId, Colonies))
+                    {
+                        Resources.AddToMin();
+                    }
+
+                    // ====== Local ======
+                    static bool IsSiege(Id<PlayerId> playerId, ReadOnlyReactiveList<Crossroad> colonies)
+                    {
+                        for (int i = 0; i < colonies.Count; i++)
+                            if (colonies[i].IsEnemyNear(playerId))
+                                return true;
+                        return false;
                     }
                 }
             }

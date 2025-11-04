@@ -25,7 +25,7 @@ namespace Vurbiri
 
         [Impl(256)] public static void IfIndexOutOfRange(int index, int maxExclude)
         {
-            if (index < 0 | index >= maxExclude)
+            if (index < 0 || index >= maxExclude)
                 Errors.IndexOutOfRange(index);
         }
 

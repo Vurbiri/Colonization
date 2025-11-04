@@ -49,12 +49,12 @@ namespace Vurbiri.Colonization
 
                             if (IsOwnedColony(playerId, hexagon.Crossroads))
                             {
-                                if(s_badIds.Contains(hexagon.Id))
+                                if(s_settings.badIds.Contains(hexagon.Id))
                                     s_bad.Add(hexagon);
                             }
                             else
                             {
-                                if (s_goodIds.Contains(hexagon.Id))
+                                if (s_settings.goodIds.Contains(hexagon.Id))
                                     s_good.Add(hexagon);
                             }
                         }

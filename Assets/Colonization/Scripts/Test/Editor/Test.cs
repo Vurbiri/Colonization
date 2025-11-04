@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading;
 using TMPro;
 using UnityEngine;
+using Vurbiri.Collections;
 using Vurbiri.International;
 using Vurbiri.UI;
 
@@ -124,63 +125,96 @@ namespace Vurbiri.Colonization
 
         public void StringTest()
         {
-            int count = 100;
             double test1, test2;
             Stopwatch stopWatch = new();
+            List<int> list = new();
+            Roster<int> set = new();
 
-            print("===============================================");
+            TestListAdd(new());
+
             Thread.Sleep(100);
             stopWatch.Start();
-            for (int i = 0; i < count; i++)
-                MathMin();
+            TestListAdd(list);
             stopWatch.Stop();
             test1 = stopWatch.ElapsedTicks;
 
             stopWatch.Restart();
-            for (int i = 0; i < count; i++)
-                MathMinI();
+            TestHashAdd(set);
             stopWatch.Stop();
             test2 = stopWatch.ElapsedTicks;
 
+            print("----------------- Add -------------------------");
+            print($"List: {test1}");
+            print($"Roster: {test2}");
             print("-----------------------------------------------");
-            print($"Math: {test1}");
-            print($"MathI: {test2}");
-            print("-----------------------------------------------");
-            print($"Math/MathI:  {test1 / test2}");
+            print($"List/Roster:  {test1 / test2}");
             print("===============================================");
 
-            print("===============================================");
             Thread.Sleep(100);
             stopWatch.Restart();
-            for (int i = 0; i < count; i++)
-                MathMinI();
+            TestListContains(list);
             stopWatch.Stop();
             test2 = stopWatch.ElapsedTicks;
 
             stopWatch.Restart();
-            for (int i = 0; i < count; i++)
-                MathMin();
+            TestHashContains(set);
             stopWatch.Stop();
             test1 = stopWatch.ElapsedTicks;
 
+            print("----------------- Contains --------------------");
+            print($"List: {test1}");
+            print($"Roster: {test2}");
             print("-----------------------------------------------");
-            print($"Math: {test1}");
-            print($"MathI: {test2}");
-            print("-----------------------------------------------");
-            print($"Math/MathI:  {test1 / test2}");
+            print($"List/Roster:  {test1 / test2}");
             print("===============================================");
 
-            void MathMin()
+            Thread.Sleep(100);
+            stopWatch.Restart();
+            TestListRemove(list);
+            stopWatch.Stop();
+            test2 = stopWatch.ElapsedTicks;
+
+            stopWatch.Restart();
+            TestHashRemove(set);
+            stopWatch.Stop();
+            test1 = stopWatch.ElapsedTicks;
+
+            print("----------------- Remove ----------------------");
+            print($"List: {test1}");
+            print($"Roster: {test2}");
+            print("-----------------------------------------------");
+            print($"List/Roster:  {test1 / test2}");
+            print("===============================================");
+
+            void TestListAdd(List<int> list)
             {
-                int test;
-                for(int i = IntToStr.MIN_NUMBERS_STR; i <= IntToStr.MAX_NUMBERS_STR << 5; i++)
-                    test = Math.Min(i, 444);
+                for(int i = 0; i < 100; i++)
+                    list.Add(i);
             }
-            void MathMinI()
+            void TestHashAdd(Roster<int> set)
             {
-                int test;
-                for (int i = IntToStr.MIN_NUMBERS_STR; i <= IntToStr.MAX_NUMBERS_STR << 5; i++)
-                    test = Math.Min(i, 444);
+                for (int i = 0; i < 100; i++)
+                    set.Add(i);
+            }
+            void TestListRemove(List<int> list)
+            {
+                for (int i = 200; i >= 0; i--)
+                    list.Remove(i);
+            }
+            void TestHashRemove(Roster<int> set)
+            {
+                for (int i = 200; i >= 0; i--)
+                    set.Remove(i);
+            }
+            void TestListContains(List<int> list)
+            {
+                for (int i = 200; i >= 0; i--)
+                    list.Contains(i);
+            }
+            void TestHashContains(Roster<int> set)
+            {
+                for (int i = 200; i >= 0; i--)
+                    set.Contains(i);
             }
         }
 

@@ -28,33 +28,13 @@ namespace Vurbiri.Colonization
             public bool Equals(Actor actor) => _actor == actor;
             public static bool Equals(AI<T> self, Actor actor) => self._actor == actor;
 
-            protected static bool TryGetNextHexagon(Hexagon start, Hexagon end, out Hexagon next, out int pathLength)
-            {
-                int distance = start.Distance(end); 
-                next = null; pathLength = -1;
-
-                if (distance > (end.CanWarriorEnter ? 0 : 1) && Find(start, end, distance))
-                {
-                    next = s_links[start]; pathLength = 0;
-                    while (s_links.TryGetValue(start, out end))
-                    {
-                        start = end;
-                        pathLength++;
-                    }
-                }
-                s_links.Clear(); 
-
-                return pathLength >= 0;
-            }
-
-            protected static bool TryGetDistance(Hexagon start, Hexagon end, out int pathLength)
+            protected static bool TryGetDistance(Hexagon start, Hexagon end, int oldLength, out int pathLength)
             {
                 int distance = start.Distance(end);
-                pathLength = -1;
+                pathLength = 0;
 
                 if (distance > (end.CanWarriorEnter ? 0 : 1) && Find(start, end, distance))
                 {
-                    pathLength = 0;
                     while (s_links.TryGetValue(start, out end))
                     {
                         start = end;
@@ -63,7 +43,7 @@ namespace Vurbiri.Colonization
                 }
                 s_links.Clear();
 
-                return pathLength >= 0;
+                return pathLength > 0 && (pathLength < oldLength || (pathLength == oldLength && Chance.Rolling()));
             }
 
             protected static bool TryGetNextHexagon(Hexagon start, Hexagon end, out Hexagon next)
@@ -97,7 +77,7 @@ namespace Vurbiri.Colonization
                         near = current.Neighbors[index];
                         if (found = near == start)
                             s_links.Add(near, current);
-                        if ((!found && near != end && near.CanWarriorEnter) && near.Distance(end) < depth && near.Distance(start) < depth && s_links.TryAdd(near, current))
+                        if ((!found && near != end && near.CanWarriorEnter) && (near.Distance(end) < depth && near.Distance(start) < depth) && s_links.TryAdd(near, current))
                             s_finds.Enqueue(near);
                     }
                 }

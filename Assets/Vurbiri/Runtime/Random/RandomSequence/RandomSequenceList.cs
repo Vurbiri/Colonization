@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
@@ -7,6 +6,17 @@ namespace Vurbiri
 	public class RandomSequenceList<T> : RandomSequence<T>
     {
         private const int BASE_CAPACITY = 3;
+        private static readonly IEqualityComparer<T> s_comparer = EqualityComparer<T>.Default;
+
+        public T this[int index]
+        {
+            [Impl(256)]
+            get
+            {
+                Throw.IfIndexOutOfRange(index, _count);
+                return _values[index];
+            }
+        }
 
         [Impl(256)] public RandomSequenceList() : base(BASE_CAPACITY) { }
         [Impl(256)] public RandomSequenceList(int capacity) : base(capacity) { }
@@ -31,15 +41,7 @@ namespace Vurbiri
         public void Remove(T item)
         {
             int index = -1;
-            while (++index < _count && !_values[index].Equals(item)) ;
-
-            RemoveAt(index);
-        }
-
-        public void Remove<U>(U item) where U : IEquatable<T> 
-        {
-            int index = -1;
-            while (++index < _count && !item.Equals(_values[index])) ;
+            while (++index < _count && !s_comparer.Equals(_values[index], item));
 
             RemoveAt(index);
         }

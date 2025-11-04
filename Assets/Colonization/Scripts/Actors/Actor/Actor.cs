@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using Vurbiri.Colonization.Storage;
 using Vurbiri.Reactive;
@@ -97,7 +98,8 @@ namespace Vurbiri.Colonization
             gameObject.layer = Layers.SelectableRight;
         }
         #endregion
-        #region ================== ReactiveItem ============================
+        
+        #region ================== IReactiveItem ============================
         public int Index { [Impl(256)] get; [Impl(256)] private set; }
         public ActorCode Code { [Impl(256)] get; [Impl(256)] private set; }
 
@@ -213,6 +215,7 @@ namespace Vurbiri.Colonization
             return _states.IsAvailable & GameContainer.Diplomacy.IsCanActorsInteraction(id, _owner, typeAction, out isFriendly);
         }
 
+        #region ---------------- Combat ----------------
         public bool IsInCombat()
         {
             var neighbors = _currentHex.Neighbors;
@@ -221,15 +224,23 @@ namespace Vurbiri.Colonization
                     return true;
             return false;
         }
-        public int GetEnemiesNear()
+        public void GetEnemiesNear(List<Actor> enemies)
         {
-            int count = 0;
+            var neighbors = _currentHex.Neighbors;
+            for (int i = 0; i < neighbors.Count; i++)
+                if (neighbors[i].TryGetEnemy(_owner, out Actor enemy))
+                    enemies.Add(enemy);
+        }
+        public int GetCurrentForceEnemiesNear()
+        {
+            int force = 0;
             var neighbors = _currentHex.Neighbors;
             for (int i = 0; i < neighbors.Count; i++)
                 if (neighbors[i].IsEnemy(_owner))
-                    count++;
-            return count;
+                    force += neighbors[i].Owner.CurrentForce;
+            return force;
         }
+        #endregion
 
         #region ---------------- Diplomacy ----------------
         [Impl(256)] public bool IsFriend(Id<PlayerId> id) => GameContainer.Diplomacy.IsFriend(_owner, id);
@@ -267,7 +278,6 @@ namespace Vurbiri.Colonization
         #endregion
 
         #region ================== Start/End turn ========================
-
         public void StatesUpdate()
         {
             _currentHP.Next();

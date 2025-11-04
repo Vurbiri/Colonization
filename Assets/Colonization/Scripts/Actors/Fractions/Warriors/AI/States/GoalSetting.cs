@@ -13,7 +13,7 @@ namespace Vurbiri.Colonization
             public GoalSetting(WarriorAI parent) : base(parent)
             {
                 _states.Add(new Combat(parent));
-                _states.Add(new MoveToSieged(parent));
+                _states.Add(new MoveToUnsiege(parent));
                 _states.Add(new MoveToColony(parent));
 
                 _states.Add(new Defense(parent));

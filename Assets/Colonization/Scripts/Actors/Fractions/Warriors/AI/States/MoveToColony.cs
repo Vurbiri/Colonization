@@ -7,41 +7,54 @@ namespace Vurbiri.Colonization
     {
         sealed private class MoveToColony : MoveTo
         {
+            private Key _targetColony;
+
             public MoveToColony(WarriorAI parent) : base(parent) { }
 
-            public override bool TryEnter() => Action.CanUseMoveSkill() && FindEmptyColony();
+            public override bool TryEnter() => Action.CanUseMoveSkill() && FindEmptyColony() && Goals.Defensed.Add(_targetColony);
 
             public override IEnumerator Execution_Cn(Out<bool> isContinue) => Execution_Cn(isContinue, 0);
 
+            public override void Dispose()
+            {
+                if(_targetHexagon != null)
+                {
+                    _targetHexagon = null;
+                    Goals.Defensed.Remove(_targetColony);
+                }
+            }
+
             private bool FindEmptyColony()
             {
-                _target = null;
+                _targetHexagon = null;
 
-                if (!Status.isGuard || Status.minGuard > 1)
+                if (!Situation.isGuard || Situation.minColonyGuard > 1)
                 {
-                    Hexagon current;
+                    Hexagon current, start = Actor.Hexagon; ; Crossroad colony;
                     ReadOnlyArray<Hexagon> hexagons;
                     int distance = s_settings.maxDistanceEmpty;
                     var colonies = Colonies;
 
                     for (int i = 0; i < colonies.Count; i++)
                     {
-                        if (colonies[i].IsEmptyNear(Actor.Owner))
+                        colony = colonies[i];
+                        if (!Goals.Defensed.Contains(colony) && colony.IsEmptyNear(_playerId))
                         {
-                            hexagons = colonies[i].Hexagons;
+                            hexagons = colony.Hexagons;
                             foreach (int index in s_hexIndexes)
                             {
                                 current = hexagons[index];
-                                if (TryGetDistance(Actor.Hexagon, current, out int temp) && temp < distance)
+                                if (TryGetDistance(start, current, distance, out int newDistance))
                                 {
-                                    distance = temp;
-                                    _target = current;
+                                    distance = newDistance;
+                                    _targetHexagon = current;
+                                    _targetColony = colony.Key;
                                 }
                             }
                         }
                     }
                 }
-                return _target != null;
+                return _targetHexagon != null;
             }
         }
     }

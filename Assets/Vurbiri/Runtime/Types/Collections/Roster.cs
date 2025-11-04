@@ -8,6 +8,7 @@ namespace Vurbiri.Collections
     public class Roster<TValue> : ReadOnlyArray<TValue>, IList<TValue>
     {
         private const int BASE_CAPACITY = 3;
+
         private int _capacity;
 
         public new TValue this[int index]
@@ -71,7 +72,7 @@ namespace Vurbiri.Collections
         public bool Remove(TValue item)
         {
             int index = -1;
-            while (++index < _count && !_values[index].Equals(item));
+            while (++index < _count && !s_comparer.Equals(_values[index], item));
             if (index < _count)
                 RemoveAt(index);
 

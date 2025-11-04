@@ -14,7 +14,6 @@ namespace Vurbiri.Colonization
         protected readonly ReactiveSet<Actor>[] _actors = new ReactiveSet<Actor>[PlayerId.Count];
 
         public ReadOnlyReactiveSet<Actor> this[int playerId] { [Impl(256)] get => _actors[playerId]; }
-        public Actor this[int playerId, int index] { [Impl(256)] get => _actors[playerId][index]; }
         public Actor this[ActorCode code] { [Impl(256)] get => _actors[code.owner][code.index]; }
 
         public ActorsFactory(Settings settings) 

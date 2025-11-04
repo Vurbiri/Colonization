@@ -20,13 +20,22 @@ namespace Vurbiri.Collections
 
         public void Resize(int newSize)
         {
-            TValue[] newArr = new TValue[newSize];
-            int count = Math.Min(newSize, _count);
-            for (int i = 0; i < count; i++)
-                newArr[i] = _values[i];
+            if (_count != newSize)
+            {
+                TValue[] newArr = new TValue[newSize];
+                int count = Math.Min(newSize, _count);
+                for (int i = 0; i < count; i++)
+                    newArr[i] = _values[i];
 
-            _values = newArr;
-            _count = newSize;
+                _values = newArr;
+                _count = newSize;
+            }
+        }
+
+        public void CopyTo(TValue[] array, int arrayIndex)
+        {
+            for (int i = arrayIndex; i < _count; i++)
+                array[i] = _values[i];
         }
 
         [Impl(256)] public static implicit operator Array<TValue>(TValue[] values) => new(values);

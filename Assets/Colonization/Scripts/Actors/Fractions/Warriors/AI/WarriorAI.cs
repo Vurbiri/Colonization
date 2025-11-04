@@ -12,22 +12,25 @@ namespace Vurbiri.Colonization
 
         static WarriorAI() => s_settings = SettingsFile.Load<WarriorAISettings>();
 
-        private readonly Status _status = new();
+        private readonly Goals _goals;
+        private readonly Situation _situation;
         private readonly GoalSetting _goalSetting;
         private AIState _current;
 
-        [Impl(256)] protected WarriorAI(Actor actor) : base(actor) 
+        [Impl(256)] protected WarriorAI(Actor actor, Goals goals) : base(actor) 
         {
+            _goals = goals;
+            _situation = new();
             _current = _goalSetting = new(this);
         }
 
-        public static WarriorAI Create(Actor actor) => actor.Id switch
+        public static WarriorAI Create(Actor actor, Goals goals) => actor.Id switch
         {
-            WarriorId.Militia => new WarriorAI(actor),
-            WarriorId.Solder  => new WarriorAI(actor),
-            WarriorId.Wizard  => new WarriorAI(actor),
-            WarriorId.Warlock => new WarriorAI(actor),
-            WarriorId.Knight  => new WarriorAI(actor),
+            WarriorId.Militia => new WarriorAI(actor, goals),
+            WarriorId.Solder  => new WarriorAI(actor, goals),
+            WarriorId.Wizard  => new WarriorAI(actor, goals),
+            WarriorId.Warlock => new WarriorAI(actor, goals),
+            WarriorId.Knight  => new WarriorAI(actor, goals),
             _ => null
         };
 
@@ -38,7 +41,7 @@ namespace Vurbiri.Colonization
             {
                 Log.Info($"[WarriorAI] {_actor.Owner} state [{_current}]");
 
-                _status.Update(_actor);
+                _situation.Update(_actor);
                 yield return StartCoroutine(_current.Execution_Cn(Out<bool>.Get(out key)));
             }
             while (Out<bool>.Result(key));

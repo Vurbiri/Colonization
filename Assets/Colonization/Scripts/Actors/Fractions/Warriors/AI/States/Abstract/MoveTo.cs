@@ -6,24 +6,22 @@ namespace Vurbiri.Colonization
     {
         private abstract class MoveTo : AIState
         {
-            protected Hexagon _target;
+            protected Hexagon _targetHexagon;
 
             protected MoveTo(WarriorAI parent) : base(parent)
             {
             }
 
-            public override void Dispose() => _target = null;
-
             protected IEnumerator Execution_Cn(Out<bool> isContinue, int distance, bool isExit = false)
             {
-                isExit = isExit | Status.isInCombat;
+                isExit = isExit | Situation.isInCombat;
                 if (!isExit && Action.CanUseMoveSkill())
                 {
-                    isExit = !TryGetNextHexagon(Actor.Hexagon, _target, out Hexagon next);
+                    isExit = !TryGetNextHexagon(Actor.Hexagon, _targetHexagon, out Hexagon next);
                     if (!isExit)
                     {
                         yield return Move_Cn(next);
-                        isExit = _target.Distance(next) == distance;
+                        isExit = _targetHexagon.Distance(next) == distance;
                     }
                 }
                 isContinue.Set(isExit);

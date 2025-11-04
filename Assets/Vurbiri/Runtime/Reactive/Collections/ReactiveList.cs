@@ -7,8 +7,10 @@ using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 namespace Vurbiri.Reactive.Collections
 {
     [JsonArray]
-    public abstract class ReadOnlyReactiveList<T> : IReadOnlyList<T> where T : IEquatable<T>
+    public abstract class ReadOnlyReactiveList<T> : IReadOnlyList<T>
     {
+        protected static readonly IEqualityComparer<T> s_comparer = EqualityComparer<T>.Default;
+
         protected T[] _values;
         protected readonly RInt _count = new(0);
 
@@ -43,7 +45,7 @@ namespace Vurbiri.Reactive.Collections
         public int IndexOf(T item)
         {
             int i = _count.Value;
-            while (i --> 0 && !_values[i].Equals(item));
+            while (i --> 0 && !s_comparer.Equals(_values[i], item));
             return i;
         }
 
@@ -54,7 +56,7 @@ namespace Vurbiri.Reactive.Collections
     //**********************************************************************************************
     
     [JsonArray]
-    public class ReactiveList<T> : ReadOnlyReactiveList<T>, IList<T> where T : IEquatable<T>
+    public class ReactiveList<T> : ReadOnlyReactiveList<T>, IList<T>
     {
         private const int BASE_CAPACITY = 7;
         private int _capacity;
@@ -71,7 +73,7 @@ namespace Vurbiri.Reactive.Collections
             [Impl(256)] set
             {
                 Throw.IfIndexOutOfRange(index, _count);
-                if (!_values[index].Equals(value))
+                if (!s_comparer.Equals(_values[index], value))
                 {
                     _values[index] = value;
                     _changeEvent.Invoke(index, value, TypeEvent.Change);

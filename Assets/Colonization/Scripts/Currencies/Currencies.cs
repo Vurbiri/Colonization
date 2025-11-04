@@ -120,14 +120,21 @@ namespace Vurbiri.Colonization
             #endregion
         }
 
-        public void AddToMin(int value)
+        public void AddToMin(int value = 1)
         {
             if (value != 0)
             {
                 _amount.Value += _values[MinIndex].Add(value);
                 _changeEvent.Invoke(this);
             }
-            Log.Info($"AddToMin {value}");
+        }
+
+        public void RandomIncrement()
+        {
+            int j = UnityEngine.Random.Range(0, MainCount);
+            _values[j].Add(1);
+            _amount.Add(1);
+            _changeEvent.Invoke(this);
         }
 
         public void RandomDecrement()

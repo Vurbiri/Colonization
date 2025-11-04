@@ -104,7 +104,7 @@ namespace Vurbiri.Colonization
                     static IEnumerator BuildOnRoad(Builder parent, Plans plans, bool canColony, bool canShrine)
                     {
                         var prices = GameContainer.Prices.Edifices;
-                        HashSet<Crossroad> crossroads = new(parent.Roads.CrossroadsCount);
+                        List<Crossroad> crossroads = new(parent.Roads.CrossroadsCount);
                         if (canColony)
                             parent.Roads.GetCrossroads(crossroads);
                         else
@@ -112,9 +112,11 @@ namespace Vurbiri.Colonization
 
                         yield return null;
 
-                        int weight; ReadOnlyMainCurrencies cost; 
-                        foreach (var crossroad in crossroads)
+                        int weight, index = crossroads.Count;
+                        ReadOnlyMainCurrencies cost; Crossroad crossroad;
+                        while (index --> 0)
                         {
+                            crossroad = crossroads[index];
                             if (CanBuild(crossroad, canColony, canShrine))
                             {
                                 cost = prices[crossroad.NextId];
@@ -131,13 +133,13 @@ namespace Vurbiri.Colonization
                     //===============================================
                     static IEnumerator BuildOnLand(Builder parent, Finder finder, Plans plans)
                     {
-                        HashSet<Crossroad> starting = new(parent.Roads.CrossroadsCount + parent.Ports.Count);
+                        List<Crossroad> starting = new(parent.Roads.CrossroadsCount + parent.Ports.Count);
 
                         parent.Roads.GetDeadEnds(starting);
 
                         if (starting.Count == 0)
                         {
-                            starting.UnionWith(parent.Ports);
+                            starting.AddRange(parent.Ports);
                             parent.Roads.GetCrossroads(starting);
                         }
 
@@ -219,7 +221,7 @@ namespace Vurbiri.Colonization
                         _canColony = canColony; _canShrine = canShrine;
                     }
 
-                    public void Run(HashSet<Crossroad> starting)
+                    public void Run(List<Crossroad> starting)
                     {
                         var crossroads = GameContainer.Crossroads;
                         Queue<Crossroad> queue = new(starting);

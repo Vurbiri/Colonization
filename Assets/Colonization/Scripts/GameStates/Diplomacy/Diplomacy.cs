@@ -60,8 +60,8 @@ namespace Vurbiri.Colonization
 
         [Impl(256)] public bool IsFriend(Id<PlayerId> idA, Id<PlayerId> idB) => Validate(idA, idB) && (idA == idB || (IsNotSatan(idA, idB) && this[idA, idB] > 0));
         [Impl(256)] public bool IsGreatFriend(Id<PlayerId> idA, Id<PlayerId> idB) => Validate(idA, idB) && (idA == idB || (IsNotSatan(idA, idB) && this[idA, idB] > _settings.great));
-        [Impl(256)] public bool IsEnemy(Id<PlayerId> idA, Id<PlayerId> idB) => Validate(idA, idB) & idA != idB && (IsSatan(idA, idB) || this[idA, idB] <= 0);
-        [Impl(256)] public bool IsGreatEnemy(Id<PlayerId> idA, Id<PlayerId> idB) => Validate(idA, idB) & idA != idB && (IsSatan(idA, idB) || this[idA, idB] <= -_settings.great);
+        [Impl(256)] public bool IsEnemy(Id<PlayerId> idA, Id<PlayerId> idB) => (Validate(idA, idB) & idA != idB) && (IsSatan(idA, idB) || this[idA, idB] <= 0);
+        [Impl(256)] public bool IsGreatEnemy(Id<PlayerId> idA, Id<PlayerId> idB) => (Validate(idA, idB) & idA != idB) && (IsSatan(idA, idB) || this[idA, idB] <= -_settings.great);
 
         public Relation GetRelation(Id<PlayerId> idA, Id<PlayerId> idB)
         {
