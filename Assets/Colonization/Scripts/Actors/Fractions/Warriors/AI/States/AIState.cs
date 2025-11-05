@@ -11,8 +11,11 @@ namespace Vurbiri.Colonization
 
             protected ReadOnlyReactiveList<Crossroad> Colonies { [Impl(256)] get => GameContainer.Players.Humans[_playerId].Colonies; }
 
-            [Impl(256)] protected AIState(WarriorAI parent) : base(parent) => _playerId = parent._actor.Owner;
-
+            [Impl(256)]
+            protected AIState(WarriorAI parent) : base(parent)
+            {
+                _playerId = parent._actor.Owner;
+            }
         }
     }
 }

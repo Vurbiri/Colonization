@@ -10,10 +10,13 @@ namespace Vurbiri.Colonization
             private const int COUNT = 4;
             private readonly List<AIState> _states = new();
 
-            public GoalSetting(WarriorAI parent, Combat combat) : base(parent)
+            public GoalSetting(WarriorAI parent, Combat combat, Support support) : base(parent)
             {
                 _states.Add(combat);
+                _states.Add(support);
+
                 _states.Add(new MoveToUnsiege(parent));
+                _states.Add(new MoveToHelp(parent));
                 _states.Add(new MoveToColony(parent));
 
                 _states.Add(new Defense(parent));

@@ -224,20 +224,27 @@ namespace Vurbiri.Colonization
                     return true;
             return false;
         }
-        public void GetEnemiesNear(List<Actor> enemies)
+        public int GetEnemiesNearAndForce(List<Actor> enemies)
         {
+            int force = 0;
             var neighbors = _currentHex.Neighbors;
             for (int i = 0; i < neighbors.Count; i++)
+            {
                 if (neighbors[i].TryGetEnemy(_owner, out Actor enemy))
+                {
                     enemies.Add(enemy);
+                    force += enemy.CurrentForce;
+                }
+            }
+            return force;
         }
         public int GetCurrentForceEnemiesNear()
         {
             int force = 0;
             var neighbors = _currentHex.Neighbors;
             for (int i = 0; i < neighbors.Count; i++)
-                if (neighbors[i].IsEnemy(_owner))
-                    force += neighbors[i].Owner.CurrentForce;
+                if (neighbors[i].TryGetEnemy(_owner, out Actor enemy))
+                    force += enemy.CurrentForce;
             return force;
         }
         #endregion

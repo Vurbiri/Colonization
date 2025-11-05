@@ -133,6 +133,7 @@ namespace Vurbiri.Colonization
         #endregion
 
         [Impl(256)] public int Distance(Hexagon other) => HEX.Distance(_key, other._key);
+        [Impl(256)] public int Distance(Key key) => HEX.Distance(_key, key);
 
         [Impl(256)] public Subscription Subscribe(Action<int> action, bool instantGetValue = true) => _changeID.Add(action, instantGetValue, _id);
 
@@ -198,7 +199,7 @@ namespace Vurbiri.Colonization
             _ownerId = PlayerId.None;
         }
 
-        [Impl(256)] public bool IsFriend(Id<PlayerId> id) => GameContainer.Diplomacy.IsFriend(_ownerId, id);
+        [Impl(256)] public bool IsGreatFriend(Id<PlayerId> id) => GameContainer.Diplomacy.IsGreatFriend(_ownerId, id);
         [Impl(256)] public bool IsEnemy(Id<PlayerId> id) => GameContainer.Diplomacy.IsEnemy(_ownerId, id);
         [Impl(256)] public bool IsOwner(Id<PlayerId> id) => _ownerId == id;
 

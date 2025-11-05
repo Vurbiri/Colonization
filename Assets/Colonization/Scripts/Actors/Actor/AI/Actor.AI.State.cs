@@ -1,4 +1,6 @@
 using System.Collections;
+using System.Collections.Generic;
+using Vurbiri.Reactive.Collections;
 using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization
@@ -48,6 +50,32 @@ namespace Vurbiri.Colonization
                 {
                     Dispose();
                     _parent._current = _parent._goalSetting;
+                }
+
+                protected bool TryGetNearActorsInCombat(ReadOnlyReactiveSet<Actor> friends, ref int distance, out Actor enemy, out Actor friend)
+                {
+                    bool result = false;
+                    List<Actor> enemies = new(HEX.SIDES); 
+                    Actor enemyTemp; enemy = null; friend = null;
+
+                    foreach (var friendTemp in friends)
+                    {
+                        int force = friendTemp.GetEnemiesNearAndForce(enemies);
+
+                        for (int i = enemies.Count - 1; i >= 0; i--)
+                        {
+                            enemyTemp = enemies[i];
+                            if (Goals.Enemies.CanAdd(enemyTemp, force) && TryGetDistance(Actor.Hexagon, enemyTemp.Hexagon, distance, out int newDistance))
+                            {
+                                distance = newDistance;
+                                enemy = enemyTemp;
+                                friend = friendTemp;
+                                result = true;
+                            }
+                        }
+                        enemies.Clear();
+                    }
+                    return result;
                 }
 
                 protected IEnumerator Move_Cn(Out<bool> isContinue, int distance, Hexagon target, bool isExit = false)

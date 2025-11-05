@@ -18,7 +18,8 @@ namespace Vurbiri.Colonization
                 {
                     private readonly Dictionary<ActorCode, List<ActorData>> _targets = new();
 
-                    public bool CanAdd(Actor target)
+                    [Impl(256)] public bool CanAdd(Actor target) => CanAdd(target, target.CurrentForce);
+                    public bool CanAdd(Actor target, int enemiesForce)
                     {
                         int alliesForce = target.GetCurrentForceEnemiesNear();
 
@@ -28,7 +29,7 @@ namespace Vurbiri.Colonization
                                 alliesForce += supports[i].force;
                         }
 
-                        return (target.CurrentForce << 1) > alliesForce;
+                        return (enemiesForce << 1) > alliesForce;
                     }
 
                     public bool Add(ActorCode target, ActorData force)

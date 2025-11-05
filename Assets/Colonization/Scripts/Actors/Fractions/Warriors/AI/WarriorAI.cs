@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Vurbiri.Reactive.Collections;
 using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
@@ -9,16 +10,20 @@ namespace Vurbiri.Colonization
         protected static readonly WarriorAISettings s_settings;
         static WarriorAI() => s_settings = SettingsFile.Load<WarriorAISettings>();
         
-        [Impl(256)] private WarriorAI(Actor actor, Goals goals, System.Func<WarriorAI, Combat> combatFactory) : base(actor, goals)
+        [Impl(256)] private WarriorAI(Actor actor, Goals goals, Func<WarriorAI, Combat> combatFactory, Func<WarriorAI, Support> supportFactory) : base(actor, goals)
         {
-            _current = _goalSetting = new GoalSetting(this, combatFactory(this));
+            _current = _goalSetting = new GoalSetting(this, combatFactory(this), supportFactory(this));
+        }
+        [Impl(256)] private WarriorAI(Actor actor, Goals goals, Func<WarriorAI, Combat> combatFactory) : base(actor, goals)
+        {
+            _current = _goalSetting = new GoalSetting(this, combatFactory(this), new Support(this));
         }
 
         public static WarriorAI Create(Actor actor, Goals goals) => actor.Id switch
         {
             WarriorId.Militia => new WarriorAI(actor, goals, (ai) => new Combat(ai)),
             WarriorId.Solder  => new WarriorAI(actor, goals, (ai) => new Combat(ai)),
-            WarriorId.Wizard  => new WarriorAI(actor, goals, (ai) => new Combat(ai)),
+            WarriorId.Wizard  => new WarriorAI(actor, goals, (ai) => new Combat(ai) , (ai) => new Support(ai)),
             WarriorId.Warlock => new WarriorAI(actor, goals, (ai) => new Combat(ai)),
             WarriorId.Knight  => new WarriorAI(actor, goals, (ai) => new Combat(ai)),
             _ => null

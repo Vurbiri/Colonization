@@ -1,12 +1,19 @@
 {
   "maxDistanceUnsiege": 4,
-  "maxDistanceSupport": 3,
+  "maxDistanceHelp": 3,
   "maxDistanceEmpty": 3,
   "supports": [
     false,
     false,
     true,
-    true,
+    false,
     false
+  ],
+  "raiders": [
+    false,
+    true,
+    false,
+    true,
+    true
   ]
 }

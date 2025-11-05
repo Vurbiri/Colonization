@@ -13,11 +13,10 @@ namespace Vurbiri.Colonization
 
             public override void Update(Actor actor)
             {
-                Log.Info("[WarriorAI.Situation.Update]");
+                FindNearEnemies(actor);
+
                 var hex = actor.Hexagon;
                 var crossroads = hex.Crossroads;
-
-                FindNearEnemies(actor);
 
                 isGuard = false;
                 minColonyGuard = int.MaxValue;
