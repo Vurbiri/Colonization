@@ -8,7 +8,7 @@ namespace Vurbiri.Colonization
 {
     public partial class Actor
     {
-        public abstract class AI<T> : IEquatable<Actor> where T : AStates
+        public abstract partial class AI : IEquatable<Actor>
         {
             private static readonly Dictionary<Hexagon, Hexagon> s_links = new();
             private static readonly Queue<Hexagon> s_finds = new();
@@ -17,23 +17,22 @@ namespace Vurbiri.Colonization
             protected static readonly WaitFrames s_waitBeforeSelecting = new(10);
 
             protected readonly Actor _actor;
-            protected readonly T _action;
+            protected readonly Goals _goals;
 
-            protected AI(Actor actor)
+            [Impl(256)]
+            protected AI(Actor actor, Goals goals)
             {
                 _actor = actor;
-                _action = (T)actor._states;
+                _goals = goals;
             }
 
-            public bool Equals(Actor actor) => _actor == actor;
-            public static bool Equals(AI<T> self, Actor actor) => self._actor == actor;
-
+            #region ================= Pathfind ================== 
             protected static bool TryGetDistance(Hexagon start, Hexagon end, int oldLength, out int pathLength)
             {
                 int distance = start.Distance(end);
                 pathLength = 0;
 
-                if (distance > (end.CanWarriorEnter ? 0 : 1) && Find(start, end, distance))
+                if (distance > (end.CanWarriorEnter ? 0 : 1) && Pathfind(start, end, distance))
                 {
                     while (s_links.TryGetValue(start, out end))
                     {
@@ -51,17 +50,14 @@ namespace Vurbiri.Colonization
                 next = null;
 
                 int distance = start.Distance(end);
-                if (distance > (end.CanWarriorEnter ? 0 : 1) && Find(start, end, distance))
+                if (distance > (end.CanWarriorEnter ? 0 : 1) && Pathfind(start, end, distance))
                     next = s_links[start];
                 s_links.Clear();
 
                 return next != null;
             }
 
-            [Impl(256)] protected Coroutine StartCoroutine(IEnumerator routine) => _actor.StartCoroutine(routine);
-            [Impl(256)] protected void StopCoroutine(Coroutine coroutine) => _actor.StopCoroutine(coroutine);
-
-            private static bool Find(Hexagon start, Hexagon end, int distance)
+            private static bool Pathfind(Hexagon start, Hexagon end, int distance)
             {
                 bool found = false;
                 int depth = distance + 1;
@@ -85,6 +81,13 @@ namespace Vurbiri.Colonization
 
                 return found;
             }
+            #endregion
+
+            [Impl(256)] protected Coroutine StartCoroutine(IEnumerator routine) => _actor.StartCoroutine(routine);
+            [Impl(256)] protected void StopCoroutine(Coroutine coroutine) => _actor.StopCoroutine(coroutine);
+
+            public bool Equals(Actor actor) => _actor == actor;
         }
+
     }
 }

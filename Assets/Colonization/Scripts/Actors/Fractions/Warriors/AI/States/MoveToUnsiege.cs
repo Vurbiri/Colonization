@@ -1,20 +1,22 @@
 using System.Collections;
 using Vurbiri.Collections;
 using Vurbiri.Reactive.Collections;
+using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization
 {
     public partial class WarriorAI
     {
-        sealed private class MoveToUnsiege : MoveTo
+        sealed private class MoveToUnsiege : AIState
         {
+            private Hexagon _targetHexagon;
             private ActorCode _targetEnemy;
 
-            public MoveToUnsiege(WarriorAI parent) : base(parent) { }
+            [Impl(256)] public MoveToUnsiege(WarriorAI parent) : base(parent) { }
 
-            public override bool TryEnter() => Action.CanUseMoveSkill() && FindSiegedEnemy(Colonies) && Goals.Enemies.Add(_targetEnemy, new(Actor));
+            [Impl(256)] public override bool TryEnter() => Action.CanUseMoveSkill() && FindSiegedEnemy(Colonies) && Goals.Enemies.Add(_targetEnemy, new(Actor));
 
-            public override IEnumerator Execution_Cn(Out<bool> isContinue) => Execution_Cn(isContinue, 1, !_targetHexagon.IsEnemy(_playerId));
+            [Impl(256)] public override IEnumerator Execution_Cn(Out<bool> isContinue) => Move_Cn(isContinue, 1, _targetHexagon, !_targetHexagon.IsEnemy(_playerId));
 
             public override void Dispose()
             {

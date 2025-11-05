@@ -1,17 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
+using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization
 {
     public partial class WarriorAI
     {
-        sealed private class MoveToSupport : MoveTo
+        sealed private class MoveToSupport : AIState
         {
+            private Hexagon _targetHexagon;
             private ActorCode _targetActor;
 
-            public MoveToSupport(WarriorAI parent) : base(parent)
-            {
-            }
+            [Impl(256)] public MoveToSupport(WarriorAI parent) : base(parent) { }
 
             public override bool TryEnter() => Action.CanUseMoveSkill();
 

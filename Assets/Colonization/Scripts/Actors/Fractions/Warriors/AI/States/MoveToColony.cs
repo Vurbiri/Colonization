@@ -1,19 +1,21 @@
 using System.Collections;
 using Vurbiri.Collections;
+using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization
 {
     public partial class WarriorAI
     {
-        sealed private class MoveToColony : MoveTo
+        sealed private class MoveToColony : AIState
         {
+            private Hexagon _targetHexagon;
             private Key _targetColony;
 
-            public MoveToColony(WarriorAI parent) : base(parent) { }
+            [Impl(256)] public MoveToColony(WarriorAI parent) : base(parent) { }
 
-            public override bool TryEnter() => Action.CanUseMoveSkill() && FindEmptyColony() && Goals.Defensed.Add(_targetColony);
+            [Impl(256)] public override bool TryEnter() => Action.CanUseMoveSkill() && FindEmptyColony() && Goals.Defensed.Add(_targetColony);
 
-            public override IEnumerator Execution_Cn(Out<bool> isContinue) => Execution_Cn(isContinue, 0);
+            [Impl(256)] public override IEnumerator Execution_Cn(Out<bool> isContinue) => Move_Cn(isContinue, 0, _targetHexagon);
 
             public override void Dispose()
             {

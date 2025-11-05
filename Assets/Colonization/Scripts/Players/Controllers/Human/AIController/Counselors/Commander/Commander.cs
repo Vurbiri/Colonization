@@ -9,7 +9,7 @@ namespace Vurbiri.Colonization
         {
             private readonly RandomSequenceList<int> _indexes = new(CONST.DEFAULT_MAX_WARRIOR);
             private readonly WarriorAI[] _warriorsAI = new WarriorAI[CONST.DEFAULT_MAX_WARRIOR];
-            private readonly WarriorAI.Goals _goals = new();
+            private readonly Actor.AI.Goals _goals = new();
 
             public Commander(AIController parent) : base(parent)
             {

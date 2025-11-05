@@ -1,51 +1,28 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using Vurbiri.Reactive.Collections;
 using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization
 {
-    public partial class WarriorAI : Actor.AI<Warrior.WarriorStates>, IDisposable
+    public partial class WarriorAI : Actor.AI<Warrior.WarriorStates, WarriorAI.Situation>
     {
         protected static readonly WarriorAISettings s_settings;
-
         static WarriorAI() => s_settings = SettingsFile.Load<WarriorAISettings>();
-
-        private readonly Goals _goals;
-        private readonly Situation _situation;
-        private readonly GoalSetting _goalSetting;
-        private AIState _current;
-
-        [Impl(256)] protected WarriorAI(Actor actor, Goals goals) : base(actor) 
+        
+        [Impl(256)] private WarriorAI(Actor actor, Goals goals, System.Func<WarriorAI, Combat> combatFactory) : base(actor, goals)
         {
-            _goals = goals;
-            _situation = new();
-            _current = _goalSetting = new(this);
+            _current = _goalSetting = new GoalSetting(this, combatFactory(this));
         }
 
         public static WarriorAI Create(Actor actor, Goals goals) => actor.Id switch
         {
-            WarriorId.Militia => new WarriorAI(actor, goals),
-            WarriorId.Solder  => new WarriorAI(actor, goals),
-            WarriorId.Wizard  => new WarriorAI(actor, goals),
-            WarriorId.Warlock => new WarriorAI(actor, goals),
-            WarriorId.Knight  => new WarriorAI(actor, goals),
+            WarriorId.Militia => new WarriorAI(actor, goals, (ai) => new Combat(ai)),
+            WarriorId.Solder  => new WarriorAI(actor, goals, (ai) => new Combat(ai)),
+            WarriorId.Wizard  => new WarriorAI(actor, goals, (ai) => new Combat(ai)),
+            WarriorId.Warlock => new WarriorAI(actor, goals, (ai) => new Combat(ai)),
+            WarriorId.Knight  => new WarriorAI(actor, goals, (ai) => new Combat(ai)),
             _ => null
         };
-
-        public IEnumerator Execution_Cn()
-        {
-            int key;
-            do
-            {
-                Log.Info($"[WarriorAI] {_actor.Owner} state [{_current}]");
-
-                _situation.Update(_actor);
-                yield return StartCoroutine(_current.Execution_Cn(Out<bool>.Get(out key)));
-            }
-            while (Out<bool>.Result(key));
-        }
 
         public static bool TrySetSpawn(Human human, List<Hexagon> output)
         {
@@ -136,7 +113,5 @@ namespace Vurbiri.Colonization
             // ====================================
             #endregion
         }
-
-        public void Dispose() => _current.Dispose();
     }
 }
