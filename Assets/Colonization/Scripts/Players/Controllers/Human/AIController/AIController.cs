@@ -57,7 +57,9 @@ namespace Vurbiri.Colonization
                 yield return s_waitAll.Add(s_settings.waitPlay.Restart(), _counselors.Execution_Wait());
 
                 _interactable.False();
+#if TEST_AI
                 Log.Info("===================================================");
+#endif
 
                 GameContainer.GameLoop.EndTurn();
             }

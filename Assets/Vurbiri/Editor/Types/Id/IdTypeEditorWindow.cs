@@ -3,7 +3,6 @@ using System.IO;
 using System.Text.RegularExpressions;
 using UnityEditor;
 using UnityEngine;
-using Vurbiri;
 using static VurbiriEditor.CONST_EDITOR;
 
 namespace VurbiriEditor
@@ -27,7 +26,7 @@ namespace VurbiriEditor
             string classPattern = @"\bclass\s+{0}\s*:";
 
             List<string> names = new();
-            foreach (var type in IdCacheEd.Types)
+            foreach (var type in IdTypeCache.Types)
             {
                 if (!type.IsNested)
                     names.Add(type.Name);

@@ -5,8 +5,15 @@ namespace Vurbiri.Colonization
 		public const int Warrior = 0;
         public const int Demon   = 1;
 
+        public static string GetName(Actor actor) => GetName(actor.TypeId, actor.Id);
+        public static string GetName(int type, int id)
+        {
 #if UNITY_EDITOR
-        public static string GetName(int type, int id) => (type == Warrior ? WarriorId.Names_Ed : DemonId.Names_Ed)[id];
+            return (type == Warrior ? WarriorId.Names_Ed : DemonId.Names_Ed)[id];
+#else
+            return (type == Warrior ? "Warrior" : "Demon").Concat("_", id.ToStr());
 #endif
+        }
+
     }
 }

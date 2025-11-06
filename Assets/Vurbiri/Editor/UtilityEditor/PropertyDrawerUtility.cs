@@ -482,9 +482,9 @@ namespace VurbiriEditor
         {
             var type = typeof(T);
             if (isNone)
-                return (IdCacheEd.GetNamesNone(type), IdCacheEd.GetValuesNone(type));
+                return (IdTypeCache.GetNamesNone(type), IdTypeCache.GetValuesNone(type));
             else
-                return (IdCacheEd.GetNames(type), IdCacheEd.GetValues(type));
+                return (IdTypeCache.GetNames(type), IdTypeCache.GetValues(type));
         }
 
         protected int IdFromLabel() => IdFromLabel(_label);

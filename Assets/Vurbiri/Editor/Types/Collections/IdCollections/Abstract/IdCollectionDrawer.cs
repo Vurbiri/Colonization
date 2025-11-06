@@ -1,6 +1,5 @@
 using System;
 using UnityEditor;
-using Vurbiri;
 
 namespace VurbiriEditor.Collections
 {
@@ -25,11 +24,11 @@ namespace VurbiriEditor.Collections
 
             bool isInit = idType == _idType & _names != null;
 
-            if (!isInit && IdCacheEd.Contain(idType))
+            if (!isInit && IdTypeCache.Contain(idType))
             {
                 _idType = idType;
-                _count = IdCacheEd.GetCount(idType);
-                _names = IdCacheEd.GetNames(idType);
+                _count = IdTypeCache.GetCount(idType);
+                _names = IdTypeCache.GetNames(idType);
                 isInit = true;
             }
             

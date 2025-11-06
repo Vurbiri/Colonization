@@ -57,9 +57,9 @@ namespace Vurbiri.Colonization
                     int progress = PerkTrees.GetProgress(_perk.Type);
                     if (progress < PerkTree.MAX_PROGRESS && _leveling.TryGet(_perk.Type, PerkTree.ProgressToLevel(progress), out List<Perk> perks))
                         _perks.Add(_perk.Type, perks);
-
+#if TEST_AI
                     Log.Info($"[Scientist] {HumanId} learned a perk {_perk}");
-
+#endif
                     _perk = null;
                 }
 

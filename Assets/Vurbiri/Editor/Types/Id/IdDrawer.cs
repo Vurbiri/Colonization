@@ -18,7 +18,7 @@ namespace VurbiriEditor
                 HelpBox(position, "Failed to determine type", UnityEditor.MessageType.Error); 
                 return;
             }
-            if (!IdCacheEd.Contain(idType))
+            if (!IdTypeCache.Contain(idType))
             {
                 HelpBox(position, $"Error type", UnityEditor.MessageType.Error); 
                 return;
@@ -27,7 +27,7 @@ namespace VurbiriEditor
             SerializedProperty valueProperty = property.FindPropertyRelative(NAME_VALUE);
             label = BeginProperty(position, label, property);
             {
-                valueProperty.intValue = IntPopup(position, label.text, valueProperty.intValue, IdCacheEd.GetNamesNone(idType), IdCacheEd.GetValuesNone(idType));
+                valueProperty.intValue = IntPopup(position, label.text, valueProperty.intValue, IdTypeCache.GetNamesNone(idType), IdTypeCache.GetValuesNone(idType));
             }
             EndProperty();
         }

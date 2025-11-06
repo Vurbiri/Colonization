@@ -29,8 +29,10 @@ namespace Vurbiri.Colonization
                         {
                             yield return GameContainer.CameraController.ToPositionControlled(_crossroad.Position);
                             yield return _build(_crossroad, _cost);
-                            Log.Info($"[Builder::{this}] {HumanId} {_build.Method.Name}");
                             _done = true;
+#if TEST_AI
+                            Log.Info($"[Builder::{this}] {HumanId} {_build.Method.Name}");
+#endif
                         }
                     }
                     yield return s_waitRealtime.Restart();

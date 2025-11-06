@@ -1,8 +1,9 @@
 using System;
+using System.Reflection;
 
 namespace Vurbiri
 {
-    public static class TypeExtensions
+    public static class ReflectionExtensions
     {
         public static bool Is(this Type self, Type other)
         {
@@ -49,6 +50,19 @@ namespace Vurbiri
         {
             var property = self.GetProperty(name);
             return (Func<T>)Delegate.CreateDelegate(typeof(Func<T>), null, property.GetGetMethod());
+        }
+
+        public static bool Contains(this Assembly assembly, Assembly other) => Contains(assembly, other.GetName());
+        public static bool Contains(this Assembly assembly, AssemblyName assemblyName)
+        {
+            bool contains = assembly.FullName == assemblyName.FullName;
+            if (!contains)
+            {
+                var assemblyNames = assembly.GetReferencedAssemblies();
+                for (int i = 0; !contains & i < assemblyNames.Length; i++)
+                    contains = assemblyNames[i].FullName == assemblyName.FullName;
+            }
+            return contains;
         }
     }
 }

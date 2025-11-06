@@ -42,11 +42,12 @@ namespace Vurbiri.Colonization
                 for (int i = 0; i < count; i++)
                 {
                     current = _current[i]; _current[i] = null;
-
+#if TEST_AI
                     Log.Info($"[Caster] {HumanId} current cast [{current}]");
+#endif
                     yield return current.TryCasting_Cn();
-
                     _casts.Add(current);
+
                     yield return s_waitRealtime.Restart();
                 }
 

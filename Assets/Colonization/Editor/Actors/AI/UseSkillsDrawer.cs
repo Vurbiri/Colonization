@@ -71,12 +71,12 @@ namespace VurbiriEditor.Colonization
 
             bool isInit = idType == _idType & _fieldNames != null;
 
-            if (!isInit && IdCacheEd.Contain(idType))
+            if (!isInit && IdTypeCache.Contain(idType))
             {
                 _idType = idType;
                 _isWarrior = idType == typeof(WarriorId);
-                _count = IdCacheEd.GetCount(idType);
-                _fieldNames = IdCacheEd.GetNames(idType);
+                _count = IdTypeCache.GetCount(idType);
+                _fieldNames = IdTypeCache.GetNames(idType);
 
                 if (_isWarrior)
                     EUtility.FindAnyScriptable<WarriorsSettingsScriptable>().SetSkills_Ed(ref _skillNames, ref _skillValues, "Блок");

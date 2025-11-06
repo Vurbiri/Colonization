@@ -48,8 +48,9 @@ namespace Vurbiri.Colonization
 
                             yield return GameContainer.CameraController.ToPositionControlled(hexagon.Position);
                             yield return Human.Recruiting_Wait(_current, hexagon, cost);
-
+#if TEST_AI
                             Log.Info($"[Recruiter] {HumanId} recruiting [{_current}]");
+#endif
                             _current = WarriorId.None;
                         }
                     }

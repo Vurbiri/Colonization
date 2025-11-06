@@ -18,7 +18,7 @@ namespace VurbiriEditor
             }
 
             Type idType = ((IdAttribute)attribute).type;
-            if (!IdCacheEd.Contain(idType))
+            if (!IdTypeCache.Contain(idType))
             {
                 HelpBox(position, $"Error type", UnityEditor.MessageType.Error);
                 return;
@@ -26,7 +26,7 @@ namespace VurbiriEditor
 
             label = BeginProperty(position, label, property);
             {
-                property.intValue = IntPopup(position, label.text, property.intValue, IdCacheEd.GetNamesNone(idType), IdCacheEd.GetValuesNone(idType), EditorStyles.popup);
+                property.intValue = IntPopup(position, label.text, property.intValue, IdTypeCache.GetNamesNone(idType), IdTypeCache.GetValuesNone(idType), EditorStyles.popup);
             }
             EndProperty();
         }
