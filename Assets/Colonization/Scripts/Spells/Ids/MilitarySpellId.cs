@@ -11,7 +11,5 @@ namespace Vurbiri.Colonization
         public const int Zeal           = 6;
 
         [NotId] public const int Type = AbilityTypeId.Military;
-
-        static MilitarySpellId() => ConstructorRun();
     }
 }

@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using System.Runtime.CompilerServices;
-using UnityEngine;
 
 namespace Vurbiri
 { 
@@ -34,11 +32,11 @@ namespace Vurbiri
                     continue;
 
                 if (field.FieldType != typeInt | !field.IsLiteral)
-                    Debug.LogError($"<b>[{typeId.Name}]</b> The field <b>{field.Name}</b> not <b>int</b> or not <b>const</b>.");
+                    UnityEngine.Debug.LogError($"<b>[{typeId.Name}]</b> The field <b>{field.Name}</b> not <b>int</b> or not <b>const</b>.");
 
                 value = (int)field.GetValue(null);
                 if (value != oldValue + 1)
-                    Debug.LogError($"<b>[{typeId.Name}]</b> Invalid field value: <b>{field.Name} = {value}</b> should be <b>{oldValue + 1}</b>.");
+                    UnityEngine.Debug.LogError($"<b>[{typeId.Name}]</b> Invalid field value: <b>{field.Name} = {value}</b> should be <b>{oldValue + 1}</b>.");
 
                 Count++;
                 data.Add(field.Name, value);
@@ -46,7 +44,7 @@ namespace Vurbiri
             }
 
             if (Count == 0)
-                Debug.LogError($"<b>[{typeId.Name}]</b> No <b>public const int</b> fields found.");
+                UnityEngine.Debug.LogError($"<b>[{typeId.Name}]</b> No <b>public const int</b> fields found.");
 
             _data = new(data);
             IdCacheEd.Add(typeId, Count, _data);
@@ -65,8 +63,6 @@ namespace Vurbiri
             }
         }
 #endif
-        [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
-        protected static void ConstructorRun() { }
     }
 
 #if UNITY_EDITOR
@@ -75,6 +71,39 @@ namespace Vurbiri
         private static readonly HashSet<Type> _types = new();
         private static readonly Dictionary<Type, IdTypeData> _dates = new();
         private static readonly Dictionary<Type, int> _counts = new();
+
+        static IdCacheEd()
+        {
+            Type typeId = typeof(IdType<>), baseType;
+            object temp;
+
+            foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
+            {
+                if (assembly.FullName.StartsWith("Vurbiri"))
+                {
+                    //UnityEngine.Debug.Log(assembly.FullName);
+                    foreach (var type in assembly.GetTypes())
+                    {
+                        if (!type.IsGenericType)
+                        {
+                            baseType = type.BaseType;
+                            while (baseType != null && baseType.IsGenericType)
+                            {
+                                if (baseType.GetGenericTypeDefinition() == typeId)
+                                {
+                                    temp = baseType.GetField("Count", BindingFlags.Public | BindingFlags.Static).GetValue(null);
+                                   
+                                    //UnityEngine.Debug.Log(type.Name);
+                                    //UnityEngine.Debug.Log(baseType.GetField("Count", BindingFlags.Public | BindingFlags.Static).GetValue(null));
+                                    break;
+                                }
+                                baseType = baseType.BaseType;
+                            }
+                        }
+                    }
+                }
+            }
+        }
 
         public static IReadOnlyCollection<Type> Types => _types;
 

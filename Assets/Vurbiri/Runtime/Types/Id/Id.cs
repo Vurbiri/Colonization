@@ -81,7 +81,7 @@ namespace Vurbiri
     {
         private readonly Type _type = typeof(Id<>);
 
-        public override bool CanConvert(Type objectType) => objectType != null && (objectType.IsGenericType & objectType.GetGenericTypeDefinition() == _type);
+        public override bool CanConvert(Type objectType) => objectType != null && (objectType.IsGenericType && objectType.GetGenericTypeDefinition() == _type);
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {

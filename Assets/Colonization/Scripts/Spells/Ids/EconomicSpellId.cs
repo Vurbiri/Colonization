@@ -11,7 +11,5 @@ namespace Vurbiri.Colonization
         public const int Sacrifice     = 6;
 
         [NotId] public const int Type = AbilityTypeId.Economic;
-
-        static EconomicSpellId() => ConstructorRun();
     }
 }

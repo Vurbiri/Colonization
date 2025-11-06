@@ -16,7 +16,19 @@ namespace Vurbiri.Colonization
 
             [Impl(256)] public override bool TryEnter() => Status.CanMove(s_settings.minHPUnsiege) && FindSiegedEnemy(Colonies);
 
-            [Impl(256)] public override IEnumerator Execution_Cn(Out<bool> isContinue) => Move_Cn(isContinue, 1, _targetHexagon, !_targetHexagon.IsEnemy(_playerId));
+            [Impl(256)]
+            public override IEnumerator Execution_Cn(Out<bool> isContinue)
+            {
+                yield return Move_Cn(isContinue, 1, _targetHexagon, !_targetHexagon.IsEnemy(_playerId));
+                if(!isContinue && _targetHexagon.Distance(Actor.Hexagon) == 2)
+                {
+                    int buff = s_settings.preBuff[Actor.Id];
+                    if(Action.CanUseSkill(buff) && s_settings.preBuffChance.Roll)
+                        Action.UseSkill(buff);
+                    if (Action.CanUseSpecSkill() && s_settings.blockChance.Roll)
+                        Action.UseSpecSkill();
+                }
+            }
 
             public override void Dispose()
             {

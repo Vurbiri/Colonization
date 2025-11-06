@@ -22,7 +22,13 @@ namespace Vurbiri.Colonization
             public override IEnumerator Execution_Cn(Out<bool> isContinue)
             {
                 bool isExit = !(_support ? _targetHexagon.IsGreatFriend(_playerId) : _targetHexagon.IsEnemy(_playerId));
-                return Move_Cn(isContinue, 1, _targetHexagon, isExit);
+                yield return Move_Cn(isContinue, 1, _targetHexagon, isExit);
+                if (!(_support | isContinue) && _targetHexagon.Distance(Actor.Hexagon) == 2)
+                {
+                    int buff = s_settings.preBuff[Actor.Id];
+                    if (Action.CanUseSkill(buff) && s_settings.preBuffChance.Roll)
+                        Action.UseSkill(buff);
+                }
             }
 
             public override void Dispose()

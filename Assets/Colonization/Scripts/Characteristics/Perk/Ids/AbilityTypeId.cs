@@ -14,8 +14,6 @@ namespace Vurbiri.Colonization
 
         static AbilityTypeId()
         {
-            ConstructorRun();
-
             int[] perks = { EconomicPerksId.Count, MilitaryPerksId.Count };
             PerksCount = perks;
             int[] spells = { EconomicSpellId.Count, MilitarySpellId.Count };

@@ -8,7 +8,5 @@ namespace Vurbiri.Colonization
         public const int Grunt  = 2;
         public const int Fatty  = 3;
         public const int Boss   = 4;
-
-        static DemonId() => ConstructorRun();
 	}
 }

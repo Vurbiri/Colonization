@@ -5,7 +5,6 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using Vurbiri.Collections;
-using Vurbiri.Reactive;
 
 namespace Vurbiri.Colonization.UI
 {
@@ -116,8 +115,6 @@ namespace Vurbiri.Colonization.UI
             public const int Inside   = 1;
             public const int Hold     = 2;
             public const int Disabled = 3;
-
-            static StateId() => ConstructorRun();
         }
         #endregion
 

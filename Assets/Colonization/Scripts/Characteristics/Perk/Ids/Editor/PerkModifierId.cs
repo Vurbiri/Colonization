@@ -6,8 +6,6 @@ namespace Vurbiri.Colonization
         public const int Flat    = 1;
         public const int Percent = 2;
 
-        static PerkModifierId() => ConstructorRun();
-
         public static int ToTypeModifier(int modifier) => modifier switch
         {
             Enable  => TypeModifierId.Addition,

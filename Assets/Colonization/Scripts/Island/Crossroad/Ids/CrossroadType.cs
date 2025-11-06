@@ -6,7 +6,5 @@
 		public const int Y = 1;
 
 		[NotId] public const int Max = Y;
-
-        static CrossroadType() => ConstructorRun();
 	}
 }

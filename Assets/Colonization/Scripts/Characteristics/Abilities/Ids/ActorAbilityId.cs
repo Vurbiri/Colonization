@@ -1,6 +1,6 @@
 namespace Vurbiri.Colonization
 {
-    public class ActorAbilityId : AbilityId<ActorAbilityId>
+    public abstract class ActorAbilityId : AbilityId<ActorAbilityId>
     {
         public const int MaxHP       =  0;
         public const int CurrentHP   =  1;
@@ -17,8 +17,5 @@ namespace Vurbiri.Colonization
 
         [NotId] public const int SHIFT_ABILITY = 10;
         [NotId] public const int MAX_ID_SHIFT_ABILITY = Defense;
-
-        static ActorAbilityId() => ConstructorRun();
-        private ActorAbilityId() { }
     }
 }

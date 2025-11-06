@@ -2,15 +2,11 @@ using System.Runtime.CompilerServices;
 
 namespace Vurbiri.Colonization
 {
-    public class EdificeGroupId : IdType<EdificeGroupId>
+    public abstract class EdificeGroupId : IdType<EdificeGroupId>
     {
         public const int Shrine  =  0;
         public const int Colony  =  1;
         public const int Port    =  2;
-        
-
-        static EdificeGroupId() => ConstructorRun();
-        private EdificeGroupId() { }
 
         public static int ToState(int id) => id switch
         {

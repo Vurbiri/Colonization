@@ -11,8 +11,6 @@ namespace Vurbiri.Colonization
 
 		[NotId] public const int Code = 99; 
 
-        static ClearEffectsId() => ConstructorRun();
-
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static string ColorSelection(ProjectColors colors, int id) => id switch
 		{

@@ -36,7 +36,5 @@ namespace Vurbiri.Colonization
         public const int ExchangeSaleChance_3   = 24;
         public const int ExchangeRate_1         = 25;
         public const int MaxColony_2            = 26;
-
-        static EconomicPerksId() => ConstructorRun();
     }
 }

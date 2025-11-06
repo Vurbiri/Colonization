@@ -8,8 +8,6 @@ namespace Vurbiri.Colonization
         public const int Warlock = 3;
         public const int Knight  = 4;
 
-        static WarriorId() => ConstructorRun();
-
         public static int ToState(int id) => id switch
         {
             Militia     => HumanAbilityId.IsMilitia,

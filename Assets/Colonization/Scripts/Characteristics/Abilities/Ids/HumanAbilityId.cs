@@ -29,7 +29,5 @@ namespace Vurbiri.Colonization
 
         public static int WarriorToAbility(int warriorId) => warriorId + IsMilitia;
         public static int AbilityToWarrior(int abilityId) => abilityId - IsMilitia;
-
-        static HumanAbilityId() => ConstructorRun();
     }
 }

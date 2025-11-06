@@ -37,7 +37,5 @@ namespace Vurbiri.Colonization
         public const int ProfitAdv_1      = 24;
         public const int ProfitAdv_2      = 25;
         public const int WarriorProfit_1  = 26;
-
-        static MilitaryPerksId() => ConstructorRun();
     }
 }

@@ -16,8 +16,6 @@ namespace Vurbiri.Colonization
         public const int PortTwo        = 6;
         public const int LighthouseOne  = 7;
         public const int LighthouseTwo  = 8;
-        
-        static EdificeId() => ConstructorRun();
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static int ToGroup(int id) => id switch
