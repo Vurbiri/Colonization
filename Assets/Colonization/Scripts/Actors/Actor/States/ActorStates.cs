@@ -8,14 +8,16 @@ namespace Vurbiri.Colonization
         public abstract class Actions
         {
             public abstract bool CanUseSkill(int id);
-            public abstract bool CanUseMoveSkill();
+            public abstract bool CanUseMainSkill(int id);
             public abstract bool CanUseSpecSkill();
+            public abstract bool CanUseMoveSkill();
 
             public abstract SkillCode GetSkillCode(int id);
 
-            public abstract WaitSignal UseMoveSkill();
             public abstract WaitSignal UseSkill(int id);
             public abstract WaitSignal UseSpecSkill();
+            public abstract WaitSignal UseMoveSkill();
+            
             public abstract WaitStateSource<DeathStage> Death();
         }
         //============================================================================
@@ -23,9 +25,8 @@ namespace Vurbiri.Colonization
         {
             private readonly TargetState _targetState = new();
             protected readonly StateMachineSelectable _stateMachine = new();
-            protected int _skillsCount;
 
-            public int SkillsCount { [Impl(256)] get => _skillsCount; }
+            public int MainSkillsCount { [Impl(256)] get; [Impl(256)] set; }
             public bool IsDefault { [Impl(256)] get => _stateMachine.IsDefaultState; }
 
             public abstract ActorSkin Skin { get; }
@@ -48,9 +49,9 @@ namespace Vurbiri.Colonization
         {
             protected readonly TActor _actor;
             protected readonly TSkin _skin;
-            
+
+            protected readonly AActionState[] _actionSkills = new AActionState[CONST.ACTION_SKILLS_COUNT];
             protected MoveState _moveState;
-            protected ASkillState[] _skillState;
             protected DeathState _deathState;
 
             sealed public override ActorSkin Skin => _skin;
@@ -67,21 +68,21 @@ namespace Vurbiri.Colonization
                 _skin.EventStart += _stateMachine.ToDefaultState;
             }
 
-            sealed public override bool CanUseSkill(int id) => _skillState[id].CanUse;
+            sealed public override bool CanUseSkill(int id) => (id >= 0 & id < CONST.ACTION_SKILLS_COUNT) && _actionSkills[id].CanUse;
+            sealed public override bool CanUseMainSkill(int id) => (id >= 0 & id < CONST.MAIN_SKILLS_COUNT) && _actionSkills[id].CanUse;
             sealed public override bool CanUseMoveSkill() => _moveState.CanUse;
 
-            sealed public override SkillCode GetSkillCode(int id) => _skillState[id].code;
+            sealed public override SkillCode GetSkillCode(int id) => _actionSkills[id].code;
 
             sealed public override WaitSignal UseMoveSkill()
             {
                 _stateMachine.SetState(_moveState, true);
                 return _moveState.signal.Restart();
             }
-            
             sealed public override WaitSignal UseSkill(int id)
             {
-                _stateMachine.SetState(_skillState[id], true);
-                return _skillState[id].signal.Restart();
+                _stateMachine.SetState(_actionSkills[id], true);
+                return _actionSkills[id].signal.Restart();
             }
 
             sealed public override WaitStateSource<DeathStage> Death()
@@ -90,11 +91,10 @@ namespace Vurbiri.Colonization
                 return _deathState.stage;
             }
 
-            [Impl(256)] public void AddMoveSkillState(float speed) => _moveState = new(speed, this);
+            [Impl(256)] public void AddMoveSkillState(float speed) => _actionSkills[CONST.MOVE_SKILL_ID] = _moveState = new(speed, this);
+            [Impl(256)] public void AddSkillState(SkillSettings skill, float speedRun, int id) => _actionSkills[id] = ASkillState.Create(skill, speedRun, id, this);
+            [Impl(256)] public void AddEmptySkillState(int id) => _actionSkills[id] = new EmptyActionState(this, id);
 
-            [Impl(256)] public void SetCountState(int count) => _skillState = new ASkillState[_skillsCount = count];
-            [Impl(256)] public void AddSkillState(SkillSettings skill, float speedRun, int id) => _skillState[id] = ASkillState.Create(skill, speedRun, id, this);
-            
             public abstract void AddSpecSkillState(SpecSkillSettings specSkill, float runSpeed, float walkSpeed);
         }
     }

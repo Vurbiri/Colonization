@@ -7,7 +7,7 @@ namespace Vurbiri.Colonization
 	{
         [SerializeField] private IdArray<TId, TSettings> _settings;
 
-        public ReadOnlyIdArray<TId, TSettings> Settings => _settings;
+        public ReadOnlyArray<TSettings> Settings => _settings;
 
         public TSettings[] Init()
         {
@@ -56,6 +56,38 @@ namespace Vurbiri.Colonization
             Debug.Log("==== Actor Profit ====");
             for (int i = 0; i < ActorId<TId>.Count; i++)
                 _settings[i].PrintProfit_Ed(main, adv);
+        }
+
+        public void SetSkills_Ed(ref string[][] names, ref int[][] values, string specName = "Спец")
+        {
+            names = new string[ActorId<TId>.Count][];
+            values = new int[ActorId<TId>.Count][];
+            for (int i = 0; i < ActorId<TId>.Count; i++)
+                (names[i], values[i]) = GetSkills(_settings[i].Skills.SkillSettings_Ed);
+
+            (string[], int[]) GetSkills(SkillSettings[] skillSettings)
+            {
+                int count = skillSettings.Length, index = 0;
+                string[] names = new string[count + 3];
+                int[] values = new int[count + 3];
+
+                names[index] = "------------";
+                values[index++] = -1;
+
+                for (int i = 0; i < count; i++)
+                {
+                    names[index] = $"{skillSettings[i].GetName_Ed()} ({i})";
+                    values[index++] = i;
+                }
+
+                names[index] = $"{specName} ({CONST.SPEC_SKILL_ID})";
+                values[index++] = CONST.SPEC_SKILL_ID;
+
+                names[index] = $"Движение ({CONST.MOVE_SKILL_ID})";
+                values[index++] = CONST.MOVE_SKILL_ID;
+
+                return (names, values);
+            }
         }
 #endif
     }

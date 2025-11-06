@@ -44,6 +44,8 @@ namespace Vurbiri.Collections
         }
         #endregion
 
+        [Impl(256)] public ReadOnlyArray<TValue> ToArray() => new(_values);
+
         public IEnumerator<TValue> GetEnumerator() => new ArrayEnumerator<TValue>(_values, IdType<TId>.Count);
         IEnumerator IEnumerable.GetEnumerator() => new ArrayEnumerator<TValue>(_values, IdType<TId>.Count);
 

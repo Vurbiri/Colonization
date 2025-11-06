@@ -6,9 +6,13 @@ namespace Vurbiri.Colonization
     [System.Serializable]
     public class WarriorAISettings
 	{
-		public int maxDistanceUnsiege;
-        public int maxDistanceHelp;
-        public int maxDistanceEmpty;
+		[Range(0, 5)]   public int maxDistanceUnsiege;
+        [Range(0, 100)] public int minHPUnsiege;
+        [Space]
+        [Range(0, 5)]   public int maxDistanceHelp;
+        [Range(0, 100)] public int minHPHelp;
+        [Space]
+        [Range(0, 5)] public int maxDistanceEmpty;
         [Space]
         public ReadOnlyIdArray<WarriorId, bool> supports;
         [Space]

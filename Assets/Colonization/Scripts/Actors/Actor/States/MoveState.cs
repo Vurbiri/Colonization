@@ -16,7 +16,7 @@ namespace Vurbiri.Colonization
                 private Coroutine _coroutine;
                 private Hexagon _targetHex;
 
-                public new bool CanUse { [Impl(256)] get => base.CanUse & Actor._move.IsTrue; }
+                public override bool CanUse { [Impl(256)] get => base.CanUse & Actor._move.IsTrue; }
 
                 public MoveState(float speed, AStates<TActor, TSkin> parent) : base(parent, CONST.MOVE_SKILL_ID, CONST.MOVE_SKILL_COST) => _move = new(Actor._thisTransform, speed);
 

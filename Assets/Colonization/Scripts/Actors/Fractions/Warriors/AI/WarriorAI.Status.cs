@@ -4,7 +4,7 @@ namespace Vurbiri.Colonization
 {
     public partial class WarriorAI
     {
-        sealed public class Situation : ASituation
+        sealed public class Status : AStatus
         {
             public bool isGuard;
             public int minColonyGuard = int.MaxValue;
@@ -13,7 +13,7 @@ namespace Vurbiri.Colonization
 
             public override void Update(Actor actor)
             {
-                FindNearEnemies(actor);
+                base.Update(actor);
 
                 var hex = actor.Hexagon;
                 var crossroads = hex.Crossroads;

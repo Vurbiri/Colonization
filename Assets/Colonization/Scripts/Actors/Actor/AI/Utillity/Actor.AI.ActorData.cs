@@ -1,35 +1,9 @@
-using System.Collections.Generic;
-using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
-
 namespace Vurbiri.Colonization
 {
     public partial class Actor
     {
         public partial class AI
         {
-            #region ************* ASituation **********************
-            public abstract class ASituation
-            {
-                public bool isInCombat;
-                public readonly List<ActorCode> nearEnemies = new(3);
-
-                public abstract void Update(Actor actor);
-
-                [Impl(256)]
-                protected void FindNearEnemies(Actor actor)
-                {
-                    var near = actor._currentHex.Neighbors;
-
-                    nearEnemies.Clear();
-                    for (int i = 0; i < HEX.SIDES; i++)
-                        if (near[i].TryGetEnemy(actor._owner, out Actor enemy))
-                            nearEnemies.Add(enemy);
-                    isInCombat = nearEnemies.Count > 0;
-                }
-            }
-            #endregion
-
-            #region ************* ActorData **********************
             public readonly struct ActorData : System.IEquatable<ActorData>, System.IEquatable<ActorCode>
             {
                 public readonly ActorCode code;
@@ -52,7 +26,6 @@ namespace Vurbiri.Colonization
 
                 public readonly override int GetHashCode() => code.GetHashCode();
             }
-            #endregion
         }
     }
 }

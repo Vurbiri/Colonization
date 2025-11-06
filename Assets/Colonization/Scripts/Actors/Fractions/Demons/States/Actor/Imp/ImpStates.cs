@@ -10,7 +10,7 @@ namespace Vurbiri.Colonization
 
             public override void AddSpecSkillState(SpecSkillSettings specSkill, float runSpeed, float walkSpeed)
             {
-                _fearState = new(specSkill, walkSpeed, this);
+                _actionSkills[CONST.SPEC_SKILL_ID] = _fearState = new(specSkill, walkSpeed, this);
             }
 
             public override bool CanUseSpecSkill() => _fearState.CanUse;

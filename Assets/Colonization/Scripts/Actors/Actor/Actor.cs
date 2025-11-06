@@ -53,7 +53,8 @@ namespace Vurbiri.Colonization
         #region ================== Properties ========================
         public int Id { [Impl(256)] get => _id; }
         public Id<ActorTypeId> TypeId { [Impl(256)] get => _typeId; }
-        public bool IsWarrior { [Impl(256)] get => _typeId == ActorTypeId.Warrior; }
+        public bool IsWarrior { [Impl(256)] get; [Impl(256)] private set; }
+        public bool IsDemon { [Impl(256)] get; [Impl(256)] private set; }
         public Id<PlayerId> Owner { [Impl(256)] get => _owner; }
         public Hexagon Hexagon { [Impl(256)] get => _currentHex; }
         public int ActionPoint { [Impl(256)] get => _currentAP.Value; }
@@ -150,6 +151,9 @@ namespace Vurbiri.Colonization
             _currentHex = startHex;
             IsPersonTurn = false;
             Interactable = false;
+
+            IsWarrior = _typeId == ActorTypeId.Warrior;
+            IsDemon   = _typeId == ActorTypeId.Demon;
 
             #region Abilities
             _abilities = settings.Abilities;

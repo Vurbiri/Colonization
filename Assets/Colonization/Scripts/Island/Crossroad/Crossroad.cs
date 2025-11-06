@@ -211,10 +211,17 @@ namespace Vurbiri.Colonization
                     return true;
             return false;
         }
-        public bool IsEmptyNear(Id<PlayerId> playerId)
+        public bool IsOwnerNear(Id<PlayerId> playerId)
         {
             for (int i = 0; i < HEX_COUNT; i++)
                 if (_hexagons[i].IsOwner(playerId))
+                    return true;
+            return false;
+        }
+        public bool IsEmptyNear()
+        {
+            for (int i = 0; i < HEX_COUNT; i++)
+                if (_hexagons[i].IsOwned)
                     return false;
             return true;
         }
@@ -465,6 +472,8 @@ namespace Vurbiri.Colonization
                 key += _hexagons[i].Key;
             return new Key(key.x / HEX_COUNT, key.y);
         }
+
+        [Impl(256)] public int ApproximateDistance(Hexagon hexagon) => hexagon.Distance(CROSS.ToHex(_key, _type));
 
         [Impl(256)] private void BanBuild()
         {

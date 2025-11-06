@@ -35,8 +35,8 @@ namespace Vurbiri.Colonization
         public Actor Owner { [Impl(256)] get => _owner; }
         public bool IsOwned { [Impl(256)] get => _ownerId != PlayerId.None; }
         public bool IsWarrior { [Impl(256)] get => _ownerId != PlayerId.None && _owner.IsWarrior; }
-        public bool CanDemonEnter { [Impl(256)] get => !_isWater & _ownerId == PlayerId.None; }
-        public bool CanWarriorEnter { [Impl(256)] get => !_isGate & !_isWater & _ownerId == PlayerId.None; }
+        public bool CanDemonEnter { [Impl(256)] get => !_isWater && _ownerId == PlayerId.None; }
+        public bool CanWarriorEnter { [Impl(256)] get => !(_isGate | _isWater) && _ownerId == PlayerId.None; }
         public Vector3 Position { [Impl(256)] get; [Impl(256)] private set; }
         public ReadOnlyArray<Crossroad> Crossroads { [Impl(256)] get => _crossroads; }
         public ReadOnlyArray<Hexagon> Neighbors { [Impl(256)] get => _neighbors; }
@@ -186,6 +186,8 @@ namespace Vurbiri.Colonization
         #endregion
 
         #region ================== Actor ============================
+        [Impl(256)] public bool CanActorEnter(bool isDemon) => ((!_isGate | isDemon) & !_isWater) && _ownerId == PlayerId.None;
+
         [Impl(256)] public void ActorEnter(Actor actor)
         {
             _owner = actor;

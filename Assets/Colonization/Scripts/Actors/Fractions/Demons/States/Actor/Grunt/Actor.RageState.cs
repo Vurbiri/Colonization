@@ -9,7 +9,7 @@ namespace Vurbiri.Colonization
                 private readonly Chance _chance;
                 private bool _canUse;
 
-                public new bool CanUse => _canUse = Moving.IsTrue && NearWarriors(CurrentHex) && _chance.Roll;
+                public override bool CanUse => _canUse = Moving.IsTrue && NearWarriors(CurrentHex) && _chance.Roll;
 
                 public RageState(SpecSkillSettings specSkill, float speed, ADemonSpecMoveStates parent) : base(specSkill, speed, parent)
                 {

@@ -27,12 +27,13 @@ namespace Vurbiri.Colonization
             }
 
             #region ================= Pathfind ================== 
-            protected static bool TryGetDistance(Hexagon start, Hexagon end, int oldLength, out int pathLength)
+            protected static bool TryGetDistance(Actor actor, Hexagon end, int oldLength, out int pathLength)
             {
+                var start = actor._currentHex;
                 int distance = start.Distance(end);
                 pathLength = 0;
 
-                if (distance > (end.CanWarriorEnter ? 0 : 1) && Pathfind(start, end, distance))
+                if (distance > (end.CanActorEnter(actor.IsDemon) ? 0 : 1) && Pathfind(actor, end, distance))
                 {
                     while (s_links.TryGetValue(start, out end))
                     {
@@ -45,23 +46,23 @@ namespace Vurbiri.Colonization
                 return pathLength > 0 && (pathLength < oldLength || (pathLength == oldLength && Chance.Rolling()));
             }
 
-            protected static bool TryGetNextHexagon(Hexagon start, Hexagon end, out Hexagon next)
+            protected static bool TryGetNextHexagon(Actor actor, Hexagon end, out Hexagon next)
             {
                 next = null;
 
-                int distance = start.Distance(end);
-                if (distance > (end.CanWarriorEnter ? 0 : 1) && Pathfind(start, end, distance))
-                    next = s_links[start];
+                int distance = actor._currentHex.Distance(end);
+                if (distance > (end.CanActorEnter(actor.IsDemon) ? 0 : 1) && Pathfind(actor, end, distance))
+                    next = s_links[actor._currentHex];
                 s_links.Clear();
 
                 return next != null;
             }
 
-            private static bool Pathfind(Hexagon start, Hexagon end, int distance)
+            private static bool Pathfind(Actor actor, Hexagon end, int distance)
             {
                 bool found = false;
                 int depth = distance + 1;
-                Hexagon current, near;
+                Hexagon current, near, start = actor._currentHex; ;
 
                 s_finds.Enqueue(end);
                 while (!found & s_finds.Count > 0)
@@ -71,9 +72,9 @@ namespace Vurbiri.Colonization
                     for (int index = 0; !found & index < HEX.SIDES; index++)
                     {
                         near = current.Neighbors[index];
-                        if (found = near == start)
+                        if (found = (near == start))
                             s_links.Add(near, current);
-                        if ((!found && near != end && near.CanWarriorEnter) && (near.Distance(end) < depth && near.Distance(start) < depth) && s_links.TryAdd(near, current))
+                        if ((!found && near != end && near.CanActorEnter(actor.IsDemon)) && (near.Distance(end) < depth && near.Distance(start) < depth) && s_links.TryAdd(near, current))
                             s_finds.Enqueue(near);
                     }
                 }

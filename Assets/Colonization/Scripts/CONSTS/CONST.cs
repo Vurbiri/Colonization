@@ -5,8 +5,10 @@ namespace Vurbiri.Colonization
 {
     public static class CONST
     {
+        public const int MAIN_SKILLS_COUNT = 4, ACTION_SKILLS_COUNT = 6;
+        public const int SPEC_SKILL_ID = 4, MOVE_SKILL_ID = 5;
         public const int MOVE_SKILL_COST = 1;
-        public const int MOVE_SKILL_ID = 5, SPEC_SKILL_ID = 6;
+
         public const int BLESS_SKILL_ID = 0, WRATH_SKILL_ID = 1;
 
         public const int WALL_TYPE = ActorTypeId.Demon + 1, SPELL_TYPE = WALL_TYPE + 1;

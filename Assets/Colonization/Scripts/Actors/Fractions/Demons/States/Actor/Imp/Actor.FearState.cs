@@ -9,7 +9,7 @@ namespace Vurbiri.Colonization
                 private readonly int _hpOffset;
                 private bool _canUse;
 
-                public new bool CanUse => _canUse = Moving.IsTrue && !(Chance.Rolling(HP.Percent + _hpOffset) || NearNoWarriors(CurrentHex));
+                public override bool CanUse => _canUse = Moving.IsTrue && !(Chance.Rolling(HP.Percent + _hpOffset) || NearNoWarriors(CurrentHex));
 
                 public FearState(SpecSkillSettings specSkill, float speed, ADemonSpecMoveStates parent) : base(specSkill, speed, parent)
                 {

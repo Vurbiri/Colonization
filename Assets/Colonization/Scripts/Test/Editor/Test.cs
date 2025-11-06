@@ -18,8 +18,7 @@ namespace Vurbiri.Colonization
         [Button("Testing"), Range(-10f, 10f)]
         public float value;
 
-        public LayerMask layerMaskRight;
-        public LayerMask layerMaskLeft;
+        public UsedSkills<WarriorId> skills;
 
         private TMP_Dropdown _dropdown;
 

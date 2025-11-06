@@ -15,6 +15,7 @@ namespace Vurbiri.Colonization
             public override void AddSpecSkillState(SpecSkillSettings specSkill, float runSpeed, float walkSpeed)
             {
                 _specSkill = specSkill;
+                _actionSkills[CONST.SPEC_SKILL_ID] = new EmptyActionState(this, CONST.SPEC_SKILL_ID);
             }
 
             public override bool CanUseSpecSkill() => false;

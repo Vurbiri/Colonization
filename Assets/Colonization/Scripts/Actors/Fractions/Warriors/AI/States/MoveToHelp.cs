@@ -17,7 +17,7 @@ namespace Vurbiri.Colonization
                 _support = s_settings.supports[parent._actor.Id];
             }
 
-            public override bool TryEnter() => Action.CanUseMoveSkill() && FindTargets() && Goals.Enemies.Add(_targetEnemy, new(Actor));
+            public override bool TryEnter() => Status.CanMove(s_settings.minHPHelp) && FindTargets();
 
             public override IEnumerator Execution_Cn(Out<bool> isContinue)
             {
@@ -39,7 +39,7 @@ namespace Vurbiri.Colonization
                 _targetHexagon = null;
                 int distance = s_settings.maxDistanceHelp;
 
-                for (int i = Situation.greatFriends.Count - 1; i >= 0; i--)
+                for (int i = Status.greatFriends.Count - 1; i >= 0; i--)
                 {
                     if (TryGetNearActorsInCombat(GameContainer.Actors[i], ref distance, out Actor enemy, out Actor friend))
                     {
@@ -48,7 +48,7 @@ namespace Vurbiri.Colonization
                     }
                 }
 
-                return _targetHexagon != null;
+                return _targetHexagon != null && Goals.Enemies.Add(_targetEnemy, new(Actor));
             }
         }
     }

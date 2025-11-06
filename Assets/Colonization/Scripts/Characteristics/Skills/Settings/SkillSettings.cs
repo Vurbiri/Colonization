@@ -9,6 +9,8 @@ namespace Vurbiri.Colonization
     {
         [SerializeField] protected SkillUI.Settings _ui;
 
+        public SkillUI.Settings UI => _ui;
+
         public SkillUI Init(ProjectColors colors, SeparatorEffectUI separator, int actorType, int actorId, int skillId)
         {
             int hitsCount = _effectsHitsSettings.Length;
@@ -43,6 +45,11 @@ namespace Vurbiri.Colonization
 
 #if UNITY_EDITOR
         public HitSFXName hitSFXName_ed;
+
+        public string GetName_Ed()
+        {
+            return Vurbiri.International.Localization.ForEditor(CONST_UI.FILE).GetText(CONST_UI.FILE, _ui.keySkillName).Delete("<b>", "</b>");
+        }
 #endif
     }
 }

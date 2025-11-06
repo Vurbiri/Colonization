@@ -1,7 +1,9 @@
 {
   "maxDistanceUnsiege": 4,
+  "minHPUnsiege": 24,
   "maxDistanceHelp": 3,
-  "maxDistanceEmpty": 3,
+  "minHPHelp": 55,
+  "maxDistanceEmpty": 4,
   "supports": [
     false,
     false,

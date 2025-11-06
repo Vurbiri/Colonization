@@ -5,7 +5,7 @@ using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization
 {
-    public partial class WarriorAI : Actor.AI<Warrior.WarriorStates, WarriorAI.Situation>
+    public partial class WarriorAI : Actor.AI<Warrior.WarriorStates, WarriorAI.Status>
     {
         protected static readonly WarriorAISettings s_settings;
         static WarriorAI() => s_settings = SettingsFile.Load<WarriorAISettings>();
@@ -49,7 +49,7 @@ namespace Vurbiri.Colonization
                 for (int i = 0; i < colonies.Count; i++)
                 {
                     crossroad = colonies[i];
-                    if (crossroad.IsEmptyNear(human.Id) && TryGetNearFreeHexagon(GetNearPort(crossroad.Key, ports), crossroad, out hexagon))
+                    if (!crossroad.IsOwnerNear(human.Id) && TryGetNearFreeHexagon(GetNearPort(crossroad.Key, ports), crossroad, out hexagon))
                         output.Add(hexagon);
                 }
 

@@ -23,10 +23,10 @@ namespace Vurbiri.Colonization
 
             private static bool IsEnemyComing(Id<PlayerId> playerId, Key current)
             {
-                bool result = false; Hexagon hex;
+                bool result = false;
 
                 for (int i = 0; !result & i < HEX.NEAR_TWO.Count; i++)
-                    result = GameContainer.Hexagons.TryGet(current + HEX.NEAR_TWO[i], out hex) && hex.IsEnemy(playerId);
+                    result = GameContainer.Hexagons.TryGet(current + HEX.NEAR_TWO[i], out Hexagon hex) && hex.IsEnemy(playerId);
 
                 return result;
             }

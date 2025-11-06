@@ -17,8 +17,9 @@ namespace Vurbiri.Colonization
                 protected SubAbility<ActorAbilityId> HP { [Impl(256)] get => _parent._actor._currentHP; }
                 protected SubAbility<ActorAbilityId> AP { [Impl(256)] get => _parent._actor._currentAP; }
                 protected EffectsSet ActorEffects { [Impl(256)] get => _parent._actor._effects; }
-                public bool CanUse { [Impl(256)] get => AP >= _costAP.Value; }
                 #endregion
+
+                public virtual bool CanUse { [Impl(256)] get => AP >= _costAP.Value; }
 
                 public AActionState(AStates<TActor, TSkin> parent, int id, int cost) : base(parent)
                 {

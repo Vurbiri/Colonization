@@ -14,7 +14,7 @@ namespace Vurbiri.Colonization
 
             [Impl(256)] public MoveToUnsiege(WarriorAI parent) : base(parent) { }
 
-            [Impl(256)] public override bool TryEnter() => Action.CanUseMoveSkill() && FindSiegedEnemy(Colonies) && Goals.Enemies.Add(_targetEnemy, new(Actor));
+            [Impl(256)] public override bool TryEnter() => Status.CanMove(s_settings.minHPUnsiege) && FindSiegedEnemy(Colonies);
 
             [Impl(256)] public override IEnumerator Execution_Cn(Out<bool> isContinue) => Move_Cn(isContinue, 1, _targetHexagon, !_targetHexagon.IsEnemy(_playerId));
 
@@ -30,7 +30,7 @@ namespace Vurbiri.Colonization
             private bool FindSiegedEnemy(ReadOnlyReactiveList<Crossroad> colonies)
             {
                 _targetHexagon = null;
-                Hexagon current, start = Actor.Hexagon; 
+                Hexagon current; 
                 ReadOnlyArray<Hexagon> hexagons;
                 int distance = s_settings.maxDistanceUnsiege;
 
@@ -42,7 +42,7 @@ namespace Vurbiri.Colonization
                         current = hexagons[i];
                         if (current.IsEnemy(_playerId))
                         {
-                            if (Goals.Enemies.CanAdd(current.Owner) && TryGetDistance(start, current, distance, out int newDistance))
+                            if (Goals.Enemies.CanAdd(current.Owner) && TryGetDistance(Actor, current, distance, out int newDistance))
                             {
                                 distance = newDistance;
                                 _targetHexagon = current;
@@ -51,7 +51,7 @@ namespace Vurbiri.Colonization
                         }
                     }
                 }
-                return _targetHexagon != null;
+                return _targetHexagon != null && Goals.Enemies.Add(_targetEnemy, new(Actor));
             }
         }
     }

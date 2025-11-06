@@ -18,7 +18,7 @@ namespace Vurbiri.Colonization
                 return _blockState.signal.Restart();
             }
 
-            public override void AddSpecSkillState(SpecSkillSettings specSkill, float runSpeed, float walkSpeed) => _blockState = new(specSkill, this);
+            public override void AddSpecSkillState(SpecSkillSettings specSkill, float runSpeed, float walkSpeed) => _actionSkills[CONST.SPEC_SKILL_ID] = _blockState = new(specSkill, this);
 
             public override void Load()
             {

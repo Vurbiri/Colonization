@@ -10,6 +10,7 @@ namespace Vurbiri.Colonization
             public class Goals
             {
                 public HashSet<Key> Defensed { [Impl(256)] get; } = new(CONST.DEFAULT_MAX_EDIFICES);
+                public HashSet<Key> Raided { [Impl(256)] get; } = new(CONST.DEFAULT_MAX_EDIFICES);
                 public TargetEnemies Enemies { [Impl(256)] get; } = new();
 
                 #region Nested: TargetEnemies

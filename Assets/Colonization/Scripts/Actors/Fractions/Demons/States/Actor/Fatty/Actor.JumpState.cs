@@ -14,7 +14,7 @@ namespace Vurbiri.Colonization
                 private readonly int _baseChance;
                 private bool _canUse;
 
-                public new bool CanUse
+                public override bool CanUse
                 {
                     get
                     {

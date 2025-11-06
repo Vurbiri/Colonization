@@ -49,9 +49,11 @@ namespace Vurbiri.Colonization
             states.AddSpecSkillState(_specSkillSettings, _runSpeed, _walkSpeed);
 
             int countSkills = _skillsSettings.Length;
-            states.SetCountState(countSkills);
+            states.MainSkillsCount = countSkills;
             for (int i = 0; i < countSkills; i++)
                 states.AddSkillState(_skillsSettings[i], _runSpeed, i);
+            for (int i = countSkills; i < CONST.MAIN_SKILLS_COUNT; i++)
+                states.AddEmptySkillState(i);
         }
 
         public void Dispose()
@@ -68,18 +70,19 @@ namespace Vurbiri.Colonization
 
 #if UNITY_EDITOR
 
-        public const int COUNT_SKILLS_MAX = 4;
         private static readonly string[] A_SKILLS = { "A_Skill_0", "A_Skill_1", "A_Skill_2", "A_Skill_3" };
 
         [SerializeField] private int _swapA = -1;
         [SerializeField] private int _swapB = -1;
 
+        public SkillSettings[] SkillSettings_Ed => _skillsSettings;
+
         public void OnValidate(int type, int id)
         {
             _specSkillSettings.OnValidate(type, id);
 
-            if (_skillsSettings.Length > COUNT_SKILLS_MAX)
-                Array.Resize(ref _skillsSettings, COUNT_SKILLS_MAX);
+            if (_skillsSettings.Length > CONST.MAIN_SKILLS_COUNT)
+                Array.Resize(ref _skillsSettings, CONST.MAIN_SKILLS_COUNT);
 
             for (int i = 0; i < _skillsSettings.Length; i++)
                 _skillsSettings[i].typeActor_ed = type;
@@ -126,7 +129,7 @@ namespace Vurbiri.Colonization
                     animator[A_SKILLS[index]] = skillSettings.clipSettings_ed.clip;
             }
 
-            for (; index < COUNT_SKILLS_MAX; index++)
+            for (; index < CONST.MAIN_SKILLS_COUNT; index++)
                 if (animator[A_SKILLS[index]].name != A_SKILLS[index])
                     animator[A_SKILLS[index]] = null;
         }

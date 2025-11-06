@@ -21,7 +21,7 @@ namespace Vurbiri.Colonization.UI
 
         public void Setup(Actor actor, int idSkill, SkillUI skillUI, Vector3 localPosition)
         {
-            bool isUse = actor.Action.CanUseSkill(idSkill);
+            bool isUse = actor.Action.CanUseMainSkill(idSkill);
 
             _thisRectTransform.localPosition = localPosition;
 

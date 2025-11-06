@@ -17,7 +17,7 @@ namespace Vurbiri.Colonization
                 private readonly int _hpOffset;
                 private bool _canUse;
 
-                public new bool CanUse
+                public override bool CanUse
                 {
                     get
                     {
