@@ -47,5 +47,11 @@ namespace VurbiriEditor.Colonization
                 Repaint();
             }
         }
+
+        private void OnDestroy()
+        {
+            if (_actorsSettings != null)
+                SkillDrawer.Update<TScriptable, TId, TValue>(_actorsSettings);
+        }
     }
 }

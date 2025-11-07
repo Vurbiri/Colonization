@@ -36,6 +36,15 @@ namespace Vurbiri.Colonization
                     yield return null;
                     isContinue.Set(TryEnter(_states[i]));
                 }
+
+                // ====== Local ==========
+                bool TryEnter(State state)
+                {
+                    bool result = state.TryEnter();
+                    if (result)
+                        _parent._current = state;
+                    return result;
+                }
             }
         }
     }

@@ -29,6 +29,7 @@ namespace Vurbiri.Colonization
 #endif
                     _status.Update(_actor);
                     yield return StartCoroutine(_current.Execution_Cn(Out<bool>.Get(out key)));
+                    _status.Clear();
                 }
                 while (Out<bool>.Result(key));
             }

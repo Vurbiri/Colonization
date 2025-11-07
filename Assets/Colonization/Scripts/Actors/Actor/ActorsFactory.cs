@@ -10,25 +10,29 @@ namespace Vurbiri.Colonization
         private readonly Transform _container;
         private readonly Actor[] _prefabs = new Actor[ActorTypeId.Count];
         private readonly ActorSettings[][] _settings = new ActorSettings[ActorTypeId.Count][];
+        private readonly int _maxForce;
 
         protected readonly ReactiveSet<Actor>[] _actors = new ReactiveSet<Actor>[PlayerId.Count];
 
         public ReadOnlyReactiveSet<Actor> this[int playerId] { [Impl(256)] get => _actors[playerId]; }
         public Actor this[ActorCode code] { [Impl(256)] get => _actors[code.owner][code.index]; }
+        public int MaxForce { [Impl(256)] get => _maxForce; }
 
         public ActorsFactory(Settings settings) 
         {
             _container = settings.container;
 
             _prefabs [ActorTypeId.Warrior] = settings.warriorPrefab;
-            _settings[ActorTypeId.Warrior] = settings.warriorsSettings.Init();
+            _settings[ActorTypeId.Warrior] = settings.warriorsSettings.Init(out int warriorMaxForce);
 
             _prefabs [ActorTypeId.Demon]   = settings.demonPrefab;
-            _settings[ActorTypeId.Demon]   = settings.demonsSettings.Init();
+            _settings[ActorTypeId.Demon]   = settings.demonsSettings.Init(out int demonMaxForce);
 
             for (int i = 0; i < PlayerId.HumansCount; i++)
                 _actors[i] = new(CONST.DEFAULT_MAX_WARRIOR);
             _actors[PlayerId.Satan] = new(CONST.DEFAULT_MAX_DEMONS);
+
+            _maxForce = Mathf.Max(warriorMaxForce, demonMaxForce);
         }
 
         [Impl(256)] public Actor Create(int type, int id, ActorInitData initData, Hexagon startHex)

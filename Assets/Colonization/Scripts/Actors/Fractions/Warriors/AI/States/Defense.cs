@@ -6,30 +6,26 @@ namespace Vurbiri.Colonization
     {
         sealed private class Defense : AIState
         {
-            public Defense(WarriorAI parent) : base(parent)
-            {
-            }
+            private bool _isBuff, _isBlock;
+            
+            public Defense(WarriorAI parent) : base(parent) { }
 
-            public override bool TryEnter() => Action.CanUseSpecSkill() && IsEnemyComing(_playerId, Actor.Hexagon.Key);
+            public override bool TryEnter() 
+            {
+                return (Action.CanUseSkill(s_settings.defenseBuff[Actor.Id].skill) || Action.CanUseSpecSkill()) && IsEnemyComing();
+            }
 
             public override void Dispose() { }
 
             public override IEnumerator Execution_Cn(Out<bool> isContinue)
             {
                 yield return GameContainer.CameraController.ToPositionControlled(Actor.Position);
-                yield return Action.UseSpecSkill();
+                yield return Defense_Cn(true, true);
+
                 isContinue.Set(false);
+                Exit();
             }
 
-            private static bool IsEnemyComing(Id<PlayerId> playerId, Key current)
-            {
-                bool result = false;
-
-                for (int i = 0; !result & i < HEX.NEAR_TWO.Count; i++)
-                    result = GameContainer.Hexagons.TryGet(current + HEX.NEAR_TWO[i], out Hexagon hex) && hex.IsEnemy(playerId);
-
-                return result;
-            }
         }
     }
 }

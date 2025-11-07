@@ -33,6 +33,7 @@ namespace Vurbiri.Colonization
         public bool IsWater { [Impl(256)] get => _isWater; }
         public bool IsGround { [Impl(256)] get => !_isGate & !_isWater; }
         public Actor Owner { [Impl(256)] get => _owner; }
+        public Id<PlayerId> OwnerId { [Impl(256)] get => _ownerId; }
         public bool IsOwned { [Impl(256)] get => _ownerId != PlayerId.None; }
         public bool IsWarrior { [Impl(256)] get => _ownerId != PlayerId.None && _owner.IsWarrior; }
         public bool CanDemonEnter { [Impl(256)] get => !_isWater && _ownerId == PlayerId.None; }

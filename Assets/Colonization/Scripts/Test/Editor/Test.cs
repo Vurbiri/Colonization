@@ -119,7 +119,8 @@ namespace Vurbiri.Colonization
 
         public void Testing()
         {
-            StringTest(); StringTest();
+            for(int i = -200; i <= 200; i++)
+                print(i.ToStr());
         }
 
         public void StringTest()

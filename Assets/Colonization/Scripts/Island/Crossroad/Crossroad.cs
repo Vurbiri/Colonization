@@ -186,14 +186,27 @@ namespace Vurbiri.Colonization
         [Impl(256)] public void AddLink(CrossroadLink link) => _links.Add(link);
         #endregion
 
-        #region ================== IsOwned ============================
-        [Impl(256)] public bool IsOwnedColony(Id<PlayerId> playerId) => _owner == playerId & _states.groupId == EdificeGroupId.Colony;
-        [Impl(256)] public bool IsOwnedPort(Id<PlayerId> playerId) => _owner == playerId & _states.groupId == EdificeGroupId.Port;
+        #region ================== Actors ============================
+        [Impl(256)] public bool IsOwnerColony(Id<PlayerId> playerId) => _owner == playerId & _states.groupId == EdificeGroupId.Colony;
+        [Impl(256)] public bool IsOwnerPort(Id<PlayerId> playerId) => _owner == playerId & _states.groupId == EdificeGroupId.Port;
 
-        public int GetGuardCount(Id<PlayerId> playerId)
+        [Impl(256)] public bool TryGetOwnerColony(out Id<PlayerId> playerId)
+        {
+            playerId = _owner;
+            return _states.groupId == EdificeGroupId.Colony;
+        }
+
+        public bool IsOwnerNear(Id<PlayerId> playerId)
+        {
+            for (int i = 0; i < HEX_COUNT; i++)
+                if (_hexagons[i].IsOwner(playerId))
+                    return true;
+            return false;
+        }
+        public int GetOwnerCount(Id<PlayerId> playerId)
         {
             int count = -1;
-            if (IsOwnedColony(playerId))
+            if (IsOwnerColony(playerId))
             {
                 count = 0;
                 for (int i = 0; i < HEX_COUNT; i++)
@@ -202,7 +215,6 @@ namespace Vurbiri.Colonization
             }
             return count;
         }
-        #endregion
 
         public bool IsEnemyNear(Id<PlayerId> playerId)
         {
@@ -211,13 +223,7 @@ namespace Vurbiri.Colonization
                     return true;
             return false;
         }
-        public bool IsOwnerNear(Id<PlayerId> playerId)
-        {
-            for (int i = 0; i < HEX_COUNT; i++)
-                if (_hexagons[i].IsOwner(playerId))
-                    return true;
-            return false;
-        }
+
         public bool IsEmptyNear()
         {
             for (int i = 0; i < HEX_COUNT; i++)
@@ -225,6 +231,7 @@ namespace Vurbiri.Colonization
                     return false;
             return true;
         }
+        #endregion
 
         #region ================== Caption ============================
         [Impl(256)] public void CaptionHexagonsEnable()

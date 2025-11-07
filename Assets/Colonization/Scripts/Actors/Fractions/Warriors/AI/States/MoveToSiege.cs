@@ -29,6 +29,19 @@ namespace Vurbiri.Colonization
                     Goals.Defensed.Remove(_targetColony);
                 }
             }
+
+            private bool FindEnemiesColony()
+            {
+                _targetHexagon = null;
+                int distance = s_settings.maxDistanceColony;
+
+                if ((!Status.isGuard || Status.minColonyGuard > 1) && TryGetEmptyColony(Colonies, Goals.Defensed, ref distance, out Crossroad colony, out Hexagon target))
+                {
+                    _targetHexagon = target;
+                    _targetColony = colony.Key;
+                }
+                return _targetHexagon != null && Goals.Defensed.Add(_targetColony);
+            }
         }
     }
 }

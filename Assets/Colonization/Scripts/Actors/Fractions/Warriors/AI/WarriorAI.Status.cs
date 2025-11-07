@@ -6,8 +6,7 @@ namespace Vurbiri.Colonization
     {
         sealed public class Status : AStatus
         {
-            public bool isGuard;
-            public int minColonyGuard = int.MaxValue;
+            public int minColonyGuard;
             public readonly List<Id<PlayerId>> greatEnemies = new(2);
             public readonly List<Id<PlayerId>> greatFriends = new(3);
 
@@ -15,22 +14,17 @@ namespace Vurbiri.Colonization
             {
                 base.Update(actor);
 
-                var hex = actor.Hexagon;
-                var crossroads = hex.Crossroads;
-
-                isGuard = false;
                 minColonyGuard = int.MaxValue;
-                for (int i = 0, count; i < HEX.VERTICES; i++)
+                if (isGuard)
                 {
-                    count = crossroads[i].GetGuardCount(actor.Owner);
-                    if (count > 0)
+                    for (int i = ownerColonies.Count - 1, count; i >= 0; i--)
                     {
-                        isGuard = true;
-                        minColonyGuard = System.Math.Min(minColonyGuard, count);
+                        count = ownerColonies[i].GetOwnerCount(actor.Owner);
+                        if (count > 0)
+                            minColonyGuard = System.Math.Min(minColonyGuard, count);
                     }
                 }
 
-                greatEnemies.Clear(); greatFriends.Clear();
                 for (int i = 0; i < PlayerId.HumansCount; i++)
                 {
                     if (GameContainer.Diplomacy.IsGreatEnemy(actor.Owner, i))
@@ -39,6 +33,14 @@ namespace Vurbiri.Colonization
                         greatFriends.Add(i);
                 }
                 greatFriends.Add(actor.Owner);
+            }
+
+            public override void Clear()
+            {
+                base.Clear();
+
+                greatEnemies.Clear(); 
+                greatFriends.Clear();
             }
         }
     }

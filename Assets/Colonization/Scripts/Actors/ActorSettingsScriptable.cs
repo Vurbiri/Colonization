@@ -9,10 +9,18 @@ namespace Vurbiri.Colonization
 
         public ReadOnlyArray<TSettings> Settings => _settings;
 
-        public TSettings[] Init()
+        public TSettings[] Init(out int force)
         {
+            TSettings settings;
+            int minForce = int.MaxValue, maxForce = int.MinValue;
             for (int i = 0; i < ActorId<TId>.Count; i++)
-                _settings[i].Init();
+            {
+                settings = _settings[i];
+                settings.Init();
+                minForce = Mathf.Min(minForce, settings.Force);
+                maxForce = Mathf.Max(maxForce, settings.Force);
+            }
+            force = minForce + maxForce;
 
             return _settings.Values;
         }

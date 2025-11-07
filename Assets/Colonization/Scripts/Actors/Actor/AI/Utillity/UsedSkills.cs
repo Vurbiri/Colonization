@@ -1,3 +1,5 @@
+using Newtonsoft.Json;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,26 +7,33 @@ using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization
 {
-	[System.Serializable, Newtonsoft.Json.JsonArray]
-	public class UsedSkills<TId> : IEnumerable<int> where TId : ActorId<TId>
-	{
-		[SerializeField] private int[] _values;
+    [Serializable]
+    public class UsedSkill
+    {
+        public int skill;
+        public Chance chance;
+    }
 
-        public int this[Id<TId> id] { [Impl(256)] get => _values[id.Value]; }
-        public int this[int index] { [Impl(256)] get => _values[index]; }
+    [Serializable, JsonArray]
+	public class UsedSkills<TId> : IEnumerable<UsedSkill> where TId : ActorId<TId>
+	{
+		[SerializeField] private UsedSkill[] _values;
+
+        public UsedSkill this[Id<TId> id] { [Impl(256)] get => _values[id.Value]; }
+        public UsedSkill this[int index] { [Impl(256)] get => _values[index]; }
 
         private UsedSkills() { }
 
-        [Newtonsoft.Json.JsonConstructor]
-        private UsedSkills(IReadOnlyList<int> list)
+        [JsonConstructor]
+        protected UsedSkills(IReadOnlyList<UsedSkill> list)
         {
-            _values = new int[IdType<TId>.Count];
+            _values = new UsedSkill[IdType<TId>.Count];
             int count = Mathf.Min(IdType<TId>.Count, list.Count);
             for (int i = 0; i < count; i++)
                 _values[i] = list[i];
         }
 
-        public IEnumerator<int> GetEnumerator() => new ArrayEnumerator<int>(_values, ActorId<TId>.Count);
-        IEnumerator IEnumerable.GetEnumerator() => new ArrayEnumerator<int>(_values, ActorId<TId>.Count);
+        public IEnumerator<UsedSkill> GetEnumerator() => new ArrayEnumerator<UsedSkill>(_values, ActorId<TId>.Count);
+        IEnumerator IEnumerable.GetEnumerator() => new ArrayEnumerator<UsedSkill>(_values, ActorId<TId>.Count);
     }
 }

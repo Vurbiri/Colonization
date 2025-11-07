@@ -12,11 +12,11 @@ namespace Vurbiri.Colonization
         [Range(0, 5)]   public int maxDistanceHelp;
         [Range(0, 100)] public int minHPHelp;
         [Space]
-        public Chance blockChance;
-        public Chance preBuffChance;
-        public UsedSkills<WarriorId> preBuff;
+        [Range(0, 5)] public int maxDistanceColony;
+        [Range(0, 5)] public int maxDistanceRaid;
         [Space]
-        [Range(0, 5)] public int maxDistanceEmpty;
+        [Range(0, 100)] public int blockChance;
+        public UsedSkills<WarriorId> defenseBuff;
         [Space]
         public ReadOnlyIdArray<WarriorId, bool> supports;
         [Space]

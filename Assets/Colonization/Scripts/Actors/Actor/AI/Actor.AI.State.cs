@@ -39,23 +39,30 @@ namespace Vurbiri.Colonization
 
                 [Impl(256)] protected State(T parent) => _parent = parent;
 
-                [Impl(256)] protected bool TryEnter(State state)
+                [Impl(256)] protected void TryExitTo(State newState)
                 {
-                    bool result = state.TryEnter();
-                    if (result)
-                        _parent._current = state;
-                    return result;
+                    if (newState.TryEnter())
+                    {
+                        Dispose();
+                        _parent._current = newState;
+                    }
                 }
-
                 [Impl(256)] protected void Exit()
                 {
                     Dispose();
                     _parent._current = _parent._goalSetting;
                 }
-                [Impl(256)] protected void Exit(State newState)
+
+                protected bool IsEnemyComing()
                 {
-                    Dispose();
-                    _parent._current = newState;
+                    bool result = false;
+                    Id<PlayerId> playerId = _parent._actor._owner;
+                    Key current = _parent._actor._currentHex.Key;
+
+                    for (int i = 0; !result & i < HEX.NEAR_TWO.Count; i++)
+                        result = GameContainer.Hexagons.TryGet(current + HEX.NEAR_TWO[i], out Hexagon hex) && hex.IsEnemy(playerId);
+
+                    return result;
                 }
 
                 protected bool TryGetNearActorsInCombat(ReadOnlyReactiveSet<Actor> friends, ref int distance, out Actor enemy, out Actor friend)

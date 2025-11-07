@@ -66,7 +66,7 @@ namespace Vurbiri.Colonization
                     static bool IsOwnedColony(Id<PlayerId> playerId, ReadOnlyArray<Crossroad> crossroads)
                     {
                         int index = crossroads.Count;
-                        while (index --> 0 && !crossroads[index].IsOwnedColony(playerId));
+                        while (index --> 0 && !crossroads[index].IsOwnerColony(playerId));
                         return index >= 0;
                     }
                 }

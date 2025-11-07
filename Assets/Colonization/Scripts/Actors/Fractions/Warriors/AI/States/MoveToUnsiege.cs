@@ -12,7 +12,7 @@ namespace Vurbiri.Colonization
             private Hexagon _targetHexagon;
             private ActorCode _targetEnemy;
 
-            [Impl(256)] public MoveToUnsiege(WarriorAI parent) : base(parent) { }
+            [Impl(256)] public MoveToUnsiege(WarriorAI parent) : base(parent) {}
 
             [Impl(256)] public override bool TryEnter() => Status.CanMove(s_settings.minHPUnsiege) && FindSiegedEnemy(Colonies);
 
@@ -20,14 +20,8 @@ namespace Vurbiri.Colonization
             public override IEnumerator Execution_Cn(Out<bool> isContinue)
             {
                 yield return Move_Cn(isContinue, 1, _targetHexagon, !_targetHexagon.IsEnemy(_playerId));
-                if(!isContinue && _targetHexagon.Distance(Actor.Hexagon) == 2)
-                {
-                    int buff = s_settings.preBuff[Actor.Id];
-                    if(Action.CanUseSkill(buff) && s_settings.preBuffChance.Roll)
-                        Action.UseSkill(buff);
-                    if (Action.CanUseSpecSkill() && s_settings.blockChance.Roll)
-                        Action.UseSpecSkill();
-                }
+                if (!isContinue && IsEnemyComing())
+                    yield return Defense_Cn(true, true);
             }
 
             public override void Dispose()
