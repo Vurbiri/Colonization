@@ -79,7 +79,7 @@ namespace VurbiriEditor.Colonization
                 _fieldNames = IdTypeCache.GetNames(idType);
 
                 if (_isWarrior)
-                    EUtility.FindAnyScriptable<WarriorsSettingsScriptable>().SetSkills_Ed(ref _skillNames, ref _skillValues, "Блок");
+                    EUtility.FindAnyScriptable<WarriorsSettingsScriptable>().SetSkills_Ed(ref _skillNames, ref _skillValues);
                 else
                     EUtility.FindAnyScriptable<WarriorsSettingsScriptable>().SetSkills_Ed(ref _skillNames, ref _skillValues);
 

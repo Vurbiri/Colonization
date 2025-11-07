@@ -19,7 +19,11 @@ namespace Vurbiri
         
         static IdType()
         {
-            Type typeId = typeof(T), typeInt = typeof(int), typeAttribute = typeof(NotIdAttribute);
+            Type typeId = typeof(T);
+            if (!typeId.IsAbstract)
+                throw new($"<b>[{typeId.Name}]</b> must be <b>abstract</b>.");
+
+            Type typeInt = typeof(int), typeAttribute = typeof(NotIdAttribute);
             var fields = typeId.GetFields(BindingFlags.Public | BindingFlags.Static);
             VurbiriEditor.IdTypeListData data = new(fields.Length);
 

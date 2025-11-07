@@ -1,6 +1,6 @@
 namespace Vurbiri.Colonization
 {
-	public class MilitarySpellId : ASpellId<MilitarySpellId>
+	public abstract class MilitarySpellId : ASpellId<MilitarySpellId>
     {
         public const int BloodTrade     = 0;
         public const int Spying         = 1;

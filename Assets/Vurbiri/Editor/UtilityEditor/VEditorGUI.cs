@@ -1,3 +1,4 @@
+using System;
 using UnityEditor;
 using UnityEngine;
 using Vurbiri;
@@ -64,6 +65,20 @@ namespace VurbiriEditor
 
             return true;
         }
+        public static void MinMaxSlider(Rect position, ref int minValue, ref int maxValue, int minLimit, int maxLimit)
+        {
+            var (sizeMin, sizeSlider, sizeMax) = CalkPositionSliderNotLabel(position);
+
+            minValue = Math.Clamp(minValue, minLimit, maxLimit - 1);
+            maxValue = Math.Clamp(maxValue, minValue + 1, maxLimit);
+
+            float min = EditorGUI.IntField(sizeMin, minValue);
+            float max = EditorGUI.IntField(sizeMax, maxValue);
+            EditorGUI.MinMaxSlider(sizeSlider, ref min, ref max, minLimit, maxLimit);
+
+            minValue = Math.Clamp(MathI.Round(min), minLimit, maxValue - 1);
+            maxValue = Math.Clamp(MathI.Round(max), minValue + 1, maxLimit);
+        }
 
         public static Rect CustomPropertyField(Rect position, SerializedProperty property, string name)
         {
@@ -103,7 +118,6 @@ namespace VurbiriEditor
 
         }
 
-
         private static (Rect, Rect, Rect, Rect) CalkPositionSlider(Rect position)
         {
             Rect sizeLabel = position, sizeMin = position, sizeMax = position, sizeSlider = position;
@@ -116,6 +130,22 @@ namespace VurbiriEditor
             sizeSlider.width = EditorGUIUtility.currentViewWidth - SIZE_VALUE * 2f - sizeLabel.width - SIZE_SPACE * 2f;
 
             return (sizeLabel, sizeMin, sizeSlider, sizeMax);
+        }
+
+        private static (Rect, Rect, Rect) CalkPositionSliderNotLabel(Rect position)
+        {
+            position.height = EditorGUIUtility.singleLineHeight;
+            position.x = SIZE_SPACE; position.width = EditorGUIUtility.currentViewWidth - SIZE_SPACE * 2f;
+
+            Rect sizeMin = position, sizeMax = position, sizeSlider = position;
+
+            sizeSlider.x += SIZE_VALUE + SIZE_SPACE;
+            sizeMax.x += position.width - SIZE_VALUE;
+
+            sizeMin.width = sizeMax.width = SIZE_VALUE;
+            sizeSlider.width = position.width - (SIZE_VALUE + SIZE_SPACE) * 2f;
+
+            return (sizeMin, sizeSlider, sizeMax);
         }
     }
 }

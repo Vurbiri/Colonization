@@ -8,7 +8,7 @@ namespace Vurbiri.Colonization
         public static T Load<T>()
         {
             var type = typeof(T);
-            return (T)Vurbiri.Storage.LoadObjectFromJsonResource(string.Concat(FOLDER, type.Name), type); ;
+            return (T)Vurbiri.Storage.LoadObjectFromJsonResource(string.Concat(FOLDER, type.Name), type);
         }
     }
 }

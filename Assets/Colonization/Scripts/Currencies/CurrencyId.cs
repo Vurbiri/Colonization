@@ -1,6 +1,6 @@
 namespace Vurbiri.Colonization
 {
-    public class CurrencyId : IdType<CurrencyId>
+    public abstract class CurrencyId : IdType<CurrencyId>
     {
         public const int Gold  = 0;
         public const int Food  = 1;
@@ -11,7 +11,5 @@ namespace Vurbiri.Colonization
 
         [NotId] public const int MainCount = 5;
         [NotId] public const int AllCount = 6;
-
-        private CurrencyId() { }
     }
 }

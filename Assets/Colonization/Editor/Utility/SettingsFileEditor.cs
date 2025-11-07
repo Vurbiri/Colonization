@@ -45,7 +45,6 @@ namespace VurbiriEditor.Colonization
             AssetDatabase.SaveAssets();
         }
 
-        private static string GetPath(Type type) => Application.dataPath.Concat(PATH, type.Name, JSON_EXT);
         private static string GetPath(string path, Type type) => Application.dataPath.Concat(path, type.Name, JSON_EXT);
     }
 }

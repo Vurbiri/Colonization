@@ -14,7 +14,7 @@ namespace VurbiriEditor
         private readonly List<string> _paths = new(), _names = new();
         //private string[] _namesIdType;
 
-        [MenuItem(MENU, false, 10)]
+        [MenuItem(MENU, false, 80)]
         private static void ShowWindow()
         {
             GetWindow<IdTypeEditorWindow>(true, NAME);

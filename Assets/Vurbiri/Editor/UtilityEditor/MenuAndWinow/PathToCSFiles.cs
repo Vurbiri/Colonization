@@ -56,7 +56,7 @@ namespace VurbiriEditor
             EditorUtility.DisplayDialog(MENU_NAME_REMOVE, $"Очищено {s_count} файлов", "OK");
         }
 
-        [MenuItem(MENU_COMMAND_AUTO, false, 12)]
+        [MenuItem(MENU_COMMAND_AUTO, false, 82)]
         private static void CommandAuto()
         {
             s_isAuto = !s_isAuto;
@@ -65,7 +65,7 @@ namespace VurbiriEditor
             SetChecked();
             Log();
         }
-        [MenuItem(MENU_COMMAND_AUTO, true, 12)]
+        [MenuItem(MENU_COMMAND_AUTO, true, 82)]
         private static bool CommandAutoValidate()
         {
             SetChecked();

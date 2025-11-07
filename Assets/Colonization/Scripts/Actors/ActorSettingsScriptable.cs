@@ -58,33 +58,27 @@ namespace Vurbiri.Colonization
                 _settings[i].PrintProfit_Ed(main, adv);
         }
 
-        public void SetSkills_Ed(ref string[][] names, ref int[][] values, string specName = "Спец")
+        public void SetSkills_Ed(ref string[][] names, ref int[][] values)
         {
             names = new string[ActorId<TId>.Count][];
             values = new int[ActorId<TId>.Count][];
             for (int i = 0; i < ActorId<TId>.Count; i++)
                 (names[i], values[i]) = GetSkills(_settings[i].Skills.SkillSettings_Ed);
 
-            (string[], int[]) GetSkills(SkillSettings[] skillSettings)
+            static (string[], int[]) GetSkills(SkillSettings[] skillSettings)
             {
-                int count = skillSettings.Length, index = 0;
-                string[] names = new string[count + 3];
-                int[] values = new int[count + 3];
+                int count = skillSettings.Length;
+                string[] names = new string[count + 1];
+                int[] values = new int[count + 1];
 
-                names[index] = "------------";
-                values[index++] = -1;
+                names[0]  = "------------";
+                values[0] = -1;
 
-                for (int i = 0; i < count; i++)
+                for (int i = 0, j = 1; i < count; i++, j++)
                 {
-                    names[index] = $"{skillSettings[i].GetName_Ed()} ({i})";
-                    values[index++] = i;
+                    names[j]  = $"{skillSettings[i].GetName_Ed()} ({i.ToStr()})";
+                    values[j] = i;
                 }
-
-                names[index] = $"{specName} ({CONST.SPEC_SKILL_ID})";
-                values[index++] = CONST.SPEC_SKILL_ID;
-
-                names[index] = $"Движение ({CONST.MOVE_SKILL_ID})";
-                values[index++] = CONST.MOVE_SKILL_ID;
 
                 return (names, values);
             }
