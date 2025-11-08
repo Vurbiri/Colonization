@@ -17,7 +17,7 @@ namespace Vurbiri.Colonization
                 _raider = s_settings.raiders[parent._actor.Id];
             }
 
-            public override bool TryEnter() => _raider && Action.CanUseMoveSkill();
+            public override bool TryEnter() => _raider & Status.isMove && FindEnemiesColony();
 
             public override IEnumerator Execution_Cn(Out<bool> isContinue) => Move_Cn(isContinue, 0, _targetHexagon);
 
@@ -33,14 +33,21 @@ namespace Vurbiri.Colonization
             private bool FindEnemiesColony()
             {
                 _targetHexagon = null;
-                int distance = s_settings.maxDistanceColony;
 
-                if ((!Status.isGuard || Status.minColonyGuard > 1) && TryGetEmptyColony(Colonies, Goals.Defensed, ref distance, out Crossroad colony, out Hexagon target))
+                if (!Status.isSiege)
                 {
-                    _targetHexagon = target;
-                    _targetColony = colony.Key;
+                    int distance = s_settings.maxDistanceRaid;
+                    var playerId = Actor.Owner;
+                    for (int i = 0; i < PlayerId.HumansCount; i++)
+                    {
+                        if(GameContainer.Diplomacy.IsGreatEnemy(playerId, i) && TryGetEmptyColony(GetColonies(i), Goals.Raided, ref distance, out Crossroad colony, out Hexagon target))
+                        {
+                            _targetHexagon = target;
+                            _targetColony = colony.Key;
+                        }
+                    }
                 }
-                return _targetHexagon != null && Goals.Defensed.Add(_targetColony);
+                return _targetHexagon != null && Goals.Raided.Add(_targetColony);
             }
         }
     }

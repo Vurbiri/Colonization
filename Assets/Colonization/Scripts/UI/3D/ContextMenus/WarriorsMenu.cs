@@ -37,8 +37,8 @@ namespace Vurbiri.Colonization.UI
             _currentWarrior = actor;
             var skills = GameContainer.Actors.GetSkills(actor);
 
-            _buttonMove.Setup(actor.Action.CanUseMoveSkill(), skills.MoveUI);
-            _buttonBlock.Setup(actor.Action.CanUseSpecSkill(), skills.Spec.UI);
+            _buttonMove.Setup(actor.Action.CanUsedMoveSkill(), skills.MoveUI);
+            _buttonBlock.Setup(actor.Action.CanUsedSpecSkill(), skills.Spec.UI);
 
             int index = 0; var skillsUI = skills.SkillsUI;
             for (int count = skillsUI.Count; index < count; index++)

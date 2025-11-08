@@ -20,7 +20,7 @@ namespace Vurbiri.Colonization
                     if (FindMilitias(HumanId) && Spell.Prep(_param))
                     {
                         Actor militia = s_militias.Rand();
-                        if (militia.Action.CanUseMainSkill(s_settings.skillId))
+                        if (militia.Action.CanUsedMainSkill(s_settings.skillId))
                         {
                             yield return militia.Action.UseSkill(s_settings.skillId);
                             yield return s_settings.waitBeforeSelecting.Restart();

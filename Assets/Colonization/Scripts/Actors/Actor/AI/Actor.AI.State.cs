@@ -35,6 +35,7 @@ namespace Vurbiri.Colonization
                 protected TStatus Status { [Impl(256)] get => _parent._status; }
                 protected bool ActorInCombat { [Impl(256)] get => _parent._actor.IsInCombat(); }
                 protected TAction Action { [Impl(256)] get => _parent._action; }
+                protected bool IsEnemyComing { [Impl(256)] get => _parent._status.forceNearTwoEnemies > 0; }
                 #endregion
 
                 [Impl(256)] protected State(T parent) => _parent = parent;
@@ -53,16 +54,42 @@ namespace Vurbiri.Colonization
                     _parent._current = _parent._goalSetting;
                 }
 
-                protected bool IsEnemyComing()
+                [Impl(256)] protected bool EscapeChance(int enemyForce) => Status.isMove && Chance.Rolling((enemyForce * 10) / Actor.CurrentForce - 11);
+
+                protected bool TryEscape(int minDistance, out Hexagon hexagon)
                 {
-                    bool result = false;
-                    Id<PlayerId> playerId = _parent._actor._owner;
-                    Key current = _parent._actor._currentHex.Key;
+                    Hexagon temp; hexagon = null;
+                    var hexagons = Actor._currentHex.Neighbors;
+                    foreach (int index in s_hexagonIndexes)
+                    {
+                        temp = hexagons[index];
+                        if (temp.CanActorEnter(Actor.IsDemon) && CheckHexagon(minDistance, temp))
+                        {
+                            hexagon = temp;
+                            break;
+                        }
+                    }
 
-                    for (int i = 0; !result & i < HEX.NEAR_TWO.Count; i++)
-                        result = GameContainer.Hexagons.TryGet(current + HEX.NEAR_TWO[i], out Hexagon hex) && hex.IsEnemy(playerId);
+                    return hexagon != null;
 
-                    return result;
+                    #region Local: CheckHexagon(..), CheckActors(..)
+                    //======================================================
+                    bool CheckHexagon(int minDistance, Key target)
+                    {
+                        for(int i = Status.enemies.Count - 1; i >= 0; i--)
+                            if (!CheckActors(GameContainer.Actors[Status.enemies[i]], minDistance, target))
+                                return false;
+                        return true;
+                    }
+                    //======================================================
+                    static bool CheckActors(ReadOnlyReactiveSet<Actor> enemies, int minDistance, Key target)
+                    {
+                        foreach (var enemy in enemies)
+                            if (enemy._currentHex.Distance(target) < minDistance)
+                                return false;
+                        return true;
+                    }
+                    #endregion
                 }
 
                 protected bool TryGetNearActorsInCombat(ReadOnlyReactiveSet<Actor> friends, ref int distance, out Actor enemy, out Actor friend)
@@ -104,7 +131,7 @@ namespace Vurbiri.Colonization
                         if (!targets.Contains(colonyTemp) && (colonyTemp.ApproximateDistance(Actor.Hexagon) <= (distance + 1)) && colonyTemp.IsEmptyNear())
                         {
                             hexagons = colonyTemp.Hexagons;
-                            foreach (int index in s_hexIndexes)
+                            foreach (int index in s_crossroadHex)
                             {
                                 hexTemp = hexagons[index];
                                 if (TryGetDistance(Actor, hexTemp, distance, out int newDistance))
@@ -124,30 +151,29 @@ namespace Vurbiri.Colonization
                 protected IEnumerator Move_Cn(Out<bool> isContinue, int distance, Hexagon target, bool isExit = false)
                 {
                     isExit |= Status.isInCombat;
-                    if (!isExit && Action.CanUseMoveSkill())
+                    if (!isExit && Action.CanUsedMoveSkill())
                     {
                         isExit = !TryGetNextHexagon(Actor, target, out Hexagon next);
                         if (!isExit)
                         {
-                            yield return Actor.StartCoroutine(Move_Cn(Action, next));
+                            yield return Actor.StartCoroutine(Move_Cn(next));
                             isExit = target.Distance(next) == distance;
                         }
                     }
                     isContinue.Set(isExit);
                     if (isExit) Exit();
+                }
 
-                    // ======= Local =============
-                    static IEnumerator Move_Cn(TAction action, Hexagon target)
-                    {
-                        yield return GameContainer.CameraController.ToPositionControlled(target.Position);
+                protected IEnumerator Move_Cn(Hexagon target)
+                {
+                    yield return GameContainer.CameraController.ToPositionControlled(target.Position);
 
-                        var wait = action.UseMoveSkill();
+                    var wait = Action.UseMoveSkill();
 
-                        yield return s_waitBeforeSelecting;
-                        action.Unselect(target);
+                    yield return s_waitBeforeSelecting;
+                    Action.Unselect(target);
 
-                        yield return wait;
-                    }
+                    yield return wait;
                 }
             }
         }

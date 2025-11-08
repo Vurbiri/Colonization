@@ -17,7 +17,7 @@ namespace Vurbiri
         {
             get
             {
-                bool result = (_negentropy += _value) >= MAX_CHANCE | (_negentropy > 0 && Random.Range(0, MAX_CHANCE) < _negentropy);
+                bool result = (_negentropy += _value) >= MAX_CHANCE || (_negentropy > 0 && Random.Range(0, MAX_CHANCE) < _negentropy);
                 if(result) _negentropy -= MAX_CHANCE;
                 return result;
             }
@@ -34,7 +34,7 @@ namespace Vurbiri
         [Impl(256)] public T Select<T>(T trueValue) => Roll ? trueValue : default;
 
         #region Static methods
-        [Impl(256)] public static bool Rolling(int value = 50) => value > 0 & (value >= MAX_CHANCE || Random.Range(0, MAX_CHANCE) < value);
+        [Impl(256)] public static bool Rolling(int value = 50) => value > 0 && (value >= MAX_CHANCE || Random.Range(0, MAX_CHANCE) < value);
 
         [Impl(256)] public static T Select<T>(T trueValue, T falseValue, int value = 50)
         {

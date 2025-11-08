@@ -11,16 +11,7 @@ namespace Vurbiri.Colonization
             protected Id<PlayerId> _playerId;
 
             protected ReadOnlyReactiveList<Crossroad> Colonies { [Impl(256)] get => GameContainer.Players.Humans[_playerId].Colonies; }
-            protected bool IsBlock { [Impl(256)] get => Action.CanUseSpecSkill() && _parent._blockChance.Roll; }
-            protected bool IsDefenseBuff
-            {
-                [Impl(256)]
-                get 
-                {
-                    var used = s_settings.defenseBuff[Actor.Id];
-                    return Action.CanUseSkill(used.skill) && used.chance.Roll; 
-                }
-            }
+            protected bool IsBlock { [Impl(256)] get => Action.CanUsedSpecSkill() && _parent._blockChance.Roll; }
             
 
             [Impl(256)]
@@ -29,12 +20,14 @@ namespace Vurbiri.Colonization
                 _playerId = parent._actor.Owner;
             }
 
+            [Impl(256)] protected ReadOnlyReactiveList<Crossroad> GetColonies(int playerId) => GameContainer.Players.Humans[playerId].Colonies;
+
             protected IEnumerator Defense_Cn(bool isBuff, bool isBlock)
             {
-                var used = s_settings.defenseBuff[Actor.Id];
-                if (isBuff && Action.CanUseSkill(used.skill) && used.chance.Roll)
-                    yield return Action.UseSkill(used.skill);
-                if (isBlock && Action.CanUseSpecSkill() && _parent._blockChance.Roll)
+                var skill = s_settings.defenseBuff[Actor.Id];
+                if (isBuff && skill.CanUsed(Action, Actor))
+                    yield return skill.Use(Action);
+                if (isBlock && Action.CanUsedSpecSkill() && _parent._blockChance.Roll)
                     yield return Action.UseSpecSkill();
             }
         }

@@ -7,16 +7,16 @@ namespace Vurbiri.Colonization
     public class EdificeSettings
     {
         public Id<EdificeId> id;
-        public Id<EdificeGroupId> groupId;
+        [ReadOnly] public Id<EdificeGroupId> groupId;
         [Space]
-        public Id<EdificeId> nextId;
-        public Id<EdificeGroupId> nextGroupId;
+        [ReadOnly] public Id<EdificeId> nextId;
+        [ReadOnly] public Id<EdificeGroupId> nextGroupId;
         [Space]
-        public int profit;
+        [ReadOnly] public int profit;
         [Space]
-        public bool isUpgrade;
-        public bool isBuildWall;
-        public int wallDefense;
+        [ReadOnly] public bool isUpgrade;
+        [ReadOnly] public bool isBuildWall;
+        [ReadOnly] public int wallDefense;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void SetNextId(Id<EdificeId> id, Id<EdificeGroupId> groupId)

@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Vurbiri.Reactive;
 using Vurbiri.Reactive.Collections;
 
 namespace Vurbiri.Colonization
@@ -10,12 +9,10 @@ namespace Vurbiri.Colonization
     {
         protected readonly AbilitiesSet<ActorAbilityId> _abilities;
         protected ReactiveEffect[] _values;
-        protected int _capacity = 4;
-        protected readonly RInt _count = new(0);
+        protected int _count, _capacity = 3;
         protected readonly VAction<ReactiveEffect, TypeEvent> _eventChanged = new();
         
         public int Count => _count;
-        public ReactiveValue<int> CountReactive => _count;
 
         protected ReactiveEffects(AbilitiesSet<ActorAbilityId> abilities)
         {
@@ -34,16 +31,15 @@ namespace Vurbiri.Colonization
             return _eventChanged.Add(action);
         }
 
-        public bool Contains<T>(T code) where T : struct, IEquatable<EffectCode>
+        public bool Contains<T>(T code) where T : IEquatable<EffectCode>
         {
             int i = _count;
-            while (i --> 0 && !code.Equals(_values[i].Code));
+            while (i --> 0 && !code.Equals(_values[i].Code)) ;
             return i >= 0;
         }
 
         public IEnumerator<ReactiveEffect> GetEnumerator() => new ArrayEnumerator<ReactiveEffect>(_values, _count);
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-
     }
 
     //**************************************************************************************************
@@ -60,7 +56,7 @@ namespace Vurbiri.Colonization
             if (_values != null & effect != null)
             {
                 for (int i = 0; i < _count; i++)
-                    if (_values[i].Update(effect, _abilities.AddPerk, out int delta))
+                    if (_values[i].TryUpdate(effect, _abilities.AddPerk, out int delta))
                         return delta;
 
                 if (_count == _capacity)
@@ -68,7 +64,7 @@ namespace Vurbiri.Colonization
 
                 _values[_count] = effect;
                 effect.Adding(RedirectEvents, _count);
-                _count.Increment();
+                _count++;
 
                 return _abilities.AddPerk(effect);
             }
@@ -120,9 +116,9 @@ namespace Vurbiri.Colonization
 
         private void RemoveItem(ReactiveEffect effect)
         {
-            _count.SilentValue--;
-
             ReactiveEffect temp;
+
+            _count--;
             for (int i = effect.Index; i < _count; i++)
             {
                 temp = _values[i + 1];
@@ -132,8 +128,6 @@ namespace Vurbiri.Colonization
 
             _values[_count] = null;
             _abilities.RemovePerk(effect);
-
-            _count.Signal();
         }
 
         private void RedirectEvents(ReactiveEffect effect, TypeEvent operation)
@@ -146,7 +140,7 @@ namespace Vurbiri.Colonization
 
         private void GrowArray()
         {
-            _capacity = _capacity << 1 | 4;
+            _capacity = _capacity << 1 | 3;
 
             ReactiveEffect[] array = new ReactiveEffect[_capacity];
             for (int i = 0; i < _count; i++)

@@ -5,12 +5,12 @@ namespace Vurbiri.Colonization
 {
     public partial class WarriorAI
     {
-        sealed private class MoveToColony : AIState
+        sealed private class MoveToHome : AIState
         {
             private Hexagon _targetHexagon;
             private Key _targetColony;
 
-            [Impl(256)] public MoveToColony(WarriorAI parent) : base(parent) { }
+            [Impl(256)] public MoveToHome(WarriorAI parent) : base(parent) { }
 
             [Impl(256)] public override bool TryEnter() => Status.isMove && FindEmptyColony();
 
@@ -28,7 +28,7 @@ namespace Vurbiri.Colonization
             private bool FindEmptyColony()
             {
                 _targetHexagon = null;
-                int distance = s_settings.maxDistanceColony;
+                int distance = s_settings.maxDistanceHome;
 
                 if ((!Status.isGuard || Status.minColonyGuard > 1) && TryGetEmptyColony(Colonies, Goals.Defensed, ref distance, out Crossroad colony, out Hexagon target))
                 {

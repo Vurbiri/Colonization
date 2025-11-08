@@ -13,7 +13,7 @@ namespace Vurbiri.Colonization
                 _actionSkills[CONST.SPEC_SKILL_ID] = _eatState = new(specSkill, this);
             }
 
-            public override bool CanUseSpecSkill() => _eatState.CanUse;
+            public override bool CanUsedSpecSkill() => _eatState.CanUse;
 
             public override WaitSignal UseSpecSkill()
             {

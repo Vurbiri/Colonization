@@ -13,7 +13,8 @@ namespace Vurbiri.Colonization
             private static readonly Dictionary<Hexagon, Hexagon> s_links = new();
             private static readonly Queue<Hexagon> s_finds = new();
 
-            protected static readonly RandomSequence s_hexIndexes = new(Crossroad.HEX_COUNT);
+            protected static readonly RandomSequence s_crossroadHex = new(Crossroad.HEX_COUNT);
+            protected static readonly RandomSequence s_hexagonIndexes = new(HEX.SIDES);
             protected static readonly WaitFrames s_waitBeforeSelecting = new(10);
 
             protected readonly Actor _actor;
@@ -61,26 +62,31 @@ namespace Vurbiri.Colonization
             private static bool Pathfind(Actor actor, Hexagon end, int distance)
             {
                 bool found = false;
-                int depth = distance + 1;
-                Hexagon current, near, start = actor._currentHex; ;
 
                 s_finds.Enqueue(end);
-                while (!found & s_finds.Count > 0)
-                {
-                    current = s_finds.Dequeue();
-
-                    for (int index = 0; !found & index < HEX.SIDES; index++)
-                    {
-                        near = current.Neighbors[index];
-                        if (found = (near == start))
-                            s_links.Add(near, current);
-                        if ((!found && near != end && near.CanActorEnter(actor.IsDemon)) && (near.Distance(end) < depth && near.Distance(start) < depth) && s_links.TryAdd(near, current))
-                            s_finds.Enqueue(near);
-                    }
-                }
+                while (s_finds.Count > 0 && !(found = Find(actor._currentHex, end, distance, actor.IsDemon))) ;
                 s_finds.Clear();
 
                 return found;
+
+                // ========== Local ============
+                static bool Find(Hexagon start, Hexagon end, int depth, bool isDemon)
+                {
+                    Hexagon near, current = s_finds.Dequeue(); ;
+                    foreach (int index in s_hexagonIndexes)
+                    {
+                        near = current.Neighbors[index];
+                        if (near == start)
+                        {
+                            s_links.Add(near, current);
+                            return true;
+                        }
+
+                        if (near != end && near.CanActorEnter(isDemon) && (near.Distance(end) <= depth && near.Distance(start) <= depth) && s_links.TryAdd(near, current))
+                            s_finds.Enqueue(near);
+                    }
+                    return false;
+                }
             }
             #endregion
 

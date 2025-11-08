@@ -7,17 +7,17 @@ namespace Vurbiri.Colonization
     {
         public abstract class Actions
         {
-            public abstract bool CanUseSkill(int id);
-            public abstract bool CanUseMainSkill(int id);
-            public abstract bool CanUseSpecSkill();
-            public abstract bool CanUseMoveSkill();
-
-            public abstract SkillCode GetSkillCode(int id);
+            public abstract bool CanUsedSkill(int id);
+            public abstract bool CanUsedMainSkill(int id);
+            public abstract bool CanUsedSpecSkill();
+            public abstract bool CanUsedMoveSkill();
 
             public abstract WaitSignal UseSkill(int id);
             public abstract WaitSignal UseSpecSkill();
             public abstract WaitSignal UseMoveSkill();
-            
+
+            public abstract bool IsApplied(int id, Actor target);
+
             public abstract WaitStateSource<DeathStage> Death();
         }
         //============================================================================
@@ -68,11 +68,9 @@ namespace Vurbiri.Colonization
                 _skin.EventStart += _stateMachine.ToDefaultState;
             }
 
-            sealed public override bool CanUseSkill(int id) => (id >= 0 & id < CONST.ACTION_SKILLS_COUNT) && _actionSkills[id].CanUse;
-            sealed public override bool CanUseMainSkill(int id) => (id >= 0 & id < CONST.MAIN_SKILLS_COUNT) && _actionSkills[id].CanUse;
-            sealed public override bool CanUseMoveSkill() => _moveState.CanUse;
-
-            sealed public override SkillCode GetSkillCode(int id) => _actionSkills[id].code;
+            sealed public override bool CanUsedSkill(int id) => (id >= 0 & id < CONST.ACTION_SKILLS_COUNT) && _actionSkills[id].CanUse;
+            sealed public override bool CanUsedMainSkill(int id) => (id >= 0 & id < CONST.MAIN_SKILLS_COUNT) && _actionSkills[id].CanUse;
+            sealed public override bool CanUsedMoveSkill() => _moveState.CanUse;
 
             sealed public override WaitSignal UseMoveSkill()
             {
@@ -84,6 +82,8 @@ namespace Vurbiri.Colonization
                 _stateMachine.SetState(_actionSkills[id], true);
                 return _actionSkills[id].signal.Restart();
             }
+
+            sealed public override bool IsApplied(int id, Actor target) => target._effects.Contains(_actionSkills[id].code);
 
             sealed public override WaitStateSource<DeathStage> Death()
             {

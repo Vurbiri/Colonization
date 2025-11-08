@@ -12,9 +12,7 @@ namespace VurbiriEditor.Colonization
         private const string NAME = "Demons Settings", MENU = MENU_AC_PATH + NAME;
 
         [SerializeField] private BuffsScriptable _perks;
-
         
-
         [MenuItem(MENU, false, MENU_AC_ORDER)]
         private static void ShowWindow()
         {
@@ -37,6 +35,8 @@ namespace VurbiriEditor.Colonization
                         _advProfit = 100 + (buff.value * max / buff.advance);
                 }
             }
+
+            RefreshAsync();
         }
 
         protected override VisualElement CreateEditor(DemonsSettingsScriptable settings) => DemonsSettingsEditor.CreateCachedEditorAndBind(settings);

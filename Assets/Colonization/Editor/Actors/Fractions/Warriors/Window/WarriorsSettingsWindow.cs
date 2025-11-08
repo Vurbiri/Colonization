@@ -27,6 +27,8 @@ namespace VurbiriEditor.Colonization
                 _mainProfit = 100 + mil[MilitaryPerksId.ProfitMain_1].Value + mil[MilitaryPerksId.ProfitMain_2].Value;
                 _advProfit = 100 + mil[MilitaryPerksId.ProfitAdv_1].Value + mil[MilitaryPerksId.ProfitAdv_2].Value;
             }
+
+            RefreshAsync();
         }
 
         protected override VisualElement CreateEditor(WarriorsSettingsScriptable settings) => WarriorsSettingsEditor.CreateCachedEditorAndBind(settings);

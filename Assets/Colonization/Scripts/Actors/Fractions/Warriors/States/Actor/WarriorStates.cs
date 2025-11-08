@@ -10,7 +10,7 @@ namespace Vurbiri.Colonization
 
             public override bool IsAvailable => _stateMachine.IsSetOrDefault(_blockState);
 
-            public override bool CanUseSpecSkill() => _blockState.CanUse;
+            public override bool CanUsedSpecSkill() => _blockState.CanUse;
 
             public override WaitSignal UseSpecSkill()
             {

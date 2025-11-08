@@ -2,30 +2,30 @@
   "maxDistanceUnsiege": 4,
   "minHPUnsiege": 24,
   "maxDistanceHelp": 3,
-  "minHPHelp": 55,
-  "maxDistanceColony": 3,
+  "minHPHelp": 60,
+  "maxDistanceHome": 3,
   "maxDistanceRaid": 2,
   "blockChance": 50,
   "defenseBuff": [
     {
-      "skill": 3,
-      "chance": 75
+      "_skill": 3,
+      "_chance": 77
     },
     {
-      "skill": 3,
-      "chance": 50
+      "_skill": 3,
+      "_chance": 45
     },
     {
-      "skill": -1,
-      "chance": 0
+      "_skill": -1,
+      "_chance": 0
     },
     {
-      "skill": -1,
-      "chance": 0
+      "_skill": -1,
+      "_chance": 0
     },
     {
-      "skill": 3,
-      "chance": 20
+      "_skill": 3,
+      "_chance": 18
     }
   ],
   "supports": [

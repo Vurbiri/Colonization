@@ -34,7 +34,7 @@ namespace Vurbiri.Colonization
             _fixed = (code.SourceType == ActorTypeId.Warrior && code.SkillId == CONST.SPEC_SKILL_ID) || code == ReactiveEffectsFactory.WallEffectCode;
         }
 
-        public bool Update(ReactiveEffect other, Func<IPerk, int> addPerk, out int delta)
+        public bool TryUpdate(ReactiveEffect other, Func<IPerk, int> addPerk, out int delta)
         {
             bool result = _code == other._code; delta = 0;
 

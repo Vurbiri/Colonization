@@ -18,7 +18,7 @@ namespace Vurbiri.Colonization
         [Button("Testing"), Range(-10f, 10f)]
         public float value;
 
-        public UsedSkills<WarriorId> skills;
+        public ChanceUsedSkills<WarriorId> skills;
 
         private TMP_Dropdown _dropdown;
 

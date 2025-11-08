@@ -63,20 +63,6 @@ namespace Vurbiri.Colonization
         [Impl(256)] public bool IsEnemy(Id<PlayerId> idA, Id<PlayerId> idB) => (Validate(idA, idB) & idA != idB) && (IsSatan(idA, idB) || this[idA, idB] <= 0);
         [Impl(256)] public bool IsGreatEnemy(Id<PlayerId> idA, Id<PlayerId> idB) => (Validate(idA, idB) & idA != idB) && (IsSatan(idA, idB) || this[idA, idB] <= -_settings.great);
 
-        public Relation GetRelation(Id<PlayerId> idA, Id<PlayerId> idB)
-        {
-            if (idA == PlayerId.None | idB == PlayerId.None)
-                return Relation.None;
-
-            if (idA == idB)
-                return Relation.Friend;
-
-            if (idA == PlayerId.Satan | idB == PlayerId.Satan)
-                return Relation.Enemy;
-
-            return this[idA, idB] > 0 ? Relation.Friend : Relation.Enemy;
-        }
-
         [Impl(256)] public void Gift(int id, int giver) => Set(id, giver, id == PlayerId.Person ? _settings.rewardForGift >> 1 : _settings.rewardForGift);
         [Impl(256)] public void Marauding(int idA, int idB) => Set(idA, idB, _settings.penaltyForMarauding);
 

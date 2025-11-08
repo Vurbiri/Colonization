@@ -1,5 +1,5 @@
 using System.Collections;
-using System.Runtime.CompilerServices;
+using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization
 {
@@ -12,11 +12,8 @@ namespace Vurbiri.Colonization
                 private readonly EffectCode _effectCode;
                 private readonly int _value;
 
-                public bool IsApplied 
-                {
-                    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-                    get => ActorEffects.Contains(_effectCode); 
-                }
+                public bool IsApplied { [Impl(256)]  get => ActorEffects.Contains(_effectCode); }
+                public override bool CanUse { [Impl(256)] get => base.CanUse && !ActorEffects.Contains(_effectCode); }
 
                 public BlockState(SpecSkillSettings specSkill, WarriorStates parent) : base(parent, CONST.SPEC_SKILL_ID, specSkill.Cost)
                 {

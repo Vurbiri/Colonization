@@ -17,13 +17,13 @@ namespace Vurbiri.Colonization
                 _support = s_settings.supports[parent._actor.Id];
             }
 
-            public override bool TryEnter() => Status.CanMove(s_settings.minHPHelp) && FindTargets();
+            public override bool TryEnter() => Status.CanMoveToEnemy(s_settings.minHPHelp) && FindTargets();
 
             public override IEnumerator Execution_Cn(Out<bool> isContinue)
             {
                 bool isExit = !(_support ? _targetHexagon.IsGreatFriend(_playerId) : _targetHexagon.IsEnemy(_playerId));
                 yield return Move_Cn(isContinue, 1, _targetHexagon, isExit);
-                if (!isContinue && IsEnemyComing())
+                if (!isContinue && IsEnemyComing)
                     yield return Defense_Cn(true, false);
             }
 
@@ -40,10 +40,11 @@ namespace Vurbiri.Colonization
             {
                 _targetHexagon = null;
                 int distance = s_settings.maxDistanceHelp;
+                var playerId = Actor.Owner;
 
-                for (int i = Status.greatFriends.Count - 1; i >= 0; i--)
+                for (int i = 0; i < PlayerId.Count; i++)
                 {
-                    if (TryGetNearActorsInCombat(GameContainer.Actors[i], ref distance, out Actor enemy, out Actor friend))
+                    if (GameContainer.Diplomacy.IsGreatFriend(playerId, i) && TryGetNearActorsInCombat(GameContainer.Actors[i], ref distance, out Actor enemy, out Actor friend))
                     {
                         _targetEnemy = enemy.Code;
                         _targetHexagon = (_support ? friend : enemy).Hexagon;

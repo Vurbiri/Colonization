@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -12,8 +13,9 @@ namespace VurbiriEditor.Colonization
     {
         [SerializeField] protected TScriptable _actorsSettings;
 
+        private bool _refresh;
         protected int _mainProfit, _advProfit;
-
+         
         public void CreateGUI()
         {
             EUtility.CheckScriptable<TScriptable>(ref _actorsSettings, typeof(TValue).Name, "Assets/Colonization/Settings/Characteristics");
@@ -36,6 +38,16 @@ namespace VurbiriEditor.Colonization
             CreateGUI();
         }
 
+        protected async void RefreshAsync()
+        {
+            await Task.Delay(177);
+            if (!_refresh)
+            {
+                _refresh = true;
+                Refresh();
+            }
+        }
+
         private void PrintForce() => _actorsSettings?.PrintForce_Ed();
         private void PrintProfit() => _actorsSettings?.PrintProfit_Ed(_mainProfit, _advProfit);
 
@@ -50,8 +62,9 @@ namespace VurbiriEditor.Colonization
 
         private void OnDestroy()
         {
+            _refresh = true;
             if (_actorsSettings != null)
-                SkillDrawer.Update<TScriptable, TId, TValue>(_actorsSettings);
+                UsedSkillDrawer.Update<TScriptable, TId, TValue>(_actorsSettings);
         }
     }
 }

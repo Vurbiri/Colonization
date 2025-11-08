@@ -18,7 +18,7 @@ namespace Vurbiri.Colonization
                 _actionSkills[CONST.SPEC_SKILL_ID] = new EmptyActionState(this, CONST.SPEC_SKILL_ID);
             }
 
-            public override bool CanUseSpecSkill() => false;
+            public override bool CanUsedSpecSkill() => false;
 
             public override WaitSignal UseSpecSkill()
             {

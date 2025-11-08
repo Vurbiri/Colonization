@@ -1,5 +1,3 @@
-using System.Runtime.CompilerServices;
-
 namespace Vurbiri.Colonization
 {
     public abstract class EdificeId : IdType<EdificeId>
@@ -16,21 +14,5 @@ namespace Vurbiri.Colonization
         public const int PortTwo        = 6;
         public const int LighthouseOne  = 7;
         public const int LighthouseTwo  = 8;
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static int ToGroup(int id) => id switch
-        {
-            Empty                                                => EdificeGroupId.None,
-            Shrine                                               => EdificeGroupId.Shrine,
-            PortOne or PortTwo or LighthouseOne or LighthouseTwo => EdificeGroupId.Port,
-            Camp or Town or City                                 => EdificeGroupId.Colony,
-            _                                                    => Errors.ArgumentOutOfRange("EdificeTypeId", id),
-        };
-    }
-
-    public static class ExtensionsEdificeId
-    {
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Id<EdificeGroupId> ToGroup(this Id<EdificeId> self) => EdificeId.ToGroup(self.Value); 
     }
 }

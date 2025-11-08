@@ -15,7 +15,7 @@ namespace Vurbiri.Colonization
         {
             _settings.id = EdificeId.Empty;
             _settings.groupId = EdificeGroupId.None;
-            _settings.nextId = EdificeId.Empty;
+            _settings.nextId = EdificeId.None;
             _settings.nextGroupId = EdificeGroupId.None;
 
             _settings.isBuildWall = false;

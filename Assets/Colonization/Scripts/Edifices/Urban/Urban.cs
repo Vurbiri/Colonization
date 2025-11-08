@@ -50,5 +50,33 @@ namespace Vurbiri.Colonization
             if (isWall && _wall != null)
                 _wall.RemoveRoad(linkId);
         }
+
+#if UNITY_EDITOR
+        protected override void OnValidate()
+        {
+            if (UnityEngine.Application.isPlaying) return;
+
+            _settings.id = Mathf.Clamp(_settings.id, EdificeId.Camp, EdificeId.City);
+            _settings.nextId = _settings.id + 1;
+
+            _settings.groupId = EdificeGroupId.Colony;
+            _settings.nextGroupId = EdificeGroupId.Colony;
+
+            _settings.wallDefense = _settings.id - EdificeId.Camp;
+            _settings.profit = _settings.wallDefense + 1;
+
+            _settings.isBuildWall = _settings.wallDefense > 0;
+
+            if (_settings.id == EdificeId.City)
+            {
+                _settings.nextId = EdificeId.None;
+                _settings.nextGroupId = EdificeGroupId.None;
+            }
+
+            _settings.isUpgrade = _settings.nextId != EdificeId.None;
+
+            base.OnValidate();
+        }
+#endif
     }
 }
