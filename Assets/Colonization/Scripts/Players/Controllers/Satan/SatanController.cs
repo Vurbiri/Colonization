@@ -33,16 +33,21 @@ namespace Vurbiri.Colonization
 
                 foreach (var demon in Actors)
                 {
-                    if (returnSignal = demon.IsMainProfit)
+                    if (!demon.IsInCombat())
                     {
-                        balance++;
-                        yield return returnSignal.signal;
+                        if (returnSignal = demon.IsMainProfit)
+                        {
+                            balance++;
+                            yield return returnSignal.signal;
+                        }
+                        if (returnSignal = demon.IsAdvProfit)
+                        {
+                            countBuffs++;
+                            yield return returnSignal.signal;
+                        }
                     }
-                    if (returnSignal = demon.IsAdvProfit)
-                    {
-                        countBuffs++;
-                        yield return returnSignal.signal;
-                    }
+
+                    yield return s_delayHalfSecond.Restart();
 
                     demon.StatesUpdate();
                 }

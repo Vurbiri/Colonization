@@ -27,7 +27,7 @@ namespace Vurbiri.Colonization
                 var port = GameContainer.Crossroads.GetRandomPort();
                 yield return GameContainer.CameraController.ToPositionControlled(port.Position);
                 yield return Human.BuildPort(port).signal;
-                yield return s_waitRealtime.Restart();
+                yield return s_delayHalfSecond.Restart();
             }
 
             public override IEnumerator Execution_Cn()

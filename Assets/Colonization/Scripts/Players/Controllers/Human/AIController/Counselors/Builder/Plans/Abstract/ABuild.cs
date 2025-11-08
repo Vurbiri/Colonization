@@ -35,7 +35,7 @@ namespace Vurbiri.Colonization
 #endif
                         }
                     }
-                    yield return s_waitRealtime.Restart();
+                    yield return s_delayHalfSecond.Restart();
                 }
             }
         }

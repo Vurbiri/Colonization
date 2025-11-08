@@ -49,7 +49,7 @@ namespace Vurbiri.Colonization
                         if (_cursor == _roadsCount)
                             yield return BuildCamp_Cn();
                     }
-                    yield return s_waitRealtime.Restart();
+                    yield return s_delayHalfSecond.Restart();
                 }
 
                 private IEnumerator BuildRoads_Cn()
@@ -64,7 +64,7 @@ namespace Vurbiri.Colonization
                             step = _steps[_cursor]; _steps[_cursor++] = null;
                             yield return GameContainer.CameraController.ToPositionControlled(step.link.Position);
                             yield return Human.BuyRoad(step.crossroad.Type, step.link, _roadCost);
-                            yield return s_waitRealtime.Restart();
+                            yield return s_delayHalfSecond.Restart();
                             canRoadBuild = _cursor < _roadsCount;
 #if TEST_AI
                             Log.Info($"[Builder::LandBuild] {HumanId} built Road");

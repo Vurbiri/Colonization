@@ -48,7 +48,7 @@ namespace Vurbiri.Colonization
                     yield return current.TryCasting_Cn();
                     _casts.Add(current);
 
-                    yield return s_waitRealtime.Restart();
+                    yield return s_delayHalfSecond.Restart();
                 }
 
                 yield break;

@@ -3,9 +3,10 @@
   "minHPUnsiege": 24,
   "maxDistanceHelp": 3,
   "minHPHelp": 60,
-  "maxDistanceHome": 3,
   "maxDistanceRaid": 2,
-  "blockChance": 50,
+  "minHPRaid": 81,
+  "maxDistanceHome": 3,
+  "blockChance": 55,
   "defenseBuff": [
     {
       "_skill": 3,

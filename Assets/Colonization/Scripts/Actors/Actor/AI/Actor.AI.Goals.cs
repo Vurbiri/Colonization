@@ -9,11 +9,15 @@ namespace Vurbiri.Colonization
         {
             public class Goals
             {
-                public HashSet<Key> Defensed { [Impl(256)] get; } = new(CONST.DEFAULT_MAX_EDIFICES);
-                public HashSet<Key> Raided { [Impl(256)] get; } = new(CONST.DEFAULT_MAX_EDIFICES);
-                public TargetEnemies Enemies { [Impl(256)] get; } = new();
+                private readonly HashSet<Key> _home = new(CONST.DEFAULT_MAX_EDIFICES);
 
-                #region Nested: TargetEnemies
+                public HashSet<Key> Home { [Impl(256)] get => _home; } 
+                public TargetEnemies Enemies { [Impl(256)] get; } = new();
+                public RaidTargets Raid { [Impl(256)] get; } = new();
+
+                public bool CanGoHome(Crossroad target) => !_home.Contains(target.Key);
+
+                #region Nested: TargetEnemies, RaidTargets
                 //********************************************
                 public class TargetEnemies
                 {
@@ -33,22 +37,35 @@ namespace Vurbiri.Colonization
                         return (enemiesForce << 1) > alliesForce;
                     }
 
-                    public bool Add(ActorCode target, ActorData force)
+                    public bool Add(ActorCode target, ActorData actor)
                     {
                         if (!_targets.TryGetValue(target, out List<ActorData> supports))
-                            _targets.Add(target, supports = new());
-                        supports.Add(force);
+                            _targets.Add(target, supports = new(3));
+                        supports.Add(actor);
 
                         return true;
                     }
 
-                    public void Remove(ActorCode target, ActorData force)
+                    [Impl(256)] public void Remove(ActorCode target, ActorData actor) => _targets[target].Remove(actor);
+
+                }
+                //********************************************
+                public class RaidTargets
+                {
+                    private readonly Dictionary<Key, List<ActorCode>> _targets = new();
+
+                    public bool CanAdd(Crossroad target) => !(_targets.TryGetValue(target.Key, out List<ActorCode> raiders) && raiders.Count > 1);
+
+                    public bool Add(Key target, ActorCode actor)
                     {
-                        var supports = _targets[target];
-                        supports.Remove(force);
-                        if (supports.Count == 0)
-                            _targets.Remove(target);
+                        if (!_targets.TryGetValue(target, out List<ActorCode> raiders))
+                            _targets.Add(target, raiders = new(2));
+                        raiders.Add(actor);
+
+                        return true;
                     }
+
+                    [Impl(256)] public void Remove(Key target, ActorCode actor) => _targets[target].Remove(actor);
                 }
                 //********************************************
                 #endregion

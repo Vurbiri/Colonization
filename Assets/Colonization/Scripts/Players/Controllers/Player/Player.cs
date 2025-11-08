@@ -9,6 +9,8 @@ namespace Vurbiri.Colonization
 {
 	public abstract class Player : IDisposable
     {
+        protected static readonly WaitRealtime s_delayHalfSecond = new(0.5f);
+
         protected static RInt s_shrinesCount = new();
         public static ReactiveValue<int> ShrinesCount { [Impl(256)] get => s_shrinesCount; }
 

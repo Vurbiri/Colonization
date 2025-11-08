@@ -68,16 +68,21 @@ namespace Vurbiri.Colonization
 
             foreach (var warrior in Actors)
             {
-                if (returnSignal = warrior.IsMainProfit)
+                if (!warrior.IsInCombat())
                 {
-                    profit.Add(warrior.Hexagon.GetProfit(), mainProfit);
-                    yield return returnSignal.signal;
+                    if (returnSignal = warrior.IsMainProfit)
+                    {
+                        profit.Add(warrior.Hexagon.GetProfit(), mainProfit);
+                        yield return returnSignal.signal;
+                    }
+                    if (isArtefact && (returnSignal = warrior.IsAdvProfit))
+                    {
+                        countBuffs++;
+                        yield return returnSignal.signal;
+                    }
                 }
-                if (isArtefact && (returnSignal = warrior.IsAdvProfit))
-                {
-                    countBuffs++;
-                    yield return returnSignal.signal;
-                }
+
+                yield return s_delayHalfSecond.Restart();
 
                 warrior.StatesUpdate();
                 warrior.IsPersonTurn = false;

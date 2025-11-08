@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Vurbiri.Collections;
@@ -118,7 +119,7 @@ namespace Vurbiri.Colonization
                     return result;
                 }
 
-                protected bool TryGetEmptyColony(ReadOnlyReactiveList<Crossroad> colonies, HashSet<Key> targets, ref int distance, out Crossroad colony, out Hexagon target)
+                protected bool TryGetEmptyColony(ReadOnlyReactiveList<Crossroad> colonies, ref int distance, out Crossroad colony, out Hexagon target, Func<Crossroad, bool> canAdd)
                 {
                     bool result = false;
                     colony = null; target = null;
@@ -128,7 +129,7 @@ namespace Vurbiri.Colonization
                     for (int i = 0; i < colonies.Count; i++)
                     {
                         colonyTemp = colonies[i];
-                        if (!targets.Contains(colonyTemp) && (colonyTemp.ApproximateDistance(Actor.Hexagon) <= (distance + 1)) && colonyTemp.IsEmptyNear())
+                        if (canAdd(colonyTemp) && (colonyTemp.ApproximateDistance(Actor.Hexagon) <= (distance + 1)) && colonyTemp.IsEmptyNear())
                         {
                             hexagons = colonyTemp.Hexagons;
                             foreach (int index in s_crossroadHex)

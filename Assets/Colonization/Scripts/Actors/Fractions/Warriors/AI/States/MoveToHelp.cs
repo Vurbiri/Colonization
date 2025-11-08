@@ -17,7 +17,26 @@ namespace Vurbiri.Colonization
                 _support = s_settings.supports[parent._actor.Id];
             }
 
-            public override bool TryEnter() => Status.CanMoveToEnemy(s_settings.minHPHelp) && FindTargets();
+            public override bool TryEnter()
+            {
+                _targetHexagon = null;
+
+                if (Status.isMove && Status.percentHP > s_settings.minHPHelp)
+                {
+                    int distance = s_settings.maxDistanceHelp;
+                    var playerId = Actor.Owner;
+
+                    for (int i = 0; i < PlayerId.Count; i++)
+                    {
+                        if (GameContainer.Diplomacy.IsGreatFriend(playerId, i) && TryGetNearActorsInCombat(GameContainer.Actors[i], ref distance, out Actor enemy, out Actor friend))
+                        {
+                            _targetEnemy = enemy.Code;
+                            _targetHexagon = (_support ? friend : enemy).Hexagon;
+                        }
+                    }
+                }
+                return _targetHexagon != null && Goals.Enemies.Add(_targetEnemy, new(Actor));
+            }
 
             public override IEnumerator Execution_Cn(Out<bool> isContinue)
             {
@@ -36,23 +55,7 @@ namespace Vurbiri.Colonization
                 }
             }
 
-            private bool FindTargets()
-            {
-                _targetHexagon = null;
-                int distance = s_settings.maxDistanceHelp;
-                var playerId = Actor.Owner;
-
-                for (int i = 0; i < PlayerId.Count; i++)
-                {
-                    if (GameContainer.Diplomacy.IsGreatFriend(playerId, i) && TryGetNearActorsInCombat(GameContainer.Actors[i], ref distance, out Actor enemy, out Actor friend))
-                    {
-                        _targetEnemy = enemy.Code;
-                        _targetHexagon = (_support ? friend : enemy).Hexagon;
-                    }
-                }
-
-                return _targetHexagon != null && Goals.Enemies.Add(_targetEnemy, new(Actor));
-            }
+            
         }
     }
 }

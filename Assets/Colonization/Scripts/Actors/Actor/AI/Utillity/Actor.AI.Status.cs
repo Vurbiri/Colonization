@@ -43,8 +43,6 @@ namespace Vurbiri.Colonization
 
                 }
 
-                [Impl(256)] public bool CanMoveToEnemy(int minHP) => isMove & percentHP > minHP;
-
                 [Impl(256)] private void SetNearEnemies(Actor actor)
                 {
                     var near = actor._currentHex.Neighbors;

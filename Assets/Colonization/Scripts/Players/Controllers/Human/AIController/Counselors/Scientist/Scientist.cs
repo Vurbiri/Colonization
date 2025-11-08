@@ -63,7 +63,7 @@ namespace Vurbiri.Colonization
                     _perk = null;
                 }
 
-                yield return s_waitRealtime.Restart();
+                yield return s_delayHalfSecond.Restart();
             }
 
             #region Nested: Perks, Leveling

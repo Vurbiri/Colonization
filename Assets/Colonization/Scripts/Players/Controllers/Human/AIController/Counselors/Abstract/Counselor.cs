@@ -9,8 +9,6 @@ namespace Vurbiri.Colonization
     {
         private abstract class Counselor
         {
-            protected static readonly WaitRealtime s_waitRealtime = new(0.5f);
-
             protected readonly AIController _parent;
 
             #region Parent Properties

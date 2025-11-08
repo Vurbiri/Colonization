@@ -12,30 +12,40 @@ namespace Vurbiri.Colonization
 
             [Impl(256)] public MoveToHome(WarriorAI parent) : base(parent) { }
 
-            [Impl(256)] public override bool TryEnter() => Status.isMove && FindEmptyColony();
+            public override bool TryEnter()
+            {
+                _targetHexagon = null;
 
-            [Impl(256)] public override IEnumerator Execution_Cn(Out<bool> isContinue) => Move_Cn(isContinue, 0, _targetHexagon);
+                if ((Status.isMove & !Status.isSiege) && (!Status.isGuard || Status.minColonyGuard > 1))
+                {
+                    int distance = s_settings.maxDistanceHome;
+
+                    if (TryGetEmptyColony(Colonies, ref distance, out Crossroad colony, out Hexagon target, Goals.CanGoHome))
+                    {
+                        _targetHexagon = target;
+                        _targetColony = colony.Key;
+                    }
+                }
+                return _targetHexagon != null && Goals.Home.Add(_targetColony);
+            }
+
+            public override IEnumerator Execution_Cn(Out<bool> isContinue)
+            {
+                yield return Move_Cn(isContinue, 0, _targetHexagon);
+                if (!isContinue && IsEnemyComing)
+                {
+                    isContinue.Set(true);
+                    Exit();
+                }
+            }
 
             public override void Dispose()
             {
                 if(_targetHexagon != null)
                 {
                     _targetHexagon = null;
-                    Goals.Defensed.Remove(_targetColony);
+                    Goals.Home.Remove(_targetColony);
                 }
-            }
-
-            private bool FindEmptyColony()
-            {
-                _targetHexagon = null;
-                int distance = s_settings.maxDistanceHome;
-
-                if ((!Status.isGuard || Status.minColonyGuard > 1) && TryGetEmptyColony(Colonies, Goals.Defensed, ref distance, out Crossroad colony, out Hexagon target))
-                {
-                    _targetHexagon = target;
-                    _targetColony = colony.Key;
-                }
-                return _targetHexagon != null && Goals.Defensed.Add(_targetColony);
             }
         }
     }
