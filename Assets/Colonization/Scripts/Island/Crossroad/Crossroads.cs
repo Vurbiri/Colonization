@@ -85,14 +85,14 @@ namespace Vurbiri.Colonization
         //***********************************
         private class Coast : WeightsList<Key>
         {
-            public Coast() : base(Key.Zero, HEX.SIDES * (CONST.MAX_CIRCLES + HEX.SIDES)) { }
+            public Coast() : base(HEX.SIDES * (CONST.MAX_CIRCLES + HEX.SIDES)) { }
 
             public void Add(Crossroad crossroad)
             {
                 if (crossroad.CanBuildOnCoast && HexagonsValid(crossroad.Hexagons))
                 {
                     base.Add(crossroad.Key, crossroad.Weight);
-                    crossroad.BannedBuild.Add(Remove);
+                    crossroad.BannedBuild.Add(RemoveKey);
                 }
             }
 
@@ -107,6 +107,8 @@ namespace Vurbiri.Colonization
                 }
                 return true;
             }
+
+            private void RemoveKey(Key key) => Remove(FindIndex(key));
         }
         #endregion
     }

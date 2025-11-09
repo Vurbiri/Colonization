@@ -53,7 +53,7 @@ namespace Vurbiri.Colonization
 
         public int Add(ReactiveEffect effect)
         {
-            if (_values != null & effect != null)
+            if (_values != null && effect != null)
             {
                 for (int i = 0; i < _count; i++)
                     if (_values[i].TryUpdate(effect, _abilities.AddPerk, out int delta))

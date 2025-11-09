@@ -24,19 +24,19 @@ namespace Vurbiri.Colonization
         #endregion
 
         #region =========== AI.State<T>  ==================
-        public partial class AI<TAction, TStatus>
+        public partial class AI<TAction>
         {
-            protected abstract class State<T> : State where T : AI<TAction, TStatus>
+            protected abstract class State<T> : State where T : AI<TAction>
             {
                 protected readonly T _parent;
 
                 #region Parent Properties
                 protected Actor Actor { [Impl(256)] get => _parent._actor; }
                 protected Goals Goals { [Impl(256)] get => _parent._goals; }
-                protected TStatus Status { [Impl(256)] get => _parent._status; }
-                protected bool ActorInCombat { [Impl(256)] get => _parent._actor.IsInCombat(); }
+                protected Status Status { [Impl(256)] get => _parent._status; }
                 protected TAction Action { [Impl(256)] get => _parent._action; }
-                protected bool IsEnemyComing { [Impl(256)] get => _parent._status.forceNearTwoEnemies > 0; }
+                protected bool IsInCombat { [Impl(256)] get => _parent._status.near.force > 0; }
+                protected bool IsEnemyComing { [Impl(256)] get => _parent._status.nearTwo.force > 0; }
                 #endregion
 
                 [Impl(256)] protected State(T parent) => _parent = parent;
@@ -151,7 +151,7 @@ namespace Vurbiri.Colonization
 
                 protected IEnumerator Move_Cn(Out<bool> isContinue, int distance, Hexagon target, bool isExit = false)
                 {
-                    isExit |= Status.isInCombat;
+                    isExit |= IsInCombat;
                     if (!isExit && Action.CanUsedMoveSkill())
                     {
                         isExit = !TryGetNextHexagon(Actor, target, out Hexagon next);

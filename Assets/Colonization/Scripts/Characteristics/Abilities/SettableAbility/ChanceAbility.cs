@@ -13,7 +13,6 @@ namespace Vurbiri.Colonization
         public bool Next()
         {
             _chance.Value = _value * _ratio.Value / 100;
-            Log.Info($"[ChanceAbility] {_value / 100} * {_ratio.Value} = {_chance.Value}");
             return _chance.Roll;
         }
     }

@@ -189,7 +189,7 @@ namespace Vurbiri.Colonization
                             }
                             else
                             {
-                                repeat = plans.Count == 0 & parent.Colonies.Count == 0;
+                                repeat = plans.Count == 0 && parent.Colonies.Count == 0;
                                 GetWeight = (_, _) => 0;
                             }
                         }

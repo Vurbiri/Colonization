@@ -31,7 +31,7 @@ namespace Vurbiri.Colonization
             _value = value;
             _duration = duration;
             _skip = skip;
-            _fixed = (code.SourceType == ActorTypeId.Warrior && code.SkillId == CONST.SPEC_SKILL_ID) || code == ReactiveEffectsFactory.WallEffectCode;
+            _fixed = (code.SourceType == ActorTypeId.Warrior && code.SkillId == CONST.SPEC_SKILL_ID) || code == WallEffectFactory.WallEffectCode;
         }
 
         public bool TryUpdate(ReactiveEffect other, Func<IPerk, int> addPerk, out int delta)

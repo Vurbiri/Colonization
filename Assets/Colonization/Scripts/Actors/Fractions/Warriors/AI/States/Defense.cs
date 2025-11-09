@@ -1,4 +1,5 @@
 using System.Collections;
+using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization
 {
@@ -6,41 +7,32 @@ namespace Vurbiri.Colonization
     {
         sealed private class Defense : AIState
         {
-            private bool _isEscape, _isBuff, _isBlock;
-            private Hexagon _target;
+            private bool _isBuff, _isBlock;
 
-            public Defense(WarriorAI parent) : base(parent) { }
+            [Impl(256)] public Defense(WarriorAI parent) : base(parent) { }
 
             public override bool TryEnter()
             {
-                _isEscape = _isBuff = _isBlock = false;
-                if(!Status.isInCombat && IsEnemyComing)
+                _isBuff = _isBlock = false;
+                if (IsEnemyComing)
                 {
-                    _isEscape = (!Status.isGuard || Actor.CurrentHP < s_settings.minHPUnsiege) && EscapeChance(Status.forceNearTwoEnemies) && TryEscape(3, out _target);
-                    _isBuff  = !_isEscape && s_settings.defenseBuff[Actor.Id].CanUsed(Action, Actor);
-                    _isBlock = !_isEscape && Action.CanUsedSpecSkill() && _parent._blockChance.Roll;
+                    _isBuff  = s_settings.defenseBuff[Actor.Id].CanUsed(Action, Actor);
+                    _isBlock = Action.CanUsedSpecSkill() && _parent._blockChance.Roll;
                 }
 
-                return _isEscape | _isBuff | _isBlock;
+                return _isBuff | _isBlock;
             }
 
-            public override void Dispose() => _target = null;
+            public override void Dispose() { }
 
             public override IEnumerator Execution_Cn(Out<bool> isContinue)
             {
                 yield return GameContainer.CameraController.ToPositionControlled(Actor.Position);
 
-                if (_isEscape)
-                {
-                    yield return Move_Cn(_target);
-                }
-                else
-                {
-                    if (_isBuff)
-                        yield return s_settings.defenseBuff[Actor.Id].Use(Action);
-                    if (_isBlock && Action.CanUsedSpecSkill())
-                        yield return Action.UseSpecSkill();
-                }
+                if (_isBuff)
+                    yield return s_settings.defenseBuff[Actor.Id].Use(Action);
+                if (_isBlock && Action.CanUsedSpecSkill())
+                    yield return Action.UseSpecSkill();
 
                 isContinue.Set(false);
                 Exit();

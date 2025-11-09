@@ -14,10 +14,13 @@ namespace Vurbiri.Colonization
                 {
                     combat, 
                     support,
+
+                    new MoveToHelp(parent),
+
                     new Defense(parent),
 
                     new MoveToUnsiege(parent),
-                    new MoveToHelp(parent),
+                    
                     new MoveToRaid(parent),
                     new MoveToHome(parent),
                 };

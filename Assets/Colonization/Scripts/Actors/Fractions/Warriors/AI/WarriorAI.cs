@@ -5,7 +5,7 @@ using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization
 {
-    public partial class WarriorAI : Actor.AI<Warrior.WarriorStates, WarriorAI.Status>
+    public partial class WarriorAI : Actor.AI<Warrior.WarriorStates>
     {
         protected static readonly WarriorAISettings s_settings;
         static WarriorAI() => s_settings = SettingsFile.Load<WarriorAISettings>();

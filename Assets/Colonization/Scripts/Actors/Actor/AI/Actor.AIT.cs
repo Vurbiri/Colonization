@@ -6,17 +6,17 @@ namespace Vurbiri.Colonization
 {
     public partial class Actor
     {
-        public abstract partial class AI<TAction, TStatus> : AI, IDisposable where TAction : AStates where TStatus : AI.AStatus, new()
+        public abstract partial class AI<TAction> : AI, IDisposable where TAction : AStates
         {
             private readonly TAction _action;
-            private readonly TStatus _status;
+            private readonly Status _status;
             protected State _current, _goalSetting;
-
+            
             [Impl(256)]
             protected AI(Actor actor, Goals goals) : base(actor, goals)
             {
                 _action = (TAction)actor._states;
-                _status = new();
+                _status = new(actor._owner);
             }
 
             public IEnumerator Execution_Cn()

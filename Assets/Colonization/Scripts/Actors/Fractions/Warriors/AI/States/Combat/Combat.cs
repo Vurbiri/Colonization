@@ -15,7 +15,7 @@ namespace Vurbiri.Colonization
                yield break;
             }
 
-            public override bool TryEnter() => ActorInCombat;
+            public override bool TryEnter() => IsInCombat;
 
             public override void Dispose()
             {

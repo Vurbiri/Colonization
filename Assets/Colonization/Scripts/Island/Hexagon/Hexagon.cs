@@ -187,7 +187,7 @@ namespace Vurbiri.Colonization
         #endregion
 
         #region ================== Actor ============================
-        [Impl(256)] public bool CanActorEnter(bool isDemon) => ((!_isGate | isDemon) & !_isWater) && _ownerId == PlayerId.None;
+        [Impl(256)] public bool CanActorEnter(bool isEnterToGate) => ((!_isGate | isEnterToGate) & !_isWater) && _ownerId == PlayerId.None;
 
         [Impl(256)] public void ActorEnter(Actor actor)
         {

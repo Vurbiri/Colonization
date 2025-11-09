@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri
@@ -5,14 +6,17 @@ namespace Vurbiri
 	public class WeightsList<T>
     {
         private const int BASE_CAPACITY = 7;
+        private static readonly IEqualityComparer<T> s_comparer = EqualityComparer<T>.Default;
 
         private Weight[] _weights;
         private int _count, _capacity, _max;
 
+        public T this[int index] { [Impl(256)] get { Throw.IfIndexOutOfRange(index, _count - 1); return _weights[index + 1].value; } }
         public int Count { [Impl(256)] get => _count - 1; }
+        public T Roll { [Impl(256)] get => _weights[GetRandomIndex()].value; }
 
-        public T Roll { [Impl(256)] get => _weights[GetIndex()].value; }
-
+        [Impl(256)] public WeightsList() : this(default, BASE_CAPACITY) { }
+        [Impl(256)] public WeightsList(int capacity) : this(default, capacity) { }
         [Impl(256)] public WeightsList(T zero) : this(zero, BASE_CAPACITY) { }
         public WeightsList(T zero, int capacity)
         {
@@ -41,7 +45,7 @@ namespace Vurbiri
 
         [Impl(256)] public T Extract()
         {
-            int index = GetIndex();
+            int index = GetRandomIndex();
             T value = _weights[index].value;
             if (index > 0)
                 Remove(index);
@@ -49,14 +53,21 @@ namespace Vurbiri
             return value;
         }
 
-        public void Remove<U>(U item) where U : System.IEquatable<T>
+        [Impl(256)] public void RemoveAt(int index)
         {
-            int index = _count;
-            while (index --> 1 && !item.Equals(_weights[index].value)) ;
-
-            if(index > 0)
-                Remove(index);
+            Throw.IfIndexOutOfRange(index, _count - 1);
+            Remove(index + 1);
         }
+
+        [Impl(256)] public bool Remove(T item)
+        {
+            int index = FindIndex(item);
+            bool result = index > 0;
+            if(result) Remove(index);
+            return result;
+        }
+
+        [Impl(256)] public int IndexOf(T item) => FindIndex(item) - 1;
 
         public void Clear()
         {
@@ -67,23 +78,14 @@ namespace Vurbiri
 
         [Impl(256)] public void TrimExcess() => ReSize(_count);
 
-        //public void Shuffle()
-        //{
-        //    int newIndex = 1, maxWeight = 0;
-        //    var weights = new Weight[_capacity];
-        //    Weight temp;
+        protected int FindIndex(T item)
+        {
+            int index = _count;
+            while (index --> 1 && !s_comparer.Equals(_weights[index].value, item)) ;
+            return index;
+        }
 
-        //    weights[0] = _weights[0];
-        //    foreach (int oldIndex in new RandomSequence(1, _count))
-        //    {
-        //        temp = _weights[oldIndex];
-        //        maxWeight += temp - _weights[oldIndex - 1];
-        //        weights[newIndex++] = new(temp.value, maxWeight);
-        //    }
-        //    _weights = weights;
-        //}
-
-        private int GetIndex()
+        protected int GetRandomIndex()
         {
             int index = 0;
             if (_count > 1)
@@ -104,17 +106,7 @@ namespace Vurbiri
             return index;
         }
 
-        private void ReSize(int newCapacity)
-        {
-            _capacity = newCapacity;
-
-            var array = new Weight[newCapacity];
-            for (int i = 0; i < _count; i++)
-                array[i] = _weights[i];
-            _weights = array;
-        }
-
-        private void Remove(int index)
+        protected void Remove(int index)
         {
             _count--;
             int delta = _weights[index] - _weights[index - 1];
@@ -124,7 +116,7 @@ namespace Vurbiri
             _max -= delta;
         }
 
-        private T Search(int min, int max, int weight)
+        protected T Search(int min, int max, int weight)
         {
             int current = min + max >> 1;
 
@@ -134,6 +126,16 @@ namespace Vurbiri
                 return Search(min, current, weight);
 
             return _weights[current].value;
+        }
+
+        private void ReSize(int newCapacity)
+        {
+            _capacity = newCapacity;
+
+            var array = new Weight[newCapacity];
+            for (int i = 0; i < _count; i++)
+                array[i] = _weights[i];
+            _weights = array;
         }
 
         #region Nested Weight
@@ -182,5 +184,21 @@ namespace Vurbiri
             [Impl(256)] public static bool operator <=(int i, Weight w) => i <= w._weight;
         }
         #endregion
+
+        //public void Shuffle()
+        //{
+        //    int newIndex = 1, maxWeight = 0;
+        //    var weights = new Weight[_capacity];
+        //    Weight temp;
+
+        //    weights[0] = _weights[0];
+        //    foreach (int oldIndex in new RandomSequence(1, _count))
+        //    {
+        //        temp = _weights[oldIndex];
+        //        maxWeight += temp - _weights[oldIndex - 1];
+        //        weights[newIndex++] = new(temp.value, maxWeight);
+        //    }
+        //    _weights = weights;
+        //}
     }
 }

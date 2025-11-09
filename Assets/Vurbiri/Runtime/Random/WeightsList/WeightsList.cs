@@ -11,7 +11,7 @@ namespace Vurbiri
 
         public int Count { [Impl(256)] get => _count - 1; }
 
-        public int Next
+        public int Roll
         {
             get
             {

@@ -59,7 +59,7 @@ namespace Vurbiri.Colonization
             if (count > 0)
             {
                 for (int i = 0; i < count; i++)
-                    _add[_rIndex.Next]++;
+                    _add[_rIndex.Roll]++;
 
                 for (int i = 0, add; i < _count; i++)
                 {

@@ -28,13 +28,13 @@ namespace Vurbiri.Colonization
             }
 
             #region ================= Pathfind ================== 
-            protected static bool TryGetDistance(Actor actor, Hexagon end, int oldLength, out int pathLength)
+            protected static bool TryGetDistance(Actor actor, Hexagon end, int oldLength, out int pathLength, bool isEnterToGate = false)
             {
                 var start = actor._currentHex;
                 int distance = start.Distance(end);
                 pathLength = 0;
 
-                if (distance > (end.CanActorEnter(actor.IsDemon) ? 0 : 1) && Pathfind(actor, end, distance))
+                if (distance > (end.CanActorEnter(isEnterToGate) ? 0 : 1) && Pathfind(actor, end, distance, isEnterToGate))
                 {
                     while (s_links.TryGetValue(start, out end))
                     {
@@ -47,30 +47,30 @@ namespace Vurbiri.Colonization
                 return pathLength > 0 && (pathLength < oldLength || (pathLength == oldLength && Chance.Rolling()));
             }
 
-            protected static bool TryGetNextHexagon(Actor actor, Hexagon end, out Hexagon next)
+            protected static bool TryGetNextHexagon(Actor actor, Hexagon end, out Hexagon next, bool isEnterToGate = false)
             {
                 next = null;
 
                 int distance = actor._currentHex.Distance(end);
-                if (distance > (end.CanActorEnter(actor.IsDemon) ? 0 : 1) && Pathfind(actor, end, distance))
+                if (distance > (end.CanActorEnter(isEnterToGate) ? 0 : 1) && Pathfind(actor, end, distance, isEnterToGate))
                     next = s_links[actor._currentHex];
                 s_links.Clear();
 
                 return next != null;
             }
 
-            private static bool Pathfind(Actor actor, Hexagon end, int distance)
+            private static bool Pathfind(Actor actor, Hexagon end, int distance, bool isEnterToGate)
             {
                 bool found = false;
 
                 s_finds.Enqueue(end);
-                while (s_finds.Count > 0 && !(found = Find(actor._currentHex, end, distance, actor.IsDemon))) ;
+                while (s_finds.Count > 0 && !(found = Find(actor._currentHex, end, distance, isEnterToGate))) ;
                 s_finds.Clear();
 
                 return found;
 
                 // ========== Local ============
-                static bool Find(Hexagon start, Hexagon end, int depth, bool isDemon)
+                static bool Find(Hexagon start, Hexagon end, int depth, bool isEnterToGate)
                 {
                     Hexagon near, current = s_finds.Dequeue(); ;
                     foreach (int index in s_hexagonIndexes)
@@ -82,7 +82,7 @@ namespace Vurbiri.Colonization
                             return true;
                         }
 
-                        if (near != end && near.CanActorEnter(isDemon) && (near.Distance(end) <= depth && near.Distance(start) <= depth) && s_links.TryAdd(near, current))
+                        if (near != end && near.CanActorEnter(isEnterToGate) && (near.Distance(end) <= depth && near.Distance(start) <= depth) && s_links.TryAdd(near, current))
                             s_finds.Enqueue(near);
                     }
                     return false;

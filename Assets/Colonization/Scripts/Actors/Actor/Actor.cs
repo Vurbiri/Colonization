@@ -298,7 +298,7 @@ namespace Vurbiri.Colonization
         public void EffectsUpdate(int defense)
         {
             _effects.Next();
-            _effects.Add(ReactiveEffectsFactory.CreateWallDefenceEffect(defense));
+            _effects.Add(WallEffectFactory.Create(defense));
 
             _states.ToDefault();
         }
@@ -306,8 +306,9 @@ namespace Vurbiri.Colonization
         #endregion
 
         #region ================== WallDefence ============================
-        [Impl(256)] public void AddWallDefenceEffect(int maxDefense) => _effects.Add(ReactiveEffectsFactory.CreateWallDefenceEffect(maxDefense));
-        [Impl(256)] public void RemoveWallDefenceEffect() => _effects.Remove(ReactiveEffectsFactory.WallEffectCode);
+        [Impl(256)] public void AddWallDefenceEffect(int maxDefense) => _effects.Add(WallEffectFactory.Create(maxDefense));
+        [Impl(256)] public void RemoveWallDefenceEffect() => _effects.Remove(WallEffectFactory.WallEffectCode);
+        [Impl(256)] public bool IsWallDefenceEffect() => _effects.Contains(WallEffectFactory.WallEffectCode);
         #endregion
 
         #region ================== Target ============================
