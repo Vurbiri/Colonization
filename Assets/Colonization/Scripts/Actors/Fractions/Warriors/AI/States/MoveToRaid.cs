@@ -7,18 +7,16 @@ namespace Vurbiri.Colonization
     {
         sealed private class MoveToRaid : AIState
         {
-            private readonly bool _raider;
-
             private Hexagon _targetHexagon;
             private Key _targetColony;
-            
-            [Impl(256)] public MoveToRaid(WarriorAI parent) : base(parent) => _raider = s_settings.raiders[parent._actor.Id];
+
+            [Impl(256)] public MoveToRaid(WarriorAI parent) : base(parent) { }
 
             public override bool TryEnter()
             {
                 _targetHexagon = null;
 
-                if ((_raider & Status.isMove & !Status.isSiege) && Status.percentHP > s_settings.minHPRaid)
+                if ((Raider & Status.isMove & !Status.isSiege) && Status.percentHP > s_settings.minHPRaid)
                 {
                     int distance = s_settings.maxDistanceRaid;
                     var playerId = Actor.Owner;

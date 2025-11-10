@@ -1,11 +1,10 @@
 using UnityEngine;
-using Vurbiri.Collections;
 
 namespace Vurbiri.Colonization
 {
     [System.Serializable]
-    public class WarriorAISettings
-	{
+    public class WarriorsAISettings : ActorsAISettings<WarriorId>
+    {
 		[Range(0, 5)]   public int maxDistanceUnsiege;
         [Range(0, 100)] public int minHPUnsiege;
         [Space]
@@ -16,12 +15,5 @@ namespace Vurbiri.Colonization
         [Range(0, 100)] public int minHPRaid;
         [Space]
         [Range(0, 5)] public int maxDistanceHome;
-        [Space]
-        [Range(0, 100)] public int blockChance;
-        public ChanceUsedSkills<WarriorId> defenseBuff;
-        [Space]
-        public ReadOnlyIdArray<WarriorId, bool> supports;
-        [Space]
-        public ReadOnlyIdArray<WarriorId, bool> raiders;
     }
 }

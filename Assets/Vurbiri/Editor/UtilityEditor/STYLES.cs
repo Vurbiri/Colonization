@@ -8,6 +8,7 @@ namespace VurbiriEditor
         public static readonly GUIStyle H1;
         public static readonly GUIStyle H2;
         public static readonly GUIStyle H3;
+        public static readonly GUIStyle border;
         public static readonly GUIStyle borderLight;
         public static readonly GUIStyle borderDark;
         public static readonly GUIStyle flatButton;
@@ -33,16 +34,23 @@ namespace VurbiriEditor
             };
             H2.normal.textColor = new(0.6f, 0.7f, 0.8f);
 
-            borderLight = new()
+            border = new()
             {
-                name = "borderLight",
+                name = "border",
                 border = new(4, 4, 4, 4),
                 padding = new(12, 6, 6, 6)
 
             };
+            border.normal.background = Border(new Color32(33, 33, 33, 255));
+
+            borderLight = new(border)
+            {
+                name = "borderLight"
+
+            };
             borderLight.normal.background = Border(new Color32(77, 77, 77, 255));
 
-            borderDark = new(borderLight)
+            borderDark = new(border)
             {
                 name = "borderDark"
             };

@@ -1,0 +1,56 @@
+{
+  "maxDistanceUnsiege": 4,
+  "minHPUnsiege": 24,
+  "maxDistanceHelp": 3,
+  "minHPHelp": 60,
+  "maxDistanceRaid": 2,
+  "minHPRaid": 84,
+  "maxDistanceHome": 3,
+  "_values": [
+    {
+      "support": false,
+      "raider": false,
+      "specChance": 60,
+      "selfBuff": {
+        "_skill": 3,
+        "_chance": 77
+      }
+    },
+    {
+      "support": false,
+      "raider": true,
+      "specChance": 77,
+      "selfBuff": {
+        "_skill": 3,
+        "_chance": 45
+      }
+    },
+    {
+      "support": true,
+      "raider": false,
+      "specChance": 55,
+      "selfBuff": {
+        "_skill": -1,
+        "_chance": 0
+      }
+    },
+    {
+      "support": false,
+      "raider": true,
+      "specChance": 66,
+      "selfBuff": {
+        "_skill": -1,
+        "_chance": 0
+      }
+    },
+    {
+      "support": false,
+      "raider": true,
+      "specChance": 88,
+      "selfBuff": {
+        "_skill": 3,
+        "_chance": 18
+      }
+    }
+  ]
+}

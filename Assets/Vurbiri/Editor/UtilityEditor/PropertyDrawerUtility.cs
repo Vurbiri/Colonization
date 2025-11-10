@@ -453,16 +453,7 @@ namespace VurbiriEditor
         #region DrawLine
         protected void DrawLine() => DrawLine(Color.gray, 0f);
         protected void DrawLine(float leftOffset) => DrawLine(Color.gray, leftOffset);
-        protected void DrawLine(Color color, float leftOffset = 0f)
-        {
-            Rect size = _position;
-            size.y += _height + _ySpace * 2f;
-            size.x += leftOffset;
-            size.width -= leftOffset;
-            size.height = _ySpace;
-            DrawRect(size, color);
-            _position.y += _ySpace * 5f;
-        }
+        protected void DrawLine(Color color, float leftOffset = 0f) => _position = VEditorGUI.DrawLine(_position, color, leftOffset);
         #endregion
         //================================================================
         #region GetProperty

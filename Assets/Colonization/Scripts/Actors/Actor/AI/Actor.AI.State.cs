@@ -34,6 +34,9 @@ namespace Vurbiri.Colonization
                 protected Actor Actor { [Impl(256)] get => _parent._actor; }
                 protected Goals Goals { [Impl(256)] get => _parent._goals; }
                 protected Status Status { [Impl(256)] get => _parent._status; }
+                protected ActorAISettings Settings { [Impl(256)] get => _parent._aISettings; }
+                protected bool Support { [Impl(256)] get => _parent._aISettings.support; }
+                protected bool Raider { [Impl(256)] get => _parent._aISettings.raider; }
                 protected TAction Action { [Impl(256)] get => _parent._action; }
                 protected bool IsInCombat { [Impl(256)] get => _parent._status.near.force > 0; }
                 protected bool IsEnemyComing { [Impl(256)] get => _parent._status.nearTwo.force > 0; }
@@ -53,6 +56,14 @@ namespace Vurbiri.Colonization
                 {
                     Dispose();
                     _parent._current = _parent._goalSetting;
+                }
+
+                protected IEnumerator Defense_Cn(bool isBuff, bool isBlock)
+                {
+                    if (isBuff && Settings.selfBuff.CanUsed(Action, Actor))
+                        yield return Settings.selfBuff.Use(Action);
+                    if (isBlock && Action.CanUsedSpecSkill() && Settings.specChance.Roll)
+                        yield return Action.UseSpecSkill();
                 }
 
                 [Impl(256)] protected bool EscapeChance(int enemyForce) => Status.isMove && Chance.Rolling((enemyForce * 10) / Actor.CurrentForce - 11);

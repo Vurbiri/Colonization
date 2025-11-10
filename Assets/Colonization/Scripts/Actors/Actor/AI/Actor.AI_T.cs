@@ -10,13 +10,15 @@ namespace Vurbiri.Colonization
         {
             private readonly TAction _action;
             private readonly Status _status;
+            private readonly ActorAISettings _aISettings;
             protected State _current, _goalSetting;
-            
+                        
             [Impl(256)]
-            protected AI(Actor actor, Goals goals) : base(actor, goals)
+            protected AI(Actor actor, Goals goals, ActorAISettings aISettings) : base(actor, goals)
             {
                 _action = (TAction)actor._states;
                 _status = new(actor._owner);
+                _aISettings = aISettings;
             }
 
             public IEnumerator Execution_Cn()

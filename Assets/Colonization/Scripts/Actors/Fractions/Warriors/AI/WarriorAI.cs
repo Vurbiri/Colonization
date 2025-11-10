@@ -7,15 +7,10 @@ namespace Vurbiri.Colonization
 {
     public partial class WarriorAI : Actor.AI<Warrior.WarriorStates>
     {
-        protected static readonly WarriorAISettings s_settings;
-        static WarriorAI() => s_settings = SettingsFile.Load<WarriorAISettings>();
+        protected static readonly WarriorsAISettings s_settings;
+        static WarriorAI() => s_settings = SettingsFile.Load<WarriorsAISettings>();
 
-        private Chance _blockChance;
-
-        [Impl(256)] private WarriorAI(Actor actor, Goals goals) : base(actor, goals)
-        {
-            _blockChance = new(s_settings.blockChance + (actor.Id << 2));
-        }
+        [Impl(256)] private WarriorAI(Actor actor, Goals goals) : base(actor, goals, s_settings[actor.Id]) { }
         [Impl(256)] private WarriorAI(Actor actor, Goals goals, Func<WarriorAI, Combat> combatFactory, Func<WarriorAI, Support> supportFactory) : this(actor, goals)
         {
             _current = _goalSetting = new GoalSetting(this, combatFactory(this), supportFactory(this));

@@ -7,15 +7,10 @@ namespace Vurbiri.Colonization
     {
         sealed private class MoveToHelp : AIState
         {
-            private readonly bool _support;
-
             private Hexagon _targetHexagon;
             private ActorCode _targetEnemy;
 
-            [Impl(256)] public MoveToHelp(WarriorAI parent) : base(parent) 
-            {
-                _support = s_settings.supports[parent._actor.Id];
-            }
+            [Impl(256)] public MoveToHelp(WarriorAI parent) : base(parent) { }
 
             public override bool TryEnter()
             {
@@ -31,7 +26,7 @@ namespace Vurbiri.Colonization
                         if (GameContainer.Diplomacy.IsGreatFriend(playerId, i) && TryGetNearActorsInCombat(GameContainer.Actors[i], ref distance, out Actor enemy, out Actor friend))
                         {
                             _targetEnemy = enemy.Code;
-                            _targetHexagon = (_support ? friend : enemy).Hexagon;
+                            _targetHexagon = (Support ? friend : enemy).Hexagon;
                         }
                     }
                 }
@@ -40,7 +35,7 @@ namespace Vurbiri.Colonization
 
             public override IEnumerator Execution_Cn(Out<bool> isContinue)
             {
-                bool isExit = !(_support ? _targetHexagon.IsGreatFriend(_playerId) : _targetHexagon.IsEnemy(_playerId));
+                bool isExit = !(Support ? _targetHexagon.IsGreatFriend(_playerId) : _targetHexagon.IsEnemy(_playerId));
                 yield return Move_Cn(isContinue, 1, _targetHexagon, isExit);
                 if (!isContinue && IsEnemyComing)
                     yield return Defense_Cn(true, false);

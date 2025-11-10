@@ -12,6 +12,21 @@ namespace VurbiriEditor
         private static readonly float s_height = EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing;
         private static readonly float s_ySpace = EditorGUIUtility.standardVerticalSpacing;
 
+        #region DrawLine
+        public static Rect DrawLine(Rect position) => DrawLine(position, Color.gray, 0f);
+        public static Rect DrawLine(Rect position, float leftOffset) => DrawLine(position, Color.gray, leftOffset);
+        public static Rect DrawLine(Rect position, Color color, float leftOffset = 0f)
+        {
+            Rect size = position;
+            size.y += s_height + s_ySpace * 2f; size.x += leftOffset;
+            size.width -= leftOffset; size.height = s_ySpace;
+            EditorGUI.DrawRect(size, color);
+            position.y += s_ySpace * SIZE_SPACE;
+            return position;
+        }
+        #endregion
+
+        #region MinMaxSlider
         public static bool MinMaxSlider(Rect position, GUIContent label, SerializedProperty minProperty, SerializedProperty maxProperty, float min, float max)
         {
             if (minProperty.propertyType != SerializedPropertyType.Float) return false;
@@ -86,6 +101,7 @@ namespace VurbiriEditor
             position.y += EditorGUI.GetPropertyHeight(property) + s_ySpace;
             return position;
         }
+        #endregion
 
         public static Rect DefaultPropertyField(Rect position, SerializedProperty property, string name)
         {
