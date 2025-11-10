@@ -4,14 +4,14 @@ using Vurbiri.Colonization;
 
 namespace VurbiriEditor.Colonization
 {
-	internal static class UsedSkillDrawer
+	internal static class SkillDrawer
 	{
         public const string F_SKILL = "_skill";
 
         private static readonly string[][][] s_skillNames = new string[ActorTypeId.Count][][];
         private static readonly int[][][] s_skillValues = new int[ActorTypeId.Count][][];
 
-        static UsedSkillDrawer()
+        static SkillDrawer()
         {
             EUtility.FindAnyScriptable<WarriorsSettingsScriptable>().SetSkills_Ed(ref s_skillNames[ActorTypeId.Warrior], ref s_skillValues[ActorTypeId.Warrior]);
             EUtility.FindAnyScriptable<DemonsSettingsScriptable>()  .SetSkills_Ed(ref s_skillNames[ActorTypeId.Demon],   ref s_skillValues[ActorTypeId.Demon]);

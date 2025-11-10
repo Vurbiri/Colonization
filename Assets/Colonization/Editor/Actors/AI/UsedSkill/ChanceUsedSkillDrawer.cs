@@ -1,4 +1,4 @@
-using UnityEditor;
+﻿using UnityEditor;
 
 namespace VurbiriEditor.Colonization
 {
@@ -11,7 +11,7 @@ namespace VurbiriEditor.Colonization
         public ChanceUsedSkillDrawer(SerializedProperty parentProperty) : this(parentProperty, parentProperty.displayName) { }
         public ChanceUsedSkillDrawer(SerializedProperty parentProperty, string name)
         {
-            _skillProperty  = parentProperty.FindPropertyRelative(UsedSkillDrawer.F_SKILL);
+            _skillProperty  = parentProperty.FindPropertyRelative(SkillDrawer.F_SKILL);
             _chanceProperty = parentProperty.FindPropertyRelative("_chance").FindPropertyRelative("_value");
 
             _name = name;
@@ -19,19 +19,12 @@ namespace VurbiriEditor.Colonization
 
         public void Draw(int type, int id)
         {
-            _skillProperty.intValue = UsedSkillDrawer.Draw(type, id, _name, _skillProperty.intValue);
+            _skillProperty.intValue = SkillDrawer.Draw(type, id, _name, _skillProperty.intValue);
 
-            EditorGUI.indentLevel++;
-            {
-                bool notSkill = _skillProperty.intValue < 0;
-
-                EditorGUI.BeginDisabledGroup(notSkill);
-                {
-                    _chanceProperty.intValue = EditorGUILayout.IntSlider("Chance", notSkill ? 0 : _chanceProperty.intValue, 0, 100);
-                }
-                EditorGUI.EndDisabledGroup();
-            }
-            EditorGUI.indentLevel--;
+            if (_skillProperty.intValue >= 0)
+                _chanceProperty.intValue = EditorGUILayout.IntSlider(" └─ Chance", _chanceProperty.intValue, 0, 100);
+            else
+                _chanceProperty.intValue = 0;
         }
     }
 }

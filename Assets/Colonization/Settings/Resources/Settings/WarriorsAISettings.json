@@ -1,4 +1,5 @@
 {
+  "offsetHPEscape": 0,
   "maxDistanceUnsiege": 4,
   "minHPUnsiege": 24,
   "maxDistanceHelp": 3,
@@ -22,7 +23,7 @@
       "specChance": 77,
       "selfBuff": {
         "_skill": 3,
-        "_chance": 45
+        "_chance": 44
       }
     },
     {
