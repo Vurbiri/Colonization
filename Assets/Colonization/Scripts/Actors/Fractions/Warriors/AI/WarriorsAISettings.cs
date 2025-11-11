@@ -5,7 +5,7 @@ namespace Vurbiri.Colonization
     [System.Serializable]
     public class WarriorsAISettings : ActorsAISettings<WarriorId>
     {
-        [Range(0, 100)] public int offsetHPEscape;
+        [Range(1, 50)] public int enemyRatioForEscape;
         [Space]
         [Range(0, 5)]   public int maxDistanceUnsiege;
         [Range(0, 100)] public int minHPUnsiege;

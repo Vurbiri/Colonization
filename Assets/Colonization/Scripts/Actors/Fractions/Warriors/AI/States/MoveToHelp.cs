@@ -35,7 +35,7 @@ namespace Vurbiri.Colonization
 
             public override IEnumerator Execution_Cn(Out<bool> isContinue)
             {
-                bool isExit = !(Support ? _targetHexagon.IsGreatFriend(_playerId) : _targetHexagon.IsEnemy(_playerId));
+                bool isExit = !(Support ? _targetHexagon.IsGreatFriend(Player) : _targetHexagon.IsEnemy(Player));
                 yield return Move_Cn(isContinue, 1, _targetHexagon, isExit);
                 if (!isContinue && IsEnemyComing)
                     yield return Defense_Cn(true, false);

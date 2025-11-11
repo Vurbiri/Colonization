@@ -1,5 +1,5 @@
 {
-  "offsetHPEscape": 0,
+  "enemyRatioForEscape": 10,
   "maxDistanceUnsiege": 4,
   "minHPUnsiege": 24,
   "maxDistanceHelp": 3,

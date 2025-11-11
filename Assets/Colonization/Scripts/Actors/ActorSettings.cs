@@ -51,9 +51,9 @@ namespace Vurbiri.Colonization
                 string prefabName = $"P_{ActorTypeId.GetName(TypeId, _id)}Skin";
                 _prefabActorSkin = EUtility.FindAnyPrefab<ActorSkin>(prefabName);
             }
-
-            _force = Formulas.ActorForce(_abilities);
         }
+
+        public void SetDefaultForce_Ed() => _force = Formulas.ActorForce(_abilities);
 
         public bool UpdateName_Ed(string oldName, string newName)
         {

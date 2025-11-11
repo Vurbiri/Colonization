@@ -54,10 +54,13 @@ namespace Vurbiri.Colonization
                     near.enemies.Clear();
                     nearTwo.enemies.Clear();
 
-                    ownerColoniesHex.Clear();
-                    enemiesColoniesHex.Clear();
-
                     enemies.Clear();
+
+                    if (isHuman)
+                    {
+                        ownerColoniesHex.Clear();
+                        enemiesColoniesHex.Clear();
+                    }
                 }
 
                 public void FindOwnedColoniesHex(Actor actor)

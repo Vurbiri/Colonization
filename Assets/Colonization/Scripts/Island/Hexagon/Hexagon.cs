@@ -211,6 +211,11 @@ namespace Vurbiri.Colonization
             actor = _owner;
             return GameContainer.Diplomacy.IsEnemy(_ownerId, id);
         }
+        [Impl(256)] public bool TryGetAlly(Id<PlayerId> id, out Actor actor)
+        {
+            actor = _owner;
+            return id != PlayerId.None && _ownerId == id;
+        }
 
         #region ---------------- Defense ----------------
         public int GetMaxDefense()

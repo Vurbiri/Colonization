@@ -13,12 +13,24 @@ namespace Vurbiri.Colonization
 
             public override bool TryEnter()
             {
-                Status.FindOwnedColoniesHex(Actor);
+                bool isEscape = Status.isMove;
 
-                bool isEscape = IsInCombat || IsEnemyComing;
                 if (isEscape)
                 {
-                    isEscape = (!Status.isGuard || Actor.CurrentHP < s_settings.minHPUnsiege) && EscapeChance(Status.nearTwo.force) && TryEscape(3, out _target);
+                    Status.FindOwnedColoniesHex(Actor);
+
+
+
+                    if (IsInCombat)
+                    {
+
+                    }
+
+
+                    if (isEscape)
+                    {
+                        isEscape = (!Status.isGuard || Actor.CurrentHP < s_settings.minHPUnsiege) && EscapeChance(Status.nearTwo.force) && TryEscape(3, out _target);
+                    }
                 }
 
                 return isEscape;
