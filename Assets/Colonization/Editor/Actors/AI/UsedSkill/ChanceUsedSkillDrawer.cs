@@ -19,9 +19,7 @@ namespace VurbiriEditor.Colonization
 
         public void Draw(int type, int id)
         {
-            _skillProperty.intValue = SkillDrawer.Draw(type, id, _name, _skillProperty.intValue);
-
-            if (_skillProperty.intValue >= 0)
+            if (SkillDrawer.DrawNone(type, id, _name, _skillProperty) >= 0)
                 _chanceProperty.intValue = EditorGUILayout.IntSlider(" └─ Chance", _chanceProperty.intValue, 0, 100);
             else
                 _chanceProperty.intValue = 0;

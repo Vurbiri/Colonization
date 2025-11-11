@@ -44,9 +44,8 @@ namespace VurbiriEditor.Colonization
                     {
                         BeginVertical(STYLES.borderDark);
                         {
-                            Space(5f);
                             PropertyField(_serializedProperty);
-                            Space(5f);
+                            Space(2f);
                         }
                         EndVertical();
                         Space();

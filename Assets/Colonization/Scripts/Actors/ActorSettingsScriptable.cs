@@ -57,6 +57,7 @@ namespace Vurbiri.Colonization
             Debug.Log("==== Actor Force ====");
             for (int i = 0; i < ActorId<TId>.Count; i++)
                 _settings[i].PrintForce_Ed();
+            Debug.Log("=====================");
         }
 
         public void PrintProfit_Ed(int main, int adv)
@@ -64,31 +65,27 @@ namespace Vurbiri.Colonization
             Debug.Log("==== Actor Profit ====");
             for (int i = 0; i < ActorId<TId>.Count; i++)
                 _settings[i].PrintProfit_Ed(main, adv);
+            Debug.Log("======================");
         }
 
-        public void SetSkills_Ed(ref string[][] names, ref int[][] values)
+        public string[][] SetSkills_Ed()
         {
-            names = new string[ActorId<TId>.Count][];
-            values = new int[ActorId<TId>.Count][];
+            string[][] names = new string[ActorId<TId>.Count][];
             for (int i = 0; i < ActorId<TId>.Count; i++)
-                (names[i], values[i]) = GetSkills(_settings[i].Skills.SkillSettings_Ed);
+                names[i] = GetSkills(_settings[i].Skills.SkillSettings_Ed);
 
-            static (string[], int[]) GetSkills(SkillSettings[] skillSettings)
+            return names;
+
+            // =============== Local ===================
+            static string[] GetSkills(SkillSettings[] skillSettings)
             {
                 int count = skillSettings.Length;
-                string[] names = new string[count + 1];
-                int[] values = new int[count + 1];
+                string[] names = new string[count];
 
-                names[0]  = "------------";
-                values[0] = -1;
+                for (int i = 0; i < count; i++)
+                    names[i] = $"{skillSettings[i].GetName_Ed()} ({i.ToStr()})";
 
-                for (int i = 0, j = 1; i < count; i++, j++)
-                {
-                    names[j]  = $"{skillSettings[i].GetName_Ed()} ({i.ToStr()})";
-                    values[j] = i;
-                }
-
-                return (names, values);
+                return names;
             }
         }
 #endif

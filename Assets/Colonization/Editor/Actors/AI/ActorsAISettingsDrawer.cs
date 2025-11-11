@@ -68,13 +68,12 @@ namespace VurbiriEditor.Colonization
                 {
                     if(_parentProperty.isExpanded = BeginFoldoutHeaderGroup(_parentProperty.isExpanded, _name))
                     {
-                        Space(3f);
+                        Space(4f);
                         BeginVertical(STYLES.borderDark);
                         {
-                            Space(3f);
                             PropertyField(_supportProperty);
                             PropertyField(_raiderProperty);
-                            Space();
+                            Space(1f);
                             PropertyField(_specChanceProperty, _specChanceName);
                             Space();
                             _selfBuffDrawer.Draw(_typeId, _id);
