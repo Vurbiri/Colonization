@@ -32,15 +32,15 @@ namespace Vurbiri.Colonization
 
                 #region Parent Properties
                 protected Actor Actor { [Impl(256)] get => _parent._actor; }
-                protected Id<PlayerId> Player { [Impl(256)] get => _parent._actor._owner; }
+                protected Id<PlayerId> OwnerId { [Impl(256)] get => _parent._actor._owner; }
                 protected TAction Action { [Impl(256)] get => _parent._action; }
                 protected Goals Goals { [Impl(256)] get => _parent._goals; }
                 protected Status Status { [Impl(256)] get => _parent._status; }
                 protected ActorAISettings Settings { [Impl(256)] get => _parent._aISettings; }
                 protected bool Support { [Impl(256)] get => _parent._aISettings.support; }
                 protected bool Raider { [Impl(256)] get => _parent._aISettings.raider; }
-                protected bool IsInCombat { [Impl(256)] get => _parent._status.near.force > 0; }
-                protected bool IsEnemyComing { [Impl(256)] get => _parent._status.nearTwo.force > 0; }
+                protected bool IsInCombat { [Impl(256)] get => _parent._status.near.enemiesForce > 0; }
+                protected bool IsEnemyComing { [Impl(256)] get => _parent._status.nearTwo.enemiesForce > 0; }
                 #endregion
 
                 [Impl(256)] protected State(T parent) => _parent = parent;
@@ -61,46 +61,10 @@ namespace Vurbiri.Colonization
 
                 protected IEnumerator Defense_Cn(bool isBuff, bool isBlock)
                 {
-                    if (isBuff && Settings.selfBuff.CanUsed(Action, Actor))
-                        yield return Settings.selfBuff.Use(Action);
+                    if (isBuff && Settings.defenseBuff.CanUsed(Action, Actor))
+                        yield return Settings.defenseBuff.Use(Action);
                     if (isBlock && Action.CanUsedSpecSkill() && Settings.specChance.Roll)
                         yield return Action.UseSpecSkill();
-                }
-
-                protected bool TryEscape(int minDistance, out Hexagon hexagon)
-                {
-                    Hexagon temp; hexagon = null;
-                    var hexagons = Actor._currentHex.Neighbors;
-                    foreach (int index in s_hexagonIndexes)
-                    {
-                        temp = hexagons[index];
-                        if (temp.CanActorEnter(Actor.IsDemon) && CheckHexagon(minDistance, temp))
-                        {
-                            hexagon = temp;
-                            break;
-                        }
-                    }
-
-                    return hexagon != null;
-
-                    #region Local: CheckHexagon(..), CheckActors(..)
-                    //======================================================
-                    bool CheckHexagon(int minDistance, Key target)
-                    {
-                        for(int i = Status.enemies.Count - 1; i >= 0; i--)
-                            if (!CheckActors(GameContainer.Actors[Status.enemies[i]], minDistance, target))
-                                return false;
-                        return true;
-                    }
-                    //======================================================
-                    static bool CheckActors(ReadOnlyReactiveSet<Actor> enemies, int minDistance, Key target)
-                    {
-                        foreach (var enemy in enemies)
-                            if (enemy._currentHex.Distance(target) < minDistance)
-                                return false;
-                        return true;
-                    }
-                    #endregion
                 }
 
                 protected bool TryGetNearActorsInCombat(ReadOnlyReactiveSet<Actor> friends, ref int distance, out Actor enemy, out Actor friend)
@@ -111,7 +75,7 @@ namespace Vurbiri.Colonization
 
                     foreach (var friendTemp in friends)
                     {
-                        int force = friendTemp.GetEnemiesNearAndForce(enemies);
+                        int force = GetEnemiesNearAndForce(friendTemp, enemies);
 
                         for (int i = enemies.Count - 1; i >= 0; i--)
                         {
@@ -127,6 +91,22 @@ namespace Vurbiri.Colonization
                         enemies.Clear();
                     }
                     return result;
+
+                    // =============== Local ======================
+                    static int GetEnemiesNearAndForce(Actor friend, List< Actor> enemies)
+                    {
+                        int force = 0;
+                        var neighbors = friend._currentHex.Neighbors;
+                        for (int i = 0; i < HEX.SIDES; i++)
+                        {
+                            if (neighbors[i].TryGetEnemy(friend._owner, out Actor enemy))
+                            {
+                                enemies.Add(enemy);
+                                force += enemy.CurrentForce;
+                            }
+                        }
+                        return force;
+                    }
                 }
 
                 protected bool TryGetEmptyColony(ReadOnlyReactiveList<Crossroad> colonies, ref int distance, out Crossroad colony, out Hexagon target, Func<Crossroad, bool> canAdd)
@@ -162,7 +142,7 @@ namespace Vurbiri.Colonization
                 protected IEnumerator Move_Cn(Out<bool> isContinue, int distance, Hexagon target, bool isExit = false)
                 {
                     isExit |= IsInCombat;
-                    if (!isExit && Action.CanUsedMoveSkill())
+                    if (!isExit && Status.isMove)
                     {
                         isExit = !TryGetNextHexagon(Actor, target, out Hexagon next);
                         if (!isExit)

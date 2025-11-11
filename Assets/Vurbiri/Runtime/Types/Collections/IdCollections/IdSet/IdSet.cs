@@ -20,10 +20,10 @@ namespace Vurbiri.Collections
 
         [Impl(256)] public bool TryAdd(TValue value)
         {
-            bool result = _values[value.Id] == null;
+            bool result = _values[value.Id.Value] == null;
             if (result)
             {
-                _values[value.Id] = value;
+                _values[value.Id.Value] = value;
                 _count++;
             }
             return result;
@@ -37,10 +37,10 @@ namespace Vurbiri.Collections
 
         [Impl(256)] public void Replace(TValue value)
         {
-            if (_values[value.Id] == null)
+            if (_values[value.Id.Value] == null)
                 _count++;
 
-            _values[value.Id] = value;
+            _values[value.Id.Value] = value;
         }
 
         [Impl(256)] public void ReplaceRange(IEnumerable<TValue> collection)

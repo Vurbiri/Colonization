@@ -26,7 +26,7 @@ namespace Vurbiri.Colonization
                     [Impl(256)] public bool CanAdd(Actor target) => CanAdd(target, target.CurrentForce);
                     public bool CanAdd(Actor target, int enemiesForce)
                     {
-                        int alliesForce = target.GetCurrentForceEnemiesNear();
+                        int alliesForce = target.GetCurrentForceNearEnemies();
 
                         if (_targets.TryGetValue(target, out List<ActorData> supports))
                         {

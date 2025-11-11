@@ -32,6 +32,7 @@ namespace VurbiriEditor.Colonization
             EndVertical();
         }
 
+        // ************ Nested ****************
         private class ActorAISettingsDrawer
         {
             private readonly int _typeId, _id;
@@ -57,7 +58,7 @@ namespace VurbiriEditor.Colonization
                 _raiderProperty     = parentProperty.FindPropertyRelative(nameof(ActorAISettings.raider));
                 _specChanceProperty = parentProperty.FindPropertyRelative(nameof(ActorAISettings.specChance));
 
-                _selfBuffDrawer   = new(parentProperty.FindPropertyRelative(nameof(ActorAISettings.selfBuff)));
+                _selfBuffDrawer   = new(parentProperty.FindPropertyRelative(nameof(ActorAISettings.defenseBuff)));
 
                 _specChanceName = typeId == ActorTypeId.Warrior ? new("Block Chance") : new("Spec Chance");
             }
@@ -87,5 +88,6 @@ namespace VurbiriEditor.Colonization
                 EndVertical();
             }
         }
+        // ************************************
     }
 }

@@ -15,7 +15,7 @@ namespace Vurbiri.Colonization
 
         public ActorCode(Actor actor)
         {
-            this.owner = actor.Owner;
+            this.owner = actor.Owner.Value;
             this.index = actor.Index;
         }
 

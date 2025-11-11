@@ -19,11 +19,10 @@ namespace Vurbiri.Colonization
                 if (Status.isMove && Status.percentHP > s_settings.minHPHelp)
                 {
                     int distance = s_settings.maxDistanceHelp;
-                    var playerId = Actor.Owner;
 
                     for (int i = 0; i < PlayerId.Count; i++)
                     {
-                        if (GameContainer.Diplomacy.IsGreatFriend(playerId, i) && TryGetNearActorsInCombat(GameContainer.Actors[i], ref distance, out Actor enemy, out Actor friend))
+                        if (GameContainer.Diplomacy.IsGreatFriend(OwnerId, i) && TryGetNearActorsInCombat(GameContainer.Actors[i], ref distance, out Actor enemy, out Actor friend))
                         {
                             _targetEnemy = enemy.Code;
                             _targetHexagon = (Support ? friend : enemy).Hexagon;
@@ -35,7 +34,7 @@ namespace Vurbiri.Colonization
 
             public override IEnumerator Execution_Cn(Out<bool> isContinue)
             {
-                bool isExit = !(Support ? _targetHexagon.IsGreatFriend(Player) : _targetHexagon.IsEnemy(Player));
+                bool isExit = !(Support ? _targetHexagon.IsGreatFriend(OwnerId) : _targetHexagon.IsEnemy(OwnerId));
                 yield return Move_Cn(isContinue, 1, _targetHexagon, isExit);
                 if (!isContinue && IsEnemyComing)
                     yield return Defense_Cn(true, false);
@@ -49,8 +48,6 @@ namespace Vurbiri.Colonization
                     Goals.Enemies.Remove(_targetEnemy, new(Actor.Code));
                 }
             }
-
-            
         }
     }
 }

@@ -76,7 +76,7 @@ namespace Vurbiri.Colonization
         public void OnStartTurn()
         {
             foreach (var demon in Actors)
-                demon.EffectsUpdate(_parameters.gateDefense);
+                demon.EffectsUpdate(demon.Hexagon.IsGate ? _parameters.gateDefense : 0);
         }
 
         public void OnPlay()

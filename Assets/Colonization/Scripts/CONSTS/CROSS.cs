@@ -28,7 +28,7 @@ namespace Vurbiri.Colonization
             int x = Math.Abs(a.x - b.x), y = Math.Abs(a.y - b.y);
             return (x < y) ? (x + y) >> 1 : x;
         }
-        public static Key ToHex(Key c, int type)
+        public static Key ToHex(Key c, Id<CrossroadType> type)
         {
             int offset;
             if (c.y > 0)

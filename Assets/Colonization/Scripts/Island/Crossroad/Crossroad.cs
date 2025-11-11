@@ -203,18 +203,6 @@ namespace Vurbiri.Colonization
                     return true;
             return false;
         }
-        public int GetOwnerCount(Id<PlayerId> playerId)
-        {
-            int count = -1;
-            if (IsOwnerColony(playerId))
-            {
-                count = 0;
-                for (int i = 0; i < HEX_COUNT; i++)
-                    if (_hexagons[i].IsOwner(playerId))
-                        count++;
-            }
-            return count;
-        }
 
         public bool IsEnemyNear(Id<PlayerId> playerId)
         {
@@ -480,7 +468,7 @@ namespace Vurbiri.Colonization
             return new Key(key.x / HEX_COUNT, key.y);
         }
 
-        [Impl(256)] public int ApproximateDistance(Hexagon hexagon) => hexagon.Distance(CROSS.ToHex(_key, _type));
+        [Impl(256)] public int ApproximateDistance(Hexagon hexagon) => hexagon.Distance(CROSS.ToHex(_key, _type.Value));
 
         [Impl(256)] private void BanBuild()
         {

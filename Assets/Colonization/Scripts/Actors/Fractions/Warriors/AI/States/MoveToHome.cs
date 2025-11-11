@@ -16,7 +16,7 @@ namespace Vurbiri.Colonization
             {
                 _targetHexagon = null;
 
-                if ((Status.isMove & !Status.isSiege) && (!Status.isGuard || Status.minColonyGuard > 1))
+                if (Status.isMove & !(Status.isSiege | Status.isGuard))
                 {
                     int distance = s_settings.maxDistanceHome;
 
@@ -31,7 +31,7 @@ namespace Vurbiri.Colonization
 
             public override IEnumerator Execution_Cn(Out<bool> isContinue)
             {
-                yield return Move_Cn(isContinue, 0, _targetHexagon);
+                yield return Move_Cn(isContinue, 0, _targetHexagon, !_targetHexagon.CanWarriorEnter);
                 if (!isContinue && IsEnemyComing)
                 {
                     isContinue.Set(true);

@@ -1,9 +1,9 @@
 {
-  "enemyRatioForEscape": 10,
-  "maxDistanceUnsiege": 4,
-  "minHPUnsiege": 24,
+  "enemyRatioForEscape": 11,
   "maxDistanceHelp": 3,
   "minHPHelp": 60,
+  "maxDistanceUnsiege": 4,
+  "minHPUnsiege": 22,
   "maxDistanceRaid": 2,
   "minHPRaid": 84,
   "maxDistanceHome": 3,
@@ -12,25 +12,25 @@
       "support": false,
       "raider": false,
       "specChance": 60,
-      "selfBuff": {
+      "defenseBuff": {
         "_skill": 3,
-        "_chance": 77
+        "_chance": 88
       }
     },
     {
       "support": false,
       "raider": true,
       "specChance": 77,
-      "selfBuff": {
+      "defenseBuff": {
         "_skill": 3,
-        "_chance": 44
+        "_chance": 66
       }
     },
     {
       "support": true,
       "raider": false,
       "specChance": 55,
-      "selfBuff": {
+      "defenseBuff": {
         "_skill": -1,
         "_chance": 0
       }
@@ -39,7 +39,7 @@
       "support": false,
       "raider": true,
       "specChance": 66,
-      "selfBuff": {
+      "defenseBuff": {
         "_skill": -1,
         "_chance": 0
       }
@@ -48,9 +48,9 @@
       "support": false,
       "raider": true,
       "specChance": 88,
-      "selfBuff": {
-        "_skill": 3,
-        "_chance": 18
+      "defenseBuff": {
+        "_skill": -1,
+        "_chance": 0
       }
     }
   ]

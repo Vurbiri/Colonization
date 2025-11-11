@@ -12,6 +12,8 @@ namespace Vurbiri.Colonization
             {
                 _states = new AIState[]
                 {
+                    new Escape(parent),
+
                     combat, 
                     support,
 
@@ -20,7 +22,7 @@ namespace Vurbiri.Colonization
                     new Defense(parent),
 
                     new MoveToUnsiege(parent),
-                    
+                    new MoveToAttack(parent),
                     new MoveToRaid(parent),
                     new MoveToHome(parent),
                 };

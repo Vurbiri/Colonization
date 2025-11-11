@@ -37,7 +37,7 @@ namespace Vurbiri.Colonization
 
             public override IEnumerator Execution_Cn(Out<bool> isContinue)
             {
-                yield return Move_Cn(isContinue, 0, _targetHexagon);
+                yield return Move_Cn(isContinue, 0, _targetHexagon, !_targetHexagon.CanWarriorEnter);
                 if (!isContinue && IsEnemyComing)
                 {
                     isContinue.Set(true);

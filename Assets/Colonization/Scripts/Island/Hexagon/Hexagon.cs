@@ -53,7 +53,7 @@ namespace Vurbiri.Colonization
 
             Position = view.Init(key, id, surface);
 
-            _surfaceId = surface.Id;
+            _surfaceId = surface.Id.Value;
             _profit = surface.Profit;
 
             _isGate = surface.IsGate;
@@ -211,20 +211,15 @@ namespace Vurbiri.Colonization
             actor = _owner;
             return GameContainer.Diplomacy.IsEnemy(_ownerId, id);
         }
-        [Impl(256)] public bool TryGetAlly(Id<PlayerId> id, out Actor actor)
-        {
-            actor = _owner;
-            return id != PlayerId.None && _ownerId == id;
-        }
 
         #region ---------------- Defense ----------------
-        public int GetMaxDefense()
+        [Impl(256)] public int GetMaxDefense() => GetMaxDefense(_ownerId);
+        public int GetMaxDefense(Id<PlayerId> playerId)
         {
-            if (_isGate) return 0;
-
-            int max = int.MinValue;
-            for (int i = _crossroads.Count - 1; i >= 0; i--)
-                max = Mathf.Max(_crossroads[i].GetDefense(_ownerId), max);
+            int max = 0;
+            if (!(_isGate | IsWater))
+                for (int i = 0; i < HEX.VERTICES; i++)
+                    max = Mathf.Max(_crossroads[i].GetDefense(playerId), max);
 
             return max;
         }

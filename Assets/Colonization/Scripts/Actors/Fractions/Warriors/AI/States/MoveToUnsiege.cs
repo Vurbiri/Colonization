@@ -31,7 +31,7 @@ namespace Vurbiri.Colonization
                         for (int i = 0; i < Crossroad.HEX_COUNT; i++)
                         {
                             current = hexagons[i];
-                            if (current.IsEnemy(Player))
+                            if (current.IsEnemy(OwnerId))
                             {
                                 if (Goals.Enemies.CanAdd(current.Owner) && TryGetDistance(Actor, current, distance, out int newDistance))
                                 {
@@ -48,7 +48,7 @@ namespace Vurbiri.Colonization
 
             public override IEnumerator Execution_Cn(Out<bool> isContinue)
             {
-                yield return Move_Cn(isContinue, 1, _targetHexagon, !_targetHexagon.IsEnemy(Player));
+                yield return Move_Cn(isContinue, 1, _targetHexagon, !_targetHexagon.IsEnemy(OwnerId));
                 if (!isContinue && IsEnemyComing)
                     yield return Defense_Cn(true, true);
             }

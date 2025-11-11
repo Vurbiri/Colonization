@@ -10,11 +10,11 @@ namespace Vurbiri.Colonization
             protected class Enemies
             {
                 public readonly WeightsList<Actor> enemies = new(3);
-                public int force;
-
+                public int enemiesForce;
+                
                 public void Update(Actor actor, ReadOnlyArray<Key> keys)
                 {
-                    force = 0;
+                    enemiesForce = 0;
 
                     Key current = actor._currentHex.Key;
                     for (int i = 0; i < keys.Count; i++)
@@ -24,7 +24,7 @@ namespace Vurbiri.Colonization
 
                 public void Update(Actor actor)
                 {
-                    force = 0;
+                    enemiesForce = 0;
 
                     var hexagons = actor._currentHex.Neighbors;
                     for (int i = 0; i < HEX.SIDES; i++)
@@ -35,8 +35,8 @@ namespace Vurbiri.Colonization
                 [Impl(256)] private void Add(Actor enemy)
                 {
                     int currentForce = enemy.CurrentForce;
-                    force += currentForce;
-                    enemies.Add(enemy, GameContainer.Actors.MaxForce - enemy.CurrentForce);
+                    enemiesForce += currentForce;
+                    enemies.Add(enemy, GameContainer.Actors.MaxForce - currentForce);
                 }
             }
         }

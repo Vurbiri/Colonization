@@ -7,15 +7,12 @@ namespace Vurbiri.Colonization
     {
         private abstract class AIState : State<WarriorAI>
         {
-            protected ReadOnlyReactiveList<Crossroad> Colonies { [Impl(256)] get => GameContainer.Players.Humans[Player].Colonies; }
+            protected ReadOnlyReactiveList<Crossroad> Colonies { [Impl(256)] get => GameContainer.Players.Humans[OwnerId.Value].Colonies; }
 
             [Impl(256)] protected AIState(WarriorAI parent) : base(parent) { }
 
 
-            [Impl(256)] protected bool EscapeChance(int enemyForce)
-            {
-                return Chance.Rolling((enemyForce * s_settings.enemyRatioForEscape) / Actor.CurrentForce - (s_settings.enemyRatioForEscape + 1));
-            }
+            
 
             [Impl(256)] protected ReadOnlyReactiveList<Crossroad> GetColonies(int playerId) => GameContainer.Players.Humans[playerId].Colonies;
         }

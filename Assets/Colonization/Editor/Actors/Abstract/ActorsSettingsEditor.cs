@@ -24,20 +24,20 @@ namespace VurbiriEditor.Colonization
             var container = root.Q<VisualElement>(U_CONTAINER);
 
             serializedObject.Update();
-            var settingsProperty = serializedObject.FindProperty(P_SETTINGS).FindPropertyRelative(P_ARRAY);
+            var arrayProperty = serializedObject.FindProperty(P_SETTINGS).FindPropertyRelative(P_ARRAY);
 
-            SerializedProperty sttProperty, skillsProperty;
+            SerializedProperty settingsProperty, skillsProperty;
             VisualElement element;
             for (int i = 0; i < IdType<TId>.Count; i++)
             {
-                sttProperty = settingsProperty.GetArrayElementAtIndex(i);
-                sttProperty.FindPropertyRelative(P_ID).intValue = i;
-                skillsProperty = sttProperty.FindPropertyRelative(P_SKILLS);
+                settingsProperty = arrayProperty.GetArrayElementAtIndex(i);
+                settingsProperty.FindPropertyRelative(P_ID).intValue = i;
+                skillsProperty = settingsProperty.FindPropertyRelative(P_SKILLS);
 
-                element = _treeActorSettings.Instantiate(sttProperty.propertyPath);
+                element = _treeActorSettings.Instantiate(settingsProperty.propertyPath);
                 element.Q<Foldout>(U_LABEL).text = IdType<TId>.Names_Ed[i];
-                element.Q<VisualElement>(U_SKILLS).Add(_treeSkillsVT.Instantiate(skillsProperty.propertyPath));
                 element.Q<Button>(U_B_FORCE).clicked += settings[i].SetDefaultForce_Ed;
+                element.Q<VisualElement>(U_SKILLS).Add(_treeSkillsVT.Instantiate(skillsProperty.propertyPath));
                 container.Add(element);
             }
 

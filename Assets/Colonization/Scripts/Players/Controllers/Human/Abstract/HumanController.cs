@@ -12,12 +12,12 @@ namespace Vurbiri.Colonization
         {
             if (type == ActorTypeId.Demon)
             {
-                GameContainer.Score.ForKillingDemon(_id, id);
+                GameContainer.Score.ForKillingDemon(_id.Value, id);
                 _resources.AddBlood(id + 1);
             }
             else
             {
-                GameContainer.Score.ForKillingWarrior(_id, id);
+                GameContainer.Score.ForKillingWarrior(_id.Value, id);
             }
         }
 

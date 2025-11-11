@@ -35,7 +35,7 @@ namespace Vurbiri.Colonization
             _leveling = new(settings.satanLeveling, loadData.state.level);
             _artefact = Artefact.Create(settings.artefact, loadData);
 
-            _spawner = new(new(PlayerId.Satan, _leveling, _artefact), GameContainer.Hexagons[Key.Zero], loadData.state.spawn);
+            _spawner = new(new(PlayerId.Satan, _leveling, _artefact), loadData.state.spawn);
 
             for (int i = loadData.actors.Count - 1; i >= 0; i--)
                 _spawner.Load(loadData.actors[i]);

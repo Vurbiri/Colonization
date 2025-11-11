@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using UnityEngine;
 using Vurbiri.Colonization.Storage;
 using Vurbiri.Reactive;
@@ -107,7 +106,7 @@ namespace Vurbiri.Colonization
         public void Adding(Action<Actor, TypeEvent> action, int index)
         {
             Index = index;
-            Code = new(_owner, index);
+            Code = new(_owner.Value, index);
 
             action(this, TypeEvent.Add);
             _eventChanged.Add(action);
@@ -228,25 +227,11 @@ namespace Vurbiri.Colonization
                     return true;
             return false;
         }
-        public int GetEnemiesNearAndForce(List<Actor> enemies)
+        public int GetCurrentForceNearEnemies()
         {
             int force = 0;
             var neighbors = _currentHex.Neighbors;
-            for (int i = 0; i < neighbors.Count; i++)
-            {
-                if (neighbors[i].TryGetEnemy(_owner, out Actor enemy))
-                {
-                    enemies.Add(enemy);
-                    force += enemy.CurrentForce;
-                }
-            }
-            return force;
-        }
-        public int GetCurrentForceEnemiesNear()
-        {
-            int force = 0;
-            var neighbors = _currentHex.Neighbors;
-            for (int i = 0; i < neighbors.Count; i++)
+            for (int i = 0; i < HEX.SIDES; i++)
                 if (neighbors[i].TryGetEnemy(_owner, out Actor enemy))
                     force += enemy.CurrentForce;
             return force;
@@ -302,11 +287,11 @@ namespace Vurbiri.Colonization
 
             _states.ToDefault();
         }
-        public void EffectsUpdate() => EffectsUpdate(_currentHex.GetMaxDefense());
+        [Impl(256)] public void EffectsUpdate() => EffectsUpdate(_currentHex.GetMaxDefense());
         #endregion
 
         #region ================== WallDefence ============================
-        [Impl(256)] public void AddWallDefenceEffect(int maxDefense) => _effects.Add(WallEffectFactory.Create(maxDefense));
+        [Impl(256)] public void AddWallDefenceEffect(int defense) => _effects.Add(WallEffectFactory.Create(defense));
         [Impl(256)] public void RemoveWallDefenceEffect() => _effects.Remove(WallEffectFactory.WallEffectCode);
         [Impl(256)] public bool IsWallDefenceEffect() => _effects.Contains(WallEffectFactory.WallEffectCode);
         #endregion

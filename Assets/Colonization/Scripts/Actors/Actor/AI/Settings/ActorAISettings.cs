@@ -6,6 +6,6 @@ namespace Vurbiri.Colonization
 		public bool support;
         public bool raider;
         public Chance specChance;
-        public ChanceUsedSkill selfBuff;
+        public ChanceUsedSkill defenseBuff;
     }
 }

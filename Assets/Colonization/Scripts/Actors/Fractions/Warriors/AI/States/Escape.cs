@@ -7,44 +7,92 @@ namespace Vurbiri.Colonization
     {
         sealed private class Escape : AIState
         {
-            private Hexagon _target;
-
             [Impl(256)] public Escape(WarriorAI parent) : base(parent) { }
 
             public override bool TryEnter()
             {
-                bool isEscape = Status.isMove;
+                bool isEscape = false;
 
-                if (isEscape)
+                if (Status.isMove && (IsInCombat || IsEnemyComing))
                 {
-                    Status.FindOwnedColoniesHex(Actor);
-
-
-
-                    if (IsInCombat)
+                    int enemiesForce, contraForce;
+                    if(IsInCombat)
                     {
-
+                        enemiesForce = Status.near.enemiesForce;
+                        contraForce = GetContraForce(Status.near.enemies);
+                    }
+                    else
+                    {
+                        enemiesForce = Status.nearTwo.enemiesForce;
+                        contraForce = GetContraForce(Status.nearTwo.enemies) + Actor.CurrentForce;
                     }
 
+                    if (Status.isGuard)
+                        enemiesForce /= (Actor.Hexagon.GetMaxDefense() + 2);
 
-                    if (isEscape)
-                    {
-                        isEscape = (!Status.isGuard || Actor.CurrentHP < s_settings.minHPUnsiege) && EscapeChance(Status.nearTwo.force) && TryEscape(3, out _target);
-                    }
+                    isEscape = Chance.Rolling((enemiesForce * s_settings.enemyRatioForEscape) / contraForce - (s_settings.enemyRatioForEscape + 1));
                 }
 
                 return isEscape;
             }
 
-            public override void Dispose() => _target = null;
+            public override void Dispose() { }
 
             public override IEnumerator Execution_Cn(Out<bool> isContinue)
             {
+                yield return GameContainer.CameraController.ToPositionControlled(Actor.Position);
 
-                yield return Move_Cn(_target);
+                if (TryEscape(out Hexagon target))
+                    yield return Move_Cn(target);
 
-                yield return Defense_Cn(true, true);
+                if (Settings.defenseBuff.CanUsed(Action, Actor))
+                    yield return Settings.defenseBuff.Use(Action);
 
+                if (Action.CanUsedSpecSkill())
+                    yield return Action.UseSpecSkill();
+
+                isContinue.Set(false);
+                Exit();
+            }
+
+            private int GetContraForce(WeightsList<Actor> enemies)
+            {
+                int contraForce = 0;
+                for (int i = 0; i < enemies.Count; i++)
+                    contraForce += enemies[i].GetCurrentForceNearEnemies();
+                return contraForce;
+            }
+
+            private bool TryEscape(out Hexagon hexagon)
+            {
+                Hexagon temp; hexagon = null;
+                int enemiesForce = (Status.near.enemiesForce + Status.nearTwo.enemiesForce)/(Actor.Hexagon.GetMaxDefense() + 1);
+                var hexagons = Actor.Hexagon.Neighbors;
+
+                for (int i = 0; i < HEX.SIDES; i++)
+                {
+                    temp = hexagons[i];
+                    if (temp.CanWarriorEnter && CheckHexagon(OwnerId, temp, enemiesForce, out int force))
+                    {
+                        enemiesForce = force;
+                        hexagon = temp;
+                    }
+                }
+
+                return hexagon != null;
+
+                //=============== Local =======================
+                static bool CheckHexagon(Id<PlayerId> id, Hexagon target, int maxForce, out int force)
+                {
+                    force = 0;
+                    var hexagons = target.Neighbors;
+                    for (int i = 0; i < HEX.SIDES; i++)
+                        if (hexagons[i].TryGetEnemy(id, out Actor actor))
+                            force += actor.CurrentForce;
+                    
+                    force /= (target.GetMaxDefense(id) + 1);
+                    return force < maxForce;
+                }
             }
         }
     }

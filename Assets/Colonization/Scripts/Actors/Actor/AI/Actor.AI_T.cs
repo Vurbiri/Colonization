@@ -17,7 +17,7 @@ namespace Vurbiri.Colonization
             protected AI(Actor actor, Goals goals, ActorAISettings aISettings) : base(actor, goals)
             {
                 _action = (TAction)actor._states;
-                _status = new(actor._owner);
+                _status = new();
                 _aISettings = aISettings;
             }
 
