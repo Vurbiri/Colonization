@@ -4,7 +4,7 @@ using static VurbiriEditor.Colonization.CONST_EDITOR;
 
 namespace VurbiriEditor.Colonization
 {
-	public class WarriorsAISettingsWindow : ActorAISettingsWindow<WarriorsAISettings, WarriorId>
+	public class WarriorsAISettingsWindow : ActorAISettingsWindow<WarriorsAISettings, WarriorId, WarriorAIStateId>
     {
         private const string NAME = "Warriors", MENU = MENU_AA_PATH + NAME;
 

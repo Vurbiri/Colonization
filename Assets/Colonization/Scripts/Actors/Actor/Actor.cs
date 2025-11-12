@@ -219,14 +219,7 @@ namespace Vurbiri.Colonization
         }
 
         #region ---------------- Combat ----------------
-        public bool IsInCombat()
-        {
-            var neighbors = _currentHex.Neighbors;
-            for (int i = 0; i < HEX.SIDES; i++)
-                if (neighbors[i].IsEnemy(_owner))
-                    return true;
-            return false;
-        }
+        public bool IsInCombat() => _currentHex.IsEnemyNear(_owner);
         public int GetCurrentForceNearEnemies()
         {
             int force = 0;

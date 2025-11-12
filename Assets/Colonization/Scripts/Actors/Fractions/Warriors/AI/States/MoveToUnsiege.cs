@@ -11,6 +11,8 @@ namespace Vurbiri.Colonization
             private Hexagon _targetHexagon;
             private ActorCode _targetEnemy;
 
+            public override int Id => WarriorAIStateId.MoveToUnsiege;
+
             [Impl(256)] public MoveToUnsiege(WarriorAI parent) : base(parent) {}
 
             public override bool TryEnter()

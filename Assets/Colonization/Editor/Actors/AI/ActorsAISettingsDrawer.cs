@@ -15,13 +15,14 @@ namespace VurbiriEditor.Colonization
             _count = count;
             _drawers = new ActorAISettingsDrawer[count];
 
-            var arrayProperty = mainProperty.FindPropertyRelative("_values");
+            var arrayProperty = mainProperty.FindPropertyRelative("_settings");
             for (int i = 0; i < count; i++)
                 _drawers[i] = new(typeId, i, names[i], arrayProperty.GetArrayElementAtIndex(i));
         }
 
         public void Draw()
         {
+            Space();
             BeginVertical(STYLES.border);
             {
                 Space(5f);

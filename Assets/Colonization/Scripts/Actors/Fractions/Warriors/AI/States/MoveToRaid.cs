@@ -10,6 +10,8 @@ namespace Vurbiri.Colonization
             private Hexagon _targetHexagon;
             private Key _targetColony;
 
+            public override int Id => WarriorAIStateId.MoveToRaid;
+
             [Impl(256)] public MoveToRaid(WarriorAI parent) : base(parent) { }
 
             public override bool TryEnter()

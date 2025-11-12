@@ -9,20 +9,23 @@ namespace Vurbiri.Colonization
         {
             private Hexagon _targetHexagon;
 
+            public override int Id => WarriorAIStateId.MoveToAttack;
+
             [Impl(256)] public MoveToAttack(WarriorAI parent) : base(parent) { }
 
             public override bool TryEnter()
             {
                 _targetHexagon = null;
 
-                if (Raider && Status.isMove && IsEnemyComing)
+                if (Status.isMove && IsEnemyComing)
                 {
-                    var enemies = Status.nearTwo.enemies;
+                    var enemies = Status.nearTwo.enemies; Actor enemy;
+                    int selfForce = Actor.CurrentForce, enemyForce;
 
                     do
                     {
-                        Actor enemy = enemies.Extract();
-                        if (enemy.CurrentForce < Actor.CurrentForce)
+                        enemy = enemies.Extract(); enemyForce = enemy.CurrentForce;
+                        if (Chance.Rolling((selfForce * selfForce * s_settings.ratioForAttack) / (enemyForce * enemyForce) - (s_settings.ratioForAttack - 10)))
                             _targetHexagon = enemy.Hexagon;
                     }
                     while (_targetHexagon == null && enemies.Count > 0);

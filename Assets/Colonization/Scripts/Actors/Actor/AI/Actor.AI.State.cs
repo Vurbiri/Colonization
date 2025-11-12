@@ -9,31 +9,30 @@ namespace Vurbiri.Colonization
 {
     public partial class Actor
     {
-        #region =========== AI.State ==================
         public partial class AI
         {
+            #region =========== AI.State ==================
             protected abstract class State
             {
+                public abstract int Id { get; }
+
                 public abstract bool TryEnter();
                 public abstract void Dispose();
                 public abstract IEnumerator Execution_Cn(Out<bool> isContinue);
 
                 sealed public override string ToString() => GetType().Name;
             }
-        }
-        #endregion
+            #endregion
 
-        #region =========== AI.State<T>  ==================
-        public partial class AI<TAction>
-        {
-            protected abstract class State<T> : State where T : AI<TAction>
+            #region =========== AI.State<T>  ==================
+            protected abstract class State<T> : State where T : AI
             {
                 protected readonly T _parent;
 
                 #region Parent Properties
                 protected Actor Actor { [Impl(256)] get => _parent._actor; }
                 protected Id<PlayerId> OwnerId { [Impl(256)] get => _parent._actor._owner; }
-                protected TAction Action { [Impl(256)] get => _parent._action; }
+                protected AStates Action { [Impl(256)] get => _parent._actor._states; }
                 protected Goals Goals { [Impl(256)] get => _parent._goals; }
                 protected Status Status { [Impl(256)] get => _parent._status; }
                 protected ActorAISettings Settings { [Impl(256)] get => _parent._aISettings; }

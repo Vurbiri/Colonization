@@ -1,34 +1,42 @@
-using System;
 using System.Collections.Generic;
 using Vurbiri.Reactive.Collections;
 using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization
 {
-    public partial class WarriorAI : Actor.AI<Warrior.WarriorStates>
+    public partial class WarriorAI : Actor.AI
     {
         protected static readonly WarriorsAISettings s_settings;
         static WarriorAI() => s_settings = SettingsFile.Load<WarriorsAISettings>();
 
-        [Impl(256)] private WarriorAI(Actor actor, Goals goals) : base(actor, goals, s_settings[actor.Id]) { }
-        [Impl(256)] private WarriorAI(Actor actor, Goals goals, Func<WarriorAI, Combat> combatFactory, Func<WarriorAI, Support> supportFactory) : this(actor, goals)
-        {
-            _current = _goalSetting = new GoalSetting(this, combatFactory(this), supportFactory(this));
-        }
-        [Impl(256)] private WarriorAI(Actor actor, Goals goals, Func<WarriorAI, Combat> combatFactory) : this(actor, goals)
-        {
-            _current = _goalSetting = new GoalSetting(this, combatFactory(this), new Support(this));
-        }
+        [Impl(256)] public WarriorAI(Actor actor, Goals goals) : base(actor, goals, s_settings[actor.Id]) { }
 
-        public static WarriorAI Create(Actor actor, Goals goals) => actor.Id switch
+        protected override State[] GetStates()
         {
-            WarriorId.Militia => new WarriorAI(actor, goals, (ai) => new Combat(ai)),
-            WarriorId.Solder  => new WarriorAI(actor, goals, (ai) => new Combat(ai)),
-            WarriorId.Wizard  => new WarriorAI(actor, goals, (ai) => new Combat(ai) , (ai) => new Support(ai)),
-            WarriorId.Warlock => new WarriorAI(actor, goals, (ai) => new Combat(ai)),
-            WarriorId.Knight  => new WarriorAI(actor, goals, (ai) => new Combat(ai)),
-            _ => null
-        };
+            State[] states = 
+            {
+                new Escape(this),
+
+                new Combat(this),
+                new Support(this),
+
+                new MoveToHelp(this),
+
+                new Defense(this),
+
+                new MoveToUnsiege(this),
+                new MoveToAttack(this),
+                new MoveToRaid(this),
+
+                new MoveToHome(this),
+
+                new FindResources(this),
+            };
+
+            StatesSort(states, s_settings.Priority);
+
+            return states;
+        }
 
         public static bool TrySetSpawn(Human human, List<Hexagon> output)
         {

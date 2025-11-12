@@ -3,9 +3,10 @@ using UnityEngine;
 namespace Vurbiri.Colonization
 {
     [System.Serializable]
-    public class WarriorsAISettings : ActorsAISettings<WarriorId>
+    public class WarriorsAISettings : ActorsAISettings<WarriorId, WarriorAIStateId>
     {
-        [Range(1, 50)] public int enemyRatioForEscape;
+        [Range(0, 100)] public int ratioForEscape;
+        [Range(0, 100)] public int ratioForAttack;
         [Space]
         [Range(0, 5)] public int maxDistanceHelp;
         [Range(0, 100)] public int minHPHelp;

@@ -27,7 +27,7 @@ namespace Vurbiri.Colonization
                 
                 if (type == TypeEvent.Subscribe | type == TypeEvent.Add)
                 {
-                    _warriorsAI[actor.Index] = WarriorAI.Create(actor, _goals);
+                    _warriorsAI[actor.Index] = new WarriorAI(actor, _goals);
                     _indexes.Add(actor.Index);
                 }
                 else if (type == TypeEvent.Remove)

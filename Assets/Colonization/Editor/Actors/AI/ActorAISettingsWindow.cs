@@ -5,7 +5,8 @@ using static UnityEditor.EditorGUILayout;
 
 namespace VurbiriEditor.Colonization
 {
-	public abstract class ActorAISettingsWindow<TSettings, TId> : EditorWindow where TSettings : ActorsAISettings<TId>, new() where TId : ActorId<TId>
+	public abstract class ActorAISettingsWindow<TSettings, TActorId, TStateId> : EditorWindow 
+        where TSettings : ActorsAISettings<TActorId, TStateId>, new() where TActorId : ActorId<TActorId> where TStateId : ActorAIStateId<TStateId>
     {
         protected static readonly Vector2 s_minSize = new(550f, 800f);
 
@@ -14,6 +15,7 @@ namespace VurbiriEditor.Colonization
         private string _label;
         private SerializedObject _serializedObject;
         private SerializedProperty _serializedProperty;
+        private StatesPriorityDrawer<TStateId> _prioritiesDrawer;
         private ActorsAISettingsDrawer _settingsDrawer;
         private Vector2 _scrollPos;
         
@@ -27,6 +29,8 @@ namespace VurbiriEditor.Colonization
 
             _serializedObject = new(this);
             _serializedProperty = _serializedObject.FindProperty("_settings");
+
+            _prioritiesDrawer = new (_serializedObject, _serializedProperty);
             _settingsDrawer = Init(_serializedProperty, out _label);
         }
 
@@ -48,8 +52,9 @@ namespace VurbiriEditor.Colonization
                             Space(2f);
                         }
                         EndVertical();
-                        Space();
+
                         _settingsDrawer.Draw();
+                        _prioritiesDrawer.Draw();
                     }
                     EndScrollView();
                 }

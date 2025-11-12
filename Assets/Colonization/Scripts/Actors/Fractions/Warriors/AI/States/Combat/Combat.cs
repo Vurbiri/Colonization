@@ -6,6 +6,8 @@ namespace Vurbiri.Colonization
     {
         private class Combat : AIState
         {
+            public override int Id => WarriorAIStateId.Combat;
+
             public Combat(WarriorAI parent) : base(parent)
             {
             }

@@ -2,13 +2,14 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Vurbiri.Collections;
 using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization
 {
     public partial class Actor
     {
-        public abstract partial class AI : IEquatable<Actor>
+        public abstract partial class AI : IEquatable<Actor>, IDisposable
         {
             private static readonly Dictionary<Hexagon, Hexagon> s_links = new();
             private static readonly Queue<Hexagon> s_finds = new();
@@ -17,14 +18,50 @@ namespace Vurbiri.Colonization
             protected static readonly RandomSequence s_hexagonIndexes = new(HEX.SIDES);
             protected static readonly WaitFrames s_waitBeforeSelecting = new(10);
 
-            protected readonly Actor _actor;
-            protected readonly Goals _goals;
+            private readonly Status _status;
+            private readonly Actor _actor;
+            private readonly Goals _goals;
+            private readonly ActorAISettings _aISettings;
+            private readonly State _goalSetting;
+            private State _current;
 
             [Impl(256)]
-            protected AI(Actor actor, Goals goals)
+            protected AI(Actor actor, Goals goals, ActorAISettings aISettings)
             {
+                _status = new();
                 _actor = actor;
                 _goals = goals;
+                _aISettings = aISettings;
+                _current = _goalSetting = new GoalSetting(this, GetStates());
+            }
+
+            public IEnumerator Execution_Cn()
+            {
+                int key;
+                do
+                {
+#if TEST_AI
+                    Log.Info($"[{ActorTypeId.GetName(_actor)}AI_{_actor.Index}] {_actor.Owner} state [{_current}]");
+#endif
+                    _status.Update(_actor);
+                    yield return StartCoroutine(_current.Execution_Cn(Out<bool>.Get(out key)));
+                    _status.Clear();
+                }
+                while (Out<bool>.Result(key));
+            }
+
+            public void Dispose() => _current.Dispose();
+
+            protected abstract State[] GetStates();
+
+            protected static void StatesSort(State[] states, ReadOnlyArray<int> priority)
+            {
+                for(int i = states.Length - 1, j; i > 0; i--)
+                {
+                    j = priority.IndexOf(states[i].Id);
+                    if (i != j)
+                        (states[i], states[j]) = (states[j], states[i]);
+                }
             }
 
             #region ================= Pathfind ================== 

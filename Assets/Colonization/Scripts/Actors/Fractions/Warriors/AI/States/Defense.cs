@@ -9,6 +9,8 @@ namespace Vurbiri.Colonization
         {
             private bool _isBuff, _isBlock;
 
+            public override int Id => WarriorAIStateId.Defense;
+
             [Impl(256)] public Defense(WarriorAI parent) : base(parent) { }
 
             public override bool TryEnter()

@@ -1,5 +1,6 @@
 {
-  "enemyRatioForEscape": 11,
+  "ratioForEscape": 11,
+  "ratioForAttack": 30,
   "maxDistanceHelp": 3,
   "minHPHelp": 60,
   "maxDistanceUnsiege": 4,
@@ -7,7 +8,19 @@
   "maxDistanceRaid": 2,
   "minHPRaid": 84,
   "maxDistanceHome": 3,
-  "_values": [
+  "_priority": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ],
+  "_settings": [
     {
       "support": false,
       "raider": false,
@@ -53,5 +66,17 @@
         "_chance": 0
       }
     }
+  ],
+  "Priority": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
   ]
 }

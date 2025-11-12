@@ -7,6 +7,8 @@ namespace Vurbiri.Colonization
     {
         sealed private class Escape : AIState
         {
+            public override int Id => WarriorAIStateId.Escape;
+
             [Impl(256)] public Escape(WarriorAI parent) : base(parent) { }
 
             public override bool TryEnter()
@@ -30,7 +32,7 @@ namespace Vurbiri.Colonization
                     if (Status.isGuard)
                         enemiesForce /= (Actor.Hexagon.GetMaxDefense() + 2);
 
-                    isEscape = Chance.Rolling((enemiesForce * s_settings.enemyRatioForEscape) / contraForce - (s_settings.enemyRatioForEscape + 1));
+                    isEscape = Chance.Rolling((enemiesForce * s_settings.ratioForEscape) / contraForce - (s_settings.ratioForEscape + 1));
                 }
 
                 return isEscape;

@@ -10,6 +10,8 @@ namespace Vurbiri.Colonization
             private Hexagon _targetHexagon;
             private ActorCode _targetEnemy;
 
+            public override int Id => WarriorAIStateId.MoveToHelp;
+
             [Impl(256)] public MoveToHelp(WarriorAI parent) : base(parent) { }
 
             public override bool TryEnter()

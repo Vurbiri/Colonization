@@ -212,6 +212,15 @@ namespace Vurbiri.Colonization
             return GameContainer.Diplomacy.IsEnemy(_ownerId, id);
         }
 
+        public bool IsEnemyNear(Id<PlayerId> playerId)
+        {
+            if(!_isWater)
+                for (int i = 0; i < HEX.SIDES; i++)
+                    if (_neighbors[i].IsEnemy(playerId))
+                        return true;
+            return false;
+        }
+
         #region ---------------- Defense ----------------
         [Impl(256)] public int GetMaxDefense() => GetMaxDefense(_ownerId);
         public int GetMaxDefense(Id<PlayerId> playerId)
