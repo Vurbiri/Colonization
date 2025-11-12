@@ -56,11 +56,13 @@ namespace Vurbiri.Colonization
 
             protected static void StatesSort(State[] states, ReadOnlyArray<int> priority)
             {
-                for(int i = states.Length - 1, j; i > 0; i--)
+                for(int i = states.Length - 1, j; i > 0;)
                 {
                     j = priority.IndexOf(states[i].Id);
                     if (i != j)
                         (states[i], states[j]) = (states[j], states[i]);
+                    else
+                        --i;
                 }
             }
 

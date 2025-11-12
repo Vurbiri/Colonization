@@ -23,7 +23,7 @@ namespace Vurbiri.Colonization
 
                     Actor target;
                     var neighbors = CurrentHex.Neighbors;
-                    for (int i = 0; i < neighbors.Count; i++)
+                    for (int i = 0; i < neighbors.Count; ++i)
                     {
                         if (neighbors[i].IsWarrior)
                         {

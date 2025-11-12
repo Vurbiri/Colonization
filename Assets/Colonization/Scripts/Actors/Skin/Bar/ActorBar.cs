@@ -68,7 +68,7 @@ namespace Vurbiri.Colonization.UI
         {
             _subscription?.Dispose();
 
-            for (int i = _bars.Count - 1; i >= 0; i--)
+            for (int i = _bars.Count - 1; i >= 0; --i)
                 _bars[i].Dispose();
             _bars.Clear();
         }

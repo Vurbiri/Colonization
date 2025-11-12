@@ -22,7 +22,7 @@ namespace Vurbiri.Colonization
                 {
                     int distance = s_settings.maxDistanceHelp;
 
-                    for (int i = 0; i < PlayerId.Count; i++)
+                    for (int i = 0; i < PlayerId.Count; ++i)
                     {
                         if (GameContainer.Diplomacy.IsGreatFriend(OwnerId, i) && TryGetNearActorsInCombat(GameContainer.Actors[i], ref distance, out Actor enemy, out Actor friend))
                         {

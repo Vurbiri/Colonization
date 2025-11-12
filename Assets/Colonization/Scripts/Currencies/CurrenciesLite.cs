@@ -21,7 +21,7 @@ namespace Vurbiri.Colonization
         public CurrenciesLite() { }
         public CurrenciesLite(int[] array)
         {
-            for (int i = 0; i < MainCount; i++)
+            for (int i = 0; i < MainCount; ++i)
             {
                 _values[i] = array[i];
                 _amount += array[i];

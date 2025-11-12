@@ -73,7 +73,7 @@ namespace VurbiriEditor.Colonization
                 bitmaps.Add(new(icon, --ids));
 
             Task[] tasks = new Task[iconsCount];
-            for (int i = 0; i < iconsCount; i++)
+            for (int i = 0; i < iconsCount; ++i)
             {
                 tasks[i] = new(bitmaps[i].ReColor);
                 tasks[i].Start();
@@ -160,7 +160,7 @@ namespace VurbiriEditor.Colonization
             {
                 int[] c = new int[COMPONENT_COUNT];
 
-                for (int i = 0; i < COMPONENT_COUNT; i++)
+                for (int i = 0; i < COMPONENT_COUNT; ++i)
                     c[i] = Mathf.RoundToInt(color[i] * BYTE);
 
                 return Color.FromArgb(c[3], c[0], c[1], c[2]);

@@ -11,7 +11,7 @@ namespace Vurbiri.Colonization
         {
             int count = _factories.Length; ASFXFactory factory;
             Dictionary<string, ISFX> SFXs = new(count + 1);
-            for (int i = 0; i < count; i++)
+            for (int i = 0; i < count; ++i)
             {
                 factory = _factories[i];
                 SFXs.Add(factory.Name, factory.Create());
@@ -68,7 +68,7 @@ namespace Vurbiri.Colonization
             names_ed = new string[factories.Count + 1];
             names_ed[0] = EmptySFX.NAME; 
 
-            for (int i = 0, j = 1; i < factories.Count; i++, j++)
+            for (int i = 0, j = 1; i < factories.Count; ++i, ++j)
             {
                 ASFXFactory factory = factories[i];
                 names_ed[j] = factory.Name;

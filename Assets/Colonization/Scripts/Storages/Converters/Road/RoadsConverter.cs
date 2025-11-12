@@ -20,7 +20,7 @@ namespace Vurbiri.Colonization
             public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
             {
                 Key[][] keys = serializer.Deserialize<Key[][]>(reader);
-                for (int i = 0; i < keys.Length; i++)
+                for (int i = 0; i < keys.Length; ++i)
                     CreateRoad(keys[i]);
 
                 return _roads;
@@ -33,7 +33,7 @@ namespace Vurbiri.Colonization
                     if (count < 2) return;
 
                     Crossroad start = _crossroads[keys[0]];
-                    for (int i = 1; i < count; i++)
+                    for (int i = 1; i < count; ++i)
                     {
                         foreach (var link in start.Links)
                         {
@@ -60,7 +60,7 @@ namespace Vurbiri.Colonization
 
                 int count = roads._roadsLists.Count;
                 writer.WriteStartArray();
-                for (int i = 0; i < count; i++)
+                for (int i = 0; i < count; ++i)
                     Road.Converter.WriteJsonArray(writer, roads._roadsLists[i]);
                 writer.WriteEndArray();
             }

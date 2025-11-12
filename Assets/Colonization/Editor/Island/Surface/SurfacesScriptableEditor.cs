@@ -42,7 +42,7 @@ namespace VurbiriEditor.Colonization
 
             EditorGUILayout.BeginVertical(GUI.skin.window);
             _scrollPos = EditorGUILayout.BeginScrollView(_scrollPos);
-            for (int i = 0; i < _serializedProperty.arraySize; i++)
+            for (int i = 0; i < _serializedProperty.arraySize; ++i)
 			{
                 EditorGUILayout.Space();
                 EditorGUILayout.BeginVertical(GUI.skin.window);

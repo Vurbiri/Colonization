@@ -20,7 +20,7 @@ namespace Vurbiri.Colonization
         {
             if (other.IsNotEmpty)
             {
-                for (int i = 0; i < MainCount; i++)
+                for (int i = 0; i < MainCount; ++i)
                     _values[i].Add(other[i]);
 
                 _amount.Add(other.Amount);
@@ -31,7 +31,7 @@ namespace Vurbiri.Colonization
         {
             if (other.IsNotEmpty)
             {
-                for (int i = 0; i < MainCount; i++)
+                for (int i = 0; i < MainCount; ++i)
                     _values[i].Remove(other[i]);
 
                 _amount.Remove(other.Amount);
@@ -99,7 +99,7 @@ namespace Vurbiri.Colonization
             static int[] ConvertToInt(ACurrency[] values)
             {
                 int[] array = new int[MainCount];
-                for (int i = 0; i < MainCount; i++)
+                for (int i = 0; i < MainCount; ++i)
                     array[i] = values[i].Value;
 
                 return array;
@@ -153,7 +153,7 @@ namespace Vurbiri.Colonization
 
         public void MainToStringBuilder(StringBuilder sb)
         {
-            for (int i = 0; i < MainCount; i++)
+            for (int i = 0; i < MainCount; ++i)
                 sb.AppendFormat(TAG.CURRENCY, i, _values[i].ToString());
 
             sb.Append(" ");

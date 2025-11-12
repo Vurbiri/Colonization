@@ -14,7 +14,7 @@ namespace Vurbiri.Colonization
         {
             _prefab = prefab;
             _pool = new(count);
-            for (int i = 0; i < count; i++) 
+            for (int i = 0; i < count; ++i) 
                 Create();
         }
 

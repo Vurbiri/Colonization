@@ -35,16 +35,16 @@ namespace VurbiriEditor.Colonization
 
             Dictionary<string, ScrollView> containers = new(8);
 
-            for(int i = 0; i < 3; i++)
+            for(int i = 0; i < 3; ++i)
                 containers["ACS_Warrior_".Concat(WARRIOR_NAMES[i])] = root.Q<ScrollView>(WARRIOR_NAMES[i]);
 
-            for (int i = 0; i < DemonId.Count; i++)
+            for (int i = 0; i < DemonId.Count; ++i)
                 containers["ACS_Demon_".Concat(DemonId.Names_Ed[i])] = root.Q<ScrollView>(DemonId.Names_Ed[i]);
 
             AnimationClipSettingsScriptable clip;
             Editor editor; string name;
 
-            for (int i = settings.Count - 1; i >= 0; i--)
+            for (int i = settings.Count - 1; i >= 0; --i)
             {
                 editor = null;
 

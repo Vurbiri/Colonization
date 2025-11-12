@@ -81,7 +81,7 @@ namespace VurbiriEditor.Colonization
         {
             _maxPercent = _currentSettings.exp * PERCENT; _maxHalfPercent = ((_maxPercent - 100) >> 1) + 100;
 
-            for (int i = 0; i < COUNT; i++)
+            for (int i = 0; i < COUNT; ++i)
                 _weightBase[i] = _currentSettings.weight * MathI.Pow(_currentSettings.exp, i);
         }
 
@@ -92,7 +92,7 @@ namespace VurbiriEditor.Colonization
             var percent = _percent[type];
             var perksProperty = _perksProperty[type];
             Perk perk; SerializedProperty weightProperty;
-            for (int i = 0; i < AbilityTypeId.PerksCount[type]; i++)
+            for (int i = 0; i < AbilityTypeId.PerksCount[type]; ++i)
             {
                 perk = perks[i];
                 grid[perk.Level, perk.position] = perk;

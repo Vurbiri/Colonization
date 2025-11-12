@@ -12,9 +12,7 @@ namespace Vurbiri.Colonization
             public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
             {
                 int[] data = serializer.Deserialize<int[]>(reader);
-
-                int i = 0;
-                return new HexLoadData(data[i++], data[i]);
+                return new HexLoadData(data[0], data[1]);
             }
 
             protected override void WriteJson(JsonWriter writer, Hexagon hex, JsonSerializer serializer)

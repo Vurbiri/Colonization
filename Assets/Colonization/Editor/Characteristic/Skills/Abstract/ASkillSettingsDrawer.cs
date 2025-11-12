@@ -114,7 +114,7 @@ namespace VurbiriEditor.Colonization
             _position.y += _ySpace;
 
             SerializedProperty effectsProperty, effectProperty;
-            for (int i = 0; i < count; i++)
+            for (int i = 0; i < count; ++i)
             {
                 effectsProperty = GetProperty(hitsProperty.GetArrayElementAtIndex(i), P_EFFECTS);
                 if (effectsProperty.arraySize == 0)
@@ -123,7 +123,7 @@ namespace VurbiriEditor.Colonization
                 _position.y += _height;
                 PropertyField(_position, effectsProperty, new GUIContent($"Hit {i}"));
 
-                for (int j = 0; j < effectsProperty.arraySize; j++)
+                for (int j = 0; j < effectsProperty.arraySize; ++j)
                 {
                     effectProperty = effectsProperty.GetArrayElementAtIndex(j);
                     SetEnum(effectProperty, P_CHILD_TARGET, target);
@@ -154,14 +154,14 @@ namespace VurbiriEditor.Colonization
                     SerializedProperty hitsProperty = property.FindPropertyRelative(P_HITS);
                     SerializedProperty effectsProperty;
 
-                    for (int i = 0; i < hitsProperty.arraySize; i++)
+                    for (int i = 0; i < hitsProperty.arraySize; ++i)
                     {
                         rate += 1.1f;
                         effectsProperty = hitsProperty.GetArrayElementAtIndex(i).FindPropertyRelative(P_EFFECTS);
                         if (effectsProperty.isExpanded)
                         {
                             rate += 1.8f;
-                            for (int j = 0; j < effectsProperty.arraySize; j++)
+                            for (int j = 0; j < effectsProperty.arraySize; ++j)
                                 rate += HitEffectSettingsDrawer.GetPropertyRateHeight(effectsProperty.GetArrayElementAtIndex(j), j);
                         }
                     }

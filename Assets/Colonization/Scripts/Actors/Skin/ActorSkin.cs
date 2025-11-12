@@ -57,7 +57,7 @@ namespace Vurbiri.Colonization
             _runState = new(s_idRun, this);
 
             _skillStates = new SkillState[timings.Count];
-            for (int i = 0; i < timings.Count; i++)
+            for (int i = 0; i < timings.Count; ++i)
                 _skillStates[i] = new(s_idSkills[i], this, timings[i], i);
         }
 

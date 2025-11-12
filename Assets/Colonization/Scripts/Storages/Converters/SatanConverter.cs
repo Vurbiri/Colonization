@@ -12,9 +12,7 @@ namespace Vurbiri.Colonization
             public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
             {
                 var data = serializer.Deserialize<int[]>(reader);
-
-                int i = 0;
-                return new SatanLoadState(data[i++], data[i++], data[i]);
+                return new SatanLoadState(data[0], data[1], data[2]);
             }
 
             protected override void WriteJson(JsonWriter writer, Satan satan, JsonSerializer serializer)

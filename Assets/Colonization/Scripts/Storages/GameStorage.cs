@@ -12,7 +12,7 @@ namespace Vurbiri.Colonization.Storage
 
             ContractResolver.Add(new GameLoop.Converter(), new Crossroad.Converter());
 
-            for (int i = 0; i < PlayerId.HumansCount; i++)
+            for (int i = 0; i < PlayerId.HumansCount; ++i)
                 _humanStorages[i] = new(i, _storage, isLoad);
 
             _satanStorage = new(_storage, isLoad);
@@ -75,7 +75,7 @@ namespace Vurbiri.Colonization.Storage
         public override void Dispose()
         {
             base.Dispose();
-            for (int i = 0; i < PlayerId.HumansCount; i++)
+            for (int i = 0; i < PlayerId.HumansCount; ++i)
                 _humanStorages[i].Dispose();
         }
     }

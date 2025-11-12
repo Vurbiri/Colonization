@@ -15,7 +15,7 @@ namespace Vurbiri.Colonization
             protected override void WriteJson(JsonWriter writer, Diplomacy diplomacy, JsonSerializer serializer)
             {
                 writer.WriteStartArray();
-                for (int i = 0; i < PlayerId.HumansCount; i++)
+                for (int i = 0; i < PlayerId.HumansCount; ++i)
                     writer.WriteValue(diplomacy._values[i]);
                 writer.WriteEndArray();
             }

@@ -62,11 +62,11 @@ namespace Vurbiri.Collections
             if (_count == _capacity)
                 GrowArray();
 
-            for (int i = _count; i > index; i--)
+            for (int i = _count; i > index; --i)
                 _values[i] = _values[i - 1];
 
             _values[index] = item;
-            _count++;
+            ++_count;
         }
 
         public bool Remove(TValue item)
@@ -83,8 +83,8 @@ namespace Vurbiri.Collections
         {
             Throw.IfIndexOutOfRange(index, _count);
 
-            _count--;
-            for (int i = index; i < _count; i++)
+            --_count;
+            for (int i = index; i < _count; ++i)
                 _values[i] = _values[i + 1];
 
             _values[_count] = default;
@@ -92,7 +92,7 @@ namespace Vurbiri.Collections
 
         public void Clear()
         {
-            for (int i = 0; i < _count; i++)
+            for (int i = 0; i < _count; ++i)
                 _values[i] = default;
 
             _count = 0;
@@ -100,7 +100,7 @@ namespace Vurbiri.Collections
 
         public void CopyTo(TValue[] array, int arrayIndex)
         {
-            for (int i = arrayIndex; i < _count; i++)
+            for (int i = arrayIndex; i < _count; ++i)
                 array[i] = _values[i];
         }
 
@@ -114,7 +114,7 @@ namespace Vurbiri.Collections
         private void GrowArray(int capacity)
         {
             var array = new TValue[capacity];
-            for (int i = 0; i < _count; i++)
+            for (int i = 0; i < _count; ++i)
                 array[i] = _values[i];
 
             _values = array;

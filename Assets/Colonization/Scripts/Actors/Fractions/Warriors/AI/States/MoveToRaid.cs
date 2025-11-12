@@ -22,7 +22,7 @@ namespace Vurbiri.Colonization
                 {
                     int distance = s_settings.maxDistanceRaid;
                     var playerId = Actor.Owner;
-                    for (int i = 0; i < PlayerId.HumansCount; i++)
+                    for (int i = 0; i < PlayerId.HumansCount; ++i)
                     {
                         if (GameContainer.Diplomacy.IsGreatEnemy(playerId, i))
                         {

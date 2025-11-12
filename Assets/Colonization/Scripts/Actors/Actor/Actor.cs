@@ -163,7 +163,7 @@ namespace Vurbiri.Colonization
             _profitMain = _abilities.ReplaceToChance(ActorAbilityId.ProfitMain, _currentAP);
             _profitAdv  = _abilities.ReplaceToChance(ActorAbilityId.ProfitAdv, _currentAP);
 
-            for (int i = 0; i < initData.buffs.Count; i++)
+            for (int i = 0; i < initData.buffs.Count; ++i)
                 _subscription += initData.buffs[i].Subscribe(OnBuff);
             #endregion
 
@@ -187,7 +187,7 @@ namespace Vurbiri.Colonization
             static Key GetNearGroundHexOffset(Hexagon hexagon)
             {
                 var neighbors = hexagon.Neighbors;
-                for (int i = 0; i < neighbors.Count; i++)
+                for (int i = 0; i < neighbors.Count; ++i)
                      if (neighbors[i].IsWater)
                         return hexagon.Key - neighbors[i].Key;
 
@@ -204,7 +204,7 @@ namespace Vurbiri.Colonization
 
             _zealCharge = data.state.zealCharge;
 
-            for (int i = data.effects.Length - 1; i >= 0; i--)
+            for (int i = data.effects.Length - 1; i >= 0; --i)
                 _effects.Add(data.effects[i]);
 
             _states.Load();
@@ -224,7 +224,7 @@ namespace Vurbiri.Colonization
         {
             int force = 0;
             var neighbors = _currentHex.Neighbors;
-            for (int i = 0; i < HEX.SIDES; i++)
+            for (int i = 0; i < HEX.SIDES; ++i)
                 if (neighbors[i].TryGetEnemy(_owner, out Actor enemy))
                     force += enemy.CurrentForce;
             return force;

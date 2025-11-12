@@ -17,8 +17,7 @@ namespace Vurbiri.Colonization
             {
                 var data = serializer.Deserialize<int[]>(reader);
 
-                int i = 0;
-                _profile._idLang = (SystemLanguage)data[i++]; _profile._quality = data[i];
+                _profile._idLang = (SystemLanguage)data[0]; _profile._quality = data[1];
                 _profile.Cancel();
 
                 return _profile;

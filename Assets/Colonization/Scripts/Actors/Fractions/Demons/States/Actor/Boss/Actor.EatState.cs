@@ -26,7 +26,7 @@ namespace Vurbiri.Colonization
                         {
                             var crossroads = CurrentHex.Crossroads;
                             Crossroad crossroad;
-                            for (int i = 0; i < HEX.SIDES; i++)
+                            for (int i = 0; i < HEX.SIDES; ++i)
                             {
                                 crossroad = crossroads[i];
                                 if (crossroad.IsColony && GameContainer.Humans[crossroad.Owner].Resources.Amount > 0)
@@ -73,7 +73,7 @@ namespace Vurbiri.Colonization
                     }
 
                     yield return wait; wait.Reset();
-                    for (int i = 0; i < countBuff; i++)
+                    for (int i = 0; i < countBuff; ++i)
                         _effects[i].Apply(Actor, Actor);
                     Pay();
 

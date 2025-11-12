@@ -215,7 +215,7 @@ namespace Vurbiri.Colonization
         public bool IsEnemyNear(Id<PlayerId> playerId)
         {
             if(!_isWater)
-                for (int i = 0; i < HEX.SIDES; i++)
+                for (int i = 0; i < HEX.SIDES; ++i)
                     if (_neighbors[i].IsEnemy(playerId))
                         return true;
             return false;
@@ -227,7 +227,7 @@ namespace Vurbiri.Colonization
         {
             int max = 0;
             if (!(_isGate | IsWater))
-                for (int i = 0; i < HEX.VERTICES; i++)
+                for (int i = 0; i < HEX.VERTICES; ++i)
                     max = Mathf.Max(_crossroads[i].GetDefense(playerId), max);
 
             return max;

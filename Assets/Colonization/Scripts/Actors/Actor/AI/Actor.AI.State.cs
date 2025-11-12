@@ -76,7 +76,7 @@ namespace Vurbiri.Colonization
                     {
                         int force = GetEnemiesNearAndForce(friendTemp, enemies);
 
-                        for (int i = enemies.Count - 1; i >= 0; i--)
+                        for (int i = enemies.Count - 1; i >= 0; --i)
                         {
                             enemyTemp = enemies[i];
                             if (Goals.Enemies.CanAdd(enemyTemp, force) && TryGetDistance(Actor, enemyTemp.Hexagon, distance, out int newDistance))
@@ -96,7 +96,7 @@ namespace Vurbiri.Colonization
                     {
                         int force = 0;
                         var neighbors = friend._currentHex.Neighbors;
-                        for (int i = 0; i < HEX.SIDES; i++)
+                        for (int i = 0; i < HEX.SIDES; ++i)
                         {
                             if (neighbors[i].TryGetEnemy(friend._owner, out Actor enemy))
                             {
@@ -115,7 +115,7 @@ namespace Vurbiri.Colonization
                     ReadOnlyArray<Hexagon> hexagons;
                     Hexagon hexTemp; Crossroad colonyTemp;
 
-                    for (int i = 0; i < colonies.Count; i++)
+                    for (int i = 0; i < colonies.Count; ++i)
                     {
                         colonyTemp = colonies[i];
                         if (canAdd(colonyTemp) && (colonyTemp.ApproximateDistance(Actor.Hexagon) <= (distance + 1)) && colonyTemp.IsEmptyNear())

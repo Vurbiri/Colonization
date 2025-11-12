@@ -28,7 +28,7 @@ namespace Vurbiri.Colonization
             _prefabs [ActorTypeId.Demon]   = settings.demonPrefab;
             _settings[ActorTypeId.Demon]   = settings.demonsSettings.Init(out int demonMaxForce);
 
-            for (int i = 0; i < PlayerId.HumansCount; i++)
+            for (int i = 0; i < PlayerId.HumansCount; ++i)
                 _actors[i] = new(CONST.DEFAULT_MAX_WARRIOR);
             _actors[PlayerId.Satan] = new(CONST.DEFAULT_MAX_DEMONS);
 
@@ -55,11 +55,11 @@ namespace Vurbiri.Colonization
 
         public void Dispose()
         {
-            for (int i = 0; i < PlayerId.Count; i++)
+            for (int i = 0; i < PlayerId.Count; ++i)
                 _actors[i].Dispose();
 
             for (int a = 0; a < ActorTypeId.Count; a++)
-                for (int j = _settings[a].Length - 1; j >= 0; j--)
+                for (int j = _settings[a].Length - 1; j >= 0; --j)
                     _settings[a][j].Dispose();
         }
 

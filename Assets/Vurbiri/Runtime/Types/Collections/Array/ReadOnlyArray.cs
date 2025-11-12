@@ -34,7 +34,7 @@ namespace Vurbiri.Collections
         {
             _count = list.Count;
             _values = new TValue[_count];
-            for (int i = 0; i < _count; i++)
+            for (int i = 0; i < _count; ++i)
                 _values[i] = list[i];
         }
         protected ReadOnlyArray() { }

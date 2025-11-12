@@ -71,7 +71,7 @@ namespace Vurbiri
 
         public void Clear()
         {
-            for(int i = 1; i < _count; i++)
+            for(int i = 1; i < _count; ++i)
                 _weights[i] = null;
             _count = 1;
         }
@@ -110,7 +110,7 @@ namespace Vurbiri
         {
             _count--;
             int delta = _weights[index] - _weights[index - 1];
-            for (; index < _count; index++)
+            for (; index < _count; ++index)
                 _weights[index] = _weights[index + 1].Remove(delta);
             _weights[_count] = null;
             _max -= delta;
@@ -133,7 +133,7 @@ namespace Vurbiri
             _capacity = newCapacity;
 
             var array = new Weight[newCapacity];
-            for (int i = 0; i < _count; i++)
+            for (int i = 0; i < _count; ++i)
                 array[i] = _weights[i];
             _weights = array;
         }

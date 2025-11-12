@@ -38,14 +38,14 @@ namespace Vurbiri.Colonization
         {
             _mono.StartCoroutine(OnEndLanding_Cn(turnQueue.isPerson));
 
-            //Local
+            //======== Local========
             IEnumerator OnEndLanding_Cn(bool isPlayer)
             {
                 if (isPlayer)
                 {
                     WaitRealtime wait = new(_landingDelay);
                     yield return wait;
-                    yield return GameContainer.CameraController.ToDefaultPosition(true);
+                    yield return GameContainer.CameraController.ToDefaultPosition();
                     yield return wait.Restart(_landingDelay * 0.5f);
                 }
                 yield return null;
@@ -55,9 +55,12 @@ namespace Vurbiri.Colonization
 
         private void OnStartTurn(TurnQueue turnQueue, int hexId)
         {
+            GameContainer.InputController.WindowMode(true);
+            GameContainer.CameraController.ToDefaultPosition();
+
             _mono.StartCoroutine(OnStartTurn_Cn(turnQueue.turn, turnQueue.currentId.Value));
 
-            //Local
+            // ======== Local========
             IEnumerator OnStartTurn_Cn(int turn, int id)
             {
                 yield return _label.StartTurn_Cn(turn, id);

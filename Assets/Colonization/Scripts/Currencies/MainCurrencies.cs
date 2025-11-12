@@ -15,6 +15,8 @@ namespace Vurbiri.Colonization
         [SerializeField] protected int _amount;
 
         public int this[int index] { [Impl(256)] get => _values[index]; }
+        public int this[Id<CurrencyId> id] { [Impl(256)] get => _values[id]; }
+
         public int Count { [Impl(256)] get => COUNT; }
         public int Amount { [Impl(256)] get => _amount; }
         public bool IsEmpty { [Impl(256)] get => _amount == 0; }
@@ -26,7 +28,7 @@ namespace Vurbiri.Colonization
             get
             {
                 int minId = 0;
-                for (int i = 1; i < COUNT; i++)
+                for (int i = 1; i < COUNT; ++i)
                     if (_values[i] < _values[minId])
                         minId = i;
                 return minId;
@@ -37,7 +39,7 @@ namespace Vurbiri.Colonization
             get
             {
                 int maxId = 0;
-                for (int i = 1; i < COUNT; i++)
+                for (int i = 1; i < COUNT; ++i)
                     if (_values[i] > _values[maxId])
                         maxId = i;
                 return maxId;
@@ -49,7 +51,7 @@ namespace Vurbiri.Colonization
             get
             {
                 int minValue = _values[0];
-                for (int i = 1; i < COUNT; i++)
+                for (int i = 1; i < COUNT; ++i)
                     if (_values[i] < minValue)
                         minValue = _values[i];
                 return minValue;
@@ -60,7 +62,7 @@ namespace Vurbiri.Colonization
             get
             {
                 int maxValue = _values[0];
-                for (int i = 1; i < COUNT; i++)
+                for (int i = 1; i < COUNT; ++i)
                     if (_values[i] > maxValue)
                         maxValue = _values[i];
                 return maxValue;
@@ -79,7 +81,7 @@ namespace Vurbiri.Colonization
         {
             if (_amount != 0)
             {
-                for (int i = 0, resource; i < COUNT; i++)
+                for (int i = 0, resource; i < COUNT; ++i)
                 {
                     resource = _values[i];
                     if (resource != 0)
@@ -90,14 +92,14 @@ namespace Vurbiri.Colonization
         }
         public void ToStringBuilder(StringBuilder sb)
         {
-            for (int i = 0; i < COUNT; i++)
+            for (int i = 0; i < COUNT; ++i)
                 sb.AppendFormat(TAG.CURRENCY, i, _values[i].ToString("+#;-#;0"));
         }
         public void PlusToStringBuilder(StringBuilder sb)
         {
             if (_amount > 0)
             {
-                for (int i = 0, resource; i < COUNT; i++)
+                for (int i = 0, resource; i < COUNT; ++i)
                 {
                     resource = _values[i];
                     if (resource > 0)
@@ -114,7 +116,7 @@ namespace Vurbiri.Colonization
         sealed public override string ToString()
         {
             StringBuilder sb = new();
-            for (int i = 0; i < COUNT; i++)
+            for (int i = 0; i < COUNT; ++i)
             {
                 sb.Append("["); sb.Append(_values[i]); sb.Append("]");
             }
@@ -129,7 +131,7 @@ namespace Vurbiri.Colonization
         public static MainCurrencies operator -(ReadOnlyCurrencies a, ReadOnlyMainCurrencies b)
         {
             MainCurrencies diff = new();
-            for (int i = 0; i < COUNT; i++)
+            for (int i = 0; i < COUNT; ++i)
                 diff._values[i] = a[i] - b._values[i];
             diff._amount = a.Amount - b._amount;
 
@@ -138,7 +140,7 @@ namespace Vurbiri.Colonization
         public static ReadOnlyMainCurrencies operator -(ReadOnlyMainCurrencies a, ReadOnlyMainCurrencies b)
         {
             ReadOnlyMainCurrencies diff = new();
-            for (int i = 0; i < COUNT; i++)
+            for (int i = 0; i < COUNT; ++i)
                 diff._values[i] = a._values[i] - b._values[i];
             diff._amount = a._amount - b._amount;
 
@@ -147,7 +149,7 @@ namespace Vurbiri.Colonization
         public static ReadOnlyMainCurrencies operator +(ReadOnlyMainCurrencies a, ReadOnlyMainCurrencies b)
         {
             ReadOnlyMainCurrencies sum = new();
-            for (int i = 0; i < COUNT; i++)
+            for (int i = 0; i < COUNT; ++i)
                 sum._values[i] = a._values[i] + b._values[i];
             sum._amount = a._amount + b._amount;
 
@@ -158,7 +160,7 @@ namespace Vurbiri.Colonization
             ReadOnlyMainCurrencies result = new();
             if (currencies._amount != 0 & rate != 0)
             {
-                for (int i = 0; i < COUNT; i++)
+                for (int i = 0; i < COUNT; ++i)
                     result._values[i] = currencies._values[i] * rate;
                 result._amount = currencies._amount * rate;
             }
@@ -173,14 +175,14 @@ namespace Vurbiri.Colonization
             if (left._amount < right.Amount)
                 return false;
 
-            for (int i = 0; i < COUNT; i++)
+            for (int i = 0; i < COUNT; ++i)
                 if (left._values[i] < right[i])
                     return false;
             return true;
         }
         public static bool operator <=(ReadOnlyMainCurrencies left, ReadOnlyCurrencies right)
         {
-            for (int i = 0; i < COUNT; i++)
+            for (int i = 0; i < COUNT; ++i)
                 if (left._values[i] > right[i])
                     return false;
             return true;
@@ -194,14 +196,14 @@ namespace Vurbiri.Colonization
             if (left.Amount < right._amount)
                 return false;
 
-            for (int i = 0; i < COUNT; i++)
+            for (int i = 0; i < COUNT; ++i)
                 if (left[i] < right._values[i])
                     return false;
             return true;
         }
         public static bool operator <=(ReadOnlyCurrencies left, ReadOnlyMainCurrencies right)
         {
-            for (int i = 0; i < COUNT; i++)
+            for (int i = 0; i < COUNT; ++i)
                 if (left[i] > right._values[i])
                     return false;
             return true;
@@ -220,50 +222,55 @@ namespace Vurbiri.Colonization
             [Impl(256)] get => _values[index];
             [Impl(256)] set => Set(index, value);
         }
+        public new int this[Id<CurrencyId> id]
+        {
+            [Impl(256)] get => _values[id];
+            [Impl(256)] set => Set(id, value);
+        }
 
         public MainCurrencies() { }
         public MainCurrencies(ReadOnlyCurrencies other)
         {
-            for (int i = 0; i < COUNT; i++)
+            for (int i = 0; i < COUNT; ++i)
                 _values[i] = other[i];
             _amount = other.Amount;
         }
         public MainCurrencies(ReadOnlyMainCurrencies other)
         {
-            for (int i = 0; i < COUNT; i++)
+            for (int i = 0; i < COUNT; ++i)
                 _values[i] = other[i];
             _amount = other.Amount;
         }
         public MainCurrencies(MainCurrencies other)
         {
-            for (int i = 0; i < COUNT; i++)
+            for (int i = 0; i < COUNT; ++i)
                 _values[i] = other._values[i];
             _amount = other._amount;
         }
 
-        [Impl(256)] public void Increment(int index)
+        [Impl(256)] public void Increment(Id<CurrencyId> id)
         {
-            _values[index]++; _amount++;
+            ++_values[id]; ++_amount;
         }
-        [Impl(256)] public void Decrement(int index)
+        [Impl(256)] public void Decrement(Id<CurrencyId> id)
         {
-            _values[index]--; _amount--;
+            --_values[id]; --_amount;
         }
 
-        [Impl(256)] public void Set(int index, int value)
+        [Impl(256)] public void Set(Id<CurrencyId> id, int value)
         {
-            _amount += value - _values[index];
-            _values[index] = value;
+            _amount += value - _values[id];
+            _values[id] = value;
         }
-        [Impl(256)] public void Add(int index, int value)
+        [Impl(256)] public void Add(Id<CurrencyId> id, int value)
         {
             _amount += value;
-            _values[index] += value;
+            _values[id] += value;
         }
-        [Impl(256)] public void Remove(int index, int value)
+        [Impl(256)] public void Remove(Id<CurrencyId> id, int value)
         {
             _amount -= value;
-            _values[index] -= value;
+            _values[id] -= value;
         }
 
         [Impl(256)] public void AddToRandom(int value)
@@ -276,7 +283,7 @@ namespace Vurbiri.Colonization
         {
             if (_amount != 0)
             {
-                for (int i = 0; i < COUNT; i++)
+                for (int i = 0; i < COUNT; ++i)
                     _values[i] *= ratio;
 
                 _amount *= ratio;
@@ -287,7 +294,7 @@ namespace Vurbiri.Colonization
         {
             if (other.IsNotEmpty)
             {
-                for (int i = 0; i < COUNT; i++)
+                for (int i = 0; i < COUNT; ++i)
                     _values[i] += other[i];
                 _amount += other.Amount;
             }
@@ -308,7 +315,7 @@ namespace Vurbiri.Colonization
 
         public void Clear()
         {
-            for (int i = 0; i < COUNT; i++)
+            for (int i = 0; i < COUNT; ++i)
                 _values[i] = 0;
             _amount = 0;
         }
@@ -318,7 +325,7 @@ namespace Vurbiri.Colonization
 
         public void Import(ReadOnlyCurrencies other)
         {
-            for (int i = 0; i < COUNT; i++)
+            for (int i = 0; i < COUNT; ++i)
                 _values[i] = other[i];
             _amount = other.Amount;
         }
@@ -328,7 +335,7 @@ namespace Vurbiri.Colonization
             if (_amount != 0)
             {
                 int max = MaxValue;
-                for (int i = 0; i < COUNT; i++)
+                for (int i = 0; i < COUNT; ++i)
                     _values[i] = (_values[i] - max) * ratio;
 
                 _amount = (_amount - max * COUNT) * ratio;
@@ -339,7 +346,7 @@ namespace Vurbiri.Colonization
         public static MainCurrencies operator +(MainCurrencies a, MainCurrencies b)
         {
             MainCurrencies sum = new();
-            for (int i = 0; i < COUNT; i++)
+            for (int i = 0; i < COUNT; ++i)
                 sum._values[i] = a._values[i] + b._values[i];
             sum._amount = a._amount + b._amount;
 
@@ -348,7 +355,7 @@ namespace Vurbiri.Colonization
         public static MainCurrencies operator -(MainCurrencies a, MainCurrencies b)
         {
             MainCurrencies diff = new();
-            for (int i = 0; i < COUNT; i++)
+            for (int i = 0; i < COUNT; ++i)
                 diff._values[i] = a._values[i] - b._values[i];
             diff._amount = a._amount - b._amount;
 

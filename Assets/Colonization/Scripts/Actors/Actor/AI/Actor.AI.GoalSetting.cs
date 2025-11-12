@@ -26,7 +26,7 @@ namespace Vurbiri.Colonization
                 {
                     isContinue.Set(false);
 
-                    for (int i = 0; !isContinue & i < _states.Length; i++)
+                    for (int i = 0; !isContinue & i < _states.Length; ++i)
                     {
                         yield return null;
                         isContinue.Set(TryEnter(_states[i]));

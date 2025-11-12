@@ -21,25 +21,25 @@ namespace Vurbiri.Collections
         protected ReadOnlyIdArray() { }
         public ReadOnlyIdArray(TValue defaultValue)
         {
-            for (int i = 0; i < IdType<TId>.Count; i++)
+            for (int i = 0; i < IdType<TId>.Count; ++i)
                 _values[i] = defaultValue;
         }
         public ReadOnlyIdArray(Func<TValue> factory)
         {
-            for (int i = 0; i < IdType<TId>.Count; i++)
+            for (int i = 0; i < IdType<TId>.Count; ++i)
                 _values[i] = factory();
         }
         public ReadOnlyIdArray(params TValue[] values)
         {
             int count = Mathf.Min(IdType<TId>.Count, values.Length);
-            for (int i = 0; i < count; i++)
+            for (int i = 0; i < count; ++i)
                 _values[i] = values[i];
         }
         [JsonConstructor]
         public ReadOnlyIdArray(IReadOnlyList<TValue> list)
         {
             int count = Mathf.Min(IdType<TId>.Count, list.Count);
-            for (int i = 0; i < count; i++)
+            for (int i = 0; i < count; ++i)
                 _values[i] = list[i];
         }
         #endregion

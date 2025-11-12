@@ -39,7 +39,7 @@ namespace Vurbiri
             _count = _capacity;
 
             _values[0] = ids[0];
-            for (int i = 1, j; i < _count; i++)
+            for (int i = 1, j; i < _count; ++i)
             {
                 _values[i] = ids[i];
 
@@ -52,7 +52,7 @@ namespace Vurbiri
             _count = _capacity;
 
             _values[0] = ids[0];
-            for (int i = 1, j; i < _count; i++)
+            for (int i = 1, j; i < _count; ++i)
             {
                 _values[i] = ids[i];
 
@@ -89,7 +89,7 @@ namespace Vurbiri
         private void Shuffle(int cursor = -1)
         {
             _cursor = cursor;
-            for (int i = 1, j; i < _count; i++)
+            for (int i = 1, j; i < _count; ++i)
             {
                 j = UnityEngine.Random.Range(0, i);
                 (_values[j], _values[i]) = (_values[i], _values[j]);

@@ -55,7 +55,7 @@ namespace Vurbiri.Colonization
             private IEnumerator StartSkill_Cn()
             {
                 float offset = 0f;
-                for (int i = 0; i < _countHits; i++)
+                for (int i = 0; i < _countHits; ++i)
                 {
                     yield return _waitHits[i].OffsetRestart(offset);
 

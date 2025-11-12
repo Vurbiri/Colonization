@@ -14,7 +14,7 @@ namespace Vurbiri.Colonization
             protected static bool NearNoWarriors(Hexagon hexagon)
             {
                 var neighbors = hexagon.Neighbors;
-                for (int i = 0; i < neighbors.Count; i++)
+                for (int i = 0; i < neighbors.Count; ++i)
                     if (neighbors[i].IsWarrior)
                         return false;
                 return true;
@@ -23,7 +23,7 @@ namespace Vurbiri.Colonization
             protected static bool NearWarriors(Hexagon hexagon)
             {
                 var neighbors = hexagon.Neighbors;
-                for (int i = 0; i < neighbors.Count; i++)
+                for (int i = 0; i < neighbors.Count; ++i)
                     if (neighbors[i].IsWarrior)
                         return true;
                 return false;

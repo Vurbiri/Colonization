@@ -21,7 +21,7 @@ namespace VurbiriEditor.Colonization
 				propertyValues.arraySize = PlayerId.Count;
 
 				SerializedProperty property;
-                for (int i = 0; i < PlayerId.Count; i++)
+                for (int i = 0; i < PlayerId.Count; ++i)
 				{
                     property = propertyValues.GetArrayElementAtIndex(i);
 

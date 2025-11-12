@@ -32,7 +32,7 @@ namespace Vurbiri.Reactive.Collections
         {
             if (instantGetValue)
             {
-                for (int i = 0; i < _count; i++)
+                for (int i = 0; i < _count; ++i)
                     action(i, _values[i], TypeEvent.Subscribe);
             }
 
@@ -94,7 +94,7 @@ namespace Vurbiri.Reactive.Collections
             _capacity = _count.Value = values.Count;
             _values = new T[_capacity];
 
-            for (int i = 0; i < _capacity; i++)
+            for (int i = 0; i < _capacity; ++i)
                 _values[i] = values[i];
         }
         #endregion
@@ -162,8 +162,8 @@ namespace Vurbiri.Reactive.Collections
 
             T temp = _values[index];
             
-            _count.SilentValue--;
-            for (int i = index; i < _count; i++)
+            --_count.SilentValue;
+            for (int i = index; i < _count; ++i)
                 _values[i] = _values[i + 1];
 
             _values[_count] = default;
@@ -174,7 +174,7 @@ namespace Vurbiri.Reactive.Collections
 
         public void Clear()
         {
-            for (int i = 0; i < _count; i++)
+            for (int i = 0; i < _count; ++i)
             {
                 _changeEvent.Invoke(i, _values[i], TypeEvent.Remove);
                 _values[i] = default;
@@ -185,7 +185,7 @@ namespace Vurbiri.Reactive.Collections
 
         public void CopyTo(T[] array, int arrayIndex)
         {
-            for (int i = arrayIndex; i < _count; i++)
+            for (int i = arrayIndex; i < _count; ++i)
                 array[i] = _values[i];
         }
         #endregion
@@ -195,7 +195,7 @@ namespace Vurbiri.Reactive.Collections
             _capacity = _capacity << 1 | BASE_CAPACITY;
 
             var array = new T[_capacity];
-            for(int i = 0; i < _count; i++)
+            for(int i = 0; i < _count; ++i)
                 array[i] = _values[i];
             _values = array;
         }

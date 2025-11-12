@@ -13,7 +13,11 @@ namespace Vurbiri.Colonization.Controllers
             private readonly Default _default;
             private readonly float _sqrRatioParentDistance, _maxSqrDistance, _minSqrDistance;
             private float _ratioSpeed = 1f;
+            private Vector3 _oldPosition, _targetPosition;
+            private float _oldHeight, _targetHeight;
+            private bool _isReturn;
 
+            public bool Return { [Impl(256)] set => _isReturn = value; }
             public override float InputValue { [Impl(256)] get => _ratioSpeed; [Impl(256)] set => _ratioSpeed = value; }
             public WaitSignal Signal { [Impl(256)] get => _waitSignal; }
 
@@ -35,8 +39,22 @@ namespace Vurbiri.Colonization.Controllers
 
                 Vector3 parentPosition = _cameraTransform.ParentPosition;
                 Vector3 cameraPosition = _cameraTransform.CameraPosition;
-                float height = cameraPosition.y - _default.height;
-                float sqrDistance = Mathf.Max(parentPosition.sqrMagnitude * _sqrRatioParentDistance, height * height);
+
+                if (_isReturn)
+                {
+                    _targetPosition = _oldPosition;
+                    _targetHeight = _oldHeight;
+                }
+                else
+                {
+                    _oldPosition = parentPosition;
+                    _oldHeight = cameraPosition.y;
+                    _targetPosition = Vector3.zero;
+                    _targetHeight = _default.height;
+                }
+
+                float height = cameraPosition.y - _targetHeight;
+                float sqrDistance = Mathf.Max((parentPosition - _targetPosition).sqrMagnitude * _sqrRatioParentDistance, height * height);
 
                 if(sqrDistance > _minSqrDistance)
                 {
@@ -45,32 +63,34 @@ namespace Vurbiri.Colonization.Controllers
                 }
                 else
                 {
-                    cameraPosition.y = _default.height;
-                    _cameraTransform.SetCameraAndParentPosition(cameraPosition, Vector3.zero);
+                    cameraPosition.y = _targetHeight;
+                    _cameraTransform.SetCameraAndParentPosition(cameraPosition, _targetPosition);
                     GetOutOfThisState();
                 }
             }
 
-            private IEnumerator MoveToDefault_Cn(Vector3 startParentPosition, Vector3 cameraPosition, float maxSpeed)
+            private IEnumerator MoveToDefault_Cn(Vector3 parentPosition, Vector3 cameraPosition, float maxSpeed)
             {
                 float progress = 0f;
                 float speed = maxSpeed, deltaSpeed = _default.minSpeed - maxSpeed;
-                float startHeight = cameraPosition.y, deltaHeight = _default.height - startHeight;
-                
+                float startX = parentPosition.x, startY = cameraPosition.y, startZ = parentPosition.z;
+                float deltaX = _targetPosition.x - startX, deltaY = _targetHeight - startY, deltaZ = _targetPosition.z - startZ;
+
                 while (progress < 1f)
                 {
                     progress = Mathf.Clamp01(progress + Time.unscaledDeltaTime * speed);
 
-                    cameraPosition.y = startHeight + deltaHeight * progress;
-                    _cameraTransform.SetCameraAndParentPosition(cameraPosition, startParentPosition * (1f - progress));
+                    parentPosition.x = startX + deltaX * progress;
+                    cameraPosition.y = startY + deltaY * progress;
+                    parentPosition.z = startZ + deltaZ * progress;
+                    _cameraTransform.SetCameraAndParentPosition(cameraPosition, parentPosition);
 
                     speed = maxSpeed + deltaSpeed * progress;
-
                     yield return null;
                 }
 
-                cameraPosition.y = _default.height;
-                _cameraTransform.SetCameraAndParentPosition(cameraPosition, Vector3.zero);
+                cameraPosition.y = _targetHeight;
+                _cameraTransform.SetCameraAndParentPosition(cameraPosition, _targetPosition);
 
                 _coroutine = null;
                 GetOutOfThisState();

@@ -13,7 +13,7 @@ namespace Vurbiri.Colonization
         {
             TSettings settings;
             int minForce = int.MaxValue, maxForce = int.MinValue;
-            for (int i = 0; i < ActorId<TId>.Count; i++)
+            for (int i = 0; i < ActorId<TId>.Count; ++i)
             {
                 settings = _settings[i];
                 settings.Init();
@@ -29,14 +29,14 @@ namespace Vurbiri.Colonization
 
         private void OnValidate()
         {
-            for (int i = 0; i < ActorId<TId>.Count; i++)
+            for (int i = 0; i < ActorId<TId>.Count; ++i)
                 _settings[i].OnValidate();
         }
 
         public void UpdateName_Ed(string oldName, string newName)
         {
             bool isDirty = false;
-            for (int i = 0; i < ActorId<TId>.Count; i++)
+            for (int i = 0; i < ActorId<TId>.Count; ++i)
                 isDirty |= _settings[i].UpdateName_Ed(oldName, newName);
 
             if(isDirty)
@@ -45,7 +45,7 @@ namespace Vurbiri.Colonization
 
         public void UpdateAnimation_Ed()
         {
-            for (int i = 0; i < ActorId<TId>.Count; i++)
+            for (int i = 0; i < ActorId<TId>.Count; ++i)
                 _settings[i].UpdateAnimation_Ed();
 
             UnityEditor.EditorUtility.SetDirty(this);
@@ -55,7 +55,7 @@ namespace Vurbiri.Colonization
         public void PrintForce_Ed()
         {
             Debug.Log("==== Actor Force ====");
-            for (int i = 0; i < ActorId<TId>.Count; i++)
+            for (int i = 0; i < ActorId<TId>.Count; ++i)
                 _settings[i].PrintForce_Ed();
             Debug.Log("=====================");
         }
@@ -63,7 +63,7 @@ namespace Vurbiri.Colonization
         public void PrintProfit_Ed(int main, int adv)
         {
             Debug.Log("==== Actor Profit ====");
-            for (int i = 0; i < ActorId<TId>.Count; i++)
+            for (int i = 0; i < ActorId<TId>.Count; ++i)
                 _settings[i].PrintProfit_Ed(main, adv);
             Debug.Log("======================");
         }
@@ -71,7 +71,7 @@ namespace Vurbiri.Colonization
         public string[][] SetSkills_Ed()
         {
             string[][] names = new string[ActorId<TId>.Count][];
-            for (int i = 0; i < ActorId<TId>.Count; i++)
+            for (int i = 0; i < ActorId<TId>.Count; ++i)
                 names[i] = GetSkills(_settings[i].Skills.SkillSettings_Ed);
 
             return names;
@@ -82,7 +82,7 @@ namespace Vurbiri.Colonization
                 int count = skillSettings.Length;
                 string[] names = new string[count];
 
-                for (int i = 0; i < count; i++)
+                for (int i = 0; i < count; ++i)
                     names[i] = $"{skillSettings[i].GetName_Ed()} ({i.ToStr()})";
 
                 return names;

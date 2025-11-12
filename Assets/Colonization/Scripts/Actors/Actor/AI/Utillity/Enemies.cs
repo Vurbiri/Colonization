@@ -17,7 +17,7 @@ namespace Vurbiri.Colonization
                     enemiesForce = 0;
 
                     Key current = actor._currentHex.Key;
-                    for (int i = 0; i < keys.Count; i++)
+                    for (int i = 0; i < keys.Count; ++i)
                         if (GameContainer.Hexagons.TryGet(current + keys[i], out Hexagon hex) && hex.TryGetEnemy(actor._owner, out Actor enemy))
                             Add(enemy);
                 }
@@ -27,7 +27,7 @@ namespace Vurbiri.Colonization
                     enemiesForce = 0;
 
                     var hexagons = actor._currentHex.Neighbors;
-                    for (int i = 0; i < HEX.SIDES; i++)
+                    for (int i = 0; i < HEX.SIDES; ++i)
                         if (hexagons[i].TryGetEnemy(actor._owner, out Actor enemy))
                             Add(enemy);
                 }

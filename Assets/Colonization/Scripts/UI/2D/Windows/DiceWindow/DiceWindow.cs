@@ -40,8 +40,6 @@ namespace Vurbiri.Colonization.UI
 
         private IEnumerator Roll_Cn(bool isPerson)
         {
-            GameContainer.InputController.WindowMode(true);
-
             _result.text = string.Empty;
 
             for (int i = 0; i < CONST.DICES_COUNT; i++)
@@ -63,6 +61,9 @@ namespace Vurbiri.Colonization.UI
 
             yield return _openTime.Restart();
             yield return _canvasSwitcher.Hide();
+            yield return _openTime.Restart();
+
+            yield return GameContainer.CameraController.FromDefaultPosition();
 
             GameContainer.InputController.WindowMode(false);
             GameContainer.GameLoop.Profit();

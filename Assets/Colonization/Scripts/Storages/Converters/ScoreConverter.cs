@@ -15,7 +15,7 @@ namespace Vurbiri.Colonization
             protected override void WriteJson(JsonWriter writer, Score score, JsonSerializer serializer)
             {
                 writer.WriteStartArray();
-                for (int i = 0; i < PlayerId.HumansCount; i++)
+                for (int i = 0; i < PlayerId.HumansCount; ++i)
                     writer.WriteValue(score._values[i]);
                 writer.WriteEndArray();
             }

@@ -96,7 +96,7 @@ namespace Vurbiri.Colonization
                 _canCancel.False();
 
                 _waitHexagon.SetResult(newSelectable as Hexagon);
-                for (int i = 0; i < HEX_COUNT; i++)
+                for (int i = 0; i < HEX_COUNT; ++i)
                     _hexagons[i].SetUnselectable();
             }
         }
@@ -124,7 +124,7 @@ namespace Vurbiri.Colonization
             }
             else
             {
-                for (int i = 0; i < _hexagons.Count; i++)
+                for (int i = 0; i < _hexagons.Count; ++i)
                     _hexagons[i].CrossroadRemove(this);
 
                 Object.Destroy(_edifice.gameObject);
@@ -148,7 +148,7 @@ namespace Vurbiri.Colonization
                 MainCurrencies profitId = new();
                 _countFreeLink = 3;
                 _states.SetNextId(EdificeId.Camp, EdificeGroupId.Colony);
-                for (int i = 0; i < HEX_COUNT; i++)
+                for (int i = 0; i < HEX_COUNT; ++i)
                 {
                     hexagon = _hexagons[i];
                     _weight += hexWeight[hexagon.Id];
@@ -159,7 +159,7 @@ namespace Vurbiri.Colonization
             }
             else
             {
-                for (int i = 0, count = _waterCount; count > 0; i++)
+                for (int i = 0, count = _waterCount; count > 0; ++i)
                 {
                     hexagon = _hexagons[i];
                     if (hexagon.IsWater)
@@ -198,7 +198,7 @@ namespace Vurbiri.Colonization
 
         public bool IsOwnerNear(Id<PlayerId> playerId)
         {
-            for (int i = 0; i < HEX_COUNT; i++)
+            for (int i = 0; i < HEX_COUNT; ++i)
                 if (_hexagons[i].IsOwner(playerId))
                     return true;
             return false;
@@ -206,7 +206,7 @@ namespace Vurbiri.Colonization
 
         public bool IsEnemyNear(Id<PlayerId> playerId)
         {
-            for (int i = 0; i < HEX_COUNT; i++)
+            for (int i = 0; i < HEX_COUNT; ++i)
                 if(_hexagons[i].IsEnemy(playerId))
                     return true;
             return false;
@@ -214,7 +214,7 @@ namespace Vurbiri.Colonization
 
         public bool IsEmptyNear()
         {
-            for (int i = 0; i < HEX_COUNT; i++)
+            for (int i = 0; i < HEX_COUNT; ++i)
                 if (_hexagons[i].IsOwned)
                     return false;
             return true;
@@ -224,12 +224,12 @@ namespace Vurbiri.Colonization
         #region ================== Caption ============================
         [Impl(256)] public void CaptionHexagonsEnable()
         {
-            for (int i = 0; i < HEX_COUNT; i++)
+            for (int i = 0; i < HEX_COUNT; ++i)
                 _hexagons[i].CaptionEnable(IsCoast, _isGate);
         }
         [Impl(256)] public void CaptionHexagonsDisable()
         {
-            for (int i = 0; i < HEX_COUNT; i++)
+            for (int i = 0; i < HEX_COUNT; ++i)
                 _hexagons[i].CaptionDisable();
         }
         #endregion
@@ -242,7 +242,7 @@ namespace Vurbiri.Colonization
         #region ================== Profit ============================
         public void ProfitFromPort(MainCurrencies profit, int idHex, int shiftProfit)
         {
-            for (int i = 0; i < HEX_COUNT; i++)
+            for (int i = 0; i < HEX_COUNT; ++i)
                 if (_hexagons[i].TryGetProfit(idHex, true, out int currencyId))
                     profit.Add(currencyId, _states.profit << shiftProfit);
         }
@@ -252,7 +252,7 @@ namespace Vurbiri.Colonization
             Hexagon hex;
             int countEnemy = 0;
 
-            for (int i = 0; i < HEX_COUNT; i++)
+            for (int i = 0; i < HEX_COUNT; ++i)
             {
                 hex = _hexagons[i];
 
@@ -272,7 +272,7 @@ namespace Vurbiri.Colonization
         }
         public void GetNetProfit(MainCurrencies profit)
         {
-            for (int i = 0; i < HEX_COUNT; i++)
+            for (int i = 0; i < HEX_COUNT; ++i)
                 profit.Add(_hexagons[i].GetProfit(), _states.profit);
         }
         #endregion
@@ -330,7 +330,7 @@ namespace Vurbiri.Colonization
             [Impl(256)] void ResetWeightNeighborsForPorts()
             {
                 ReadOnlyArray<Crossroad> crossroads;
-                for (int i = 0; i < HEX_COUNT; i++)
+                for (int i = 0; i < HEX_COUNT; ++i)
                 {
                     if (_hexagons[i].IsWater)
                     {
@@ -356,7 +356,7 @@ namespace Vurbiri.Colonization
             if (returnSignal)
             {
                 _states.isBuildWall = !(_isWall = true);
-                for (int i = 0; i < _hexagons.Count; i++)
+                for (int i = 0; i < _hexagons.Count; ++i)
                     _hexagons[i].AddWallDefenceEffect(playerId);
             }
 
@@ -429,7 +429,7 @@ namespace Vurbiri.Colonization
         public bool CanRecruiting(Id<PlayerId> playerId)
         {
             int countUnfit = 0;
-            for (int i = 0; i < HEX_COUNT; i++)
+            for (int i = 0; i < HEX_COUNT; ++i)
                 if (!_hexagons[i].CanWarriorEnter)
                     countUnfit++;
 
@@ -441,7 +441,7 @@ namespace Vurbiri.Colonization
             _waitHexagon.Reset();
             List<Hexagon> empty = new(2);
 
-            for (int i = 0; i < HEX_COUNT; i++)
+            for (int i = 0; i < HEX_COUNT; ++i)
                 if (_hexagons[i].CanWarriorEnter)
                     empty.Add(_hexagons[i]);
 
@@ -449,7 +449,7 @@ namespace Vurbiri.Colonization
             if (emptyCount == 0)
                 return _waitHexagon.Cancel();
 
-            for (int i = 0; i < emptyCount; i++)
+            for (int i = 0; i < emptyCount; ++i)
                 empty[i].TrySetSelectableFree();
 
             _canCancel.True();
@@ -463,7 +463,7 @@ namespace Vurbiri.Colonization
         public Key KeyCalculation()
         {
             Key key = Key.Zero;
-            for (int i = 0; i < HEX_COUNT; i++)
+            for (int i = 0; i < HEX_COUNT; ++i)
                 key += _hexagons[i].Key;
             return new Key(key.x / HEX_COUNT, key.y);
         }

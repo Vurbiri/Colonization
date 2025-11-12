@@ -20,8 +20,7 @@ namespace Vurbiri.Colonization
 
             public static ReactiveEffect ReadFromArray(int[] array)
             {
-                int i = 0;
-                return new(new(array[i++]), array[i++], array[i++], array[i++], array[i++], array[i]);
+                return new(new(array[0]), array[1], array[2], array[3], array[4], array[5]);
             }
 
             public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)

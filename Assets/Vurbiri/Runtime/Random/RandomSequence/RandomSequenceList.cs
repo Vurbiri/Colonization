@@ -30,7 +30,7 @@ namespace Vurbiri
                 _capacity = _capacity << 1 | BASE_CAPACITY;
 
                 var array = new T[_capacity];
-                for (int i = 0; i < _count; i++)
+                for (int i = 0; i < _count; ++i)
                     array[i] = _values[i];
                 _values = array;
             }
@@ -50,12 +50,12 @@ namespace Vurbiri
         {
             if (index < _count)
             {
-                _count--;
-                for (; index < _count; index++)
+                --_count;
+                for (; index < _count; ++index)
                     _values[index] = _values[index + 1];
 
                 if (_cursor >= index)
-                    _cursor--;
+                    --_cursor;
             }
         }
     }

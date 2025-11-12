@@ -15,7 +15,7 @@ namespace Vurbiri.Colonization
             [Impl(256)] get
             {
                 int count = _hitTimes.Length; var wait = new WaitScaledTime[count];
-                for (int i = 0; i < count; i++)
+                for (int i = 0; i < count; ++i)
                     wait[i] = new(_hitTimes[i]);
                 
                 return wait;
@@ -40,7 +40,7 @@ namespace Vurbiri.Colonization
             float totalTime = clipSettings.totalTime, currentTime, prevTime;
             _hitTimes[0] = prevTime = totalTime * clipSettings.hitTimes[0] / 100f;
 
-            for (int i = 1; i < count; i++)
+            for (int i = 1; i < count; ++i)
             {
                 currentTime = totalTime * clipSettings.hitTimes[i] / 100f;
                 _hitTimes[i] = currentTime - prevTime;

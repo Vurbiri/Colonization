@@ -287,7 +287,7 @@ namespace VurbiriEditor.Colonization
             void SetDefaultValue(SerializedProperty property, int[] values)
             {
                 int value = property.intValue;
-                for (int i = 0; i < values.Length; i++)
+                for (int i = 0; i < values.Length; ++i)
                     if (values[i] == value)
                         return;
 

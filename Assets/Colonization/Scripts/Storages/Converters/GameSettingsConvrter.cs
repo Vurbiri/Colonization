@@ -11,9 +11,7 @@ namespace Vurbiri.Colonization
             public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
             {
                 var data = serializer.Deserialize<int[]>(reader);
-
-                int i = 0;
-                return new GameSettings(data[i++] > 0, data[i++], data[i++] > 0, data[i++] > 0);
+                return new GameSettings(data[0] > 0, data[1], data[2] > 0, data[3] > 0);
             }
 
             protected override void WriteJson(JsonWriter writer, GameSettings settings, JsonSerializer serializer)

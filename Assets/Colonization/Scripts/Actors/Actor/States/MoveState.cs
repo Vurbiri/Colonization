@@ -63,7 +63,7 @@ namespace Vurbiri.Colonization
                 {
                     List<Hexagon> empty = new(HEX.SIDES);
                     var neighbors = CurrentHex.Neighbors;
-                    for (int i = 0; i < neighbors.Count; i++)
+                    for (int i = 0; i < neighbors.Count; ++i)
                         if (neighbors[i].TrySetSelectableFree())
                             empty.Add(neighbors[i]);
 
@@ -77,7 +77,7 @@ namespace Vurbiri.Colonization
                     yield return _waitHexagon.Restart();
                     IsCancel.False();
 
-                    for (int i = empty.Count - 1; i >= 0; i--)
+                    for (int i = empty.Count - 1; i >= 0; --i)
                         empty[i].SetUnselectable();
 
                     Move();

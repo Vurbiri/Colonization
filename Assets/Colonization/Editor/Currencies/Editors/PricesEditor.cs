@@ -19,14 +19,14 @@ namespace VurbiriEditor.Colonization
 
             SerializedProperty propertyValues = serializedObject.FindProperty(NAME_ENDIFACE).FindPropertyRelative(NAME_ARRAY);
 
-            for (int i = EdificeId.Shrine; i < EdificeId.Count; i++)
+            for (int i = EdificeId.Shrine; i < EdificeId.Count; ++i)
             {
                 root.Q<PropertyField>(EdificeId.Names_Ed[i]).BindProperty(propertyValues.GetArrayElementAtIndex(i));
             }
 
             propertyValues = serializedObject.FindProperty(NAME_WARRIORS).FindPropertyRelative(NAME_ARRAY);
 
-            for (int i = 0; i < WarriorId.Count; i++)
+            for (int i = 0; i < WarriorId.Count; ++i)
             {
                 root.Q<PropertyField>(WarriorId.Names_Ed[i]).BindProperty(propertyValues.GetArrayElementAtIndex(i));
             }

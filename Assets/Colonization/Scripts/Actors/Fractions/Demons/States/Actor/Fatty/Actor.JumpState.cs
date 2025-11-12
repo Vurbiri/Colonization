@@ -22,7 +22,7 @@ namespace Vurbiri.Colonization
                         if(base.CanUse)
                         {
                             var neighbors = CurrentHex.Neighbors;
-                            for (int i = 0; i < neighbors.Count; i++)
+                            for (int i = 0; i < neighbors.Count; ++i)
                                 if (neighbors[i].IsWarrior)
                                     _targets.Add(neighbors[i].Owner);
                         }
@@ -53,7 +53,7 @@ namespace Vurbiri.Colonization
                     yield return wait; wait.Reset();
 
                     Actor target;
-                    for (int i = _targets.Count -  1; i >= 0; i--)
+                    for (int i = _targets.Count -  1; i >= 0; --i)
                     {
                         target = _targets[i];
                         _effects.Apply(Actor, target);

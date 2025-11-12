@@ -46,7 +46,7 @@ namespace Vurbiri.Colonization
                                 
             Crossroad crossroad; Hexagon hexagon;
 
-            for (int i = 0; i < colonies.Count; i++)
+            for (int i = 0; i < colonies.Count; ++i)
             {
                 crossroad = colonies[i];
                 if (crossroad.IsEnemyNear(human.Id) && TryGetNearFreeHexagon(GetNearPort(crossroad.Key, ports), crossroad, out hexagon))
@@ -55,7 +55,7 @@ namespace Vurbiri.Colonization
 
             if (output.Count == 0)
             {
-                for (int i = 0; i < colonies.Count; i++)
+                for (int i = 0; i < colonies.Count; ++i)
                 {
                     crossroad = colonies[i];
                     if (!crossroad.IsOwnerNear(human.Id) && TryGetNearFreeHexagon(GetNearPort(crossroad.Key, ports), crossroad, out hexagon))
@@ -64,7 +64,7 @@ namespace Vurbiri.Colonization
 
                 if (output.Count == 0)
                 {
-                    for (int i = 0; i < ports.Count; i++)
+                    for (int i = 0; i < ports.Count; ++i)
                         SetFreeHexagons(ports[i], output);
                 }
             }
@@ -78,7 +78,7 @@ namespace Vurbiri.Colonization
                 var result = ports[0];
                 int distance = CROSS.Distance(colony, result.Key);
 
-                for (int i = 1, temp; i < ports.Count; i++)
+                for (int i = 1, temp; i < ports.Count; ++i)
                 {
                     temp = CROSS.Distance(colony, ports[i].Key);
                     if (temp < distance)
@@ -94,7 +94,7 @@ namespace Vurbiri.Colonization
             {
                 Hexagon current; output = null;
 
-                for (int i = 0, temp, distance = int.MaxValue; i < Crossroad.HEX_COUNT; i++)
+                for (int i = 0, temp, distance = int.MaxValue; i < Crossroad.HEX_COUNT; ++i)
                 {
                     current = start.Hexagons[i];
                     if (current.CanWarriorEnter)
@@ -117,7 +117,7 @@ namespace Vurbiri.Colonization
             static void SetFreeHexagons(Crossroad crossroad, List<Hexagon> output)
             {
                 Hexagon hexagon;
-                for (int i = 0; i < Crossroad.HEX_COUNT; i++)
+                for (int i = 0; i < Crossroad.HEX_COUNT; ++i)
                 {
                     hexagon = crossroad.Hexagons[i];
                     if (hexagon.CanWarriorEnter)

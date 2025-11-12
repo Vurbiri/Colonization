@@ -11,9 +11,7 @@ namespace Vurbiri.Colonization
             public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
             {
                 var data = serializer.Deserialize<int[]>(reader);
-
-                int i = 0;
-                return new EdificeLoadData(new(data[i++], data[i++]), data[i++], data[i] > 0);
+                return new EdificeLoadData(new(data[0], data[1]), data[2], data[3] > 0);
             }
 
             protected override void WriteJson(JsonWriter writer, Crossroad cross, JsonSerializer serializer)

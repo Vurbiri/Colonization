@@ -61,15 +61,15 @@ namespace Vurbiri
             return result;
         }
 
-        public bool Remove(int value)
+        public bool Remove(int index)
         {
-            bool result = ++value > 0 & value < _count;
+            bool result = ++index > 0 & index < _count;
             if (result)
             {
                 _count--;
-                int delta = _weights[value] - _weights[value - 1];
-                for (; value < _count; value++)
-                    _weights[value] = _weights[value + 1] - delta;
+                int delta = _weights[index] - _weights[index - 1];
+                for (; index < _count; ++index)
+                    _weights[index] = _weights[index + 1] - delta;
             }
             return result;
         }
@@ -83,7 +83,7 @@ namespace Vurbiri
             _capacity = newCapacity;
 
             var array = new int[newCapacity];
-            for (int i = 0; i < _count; i++)
+            for (int i = 0; i < _count; ++i)
                 array[i] = _weights[i];
             _weights = array;
         }

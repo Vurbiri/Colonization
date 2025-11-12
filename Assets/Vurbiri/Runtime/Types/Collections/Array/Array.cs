@@ -24,7 +24,7 @@ namespace Vurbiri.Collections
             {
                 TValue[] newArr = new TValue[newSize];
                 int count = Math.Min(newSize, _count);
-                for (int i = 0; i < count; i++)
+                for (int i = 0; i < count; ++i)
                     newArr[i] = _values[i];
 
                 _values = newArr;
@@ -34,7 +34,7 @@ namespace Vurbiri.Collections
 
         public void CopyTo(TValue[] array, int arrayIndex)
         {
-            for (int i = arrayIndex; i < _count; i++)
+            for (int i = arrayIndex; i < _count; ++i)
                 array[i] = _values[i];
         }
 

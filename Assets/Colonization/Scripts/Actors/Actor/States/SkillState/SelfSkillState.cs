@@ -22,7 +22,7 @@ namespace Vurbiri.Colonization
 
                     WaitSignal wait = Skin.Skill(_id, Skin);
 
-                    for (int i = 0; i < _countHits; i++)
+                    for (int i = 0; i < _countHits; ++i)
                     {
                         yield return wait;
                         _effectsHint[i].Apply(Actor, Actor);

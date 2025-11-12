@@ -55,10 +55,10 @@ namespace VurbiriEditor.Colonization
             if (scriptableSettings == null || scriptableSettings.Count == 0)
                 return;
 
-            for (int i = 0; i < scriptableSettings.Count; i++)
+            for (int i = 0; i < scriptableSettings.Count; ++i)
                 _settings[scriptableSettings[i].targetAbility] = scriptableSettings[i];
 
-            for (int i = 0; i < ActorAbilityId.Count; i++)
+            for (int i = 0; i < ActorAbilityId.Count; ++i)
             {
                 _showSettings[i].value = _settings[i].typeModifier >= 0;
                 _showSettings[i].valueChanged.AddListener(Repaint);
@@ -74,7 +74,7 @@ namespace VurbiriEditor.Colonization
 
                 _isSave |= DrawLevel();
 
-                for (int i = 0; i < ActorAbilityId.Count; i++)
+                for (int i = 0; i < ActorAbilityId.Count; ++i)
                     _isSave |= DrawSettings(i, _settings[i], _showSettings[i]);
             }
             EndScrollView();
@@ -160,7 +160,7 @@ namespace VurbiriEditor.Colonization
 
         protected void Disable(bool isSorting)
         {
-            for (int i = 0; i < ActorAbilityId.Count; i++)
+            for (int i = 0; i < ActorAbilityId.Count; ++i)
                 _showSettings[i].valueChanged.RemoveListener(Repaint);
 
             if (!_isSave) return;

@@ -24,7 +24,7 @@ namespace Vurbiri.Colonization.Storage
             _keyArtefact = P_BUFFS.Concat(_strId); 
 
             _keysActors = new(countActors);
-            for (int i = 0; i < countActors; i++)
+            for (int i = 0; i < countActors; ++i)
                 _keysActors.Add(P_ACTORS.Concat(_strId, i.ToString()));
         }
 
@@ -52,7 +52,7 @@ namespace Vurbiri.Colonization.Storage
             //==============================
             string GetNewKey(int index)
             {
-                for (int i = _keysActors.Count; i <= index; i++)
+                for (int i = _keysActors.Count; i <= index; ++i)
                     _keysActors.Add(P_ACTORS.Concat(_strId, i.ToString()));
 
                 return _keysActors[index];
@@ -74,7 +74,7 @@ namespace Vurbiri.Colonization.Storage
         {
             _keysActors = new(max);
             List<ActorLoadData> actors = new(max);
-            for (int i = 0; i < max; i++)
+            for (int i = 0; i < max; ++i)
             {
                 _keysActors.Add(P_ACTORS.Concat(_strId, i.ToString()));
                 if (isLoad && _storage.TryGet(_keysActors[i], out ActorLoadData actor))

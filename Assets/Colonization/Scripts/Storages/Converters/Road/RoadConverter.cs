@@ -18,7 +18,7 @@ namespace Vurbiri.Colonization
             {
                 int count = value._links.Count;
                 writer.WriteStartArray();
-                for (int i = 0; i < count; i++)
+                for (int i = 0; i < count; ++i)
                     Key.Converter.WriteToArray(writer, value._links[i]);
                 writer.WriteEndArray();
             }

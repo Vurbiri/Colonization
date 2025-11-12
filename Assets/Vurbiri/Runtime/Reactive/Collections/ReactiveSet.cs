@@ -30,7 +30,7 @@ namespace Vurbiri.Reactive.Collections
             {
                 if (_count != 0)
                 {
-                    for (int i = 0; i < _capacity; i++)
+                    for (int i = 0; i < _capacity; ++i)
                         if (_values[i] != null)
                             return _values[i];
                 }
@@ -45,7 +45,7 @@ namespace Vurbiri.Reactive.Collections
                 if (_count != 0)
                 {
                     int index = UnityEngine.Random.Range(0, _count);
-                    for (int i = 0; i < _capacity; i++)
+                    for (int i = 0; i < _capacity; ++i)
                         if (_values[i] != null && index-- == 0)
                             return _values[i];
                 }
@@ -57,7 +57,7 @@ namespace Vurbiri.Reactive.Collections
         {
             if (instantGetValue)
             {
-                for (int i = 0; i < _capacity; i++)
+                for (int i = 0; i < _capacity; ++i)
                 {
                     if (_values[i] != null)
                         action(_values[i], TypeEvent.Subscribe);
@@ -100,7 +100,7 @@ namespace Vurbiri.Reactive.Collections
                 _capacity = _capacity << 1 | BASE_CAPACITY;
 
                 T[] array = new T[_capacity];
-                for (int i = 0; i < _count; i++)
+                for (int i = 0; i < _count; ++i)
                     array[i] = _values[i];
                 _values = array;
 
@@ -108,7 +108,7 @@ namespace Vurbiri.Reactive.Collections
             }
             else
             {
-                for (int i = 0; i < _capacity; i++)
+                for (int i = 0; i < _capacity; ++i)
                 {
                     if (_values[i] == null)
                     {
@@ -130,7 +130,7 @@ namespace Vurbiri.Reactive.Collections
 
         public void Dispose()
         {
-            for (int i = 0; i < _capacity; i++)
+            for (int i = 0; i < _capacity; ++i)
                 _values[i]?.Dispose();
 
             _values = null;

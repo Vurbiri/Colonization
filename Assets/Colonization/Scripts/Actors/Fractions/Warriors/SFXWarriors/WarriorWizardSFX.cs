@@ -19,7 +19,7 @@ namespace Vurbiri.Colonization
 
             yield return base.Start();
 
-            for(int i = 0; i < _particles.Count; i++)
+            for(int i = 0; i < _particles.Count; ++i)
                 _particles[i].Play();
         }
 
@@ -28,7 +28,7 @@ namespace Vurbiri.Colonization
         public override void Death()
         {
             _magicShield.enabled = false;
-            for (int i = 0; i < _particles.Count; i++)
+            for (int i = 0; i < _particles.Count; ++i)
                 _particles[i].Stop();
         }
 

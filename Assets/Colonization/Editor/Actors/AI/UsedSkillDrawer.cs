@@ -53,7 +53,7 @@ namespace VurbiriEditor.Colonization
             names  = new string[count][];
             values = new int[count][];
 
-            for (int i = 0; i < count; i++)
+            for (int i = 0; i < count; ++i)
                 SetNone(ref names[i], ref values[i], namesSource[i]);
 
             // ============= Local ============
@@ -66,7 +66,7 @@ namespace VurbiriEditor.Colonization
                 names[0]  = "--------------";
                 values[0] = -1;
 
-                for (int i = 0, j = 1; i < count; i++, j++)
+                for (int i = 0, j = 1; i < count; i++, ++j)
                 {
                     names[j]  = namesSource[i];
                     values[j] = i;

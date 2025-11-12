@@ -27,7 +27,7 @@ namespace VurbiriEditor.Colonization
 
             static bool IsValid(ReadOnlyArray<string> keys)
             {
-                for (int i = 0; i < keys.Count; i++)
+                for (int i = 0; i < keys.Count; ++i)
                     if (string.IsNullOrEmpty(keys[i]))
                         return false;
                 return true;

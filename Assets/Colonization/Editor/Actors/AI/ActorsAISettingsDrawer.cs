@@ -16,7 +16,7 @@ namespace VurbiriEditor.Colonization
             _drawers = new ActorAISettingsDrawer[count];
 
             var arrayProperty = mainProperty.FindPropertyRelative("_settings");
-            for (int i = 0; i < count; i++)
+            for (int i = 0; i < count; ++i)
                 _drawers[i] = new(typeId, i, names[i], arrayProperty.GetArrayElementAtIndex(i));
         }
 
@@ -26,7 +26,7 @@ namespace VurbiriEditor.Colonization
             BeginVertical(STYLES.border);
             {
                 Space(5f);
-                for (int i = 0; i < _count; i++)
+                for (int i = 0; i < _count; ++i)
                     _drawers[i].Draw();
                 Space(5f);
             }

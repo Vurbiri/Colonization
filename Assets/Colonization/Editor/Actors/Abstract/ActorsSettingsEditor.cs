@@ -28,7 +28,7 @@ namespace VurbiriEditor.Colonization
 
             SerializedProperty settingsProperty, skillsProperty;
             VisualElement element;
-            for (int i = 0; i < IdType<TId>.Count; i++)
+            for (int i = 0; i < IdType<TId>.Count; ++i)
             {
                 settingsProperty = arrayProperty.GetArrayElementAtIndex(i);
                 settingsProperty.FindPropertyRelative(P_ID).intValue = i;

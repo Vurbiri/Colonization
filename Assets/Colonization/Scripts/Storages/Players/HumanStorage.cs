@@ -35,11 +35,11 @@ namespace Vurbiri.Colonization.Storage
                 Dictionary<int, List<EdificeLoadData>> edifices = new(EdificeGroupId.Count);
                 List<EdificeLoadData> loadData; string[] keys;
                 string key, strI; bool load; EdificeLoadData data = null;
-                for (int i = 0; i < EdificeGroupId.Count; i++)
+                for (int i = 0; i < EdificeGroupId.Count; ++i)
                 {
                     strI = i.ToString(); load = isLoad;
                     loadData = new(DEFAULT_MAX_EDIFICES); keys = new string[DEFAULT_MAX_EDIFICES];
-                    for (int j = 0; j < DEFAULT_MAX_EDIFICES; j++)
+                    for (int j = 0; j < DEFAULT_MAX_EDIFICES; ++j)
                     {
                         keys[j] = key = P_EDIFICES.Concat(_strId, strI, j.ToString());
                         if (load = (load && _storage.TryGet(key, out data)))
@@ -76,7 +76,7 @@ namespace Vurbiri.Colonization.Storage
 
         public void BindEdifices(IReadOnlyList<ReactiveList<Crossroad>> edificesReactive, bool instantGetValue)
         {
-            for(int i = 0; i < EdificeGroupId.Count; i++)
+            for(int i = 0; i < EdificeGroupId.Count; ++i)
                 _subscription += edificesReactive[i].Subscribe(OnEdifice, instantGetValue);
 
             #region Local OnEdifice(..)

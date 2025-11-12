@@ -11,7 +11,7 @@ namespace Vurbiri
             _count = _capacity;
 
             _values[0] = min;
-            for (int i = 1, j; i < _count; i++)
+            for (int i = 1, j; i < _count; ++i)
             {
                 _values[i] = i + min;
 

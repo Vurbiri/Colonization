@@ -82,7 +82,7 @@ namespace Vurbiri.Colonization
                 {
                     IEnumerator wait = Skin.Skill(_id, _target._states.Skin);
 
-                    for (int i = 0; i < _countHits; i++)
+                    for (int i = 0; i < _countHits; ++i)
                     {
                         yield return wait;
                         _effectsHint[i].Apply(Actor, _target);
@@ -104,7 +104,7 @@ namespace Vurbiri.Colonization
                 {
                     List<Hexagon> targets = new(HEX.SIDES);
                     var neighbors = CurrentHex.Neighbors;
-                    for (int i = 0; i < neighbors.Count; i++)
+                    for (int i = 0; i < neighbors.Count; ++i)
                         if (neighbors[i].TrySetOwnerSelectable(Owner, _relationTarget))
                             targets.Add(neighbors[i]);
 
@@ -115,7 +115,7 @@ namespace Vurbiri.Colonization
                     yield return _waitActor = new();
                     IsCancel.False();
 
-                    for (int i = targets.Count - 1; i >= 0; i--)
+                    for (int i = targets.Count - 1; i >= 0; --i)
                         targets[i].SetOwnerUnselectable();
 
                     if (_target == null)

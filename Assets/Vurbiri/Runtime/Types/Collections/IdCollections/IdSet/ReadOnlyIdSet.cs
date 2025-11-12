@@ -28,7 +28,7 @@ namespace Vurbiri.Collections
         public ReadOnlyIdSet(IReadOnlyList<TValue> list)
         {
             TValue value;
-            for (int i = list.Count - 1; i >= 0; i--)
+            for (int i = list.Count - 1; i >= 0; --i)
             {
                 if ((value = list[i]) != null)
                 {
@@ -40,7 +40,7 @@ namespace Vurbiri.Collections
         public ReadOnlyIdSet(params TValue[] values)
         {
             TValue value;
-            for (int i = values.Length - 1; i >= 0; i--)
+            for (int i = values.Length - 1; i >= 0; --i)
             {
                 if ((value = values[i]) != null)
                 {

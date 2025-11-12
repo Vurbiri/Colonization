@@ -43,7 +43,7 @@ namespace Vurbiri.Colonization
 
         public void Update()
         {
-            for (int i = 0; i < CurrencyId.MainCount; i++)
+            for (int i = 0; i < CurrencyId.MainCount; ++i)
                 _exchange[i] = _rate - _chance.Select(1);
 
             _changeValue.Invoke(this);

@@ -50,11 +50,11 @@ namespace VurbiriEditor.Colonization.UI
             _prefabs = EUtility.FindComponentsPrefabs<AHintButton3D>();
             _scene = new(FindObjectsByType<AHintButton3D>(FindObjectsInactive.Include, FindObjectsSortMode.None));
 
-            for (int i = _prefabs.Count - 1; i >= 0; i--)
+            for (int i = _prefabs.Count - 1; i >= 0; --i)
                 if (PrefabUtility.IsPartOfVariantPrefab(_prefabs[i]) && !PrefabUtility.IsAddedComponentOverride(_prefabs[i]))
                     _prefabs.RemoveAt(i);
 
-            for (int i = _scene.Count - 1; i >= 0; i--)
+            for (int i = _scene.Count - 1; i >= 0; --i)
                 if (PrefabUtility.IsPartOfAnyPrefab(_scene[i].gameObject))
                     _scene.RemoveAt(i);
 

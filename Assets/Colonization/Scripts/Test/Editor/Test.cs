@@ -56,7 +56,7 @@ namespace Vurbiri.Colonization
 
         private void AddBlood(int value)
         {
-            for (int i = 0; i < PlayerId.HumansCount; i++)
+            for (int i = 0; i < PlayerId.HumansCount; ++i)
                 GameContainer.Humans[i].Resources.AddBlood(value);
 
             MessageBox.Open("test", MBButtonId.Ok, MBButtonId.Cancel);
@@ -117,7 +117,7 @@ namespace Vurbiri.Colonization
 
         public void Testing()
         {
-            for(int i = -200; i <= 200; i++)
+            for(int i = -200; i <= 200; ++i)
                 print(i.ToStr());
         }
 
@@ -186,32 +186,32 @@ namespace Vurbiri.Colonization
 
             void TestListAdd(List<int> list)
             {
-                for(int i = 0; i < 100; i++)
+                for(int i = 0; i < 100; ++i)
                     list.Add(i);
             }
             void TestHashAdd(Roster<int> set)
             {
-                for (int i = 0; i < 100; i++)
+                for (int i = 0; i < 100; ++i)
                     set.Add(i);
             }
             void TestListRemove(List<int> list)
             {
-                for (int i = 200; i >= 0; i--)
+                for (int i = 200; i >= 0; --i)
                     list.Remove(i);
             }
             void TestHashRemove(Roster<int> set)
             {
-                for (int i = 200; i >= 0; i--)
+                for (int i = 200; i >= 0; --i)
                     set.Remove(i);
             }
             void TestListContains(List<int> list)
             {
-                for (int i = 200; i >= 0; i--)
+                for (int i = 200; i >= 0; --i)
                     list.Contains(i);
             }
             void TestHashContains(Roster<int> set)
             {
-                for (int i = 200; i >= 0; i--)
+                for (int i = 200; i >= 0; --i)
                     set.Contains(i);
             }
         }

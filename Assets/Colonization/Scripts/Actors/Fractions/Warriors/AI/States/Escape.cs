@@ -60,7 +60,7 @@ namespace Vurbiri.Colonization
             private int GetContraForce(WeightsList<Actor> enemies)
             {
                 int contraForce = 0;
-                for (int i = 0; i < enemies.Count; i++)
+                for (int i = 0; i < enemies.Count; ++i)
                     contraForce += enemies[i].GetCurrentForceNearEnemies();
                 return contraForce;
             }
@@ -71,7 +71,7 @@ namespace Vurbiri.Colonization
                 int enemiesForce = (Status.near.enemiesForce + Status.nearTwo.enemiesForce)/(Actor.Hexagon.GetMaxDefense() + 1);
                 var hexagons = Actor.Hexagon.Neighbors;
 
-                for (int i = 0; i < HEX.SIDES; i++)
+                for (int i = 0; i < HEX.SIDES; ++i)
                 {
                     temp = hexagons[i];
                     if (temp.CanWarriorEnter && CheckHexagon(OwnerId, temp, enemiesForce, out int force))
@@ -88,7 +88,7 @@ namespace Vurbiri.Colonization
                 {
                     force = 0;
                     var hexagons = target.Neighbors;
-                    for (int i = 0; i < HEX.SIDES; i++)
+                    for (int i = 0; i < HEX.SIDES; ++i)
                         if (hexagons[i].TryGetEnemy(id, out Actor actor))
                             force += actor.CurrentForce;
                     

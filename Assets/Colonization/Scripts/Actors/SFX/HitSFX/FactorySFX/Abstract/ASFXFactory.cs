@@ -51,7 +51,7 @@ namespace Vurbiri.Colonization
             if (index_ed > 0)
             {
                 var names = SFXFactoriesStorage.names_ed;
-                for (int i = names.Length - 1, id = 1; i >= 0; i--)
+                for (int i = names.Length - 1, id = 1; i >= 0; --i)
                 {
                     if (index_ed != i & _name == names[i])
                     {

@@ -30,7 +30,7 @@ namespace Vurbiri.Colonization
                     for (int c = 0; c < colonies.Count; c++)
                     {
                         hexagons = colonies[c].Hexagons;
-                        for (int i = 0; i < Crossroad.HEX_COUNT; i++)
+                        for (int i = 0; i < Crossroad.HEX_COUNT; ++i)
                         {
                             current = hexagons[i];
                             if (current.IsEnemy(OwnerId))

@@ -20,7 +20,7 @@ namespace Vurbiri.Colonization
                 var data = serializer.Deserialize<float[][]>(reader);
 
                 float[] color;
-                for (int i = 0; i < SIZE_ARRAY; i++)
+                for (int i = 0; i < SIZE_ARRAY; ++i)
                 {
                     color = data[i];
                     _colors._colors[i] = new(color[0], color[1], color[2]);
@@ -33,7 +33,7 @@ namespace Vurbiri.Colonization
             {
                 Color color;
                 writer.WriteStartArray();
-                for (int i = 0; i < SIZE_ARRAY; i++)
+                for (int i = 0; i < SIZE_ARRAY; ++i)
                 {
                     writer.WriteStartArray();
                     {

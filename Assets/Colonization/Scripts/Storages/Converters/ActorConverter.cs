@@ -31,7 +31,7 @@ namespace Vurbiri.Colonization
                 writer.WriteStartArray();
                 Key.Converter.WriteToArray(writer, actor._currentHex.Key);
                 StateWriteJson(writer, actor);
-                for (int i = actor._effects.Count - 1; i >= 0; i--)
+                for (int i = actor._effects.Count - 1; i >= 0; --i)
                     ReactiveEffect.Converter.WriteJsonArray(writer, actor._effects[i]);
                 writer.WriteEndArray();
             }
@@ -51,8 +51,7 @@ namespace Vurbiri.Colonization
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             private static ActorState StateReadFromArray(int[] array)
             {
-                int i = 0;
-                return new(array[i++], array[i++], array[i++], array[i++], array[i++] > 0);
+                return new(array[0], array[1], array[2], array[3], array[4] > 0);
             }
         }
     }

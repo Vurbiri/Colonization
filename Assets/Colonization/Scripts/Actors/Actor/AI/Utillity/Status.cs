@@ -24,7 +24,7 @@ namespace Vurbiri.Colonization
 
                     SetsGuardAndSiegeStatus(actor);
 
-                    for (int i = 0; i < PlayerId.Count; i++)
+                    for (int i = 0; i < PlayerId.Count; ++i)
                         if (GameContainer.Diplomacy.IsEnemy(actor._owner, i))
                             enemies.Add(i);
                 }
@@ -45,7 +45,7 @@ namespace Vurbiri.Colonization
 
                     if (playerId != PlayerId.Satan)
                     {
-                        for (int i = 0; !(isGuard & isSiege) & i < HEX.VERTICES; i++)
+                        for (int i = 0; !(isGuard & isSiege) & i < HEX.VERTICES; ++i)
                         {
                             if (crossroads[i].TryGetOwnerColony(out Id<PlayerId> owner))
                             {
@@ -57,7 +57,7 @@ namespace Vurbiri.Colonization
                     }
                     else
                     {
-                        for (int i = 0; !isSiege & i < HEX.VERTICES; i++)
+                        for (int i = 0; !isSiege & i < HEX.VERTICES; ++i)
                             isSiege = crossroads[i].IsColony;
                     }
                 }

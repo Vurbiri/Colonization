@@ -30,7 +30,7 @@ namespace Vurbiri.Colonization
 
                         if (_targets.TryGetValue(target, out List<ActorData> supports))
                         {
-                            for (int i = supports.Count - 1; i >= 0; i--)
+                            for (int i = supports.Count - 1; i >= 0; --i)
                                 alliesForce += supports[i].force;
                         }
 

@@ -34,7 +34,7 @@ namespace Vurbiri.Colonization
             get
             {
                 int minId = 0;
-                for (int i = 1; i < MainCount; i++)
+                for (int i = 1; i < MainCount; ++i)
                     if (_values[i] < _values[minId])
                         minId = i;
                 return minId;
@@ -45,7 +45,7 @@ namespace Vurbiri.Colonization
             get
             {
                 int maxId = 0;
-                for (int i = 1; i < MainCount; i++)
+                for (int i = 1; i < MainCount; ++i)
                     if (_values[i] > _values[maxId])
                         maxId = i;
                 return maxId;
@@ -59,7 +59,7 @@ namespace Vurbiri.Colonization
             _maxAmount = maxMainValue;
             _maxBlood = maxBloodValue;
 
-            for (int i = 0; i < MainCount; i++)
+            for (int i = 0; i < MainCount; ++i)
                 _values[i] = new MainCurrency(other[i]);
 
             _values[Blood] = new BloodCurrency(other[Blood], maxBloodValue);
@@ -82,11 +82,11 @@ namespace Vurbiri.Colonization
         public int OverCount(ReadOnlyMainCurrencies values, out int lastIndex)
         {
             int count = 0; lastIndex = -1;
-            for (int i = 0; i < MainCount; i++)
+            for (int i = 0; i < MainCount; ++i)
             {
                 if (values[i] > _values[i])
                 {
-                    count++; lastIndex = i;
+                    ++count; lastIndex = i;
                 }
             }
             return count;
@@ -94,7 +94,7 @@ namespace Vurbiri.Colonization
         public int Deficit(ReadOnlyMainCurrencies values)
         {
             int delta = 0;
-            for (int i = 0, cost; i < MainCount; i++)
+            for (int i = 0, cost; i < MainCount; ++i)
             {
                 cost = _values[i] - values[i];
                 if (cost < 0)
@@ -105,7 +105,7 @@ namespace Vurbiri.Colonization
 
         sealed public override IEnumerator<int> GetEnumerator()
         {
-            for (int i = 0; i < AllCount; i++)
+            for (int i = 0; i < AllCount; ++i)
                 yield return _values[i].Value;
         }
 

@@ -41,7 +41,7 @@ namespace VurbiriEditor.Colonization
             propertyPerks.arraySize = APerkId<TId>.Count;
             serializedObject.ApplyModifiedProperties();
                         
-            for (int i = 0; i < APerkId<TId>.Count; i++)
+            for (int i = 0; i < APerkId<TId>.Count; ++i)
             {
                 int id = i;
                 SerializedProperty propertyPerk = propertyPerks.GetArrayElementAtIndex(i);
@@ -64,7 +64,7 @@ namespace VurbiriEditor.Colonization
         {
             int target = -1, ability = -1;
             string abilityName = name.Split('_')[0];
-            for (int i = 0; i < TargetOfPerkId.Count; i++)
+            for (int i = 0; i < TargetOfPerkId.Count; ++i)
             {
                if((ability = Array.IndexOf(_ability[i], abilityName)) >= 0)
                {
