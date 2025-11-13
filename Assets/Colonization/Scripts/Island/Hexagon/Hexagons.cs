@@ -80,7 +80,7 @@ namespace Vurbiri.Colonization
             var keys = _hexagonsIdForKey[id];
             for (int i = keys.Count - 1; i >= 0; i--)
             {
-                if (_hexagons[keys[i]].SetProfitAndTryGetFreeProfit(out int currencyId))
+                if (_hexagons[keys[i]].SetProfitAndTryGetFreeProfit(out Id<CurrencyId> currencyId))
                     _freeResources.Increment(currencyId);
             }
         }

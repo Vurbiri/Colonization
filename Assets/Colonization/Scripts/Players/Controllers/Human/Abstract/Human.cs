@@ -36,6 +36,7 @@ namespace Vurbiri.Colonization
 
         public Roads Roads { [Impl(256)] get => _roads; }
 
+        public ReadOnlyAbilities<HumanAbilityId> Abilities { [Impl(256)] get => _abilities; }
         public Artefact Artefact { [Impl(256)] get => _artefact; }
         public PerkTree Perks { [Impl(256)] get => _perks; }
         public SpellBook SpellBook { [Impl(256)] get => _spellBook; }

@@ -18,5 +18,7 @@ namespace Vurbiri.Colonization
         [Range(0, 100)] public int minHPRaid;
         [Space]
         [Range(0, 5)] public int maxDistanceHome;
+        [Space]
+        public Chance chanceFreeFinding;
     }
 }

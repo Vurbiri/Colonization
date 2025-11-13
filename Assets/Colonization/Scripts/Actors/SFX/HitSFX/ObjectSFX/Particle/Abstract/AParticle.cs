@@ -13,7 +13,7 @@ namespace Vurbiri.Colonization
         public object Current => null;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public AParticle(ParticleCreator creator, Action<APooledSFX> deactivate) : base(creator, deactivate)
+        public AParticle(AParticleCreatorSFX creator, Action<APooledSFX> deactivate) : base(creator, deactivate)
         {
             _clip = creator.Clip;
             _particle = creator.Particle;

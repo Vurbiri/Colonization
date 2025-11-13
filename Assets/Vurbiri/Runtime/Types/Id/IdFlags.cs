@@ -64,16 +64,16 @@ namespace Vurbiri
         }
         #endregion
 
-        public readonly int First()
+        public readonly Id<T> First()
         {
             for (int i = 0; i < IdType<T>.Count; i++)
                 if (this[i]) return i;
             return -1;
         }
 
-        public readonly List<int> GetValues()
+        public readonly List<Id<T>> GetValues()
         {
-            List<int> values = new(IdType<T>.Count);
+            List<Id<T>> values = new(IdType<T>.Count);
             for(int i = 0; i < IdType<T>.Count; i++)
                 if(this[i]) values.Add(i);
 

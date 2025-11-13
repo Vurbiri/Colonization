@@ -153,7 +153,7 @@ namespace Vurbiri.Colonization
         #endregion
 
         #region ================== Profit ============================
-        public bool SetProfitAndTryGetFreeProfit(out int currencyId) // true - свободные ресурсы
+        public bool SetProfitAndTryGetFreeProfit(out Id<CurrencyId> currencyId) // true - свободные ресурсы
         {
             currencyId = _profit.Set();
 
@@ -163,7 +163,7 @@ namespace Vurbiri.Colonization
 
                 if (!_isGate)
                 {
-                    for (int i = _crossroads.Count - 1; i >= 0; i--)
+                    for (int i = _crossroads.Count - 1; i >= 0; --i)
                         if (_crossroads[i].IsColony) 
                             return false;
                     
@@ -178,8 +178,8 @@ namespace Vurbiri.Colonization
         }
         [Impl(256)] public void ResetProfit() => Caption.ResetProfit();
 
-        [Impl(256)] public int GetProfit() => _profit.Value;
-        [Impl(256)] public bool TryGetProfit(int hexId, bool isPort, out int currencyId)
+        [Impl(256)] public Id<CurrencyId> GetProfit() => _profit.Value;
+        [Impl(256)] public bool TryGetProfit(int hexId, bool isPort, out Id<CurrencyId> currencyId)
         {
             currencyId = _profit.Value;
             return hexId == _id & isPort == _isWater;

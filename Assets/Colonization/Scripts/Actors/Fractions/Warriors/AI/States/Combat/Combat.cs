@@ -14,7 +14,9 @@ namespace Vurbiri.Colonization
 
             public override IEnumerator Execution_Cn(Out<bool> isContinue)
             {
-               yield break;
+                isContinue.Set(false);
+                Exit();
+                yield break;
             }
 
             public override bool TryEnter() => IsInCombat;

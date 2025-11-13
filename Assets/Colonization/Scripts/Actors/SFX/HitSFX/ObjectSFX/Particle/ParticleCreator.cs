@@ -3,18 +3,11 @@ using UnityEngine;
 
 namespace Vurbiri.Colonization
 {
-    sealed public class ParticleCreator : AMonoCreatorSFX
+    sealed public class ParticleCreator : AParticleCreatorSFX
     {
+        [Space]
         [SerializeField] private SFXType _type;
         [SerializeField] private bool _isWait;
-        [Space]
-        [SerializeField] private AudioClip _clip;
-        [SerializeField] private ParticleSystem _particle;
-        [SerializeField] private float _targetHeightRate;
-
-        public AudioClip Clip => _clip;
-        public ParticleSystem Particle => _particle;
-        public float HeightRate => _targetHeightRate;
 
         public override APooledSFX Create(Action<APooledSFX> deactivate) => _type switch
         {
@@ -26,11 +19,6 @@ namespace Vurbiri.Colonization
 
 #if UNITY_EDITOR
         public override TargetForSFX_Ed Target_Ed => _type == SFXType.User ? TargetForSFX_Ed.User : TargetForSFX_Ed.Target;
-
-        private void OnValidate()
-        {
-            this.SetComponent(ref _particle);
-        }
 #endif
     }
 }

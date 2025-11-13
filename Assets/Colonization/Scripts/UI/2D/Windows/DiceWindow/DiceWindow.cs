@@ -9,6 +9,7 @@ namespace Vurbiri.Colonization.UI
 	{
         [SerializeField] private FloatRnd _delayAI;
         [SerializeField] private WaitRealtime _openTime;
+        [SerializeField] private WaitRealtime _closeTime;
         [Space]
         [SerializeField] private CanvasGroupSwitcher _canvasSwitcher;
         [Space]
@@ -61,9 +62,9 @@ namespace Vurbiri.Colonization.UI
 
             yield return _openTime.Restart();
             yield return _canvasSwitcher.Hide();
-            yield return _openTime.Restart();
+            yield return _closeTime.Restart();
 
-            yield return GameContainer.CameraController.FromDefaultPosition();
+            yield return GameContainer.CameraController.FromDefaultPosition(true);
 
             GameContainer.InputController.WindowMode(false);
             GameContainer.GameLoop.Profit();

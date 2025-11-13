@@ -12,12 +12,14 @@ namespace Vurbiri.Colonization
             {
             }
 
+            public override bool TryEnter() => false;
+
             public override IEnumerator Execution_Cn(Out<bool> isContinue)
             {
+                isContinue.Set(false);
+                Exit();
                 yield break;
             }
-
-            public override bool TryEnter() => false;
 
             public override void Dispose() { }
         }

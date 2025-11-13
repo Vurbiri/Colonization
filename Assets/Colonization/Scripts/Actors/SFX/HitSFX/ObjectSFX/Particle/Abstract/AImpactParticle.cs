@@ -8,7 +8,7 @@ namespace Vurbiri.Colonization
         private readonly float _targetHeightRate;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        protected AImpactParticle(ParticleCreator creator, Action<APooledSFX> deactivate) : base(creator, deactivate) => _targetHeightRate = creator.HeightRate;
+        protected AImpactParticle(AParticleCreatorSFX creator, Action<APooledSFX> deactivate) : base(creator, deactivate) => _targetHeightRate = creator.HeightRate;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         protected void Setup(ActorSkin target)

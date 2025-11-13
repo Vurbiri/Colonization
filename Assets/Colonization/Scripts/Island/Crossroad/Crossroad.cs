@@ -243,7 +243,7 @@ namespace Vurbiri.Colonization
         public void ProfitFromPort(MainCurrencies profit, int idHex, int shiftProfit)
         {
             for (int i = 0; i < HEX_COUNT; ++i)
-                if (_hexagons[i].TryGetProfit(idHex, true, out int currencyId))
+                if (_hexagons[i].TryGetProfit(idHex, true, out Id<CurrencyId> currencyId))
                     profit.Add(currencyId, _states.profit << shiftProfit);
         }
         public MainCurrencies ProfitFromColony(int idHex, int compensationRes)
@@ -259,7 +259,7 @@ namespace Vurbiri.Colonization
                 if (hex.IsEnemy(_owner))
                     countEnemy++;
 
-                if (hex.TryGetProfit(idHex, false, out int currencyId))
+                if (hex.TryGetProfit(idHex, false, out Id<CurrencyId> currencyId))
                     profit.Increment(currencyId);
             }
             profit.Multiply(Mathf.Max(_states.profit - Mathf.Max(countEnemy - GetDefense(), 0), 0));

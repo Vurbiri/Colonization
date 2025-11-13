@@ -4,13 +4,13 @@ namespace Vurbiri.Colonization
 {
     public class ProfitSingle : IProfit
     {
-        private readonly int _value;
+        private readonly Id<CurrencyId> _value;
 
         public IProfit Instance { [Impl(256)] get => this; }
-        public int Value { [Impl(256)] get => _value; }
+        public Id<CurrencyId> Value { [Impl(256)] get => _value; }
 
         public ProfitSingle(IdFlags<CurrencyId> profits) => _value = profits.First();
 
-        [Impl(256)] public int Set() => _value;
+        [Impl(256)] public Id<CurrencyId> Set() => _value;
     }
 }

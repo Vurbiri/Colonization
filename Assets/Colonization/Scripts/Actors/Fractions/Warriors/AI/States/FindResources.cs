@@ -27,20 +27,20 @@ namespace Vurbiri.Colonization
 
             public override IEnumerator Execution_Cn(Out<bool> isContinue)
             {
+                _hexagons.Add(Actor.Hexagon);
                 _minResCount = _resources[Actor.Hexagon.GetProfit()];
 
-                if (Status.isGuard | Status.isSiege)
+                if (Status.isSiege || (Status.isGuard && !s_settings.chanceFreeFinding.Roll))
                     SetColoniesHexagon();
                 else
                     AddHexagons(Actor.Hexagon.Key, Actor.Hexagon.Neighbors);
 
-                if(_hexagons.Count > 0)
-                {
-                    SetMinResources();
-                    RemoveHexagons();
-                    if (_hexagons.Count > 0)
-                        yield return Move_Cn(_hexagons.Rand());
-                }
+                SetMinResources();
+                RemoveHexagons();
+
+                var target = _hexagons.Rand();
+                if (target != Actor.Hexagon)
+                    yield return Move_Cn(target);
 
                 _hexagons.Clear();
                 _minResources.Clear();

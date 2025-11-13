@@ -5,7 +5,7 @@ namespace Vurbiri.Colonization
 {
 	sealed public class ImpactParticle : AImpactParticle
     {
-        public ImpactParticle(ParticleCreator creator, Action<APooledSFX> deactivate) : base(creator, deactivate) { }
+        public ImpactParticle(AParticleCreatorSFX creator, Action<APooledSFX> deactivate) : base(creator, deactivate) { }
 
         public override IEnumerator Run(ActorSFX user, ActorSkin target)
         {

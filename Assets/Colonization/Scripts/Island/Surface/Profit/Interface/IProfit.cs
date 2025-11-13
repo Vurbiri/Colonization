@@ -2,9 +2,9 @@ namespace Vurbiri.Colonization
 {
     public interface IProfit
     {
-        public int Value { get; }
+        public Id<CurrencyId> Value { get; }
         public IProfit Instance { get; }
 
-        public int Set();
+        public Id<CurrencyId> Set();
     }
 }

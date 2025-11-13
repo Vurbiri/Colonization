@@ -64,16 +64,16 @@ namespace Vurbiri.Colonization.Controllers
             return this;
         }
 
-        public WaitSignal ToDefaultPosition()
+        public WaitSignal ToDefaultPosition(bool block = true)
         {
             _moveToDefaultState.Return = false;
-            _machine.ForceSetState(_moveToDefaultState, true);
+            _machine.ForceSetState(_moveToDefaultState, block);
             return _moveToDefaultState.Signal;
         }
-        public WaitSignal FromDefaultPosition()
+        public WaitSignal FromDefaultPosition(bool block = true)
         {
             _moveToDefaultState.Return = true;
-            _machine.ForceSetState(_moveToDefaultState, true);
+            _machine.ForceSetState(_moveToDefaultState, block);
             return _moveToDefaultState.Signal;
         }
 

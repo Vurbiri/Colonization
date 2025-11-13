@@ -8,6 +8,7 @@
   "maxDistanceRaid": 2,
   "minHPRaid": 84,
   "maxDistanceHome": 3,
+  "chanceFreeFinding": 7,
   "_priority": [
     0,
     1,
