@@ -66,12 +66,14 @@ namespace Vurbiri.Colonization.Controllers
 
         public WaitSignal ToDefaultPosition(bool block = true)
         {
+            _moveToDefaultState.InputValue = 1f;
             _moveToDefaultState.Return = false;
             _machine.ForceSetState(_moveToDefaultState, block);
             return _moveToDefaultState.Signal;
         }
         public WaitSignal FromDefaultPosition(bool block = true)
         {
+            _moveToDefaultState.InputValue = _default.maxTime;
             _moveToDefaultState.Return = true;
             _machine.ForceSetState(_moveToDefaultState, block);
             return _moveToDefaultState.Signal;

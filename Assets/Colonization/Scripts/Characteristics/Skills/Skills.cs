@@ -7,7 +7,7 @@ using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 namespace Vurbiri.Colonization
 {
     [System.Serializable]
-    public class Skills : IDisposable
+    public partial class Skills : IDisposable
     {
         [SerializeField] private float _runSpeed; // = 0.6f;
         [SerializeField] private float _walkSpeed; // = 0.6f;
@@ -67,72 +67,5 @@ namespace Vurbiri.Colonization
                 _specSkillSettings.Dispose();
             }
         }
-
-#if UNITY_EDITOR
-
-        private static readonly string[] A_SKILLS = { "A_Skill_0", "A_Skill_1", "A_Skill_2", "A_Skill_3" };
-
-        [SerializeField] private int _swapA = -1;
-        [SerializeField] private int _swapB = -1;
-
-        public SkillSettings[] SkillSettings_Ed => _skillsSettings;
-
-        public void OnValidate(int type, int id)
-        {
-            _specSkillSettings.OnValidate(type, id);
-
-            if (_skillsSettings.Length > CONST.MAIN_SKILLS_COUNT)
-                Array.Resize(ref _skillsSettings, CONST.MAIN_SKILLS_COUNT);
-
-            for (int i = 0; i < _skillsSettings.Length; i++)
-                _skillsSettings[i].typeActor_ed = type;
-        }
-
-        public bool UpdateName_Ed(string oldName, string newName)
-        {
-            bool changed = false;
-            for (int i = 0; i < _skillsSettings.Length; i++)
-            {
-                if (_skillsSettings[i].hitSFXName_ed.Equals(oldName))
-                {
-                    changed = true;
-                    _skillsSettings[i].hitSFXName_ed = new(newName);
-                    _hitSfxNames[i] = newName;
-                }
-            }
-            return changed;
-        }
-
-        public void UpdateAnimation_Ed(AnimatorOverrideController animator)
-        {
-            if (animator == null) return;
-
-            _specSkillSettings.UpdateAnimation_Ed(animator);
-
-
-            int countSkills = _skillsSettings.Length;
-            if (_swapA != _swapB && _swapA >= 0 & _swapB >= 0 && _swapA < countSkills & _swapB < countSkills)
-                (_skillsSettings[_swapA], _skillsSettings[_swapB]) = (_skillsSettings[_swapB], _skillsSettings[_swapA]);
-            _swapA = _swapB = -1;
-
-            _hitSfxNames = new(countSkills); _timings = new(countSkills);
-            SkillSettings skillSettings; int index;
-
-            for (index = 0; index < countSkills; index++)
-            {
-                skillSettings = _skillsSettings[index];
-
-                _hitSfxNames[index] = skillSettings.hitSFXName_ed;
-                _timings[index] = new(skillSettings.clipSettings_ed);
-
-                if (animator[A_SKILLS[index]] != skillSettings.clipSettings_ed.clip)
-                    animator[A_SKILLS[index]] = skillSettings.clipSettings_ed.clip;
-            }
-
-            for (; index < CONST.MAIN_SKILLS_COUNT; index++)
-                if (animator[A_SKILLS[index]].name != A_SKILLS[index])
-                    animator[A_SKILLS[index]] = null;
-        }
-#endif
     }
 }

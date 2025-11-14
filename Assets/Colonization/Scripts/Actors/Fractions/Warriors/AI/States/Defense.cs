@@ -18,7 +18,7 @@ namespace Vurbiri.Colonization
                 _isBuff = _isBlock = false;
                 if (IsEnemyComing)
                 {
-                    _isBuff  = Settings.defenseBuff.CanUsed(Action, Actor);
+                    _isBuff  = Settings.defenseSkill.CanUsed(Actor);
                     _isBlock = Action.CanUsedSpecSkill() && Settings.specChance.Roll;
                 }
 
@@ -32,7 +32,7 @@ namespace Vurbiri.Colonization
                 yield return GameContainer.CameraController.ToPositionControlled(Actor.Position);
 
                 if (_isBuff)
-                    yield return Settings.defenseBuff.Use(Action);
+                    yield return Settings.defenseSkill.Use(Action);
                 if (_isBlock && Action.CanUsedSpecSkill())
                     yield return Action.UseSpecSkill();
 

@@ -42,8 +42,8 @@ namespace Vurbiri.Colonization
 
             names_ed[nameIndex] = newName;
 
-            s_warriorsSettings_ed.UpdateName_Ed(oldName, newName);
-            s_demonsSettings_ed.UpdateName_Ed(oldName, newName);
+            s_warriorsSettings_ed.UpdateSFXName_Ed(oldName, newName);
+            s_demonsSettings_ed.UpdateSFXName_Ed(oldName, newName);
 
             UnityEditor.AssetDatabase.SaveAssets();
             Debug.LogWarning($"[FactorySFX] Имя <b>\"{oldName}\"</b> заменено на <b>\"{newName}\"</b>.");

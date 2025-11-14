@@ -28,5 +28,9 @@ namespace Vurbiri.Colonization
                 (effect.IsSelf ? self : target).Add(effect.CreateEffectUI(colors));
             }
         }
+
+#if UNITY_EDITOR
+        public bool IsUsedAttack_Ed() => _effects != null && _effects.Length > 0 && _effects[0].UseAttack_Ed;
+#endif
     }
 }

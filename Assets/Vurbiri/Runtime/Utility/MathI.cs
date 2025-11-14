@@ -12,6 +12,8 @@ namespace Vurbiri
         [Impl(256)] public static int Sqrt(int num) => (int)MathF.Sqrt(num);
         [Impl(256)] public static int SqrtRound(int num) => (int)(MathF.Sqrt(num) + 0.5f);
 
+        [Impl(256)] public static int Clamp(int value, int min, int max) => Math.Clamp(value, min, max);
+
         [Impl(256)] public static int Abs(int x)
         {
             int y = x >> 31;

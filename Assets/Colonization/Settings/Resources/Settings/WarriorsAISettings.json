@@ -26,45 +26,90 @@
       "support": false,
       "raider": false,
       "specChance": 60,
-      "defenseBuff": {
+      "defenseSkill": {
         "_skill": 3,
         "_chance": 88
+      },
+      "selfBuffInCombat": {
+        "_skill": -1,
+        "_chance": 0
+      },
+      "heal": {
+        "_maxHP": 0,
+        "_useSelfHP": false,
+        "_skill": -1
       }
     },
     {
       "support": false,
       "raider": true,
       "specChance": 77,
-      "defenseBuff": {
+      "defenseSkill": {
         "_skill": 3,
-        "_chance": 66
+        "_chance": 50
+      },
+      "selfBuffInCombat": {
+        "_skill": -1,
+        "_chance": 0
+      },
+      "heal": {
+        "_maxHP": 0,
+        "_useSelfHP": false,
+        "_skill": -1
       }
     },
     {
       "support": true,
       "raider": false,
       "specChance": 55,
-      "defenseBuff": {
+      "defenseSkill": {
         "_skill": -1,
         "_chance": 0
+      },
+      "selfBuffInCombat": {
+        "_skill": -1,
+        "_chance": 0
+      },
+      "heal": {
+        "_maxHP": 90,
+        "_useSelfHP": false,
+        "_skill": 1
       }
     },
     {
       "support": false,
       "raider": true,
       "specChance": 66,
-      "defenseBuff": {
+      "defenseSkill": {
         "_skill": -1,
         "_chance": 0
+      },
+      "selfBuffInCombat": {
+        "_skill": -1,
+        "_chance": 0
+      },
+      "heal": {
+        "_maxHP": 0,
+        "_useSelfHP": false,
+        "_skill": -1
       }
     },
     {
       "support": false,
       "raider": true,
       "specChance": 88,
-      "defenseBuff": {
+      "defenseSkill": {
         "_skill": -1,
         "_chance": 0
+      },
+      "selfBuffInCombat": {
+        "_skill": 3,
+        "_chance": 19
+      },
+      "heal": {
+        "_maxHP": 20,
+        "_useSelfHP": true,
+        "_skill": 2
       }
     }
   ],

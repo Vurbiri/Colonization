@@ -12,13 +12,13 @@ namespace Vurbiri.Colonization.Controllers
             private readonly Zoom _zoom;
             private readonly Default _default;
             private readonly float _sqrRatioParentDistance, _maxSqrDistance, _minSqrDistance;
-            private float _ratioSpeed = 1f;
+            private float _speedRatio = 1f;
             private Vector3 _oldPosition, _targetPosition;
             private float _oldHeight, _targetHeight;
             private bool _isReturn;
 
             public bool Return { [Impl(256)] set => _isReturn = value; }
-            public override float InputValue { [Impl(256)] get => _ratioSpeed; [Impl(256)] set => _ratioSpeed = value; }
+            public override float InputValue { [Impl(256)] get => _speedRatio; [Impl(256)] set => _speedRatio = value; }
             public WaitSignal Signal { [Impl(256)] get => _waitSignal; }
 
             public MoveToDefaultState(CameraController controller) : base(controller)
@@ -37,7 +37,7 @@ namespace Vurbiri.Colonization.Controllers
             {
                 _waitSignal.Reset();
 
-                Vector3 parentPosition = _cameraTransform.ParentPosition;
+                Vector3 basisPosition  = _cameraTransform.BasisPosition;
                 Vector3 cameraPosition = _cameraTransform.CameraPosition;
 
                 if (_isReturn)
@@ -47,19 +47,19 @@ namespace Vurbiri.Colonization.Controllers
                 }
                 else
                 {
-                    _oldPosition = parentPosition;
+                    _oldPosition = basisPosition;
                     _oldHeight = cameraPosition.y;
                     _targetPosition = Vector3.zero;
                     _targetHeight = _default.height;
                 }
 
                 float height = cameraPosition.y - _targetHeight;
-                float sqrDistance = Mathf.Max((parentPosition - _targetPosition).sqrMagnitude * _sqrRatioParentDistance, height * height);
+                float sqrDistance = Mathf.Max((basisPosition - _targetPosition).sqrMagnitude * _sqrRatioParentDistance, height * height);
 
                 if(sqrDistance > _minSqrDistance)
                 {
-                    float speed = Mathf.Sqrt(_maxSqrDistance / sqrDistance) * _default.maxTime * _ratioSpeed;
-                    _coroutine = StartCoroutine(MoveToDefault_Cn(parentPosition, cameraPosition, speed));
+                    float speed = System.MathF.Sqrt(_maxSqrDistance / sqrDistance) * _default.maxTime * _speedRatio;
+                    _coroutine = StartCoroutine(MoveToDefault_Cn(basisPosition, cameraPosition, speed));
                 }
                 else
                 {
@@ -69,23 +69,23 @@ namespace Vurbiri.Colonization.Controllers
                 }
             }
 
-            private IEnumerator MoveToDefault_Cn(Vector3 parentPosition, Vector3 cameraPosition, float maxSpeed)
+            private IEnumerator MoveToDefault_Cn(Vector3 basisPosition, Vector3 cameraPosition, float maxSpeed)
             {
                 float progress = 0f;
-                float speed = maxSpeed, deltaSpeed = _default.minSpeed - maxSpeed;
-                float startX = parentPosition.x, startY = cameraPosition.y, startZ = parentPosition.z;
+                float speed, deltaSpeed = _default.minSpeed - maxSpeed;
+                float startX = basisPosition.x,            startY = cameraPosition.y,       startZ = basisPosition.z;
                 float deltaX = _targetPosition.x - startX, deltaY = _targetHeight - startY, deltaZ = _targetPosition.z - startZ;
 
                 while (progress < 1f)
                 {
+                    speed = maxSpeed + deltaSpeed * progress;
                     progress = Mathf.Clamp01(progress + Time.unscaledDeltaTime * speed);
 
-                    parentPosition.x = startX + deltaX * progress;
+                    basisPosition.x  = startX + deltaX * progress;
                     cameraPosition.y = startY + deltaY * progress;
-                    parentPosition.z = startZ + deltaZ * progress;
-                    _cameraTransform.SetCameraAndParentPosition(cameraPosition, parentPosition);
+                    basisPosition.z  = startZ + deltaZ * progress;
+                    _cameraTransform.SetCameraAndParentPosition(cameraPosition, basisPosition);
 
-                    speed = maxSpeed + deltaSpeed * progress;
                     yield return null;
                 }
 

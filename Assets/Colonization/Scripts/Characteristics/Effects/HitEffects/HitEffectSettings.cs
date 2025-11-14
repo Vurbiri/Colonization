@@ -9,7 +9,7 @@ namespace Vurbiri.Colonization
     public class HitEffectSettings
     {
         [SerializeField] private bool _isSelf;
-        [SerializeField] private bool _useAttack = true;
+        [SerializeField] private bool _useAttack;
         [SerializeField] private int _duration;
         [SerializeField] private int _targetAbility;
         [SerializeField] private int _typeModifier;
@@ -132,6 +132,8 @@ namespace Vurbiri.Colonization
         [SerializeField] private TargetOfSkill _parentTarget_ed;
         [SerializeField] private bool _isWarrior_ed;
 #pragma warning restore
+
+        public bool UseAttack_Ed => _useAttack;
 #endif
     }
 }

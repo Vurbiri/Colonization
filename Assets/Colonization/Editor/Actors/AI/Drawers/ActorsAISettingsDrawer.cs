@@ -44,7 +44,10 @@ namespace VurbiriEditor.Colonization
             private readonly SerializedProperty _raiderProperty;
             private readonly SerializedProperty _specChanceProperty;
 
-            private readonly ChanceUsedSkillDrawer _selfBuffDrawer;
+            private readonly UsedSelfSkillDrawer _defenseSkillDrawer;
+            private readonly UsedSelfSkillDrawer _selfBuffDrawer;
+
+            private readonly UsedHealDrawer _healDrawer;
 
             private readonly string _name;
             private readonly GUIContent _specChanceName;
@@ -59,7 +62,10 @@ namespace VurbiriEditor.Colonization
                 _raiderProperty     = parentProperty.FindPropertyRelative(nameof(ActorAISettings.raider));
                 _specChanceProperty = parentProperty.FindPropertyRelative(nameof(ActorAISettings.specChance));
 
-                _selfBuffDrawer   = new(parentProperty.FindPropertyRelative(nameof(ActorAISettings.defenseBuff)));
+                _defenseSkillDrawer = new(parentProperty.FindPropertyRelative(nameof(ActorAISettings.defenseSkill)));
+                _selfBuffDrawer     = new(parentProperty.FindPropertyRelative(nameof(ActorAISettings.selfBuffInCombat)));
+
+                _healDrawer         = new(parentProperty.FindPropertyRelative(nameof(ActorAISettings.heal)));
 
                 _specChanceName = typeId == ActorTypeId.Warrior ? new("Block Chance") : new("Spec Chance");
             }
@@ -78,7 +84,11 @@ namespace VurbiriEditor.Colonization
                             Space(1f);
                             PropertyField(_specChanceProperty, _specChanceName);
                             Space();
+                            _defenseSkillDrawer.Draw(_typeId, _id);
+                            Space(3f);
+                            LabelField("Combat", EditorStyles.boldLabel);
                             _selfBuffDrawer.Draw(_typeId, _id);
+                            _healDrawer.Draw(_typeId, _id);
                             Space(3f);
                         }
                         EndVertical();

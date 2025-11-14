@@ -64,7 +64,8 @@ namespace VurbiriEditor.Colonization
         {
             _refresh = true;
             if (_actorsSettings != null)
-                SkillDrawer.Update<TScriptable, TId, TValue>(_actorsSettings);
+                SkillDrawer.Update<TScriptable, TId, TValue>(_actorsSettings, _actorsSettings.TypeId_Ed);
+
         }
     }
 }

@@ -14,9 +14,10 @@ namespace VurbiriEditor.Colonization
             GetWindow<WarriorsAISettingsWindow>(true, NAME).minSize = s_minSize;
         }
 
-        protected override ActorsAISettingsDrawer Init(SerializedProperty property, out string label)
+        protected override string Label => "WarriorAI Settings";
+
+        protected override ActorsAISettingsDrawer GetSettingsDrawer(SerializedProperty property)
         {
-            label = "WarriorAI Settings";
             return new(ActorTypeId.Warrior, WarriorId.Count, WarriorId.Names_Ed, property);
         }
     }

@@ -60,8 +60,8 @@ namespace Vurbiri.Colonization
 
                 protected IEnumerator Defense_Cn(bool isBuff, bool isBlock)
                 {
-                    if (isBuff && Settings.defenseBuff.CanUsed(Action, Actor))
-                        yield return Settings.defenseBuff.Use(Action);
+                    if (isBuff && Settings.defenseSkill.CanUsed(Actor))
+                        yield return Settings.defenseSkill.Use(Action);
                     if (isBlock && Action.CanUsedSpecSkill() && Settings.specChance.Roll)
                         yield return Action.UseSpecSkill();
                 }

@@ -56,7 +56,7 @@ namespace Vurbiri.Colonization
 
             private IEnumerator Cast_Cn()
             {
-                int index; Actor target; Vector3 position = GameContainer.CameraTransform.ParentPosition;
+                int index; Actor target; Vector3 position = GameContainer.CameraTransform.BasisPosition;
                 while (_targets.Count > 0)
                 {
                     index = FindNearest(position, _targets);

@@ -12,14 +12,15 @@ namespace VurbiriEditor.Colonization
 
         [SerializeField] protected TSettings _settings;
 
-        private string _label;
         private SerializedObject _serializedObject;
         private SerializedProperty _serializedProperty;
         private StatesPriorityDrawer<TStateId> _prioritiesDrawer;
         private ActorsAISettingsDrawer _settingsDrawer;
         private Vector2 _scrollPos;
-        
-        protected abstract ActorsAISettingsDrawer Init(SerializedProperty property, out string label);
+
+        protected abstract string Label { get; }
+
+        protected abstract ActorsAISettingsDrawer GetSettingsDrawer(SerializedProperty property);
 
         private void OnEnable()
         {
@@ -30,17 +31,17 @@ namespace VurbiriEditor.Colonization
             _serializedObject = new(this);
             _serializedProperty = _serializedObject.FindProperty("_settings");
 
-            _prioritiesDrawer = new (_serializedObject, _serializedProperty);
-            _settingsDrawer = Init(_serializedProperty, out _label);
+            CreateDrawers();
         }
 
         private void OnGUI()
         {
             _serializedObject.Update();
+            CreateDrawers();
             BeginWindows();
             {
                 Space(10f);
-                LabelField(_label, STYLES.H1);
+                LabelField(Label, STYLES.H1);
 
                 BeginVertical(GUI.skin.box);
                 {
@@ -62,6 +63,12 @@ namespace VurbiriEditor.Colonization
             }
             EndWindows();
             _serializedObject.ApplyModifiedProperties();
+        }
+
+        private void CreateDrawers()
+        {
+            _prioritiesDrawer ??= new(_serializedObject, _serializedProperty);
+            _settingsDrawer ??= GetSettingsDrawer(_serializedProperty);
         }
 
         private void OnDisable()

@@ -50,6 +50,11 @@ namespace Vurbiri.Colonization
         {
             return Vurbiri.International.Localization.ForEditor(CONST_UI.FILE).GetText(CONST_UI.FILE, _ui.keySkillName).Delete("<b>", "</b>");
         }
+
+        public bool IsHeal_Ed()
+        {
+            return _target == TargetOfSkill.Friend && _effectsHitsSettings != null && _effectsHitsSettings.Length > 0 && _effectsHitsSettings[0].IsUsedAttack_Ed();
+        }
 #endif
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
@@ -49,9 +50,17 @@ namespace Vurbiri
             return enumerator.Current;
         }
 
+        public static bool Contains<T>(this T[] self, T item) where T : IEquatable<T>
+        {
+            for (int i = self.Length - 1; i >= 0; --i)
+                if (item.Equals(self[i]))
+                    return true;
+            return false;
+        }
+
         public static void Shuffle<T>(this List<T> self)
         {
-            for (int i = self.Count - 1, j; i > 0; i--)
+            for (int i = self.Count - 1, j; i > 0; --i)
             {
                 j = UnityEngine.Random.Range(0, i);
                 (self[j], self[i]) = (self[i], self[j]);

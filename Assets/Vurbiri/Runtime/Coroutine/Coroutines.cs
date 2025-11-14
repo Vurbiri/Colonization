@@ -25,17 +25,11 @@ namespace Vurbiri
         {
             if (s_instance == null)
             {
-                GameObject obj = new("[Coroutines]");
+                GameObject obj = new("[Coroutine]");
                 DontDestroyOnLoad(obj);
                 s_instance = obj.AddComponent<Coroutines>();
             }
         }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Coroutine Start(IEnumerator routine) => s_instance.StartCoroutine(routine);
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void Stop(Coroutine coroutine) => s_instance.StopCoroutine(coroutine);
 
         private void OnDestroy()
         {
@@ -44,11 +38,14 @@ namespace Vurbiri
         }
     }
 
-    public static class CoroutineExtensions
+    public static class CoroutineExt
     {
+        static CoroutineExt() => Coroutines.Create();
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Coroutine Start(this IEnumerator self) => Coroutines.s_instance.StartCoroutine(self);
+        public static Coroutine Start(this IEnumerator routine) => Coroutines.s_instance.StartCoroutine(routine);
+        
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void Stop(this Coroutine self) => Coroutines.s_instance.StopCoroutine(self);
+        public static void Stop(this Coroutine routine) => Coroutines.s_instance.StopCoroutine(routine);
     }
 }

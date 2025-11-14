@@ -11,7 +11,7 @@ namespace Vurbiri.Colonization.Controllers
         private const float MIN_SQR_MAGNITUDE = 1E-06f;
 
         private readonly Camera _camera;
-        private readonly Transform _cameraTransform, _parentTransform;
+        private readonly Transform _cameraTransform, _basisTransform;
         private readonly SphereBounds _bounds = new(HEX.DIAMETER_IN * CONST.MAX_CIRCLES);
         private readonly VAction<Transform> _changedTransform = new();
         private Vector3 _velocity = Vector3.zero;
@@ -25,31 +25,31 @@ namespace Vurbiri.Colonization.Controllers
             [Impl(256)] set
             {
                 _cameraTransform.localPosition = value;
-                _cameraTransform.LookAt(_parentTransform);
+                _cameraTransform.LookAt(_basisTransform);
                 _changedTransform.Invoke(_cameraTransform);
             }
         }
-        public Vector3 ParentPosition { [Impl(256)] get => _parentTransform.position; }
+        public Vector3 BasisPosition { [Impl(256)] get => _basisTransform.position; }
 
         public CameraTransform(Camera camera)
         {
             _camera = camera;
 
             _cameraTransform = camera.GetComponent<Transform>();
-            _parentTransform = _cameraTransform.parent;
+            _basisTransform = _cameraTransform.parent;
 
-            _cameraTransform.LookAt(_parentTransform);
+            _cameraTransform.LookAt(_basisTransform);
         }
 
         [Impl(256)] public void Move(Vector3 offset)
         {
-            _parentTransform.position = _bounds.ClosestPoint(_parentTransform.position + offset);
+            _basisTransform.position = _bounds.ClosestPoint(_basisTransform.position + offset);
             _changedTransform.Invoke(_cameraTransform);
         }
 
         [Impl(256)]public bool MoveToTarget(Vector3 target, float smoothTime, float maxSqrVelocity)
         {
-            _parentTransform.position = Vector3.SmoothDamp(_parentTransform.position, target, ref _velocity, smoothTime, float.PositiveInfinity, Time.unscaledDeltaTime);
+            _basisTransform.position = Vector3.SmoothDamp(_basisTransform.position, target, ref _velocity, smoothTime, float.PositiveInfinity, Time.unscaledDeltaTime);
             if (_velocity.sqrMagnitude > maxSqrVelocity)
             {
                 _changedTransform.Invoke(_cameraTransform);
@@ -61,16 +61,16 @@ namespace Vurbiri.Colonization.Controllers
 
         [Impl(256)] public void Rotate(float angleY)
         {
-            _parentTransform.rotation *= Quaternion.Euler(0f, angleY, 0f);
+            _basisTransform.rotation *= Quaternion.Euler(0f, angleY, 0f);
             _changedTransform.Invoke(_cameraTransform);
         }
 
-        [Impl(256)] public void SetCameraAndParentPosition(Vector3 cameraPosition, Vector3 parentPosition)
+        [Impl(256)] public void SetCameraAndParentPosition(Vector3 cameraPosition, Vector3 basisPosition)
         {
-            _parentTransform.position = parentPosition;
+            _basisTransform.position = basisPosition;
             _cameraTransform.localPosition = cameraPosition;
 
-            _cameraTransform.LookAt(_parentTransform);
+            _cameraTransform.LookAt(_basisTransform);
 
             _changedTransform.Invoke(_cameraTransform);
         }
