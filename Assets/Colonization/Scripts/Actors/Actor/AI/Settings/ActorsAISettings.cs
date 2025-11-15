@@ -29,7 +29,7 @@ namespace Vurbiri.Colonization
             _settings ??= new ActorAISettings[ActorId<TActorId>.Count];
             if(_settings.Length != ActorId<TActorId>.Count)
                 System.Array.Resize(ref _settings, ActorId<TActorId>.Count);
-            for(int i = 0; i < ActorId<TActorId>.Count; ++i)
+            for (int i = 0; i < ActorId<TActorId>.Count; ++i)
                 _settings[i] ??= new();
         }
 #endif

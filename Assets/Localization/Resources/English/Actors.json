@@ -15,6 +15,7 @@
   "Healing": "Healing <b>{0}%</b>",
   "MaxHPTemp": "Maximum HP <b>{0}</b> for <b>{1}</b> turn(s)",
   "HPPerTurnTemp": "Regeneration <b>{0}</b> for <b>{1}</b> turn(s)",
+  "MaxAPTemp": "Maximum AP <b>{0}</b> for <b>{1}</b> turn(s)",
   "APPerTurnTemp": "Recovery of AP <b>{0}</b> for <b>{1}</b> turn(s)",
   "AttackTemp": "Attack <b>{0}</b> for <b>{1}</b> turn(s)",
   "DefenseTemp": "Defense <b>{0}</b> for <b>{1}</b> turn(s)",

@@ -39,7 +39,7 @@ namespace Vurbiri.Colonization
                 bool isExit = !(Support ? _targetHexagon.IsGreatFriend(OwnerId) : _targetHexagon.IsEnemy(OwnerId));
                 yield return Move_Cn(isContinue, 1, _targetHexagon, isExit);
                 if (!isContinue && IsEnemyComing)
-                    yield return Defense_Cn(true, false);
+                    yield return Settings.defense.Use_Cn(Actor, true, false);
             }
 
             public override void Dispose()

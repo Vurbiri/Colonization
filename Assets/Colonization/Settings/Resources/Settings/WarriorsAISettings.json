@@ -25,10 +25,11 @@
     {
       "support": false,
       "raider": false,
-      "specChance": 60,
-      "defenseSkill": {
-        "_skill": 3,
-        "_chance": 88
+      "defense": {
+        "_buff": 3,
+        "_buffChance": 88,
+        "_block": true,
+        "_blockChance": 50
       },
       "selfBuffInCombat": {
         "_skill": -1,
@@ -43,10 +44,11 @@
     {
       "support": false,
       "raider": true,
-      "specChance": 77,
-      "defenseSkill": {
-        "_skill": 3,
-        "_chance": 50
+      "defense": {
+        "_buff": 3,
+        "_buffChance": 40,
+        "_block": true,
+        "_blockChance": 86
       },
       "selfBuffInCombat": {
         "_skill": -1,
@@ -61,10 +63,11 @@
     {
       "support": true,
       "raider": false,
-      "specChance": 55,
-      "defenseSkill": {
-        "_skill": -1,
-        "_chance": 0
+      "defense": {
+        "_buff": -1,
+        "_buffChance": 0,
+        "_block": true,
+        "_blockChance": 86
       },
       "selfBuffInCombat": {
         "_skill": -1,
@@ -79,10 +82,11 @@
     {
       "support": false,
       "raider": true,
-      "specChance": 66,
-      "defenseSkill": {
-        "_skill": -1,
-        "_chance": 0
+      "defense": {
+        "_buff": -1,
+        "_buffChance": 0,
+        "_block": true,
+        "_blockChance": 62
       },
       "selfBuffInCombat": {
         "_skill": -1,
@@ -97,10 +101,11 @@
     {
       "support": false,
       "raider": true,
-      "specChance": 88,
-      "defenseSkill": {
-        "_skill": -1,
-        "_chance": 0
+      "defense": {
+        "_buff": -1,
+        "_buffChance": 0,
+        "_block": true,
+        "_blockChance": 93
       },
       "selfBuffInCombat": {
         "_skill": 3,

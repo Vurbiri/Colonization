@@ -10,7 +10,7 @@ namespace Vurbiri.Colonization
         public IEnumerator Run(ActorSFX user, ActorSkin target)
         {
             RunInternal(user, target).Start();
-            return null;
+            yield break;
         }
 
     }

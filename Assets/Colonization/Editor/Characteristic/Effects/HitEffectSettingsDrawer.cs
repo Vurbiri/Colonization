@@ -24,9 +24,10 @@ namespace VurbiriEditor.Colonization
         #endregion
 
         #region Values
-        private readonly string[] _namesAbilitiesDuration = { ActorAbilityId.Names_Ed[MaxHP], ActorAbilityId.Names_Ed[HPPerTurn], ActorAbilityId.Names_Ed[Attack],
-                                                               ActorAbilityId.Names_Ed[Defense], ActorAbilityId.Names_Ed[Pierce], ActorAbilityId.Names_Ed[APPerTurn]};
-        private readonly int[] _valuesAbilitiesDuration = { MaxHP, HPPerTurn, Attack, Defense, Pierce, APPerTurn };
+        private readonly string[] _namesAbilitiesDuration =
+            { ActorAbilityId.Names_Ed[MaxHP], ActorAbilityId.Names_Ed[HPPerTurn], ActorAbilityId.Names_Ed[Attack], ActorAbilityId.Names_Ed[Defense], ActorAbilityId.Names_Ed[Pierce],
+              ActorAbilityId.Names_Ed[MaxAP], ActorAbilityId.Names_Ed[APPerTurn]};
+        private readonly int[] _valuesAbilitiesDuration = { MaxHP, HPPerTurn, Attack, Defense, Pierce, MaxAP, APPerTurn };
 
         private readonly string[] _namesModifiersDuration = { "Flat", "Percent" };
         private readonly int[] _valuesModifiersDuration = { TypeModifierId.Addition, TypeModifierId.TotalPercent };
@@ -197,7 +198,7 @@ namespace VurbiriEditor.Colonization
                 Space();
                 indentLevel++;
 
-                if (usedAbility == APPerTurn)
+                if (usedAbility == MaxAP || usedAbility == APPerTurn)
                 {
                     SetInt(P_TYPE_OP, TypeModifierId.Addition);
                     DrawFlatValue(-2, 2);

@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
@@ -15,8 +14,8 @@ namespace Vurbiri.Colonization
 	{
         [Space]
         public FileIdAndKey giftMsg;
-        [Button("Testing"), Range(-10f, 10f)]
-        public float value;
+        [Button("Testing")]
+        public Color value;
 
         private TMP_Dropdown _dropdown;
 
@@ -85,16 +84,16 @@ namespace Vurbiri.Colonization
             var person = GameContainer.Players.Person;
 
             person.SpawnTest(WarriorId.Militia, HEX.RightUp);
-            person.SpawnTest(WarriorId.Solder, HEX.Right);
+            //person.SpawnTest(WarriorId.Solder, HEX.Right);
             //person.SpawnTest(WarriorId.Wizard, HEX.LeftDown);
             //person.SpawnTest(WarriorId.Warlock, HEX.Left);
-            person.SpawnTest(WarriorId.Knight, HEX.LeftUp);
+            //person.SpawnTest(WarriorId.Knight, HEX.LeftUp);
 
             //person.SpawnTest(WarriorId.Knight, HEX.Left);
-            //person.SpawnDemonTest(DemonId.Fatty, Key.Zero);
+            person.SpawnDemonTest(DemonId.Bomb, Key.Zero);
 
             //person.SpawnDemonTest(DemonId.Imp, HEX.RightUp);
-            //person.SpawnDemonTest(DemonId.Bomb, HEX.Right);
+            person.SpawnDemonTest(DemonId.Bomb, HEX.Right);
             //person.SpawnDemonTest(DemonId.Grunt, HEX.LeftDown);
             //person.SpawnDemonTest(DemonId.Fatty, HEX.Left);
             //person.SpawnDemonTest(DemonId.Boss, HEX.LeftUp);

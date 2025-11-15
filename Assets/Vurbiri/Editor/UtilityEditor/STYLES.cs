@@ -46,15 +46,14 @@ namespace VurbiriEditor
             borderLight = new(border)
             {
                 name = "borderLight"
-
             };
-            borderLight.normal.background = Border(new Color32(77, 77, 77, 255));
+            borderLight.normal.background = Border(new Color32(77, 77, 77, 255), new Color32(56, 56, 56, 255));
 
             borderDark = new(border)
             {
                 name = "borderDark"
             };
-            borderDark.normal.background = Border(new Color32(33, 33, 33, 255), new Color32(52, 52, 52, 255));
+            borderDark.normal.background = Border(new Color32(33, 33, 33, 255), new Color32(51, 51, 51, 255));
 
             H3 = new(borderDark)
             {

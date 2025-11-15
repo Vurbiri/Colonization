@@ -42,11 +42,9 @@ namespace VurbiriEditor.Colonization
 
             private readonly SerializedProperty _supportProperty;
             private readonly SerializedProperty _raiderProperty;
-            private readonly SerializedProperty _specChanceProperty;
 
-            private readonly UsedSelfSkillDrawer _defenseSkillDrawer;
+            private readonly UsedDefenseDrawer _defenseDrawer;
             private readonly UsedSelfSkillDrawer _selfBuffDrawer;
-
             private readonly UsedHealDrawer _healDrawer;
 
             private readonly string _name;
@@ -60,9 +58,8 @@ namespace VurbiriEditor.Colonization
 
                 _supportProperty    = parentProperty.FindPropertyRelative(nameof(ActorAISettings.support));
                 _raiderProperty     = parentProperty.FindPropertyRelative(nameof(ActorAISettings.raider));
-                _specChanceProperty = parentProperty.FindPropertyRelative(nameof(ActorAISettings.specChance));
 
-                _defenseSkillDrawer = new(parentProperty.FindPropertyRelative(nameof(ActorAISettings.defenseSkill)));
+                _defenseDrawer      = new(parentProperty.FindPropertyRelative(nameof(ActorAISettings.defense)));
                 _selfBuffDrawer     = new(parentProperty.FindPropertyRelative(nameof(ActorAISettings.selfBuffInCombat)));
 
                 _healDrawer         = new(parentProperty.FindPropertyRelative(nameof(ActorAISettings.heal)));
@@ -82,9 +79,7 @@ namespace VurbiriEditor.Colonization
                             PropertyField(_supportProperty);
                             PropertyField(_raiderProperty);
                             Space(1f);
-                            PropertyField(_specChanceProperty, _specChanceName);
-                            Space();
-                            _defenseSkillDrawer.Draw(_typeId, _id);
+                            _defenseDrawer.Draw(_typeId, _id);
                             Space(3f);
                             LabelField("Combat", EditorStyles.boldLabel);
                             _selfBuffDrawer.Draw(_typeId, _id);

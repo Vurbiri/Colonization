@@ -21,7 +21,9 @@ namespace VurbiriEditor.Colonization
             Update<DemonsSettingsScriptable, DemonId, DemonSettings>(EUtility.FindAnyScriptable<DemonsSettingsScriptable>(), ActorTypeId.Demon);
         }
 
+        public static int Self(int type, int id, SerializedProperty property) => Draw(property.displayName, property, s_selfSkillNames[type][id], s_selfSkillValues[type][id]);
         public static int Self(int type, int id, string label, SerializedProperty property) => Draw(label, property, s_selfSkillNames[type][id], s_selfSkillValues[type][id]);
+        public static int Heal(int type, int id, SerializedProperty property) => Draw(property.displayName, property, s_healNames[type][id], s_healValues[type][id]);
         public static int Heal(int type, int id, string label, SerializedProperty property) => Draw(label, property, s_healNames[type][id], s_healValues[type][id]);
 
         public static void Update<TScriptable, TId, TValue>(TScriptable scriptable, int type)

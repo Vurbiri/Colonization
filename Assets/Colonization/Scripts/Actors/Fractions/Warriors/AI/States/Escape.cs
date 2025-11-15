@@ -47,11 +47,7 @@ namespace Vurbiri.Colonization
                 if (TryEscape(out Hexagon target))
                     yield return Move_Cn(target);
 
-                if (Settings.defenseSkill.CanUsed(Actor))
-                    yield return Settings.defenseSkill.Use(Action);
-
-                if (Action.CanUsedSpecSkill())
-                    yield return Action.UseSpecSkill();
+                yield return Settings.defense.TryUse_Cn(Actor, true, true, true);
 
                 isContinue.Set(false);
                 Exit();

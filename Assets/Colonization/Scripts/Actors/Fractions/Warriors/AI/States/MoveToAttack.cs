@@ -40,7 +40,7 @@ namespace Vurbiri.Colonization
             {
                 yield return Move_Cn(isContinue, 1, _targetHexagon, !_targetHexagon.IsEnemy(OwnerId));
                 if (!isContinue && IsEnemyComing)
-                    yield return Defense_Cn(true, true);
+                    yield return Settings.defense.Use_Cn(Actor, true, true);
             }
         }
     }

@@ -58,14 +58,6 @@ namespace Vurbiri.Colonization
                     _parent._current = _parent._goalSetting;
                 }
 
-                protected IEnumerator Defense_Cn(bool isBuff, bool isBlock)
-                {
-                    if (isBuff && Settings.defenseSkill.CanUsed(Actor))
-                        yield return Settings.defenseSkill.Use(Action);
-                    if (isBlock && Action.CanUsedSpecSkill() && Settings.specChance.Roll)
-                        yield return Action.UseSpecSkill();
-                }
-
                 protected bool TryGetNearActorsInCombat(ReadOnlyReactiveSet<Actor> friends, ref int distance, out Actor enemy, out Actor friend)
                 {
                     bool result = false;
