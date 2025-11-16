@@ -18,7 +18,7 @@ namespace Vurbiri.Colonization
             {
                 _targetHexagon = null;
 
-                if ((Raider & Status.isMove & !Status.isSiege) && Status.percentHP > s_settings.minHPRaid)
+                if ((Settings.raider & Status.isMove & !Status.isSiege) && Status.percentHP > s_settings.minHPRaid)
                 {
                     int distance = s_settings.maxDistanceRaid;
                     var playerId = Actor.Owner;

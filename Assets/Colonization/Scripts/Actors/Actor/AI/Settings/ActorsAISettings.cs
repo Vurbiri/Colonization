@@ -13,6 +13,9 @@ namespace Vurbiri.Colonization
         [SerializeField, JsonProperty, HideInInspector] 
         private ActorAISettings[] _settings;
 
+        [Range(0, 5)] public int maxDistanceHelp;
+        [Range(0, 100)] public int minHPHelp;
+
         public ActorAISettings this[Id<TActorId> id] { [Impl(256)] get => _settings[id.Value]; }
         public ActorAISettings this[int index] { [Impl(256)] get => _settings[index]; }
 

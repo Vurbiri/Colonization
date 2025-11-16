@@ -8,7 +8,7 @@ namespace Vurbiri.Colonization
         {
              public override int Id => WarriorAIStateId.Defense;
 
-            [Impl(256)] public Defense(WarriorAI parent) : base(parent) { }
+             [Impl(256)] public Defense(WarriorAI parent) : base(parent) { }
         }
     }
 }

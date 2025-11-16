@@ -11,30 +11,37 @@ namespace Vurbiri.Colonization
             {
                 public int percentHP;
                 public bool isMove, isSiege, isGuard;
-                public readonly Enemies near = new(), nearTwo = new();
-                public readonly List<Id<PlayerId>> enemies = new(3);
+                public readonly Enemies nearEnemies = new(), nighEnemies = new();
+                public readonly Friends nearFriends = new(), nighFriends = new();
+                public readonly List<Id<PlayerId>> playerEnemies = new(3);
 
                 public void Update(Actor actor)
                 {
                     percentHP = actor.PercentHP;
                     isMove = actor.Action.CanUsedMoveSkill();
 
-                    near.Update(actor);
-                    nearTwo.Update(actor, HEX.NEAR_TWO);
+                    nearEnemies.Update(actor);
+                    nearFriends.Update(actor);
+
+                    nighEnemies.Update(actor, HEX.NEAR_TWO);
+                    nighFriends.Update(actor, HEX.NEAR_TWO);
 
                     SetsGuardAndSiegeStatus(actor);
 
                     for (int i = 0; i < PlayerId.Count; ++i)
                         if (GameContainer.Diplomacy.IsEnemy(actor._owner, i))
-                            enemies.Add(i);
+                            playerEnemies.Add(i);
                 }
 
                 public void Clear()
                 {
-                    near.enemies.Clear();
-                    nearTwo.enemies.Clear();
+                    nearEnemies.Clear();
+                    nearFriends.Clear();
 
-                    enemies.Clear();
+                    nighEnemies.Clear();
+                    nighFriends.Clear();
+
+                    playerEnemies.Clear();
                 }
 
                 [Impl(256)] private void SetsGuardAndSiegeStatus(Actor actor)

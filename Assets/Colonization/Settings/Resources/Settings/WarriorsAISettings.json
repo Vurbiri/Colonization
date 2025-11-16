@@ -1,16 +1,17 @@
 {
   "ratioForEscape": 11,
   "ratioForAttack": 30,
-  "maxDistanceHelp": 3,
-  "minHPHelp": 60,
   "maxDistanceUnsiege": 4,
   "minHPUnsiege": 22,
   "maxDistanceRaid": 2,
   "minHPRaid": 84,
   "maxDistanceHome": 3,
   "chanceFreeFinding": 7,
+  "maxDistanceHelp": 3,
+  "minHPHelp": 60,
   "_priority": [
     0,
+    10,
     1,
     2,
     3,
@@ -120,6 +121,7 @@
   ],
   "Priority": [
     0,
+    10,
     1,
     2,
     3,

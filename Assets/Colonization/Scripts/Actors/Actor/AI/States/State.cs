@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using Vurbiri.Collections;
 using Vurbiri.Reactive.Collections;
 using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
@@ -9,9 +8,10 @@ namespace Vurbiri.Colonization
 {
     public partial class Actor
     {
+        #region =========== AI.State ==================
         public partial class AI
         {
-            #region =========== AI.State ==================
+
             protected abstract class State
             {
                 public abstract int Id { get; }
@@ -22,82 +22,35 @@ namespace Vurbiri.Colonization
 
                 sealed public override string ToString() => GetType().Name;
             }
-            #endregion
 
-            #region =========== AI.State<T>  ==================
-            protected abstract class State<T> : State where T : AI
+        }
+        #endregion
+
+        #region =========== AI.State<T>  ==================
+        public abstract partial class AI<TSettings, TActorId, TStateId>
+        {
+            protected abstract class State<T> : State where T : AI<TSettings, TActorId, TStateId>
             {
                 protected readonly T _parent;
 
                 #region Parent Properties
                 protected Actor Actor { [Impl(256)] get => _parent._actor; }
+                protected Hexagon Hexagon { [Impl(256)] get => _parent._actor._currentHex; }
                 protected Id<PlayerId> OwnerId { [Impl(256)] get => _parent._actor._owner; }
                 protected AStates Action { [Impl(256)] get => _parent._actor._states; }
                 protected Goals Goals { [Impl(256)] get => _parent._goals; }
                 protected Status Status { [Impl(256)] get => _parent._status; }
                 protected ActorAISettings Settings { [Impl(256)] get => _parent._aISettings; }
-                protected bool Support { [Impl(256)] get => _parent._aISettings.support; }
-                protected bool Raider { [Impl(256)] get => _parent._aISettings.raider; }
-                protected bool IsInCombat { [Impl(256)] get => _parent._status.near.enemiesForce > 0; }
-                protected bool IsEnemyComing { [Impl(256)] get => _parent._status.nearTwo.enemiesForce > 0; }
+                protected bool IsInCombat { [Impl(256)] get => _parent._status.nearEnemies.IsForce; }
+                protected bool IsEnemyComing { [Impl(256)] get => _parent._status.nighEnemies.IsForce; }
                 #endregion
 
                 [Impl(256)] protected State(T parent) => _parent = parent;
 
-                [Impl(256)] protected void TryExitTo(State newState)
-                {
-                    if (newState.TryEnter())
-                    {
-                        Dispose();
-                        _parent._current = newState;
-                    }
-                }
                 [Impl(256)] protected void Exit()
                 {
                     Dispose();
                     _parent._current = _parent._goalSetting;
-                }
-
-                protected bool TryGetNearActorsInCombat(ReadOnlyReactiveSet<Actor> friends, ref int distance, out Actor enemy, out Actor friend)
-                {
-                    bool result = false;
-                    List<Actor> enemies = new(HEX.SIDES); 
-                    Actor enemyTemp; enemy = null; friend = null;
-
-                    foreach (var friendTemp in friends)
-                    {
-                        int force = GetEnemiesNearAndForce(friendTemp, enemies);
-
-                        for (int i = enemies.Count - 1; i >= 0; --i)
-                        {
-                            enemyTemp = enemies[i];
-                            if (Goals.Enemies.CanAdd(enemyTemp, force) && TryGetDistance(Actor, enemyTemp.Hexagon, distance, out int newDistance))
-                            {
-                                distance = newDistance;
-                                enemy = enemyTemp;
-                                friend = friendTemp;
-                                result = true;
-                            }
-                        }
-                        enemies.Clear();
-                    }
-                    return result;
-
-                    // =============== Local ======================
-                    static int GetEnemiesNearAndForce(Actor friend, List< Actor> enemies)
-                    {
-                        int force = 0;
-                        var neighbors = friend._currentHex.Neighbors;
-                        for (int i = 0; i < HEX.SIDES; ++i)
-                        {
-                            if (neighbors[i].TryGetEnemy(friend._owner, out Actor enemy))
-                            {
-                                enemies.Add(enemy);
-                                force += enemy.CurrentForce;
-                            }
-                        }
-                        return force;
-                    }
                 }
 
                 protected bool TryGetEmptyColony(ReadOnlyReactiveList<Crossroad> colonies, ref int distance, out Crossroad colony, out Hexagon target, Func<Crossroad, bool> canAdd)
@@ -110,7 +63,7 @@ namespace Vurbiri.Colonization
                     for (int i = 0; i < colonies.Count; ++i)
                     {
                         colonyTemp = colonies[i];
-                        if (canAdd(colonyTemp) && (colonyTemp.ApproximateDistance(Actor.Hexagon) <= (distance + 1)) && colonyTemp.IsEmptyNear())
+                        if (canAdd(colonyTemp) && (colonyTemp.ApproximateDistance(Hexagon) <= (distance + 1)) && colonyTemp.IsEmptyNear())
                         {
                             hexagons = colonyTemp.Hexagons;
                             foreach (int index in s_crossroadHex)
@@ -162,3 +115,4 @@ namespace Vurbiri.Colonization
         #endregion
     }
 }
+

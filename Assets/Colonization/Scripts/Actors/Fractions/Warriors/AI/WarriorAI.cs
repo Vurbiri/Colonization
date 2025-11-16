@@ -4,21 +4,19 @@ using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization
 {
-    public partial class WarriorAI : Actor.AI
+    public partial class WarriorAI : Actor.AI<WarriorsAISettings, WarriorId, WarriorAIStateId>
     {
-        protected static readonly WarriorsAISettings s_settings;
-        static WarriorAI() => s_settings = SettingsFile.Load<WarriorsAISettings>();
-
-        [Impl(256)] public WarriorAI(Actor actor, Goals goals) : base(actor, goals, s_settings[actor.Id]) { }
+        [Impl(256)] public WarriorAI(Actor actor, Goals goals) : base(actor, goals) { }
 
         protected override State[] GetStates()
         {
             State[] states = 
             {
                 new Escape(this),
+                new EscapeSupport(this),
 
                 new Combat(this),
-                new Support(this),
+                new CombatSupport(this),
 
                 new MoveToHelp(this),
 
@@ -33,7 +31,7 @@ namespace Vurbiri.Colonization
                 new FindResources(this),
             };
 
-            StatesSort(states, s_settings.Priority);
+            StatesSort(states);
 
             return states;
         }

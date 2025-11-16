@@ -5,9 +5,9 @@ namespace Vurbiri.Colonization
 {
     public partial class Actor
     {
-        public partial class AI
+        public partial class AI<TSettings, TActorId, TStateId>
         {
-            protected abstract class Defense<T> : State<T> where T : AI
+            protected abstract class Defense<T> : State<T> where T : AI<TSettings, TActorId, TStateId>
             {
                 private bool _isBuff, _isBlock;
 

@@ -19,7 +19,7 @@ namespace Vurbiri.Colonization
 
                 if (Status.isMove && IsEnemyComing)
                 {
-                    var enemies = Status.nearTwo.enemies; Actor enemy;
+                    var enemies = Status.nighEnemies; Actor enemy;
                     int selfForce = Actor.CurrentForce, enemyForce;
 
                     do
@@ -28,7 +28,7 @@ namespace Vurbiri.Colonization
                         if (Chance.Rolling((selfForce * selfForce * s_settings.ratioForAttack) / (enemyForce * enemyForce) - (s_settings.ratioForAttack - 10)))
                             _targetHexagon = enemy.Hexagon;
                     }
-                    while (_targetHexagon == null && enemies.Count > 0);
+                    while (_targetHexagon == null && enemies.NotEmpty);
                 }
 
                 return _targetHexagon != null;

@@ -206,6 +206,11 @@ namespace Vurbiri.Colonization
         [Impl(256)] public bool IsEnemy(Id<PlayerId> id) => GameContainer.Diplomacy.IsEnemy(_ownerId, id);
         [Impl(256)] public bool IsOwner(Id<PlayerId> id) => _ownerId == id;
 
+        [Impl(256)] public bool TryGetFriend(Id<PlayerId> id, out Actor actor)
+        {
+            actor = _owner;
+            return GameContainer.Diplomacy.IsFriend(_ownerId, id);
+        }
         [Impl(256)] public bool TryGetEnemy(Id<PlayerId> id, out Actor actor)
         {
             actor = _owner;
@@ -214,10 +219,12 @@ namespace Vurbiri.Colonization
 
         public bool IsEnemyNear(Id<PlayerId> playerId)
         {
-            if(!_isWater)
+            if (!_isWater)
+            {
                 for (int i = 0; i < HEX.SIDES; ++i)
                     if (_neighbors[i].IsEnemy(playerId))
                         return true;
+            }
             return false;
         }
 

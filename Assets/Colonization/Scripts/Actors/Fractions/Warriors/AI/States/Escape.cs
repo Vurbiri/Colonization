@@ -15,22 +15,22 @@ namespace Vurbiri.Colonization
             {
                 bool isEscape = false;
 
-                if (Status.isMove && (IsInCombat || IsEnemyComing))
+                if (Status.isMove & (IsInCombat | IsEnemyComing))
                 {
                     int enemiesForce, contraForce;
                     if(IsInCombat)
                     {
-                        enemiesForce = Status.near.enemiesForce;
-                        contraForce = GetContraForce(Status.near.enemies);
+                        enemiesForce = Status.nearEnemies.Force;
+                        contraForce = Status.nearEnemies.GetContraForce();
                     }
                     else
                     {
-                        enemiesForce = Status.nearTwo.enemiesForce;
-                        contraForce = GetContraForce(Status.nearTwo.enemies) + Actor.CurrentForce;
+                        enemiesForce = Status.nighEnemies.Force;
+                        contraForce = Status.nighEnemies.GetContraForce() + Actor.CurrentForce;
                     }
 
                     if (Status.isGuard)
-                        enemiesForce /= (Actor.Hexagon.GetMaxDefense() + 2);
+                        enemiesForce /= (Hexagon.GetMaxDefense() + 2);
 
                     isEscape = Chance.Rolling((enemiesForce * s_settings.ratioForEscape) / contraForce - (s_settings.ratioForEscape + 1));
                 }
@@ -53,19 +53,11 @@ namespace Vurbiri.Colonization
                 Exit();
             }
 
-            private int GetContraForce(WeightsList<Actor> enemies)
-            {
-                int contraForce = 0;
-                for (int i = 0; i < enemies.Count; ++i)
-                    contraForce += enemies[i].GetCurrentForceNearEnemies();
-                return contraForce;
-            }
-
             private bool TryEscape(out Hexagon hexagon)
             {
                 Hexagon temp; hexagon = null;
-                int enemiesForce = (Status.near.enemiesForce + Status.nearTwo.enemiesForce)/(Actor.Hexagon.GetMaxDefense() + 1);
-                var hexagons = Actor.Hexagon.Neighbors;
+                int enemiesForce = (Status.nearEnemies.Force + Status.nighEnemies.Force)/(Hexagon.GetMaxDefense() + 1);
+                var hexagons = Hexagon.Neighbors;
 
                 for (int i = 0; i < HEX.SIDES; ++i)
                 {

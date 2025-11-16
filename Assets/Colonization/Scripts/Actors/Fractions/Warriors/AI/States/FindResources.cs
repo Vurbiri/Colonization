@@ -27,19 +27,19 @@ namespace Vurbiri.Colonization
 
             public override IEnumerator Execution_Cn(Out<bool> isContinue)
             {
-                _hexagons.Add(Actor.Hexagon);
-                _minResCount = _resources[Actor.Hexagon.GetProfit()];
+                _hexagons.Add(Hexagon);
+                _minResCount = _resources[Hexagon.GetProfit()];
 
                 if (Status.isSiege || (Status.isGuard && !s_settings.chanceFreeFinding.Roll))
                     SetColoniesHexagon();
                 else
-                    AddHexagons(Actor.Hexagon.Key, Actor.Hexagon.Neighbors);
+                    AddHexagons(Hexagon.Key, Hexagon.Neighbors);
 
                 SetMinResources();
                 RemoveHexagons();
 
                 var target = _hexagons.Rand();
-                if (target != Actor.Hexagon)
+                if (target != Hexagon)
                     yield return Move_Cn(target);
 
                 _hexagons.Clear();
@@ -53,8 +53,8 @@ namespace Vurbiri.Colonization
 
             private void SetColoniesHexagon()
             {
-                Key current = Actor.Hexagon.Key;
-                var crossroads = Actor.Hexagon.Crossroads;
+                Key current = Hexagon.Key;
+                var crossroads = Hexagon.Crossroads;
                 for (int i = 0; i < HEX.VERTICES; ++i)
                     if (crossroads[i].TryGetOwnerColony(out Id<PlayerId> playerId) && (playerId == OwnerId || GameContainer.Diplomacy.IsEnemy(playerId, OwnerId)))
                         AddHexagons(current, crossroads[i].Hexagons);

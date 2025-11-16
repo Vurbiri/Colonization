@@ -4,16 +4,16 @@ namespace Vurbiri.Colonization
 {
     public partial class Actor
     {
-        public partial class AI
+        public partial class AI<TSettings, TActorId, TStateId>
         {
             sealed private class GoalSetting : State
             {
-                private readonly AI _parent;
+                private readonly AI<TSettings, TActorId, TStateId> _parent;
                 private readonly State[] _states;
 
                 public override int Id => -1;
 
-                public GoalSetting(AI parent, State[] states)
+                public GoalSetting(AI<TSettings, TActorId, TStateId> parent, State[] states)
                 {
                     _parent = parent;
                     _states = states;

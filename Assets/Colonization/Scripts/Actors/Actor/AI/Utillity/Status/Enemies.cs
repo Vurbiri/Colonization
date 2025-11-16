@@ -7,14 +7,16 @@ namespace Vurbiri.Colonization
     {
         public partial class AI
         {
-            protected class Enemies
+            protected class Enemies : Actors
             {
-                public readonly WeightsList<Actor> enemies = new(3);
-                public int enemiesForce;
-                
+                private int _force;
+
+                public int Force { [Impl(256)] get => _force; }
+                public bool IsForce { [Impl(256)] get => _force > 0; }
+
                 public void Update(Actor actor, ReadOnlyArray<Key> keys)
                 {
-                    enemiesForce = 0;
+                    _force = 0;
 
                     Key current = actor._currentHex.Key;
                     for (int i = 0; i < keys.Count; ++i)
@@ -24,7 +26,7 @@ namespace Vurbiri.Colonization
 
                 public void Update(Actor actor)
                 {
-                    enemiesForce = 0;
+                    _force = 0;
 
                     var hexagons = actor._currentHex.Neighbors;
                     for (int i = 0; i < HEX.SIDES; ++i)
@@ -32,11 +34,23 @@ namespace Vurbiri.Colonization
                             Add(enemy);
                 }
 
+                
+
+                public int GetContraForce()
+                {
+                    int contraForce = 0;
+                    for (int i = 0; i < _list.Count; ++i)
+                        contraForce += _list[i].GetCurrentForceNearEnemies();
+                    return contraForce;
+                }
+
+                
+
                 [Impl(256)] private void Add(Actor enemy)
                 {
                     int currentForce = enemy.CurrentForce;
-                    enemiesForce += currentForce;
-                    enemies.Add(enemy, GameContainer.Actors.MaxForce - currentForce);
+                    _force += currentForce;
+                    _list.Add(enemy, GameContainer.Actors.MaxForce - currentForce);
                 }
             }
         }
