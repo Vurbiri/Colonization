@@ -1,5 +1,4 @@
 using UnityEditor;
-using UnityEngine;
 using Vurbiri.Colonization;
 using static UnityEditor.EditorGUILayout;
 
@@ -44,52 +43,55 @@ namespace VurbiriEditor.Colonization
             private readonly SerializedProperty _raiderProperty;
 
             private readonly UsedDefenseDrawer _defenseDrawer;
-            private readonly UsedSelfSkillDrawer _selfBuffDrawer;
+            private readonly UsedSelfSkillsDrawer _selfBuffsDrawer;
             private readonly UsedHealDrawer _healDrawer;
 
             private readonly string _name;
-            private readonly GUIContent _specChanceName;
 
             public ActorAISettingsDrawer(int typeId, int id, string name, SerializedProperty parentProperty)
             {
                 _typeId = typeId; _id = id; _name = name;
 
-                _parentProperty     = parentProperty;
+                _parentProperty  = parentProperty;
 
-                _supportProperty    = parentProperty.FindPropertyRelative(nameof(ActorAISettings.support));
-                _raiderProperty     = parentProperty.FindPropertyRelative(nameof(ActorAISettings.raider));
+                _supportProperty = parentProperty.FindPropertyRelative(nameof(ActorAISettings.support));
+                _raiderProperty  = parentProperty.FindPropertyRelative(nameof(ActorAISettings.raider));
 
-                _defenseDrawer      = new(parentProperty.FindPropertyRelative(nameof(ActorAISettings.defense)));
-                _selfBuffDrawer     = new(parentProperty.FindPropertyRelative(nameof(ActorAISettings.selfBuffInCombat)));
+                _defenseDrawer   = new(parentProperty.FindPropertyRelative(nameof(ActorAISettings.defense)), typeId, id);
 
-                _healDrawer         = new(parentProperty.FindPropertyRelative(nameof(ActorAISettings.heal)));
+                _healDrawer      = new(parentProperty.FindPropertyRelative(nameof(ActorAISettings.heal)), typeId, id);
+                _selfBuffsDrawer = new(parentProperty.FindPropertyRelative(nameof(ActorAISettings.selfBuffs)), typeId, id);
 
-                _specChanceName = typeId == ActorTypeId.Warrior ? new("Block Chance") : new("Spec Chance");
             }
 
             public void Draw()
             {
                 BeginVertical(STYLES.borderLight);
                 {
-                    if(_parentProperty.isExpanded = BeginFoldoutHeaderGroup(_parentProperty.isExpanded, _name))
+                    if(_parentProperty.isExpanded = Foldout(_parentProperty.isExpanded, _name))
                     {
                         Space(4f);
                         BeginVertical(STYLES.borderDark);
                         {
-                            PropertyField(_supportProperty);
                             PropertyField(_raiderProperty);
+                            PropertyField(_supportProperty);
                             Space(1f);
-                            _defenseDrawer.Draw(_typeId, _id);
+                            _defenseDrawer.Draw();
                             Space(3f);
-                            LabelField("Combat", EditorStyles.boldLabel);
-                            _selfBuffDrawer.Draw(_typeId, _id);
-                            _healDrawer.Draw(_typeId, _id);
+                            if (_raiderProperty.isExpanded = Foldout(_raiderProperty.isExpanded, "Combat"))
+                            {
+                                BeginVertical(STYLES.border);
+                                {
+                                    _healDrawer.Draw();
+                                    _selfBuffsDrawer.Draw();
+                                }
+                                EndVertical();
+                            }
                             Space(3f);
                         }
                         EndVertical();
                         Space(3f);
                     }
-                    EndFoldoutHeaderGroup();
                 }
                 EndVertical();
             }

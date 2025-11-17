@@ -67,7 +67,7 @@ namespace VurbiriEditor.Colonization
 
         private void CreateDrawers()
         {
-            _prioritiesDrawer ??= new(_serializedObject, _serializedProperty);
+            _prioritiesDrawer ??= new(_serializedProperty);
             _settingsDrawer ??= GetSettingsDrawer(_serializedProperty);
         }
 

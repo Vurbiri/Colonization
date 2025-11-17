@@ -15,11 +15,11 @@ namespace VurbiriEditor.Colonization
         private readonly GUIStyle _foldoutHeader;
         private readonly GUILayoutOption[] _options = { GUILayout.Width(WIDTH) , GUILayout.ExpandWidth(false) };
 
-        public StatesPriorityDrawer(SerializedObject serializedObject, SerializedProperty mainProperty) 
+        public StatesPriorityDrawer(SerializedProperty mainProperty) 
 		{
             _arrayProperty = mainProperty.FindPropertyRelative("_priority").FindPropertyRelative("_values");
 
-            _list = new(serializedObject, _arrayProperty, true, false, false, false)
+            _list = new(mainProperty.serializedObject, _arrayProperty, true, false, false, false)
             {
                 multiSelect = false,
                 drawElementCallback = DrawListItems,

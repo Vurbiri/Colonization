@@ -32,14 +32,22 @@
         "_block": true,
         "_blockChance": 50
       },
-      "selfBuffInCombat": {
-        "_skill": -1,
-        "_chance": 0
-      },
       "heal": {
         "_maxHP": 0,
         "_useSelfHP": false,
         "_skill": -1
+      },
+      "selfBuffs": {
+        "_skills": [
+          {
+            "skill": 3,
+            "currentHP": {
+              "_min": 0,
+              "_max": 100
+            },
+            "chance": 0
+          }
+        ]
       }
     },
     {
@@ -51,14 +59,22 @@
         "_block": true,
         "_blockChance": 86
       },
-      "selfBuffInCombat": {
-        "_skill": -1,
-        "_chance": 0
-      },
       "heal": {
         "_maxHP": 0,
         "_useSelfHP": false,
         "_skill": -1
+      },
+      "selfBuffs": {
+        "_skills": [
+          {
+            "skill": 3,
+            "currentHP": {
+              "_min": 0,
+              "_max": 0
+            },
+            "chance": 0
+          }
+        ]
       }
     },
     {
@@ -70,14 +86,13 @@
         "_block": true,
         "_blockChance": 86
       },
-      "selfBuffInCombat": {
-        "_skill": -1,
-        "_chance": 0
-      },
       "heal": {
         "_maxHP": 90,
         "_useSelfHP": false,
         "_skill": 1
+      },
+      "selfBuffs": {
+        "_skills": []
       }
     },
     {
@@ -89,14 +104,13 @@
         "_block": true,
         "_blockChance": 62
       },
-      "selfBuffInCombat": {
-        "_skill": -1,
-        "_chance": 0
-      },
       "heal": {
         "_maxHP": 0,
         "_useSelfHP": false,
         "_skill": -1
+      },
+      "selfBuffs": {
+        "_skills": []
       }
     },
     {
@@ -108,14 +122,22 @@
         "_block": true,
         "_blockChance": 93
       },
-      "selfBuffInCombat": {
-        "_skill": 3,
-        "_chance": 19
-      },
       "heal": {
         "_maxHP": 20,
         "_useSelfHP": true,
         "_skill": 2
+      },
+      "selfBuffs": {
+        "_skills": [
+          {
+            "skill": 3,
+            "currentHP": {
+              "_min": 0,
+              "_max": 100
+            },
+            "chance": 0
+          }
+        ]
       }
     }
   ],

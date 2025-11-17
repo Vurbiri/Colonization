@@ -7,7 +7,7 @@ namespace VurbiriEditor
 {
     public static class VEditorGUI
     {
-        private const float OFFSET_SIZE_LABEL = 20f, SIZE_VALUE = 50f, SIZE_SPACE = 5f;
+        private const float SIZE_VALUE = 50f, SIZE_SPACE = 6f;
 
         private static readonly float s_height = EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing;
         private static readonly float s_ySpace = EditorGUIUtility.standardVerticalSpacing;
@@ -27,58 +27,61 @@ namespace VurbiriEditor
         #endregion
 
         #region MinMaxSlider
-        public static bool MinMaxSlider(Rect position, GUIContent label, SerializedProperty minProperty, SerializedProperty maxProperty, float min, float max)
+        public static bool MinMaxSlider(Rect position, GUIContent label, SerializedProperty minProperty, SerializedProperty maxProperty, float minLimit, float maxLimit)
         {
-            if (minProperty.propertyType != SerializedPropertyType.Float) return false;
-            if (Mathf.Approximately(min, max)) return false;
+            bool isValid = !Mathf.Approximately(minLimit, maxLimit) && minProperty.propertyType == maxProperty.propertyType && maxProperty.propertyType == SerializedPropertyType.Float;
+            if (isValid)
+            {
+                if (minLimit > maxLimit) (minLimit, maxLimit) = (maxLimit, minLimit);
+ 
+                float minValue = Mathf.Clamp(minProperty.floatValue, minLimit, maxLimit - 1E-06f);
+                float maxValue = Mathf.Clamp(maxProperty.floatValue, minValue + 1E-06f, maxLimit);
 
-            if (min > max) (min, max) = (max, min);
+                var (sizeLabel, sizeMin, sizeSlider, sizeMax) = CalkPositionSlider(position);
 
-            float minValue = Mathf.Clamp(minProperty.floatValue, min, max);
-            float maxValue = Mathf.Clamp(maxProperty.floatValue, min, max);
+                EditorGUI.LabelField(sizeLabel, label);
+                minValue = EditorGUI.DelayedFloatField(sizeMin, minValue);
+                maxValue = EditorGUI.DelayedFloatField(sizeMax, maxValue);
+                EditorGUI.MinMaxSlider(sizeSlider, ref minValue, ref maxValue, minLimit, maxLimit);
 
-            var (sizeLabel, sizeMin, sizeSlider, sizeMax) = CalkPositionSlider(position);
+                minValue = Math.Max(minValue, minLimit);
+                maxValue = Math.Min(maxValue, maxLimit);
 
-            EditorGUI.LabelField(sizeLabel, label);
-            minValue = EditorGUI.FloatField(sizeMin, minValue);
-            maxValue = EditorGUI.FloatField(sizeMax, maxValue);
-            EditorGUI.MinMaxSlider(sizeSlider, ref minValue, ref maxValue, min, max);
-
-            if (Mathf.Approximately(minValue, maxValue)) maxValue *= 0.1f;
-
-            if (minValue > maxValue) (minValue, maxValue) = (maxValue, minValue);
-
-            minProperty.floatValue = minValue;
-            maxProperty.floatValue = maxValue;
-
-            return true;
+                minProperty.floatValue = Math.Clamp(minValue, minLimit, maxValue - 1E-06f);
+                maxProperty.floatValue = Math.Clamp(maxValue, minValue + 1E-06f, maxLimit);
+            }
+            return isValid;
         }
 
-        public static bool MinMaxSlider(Rect position, GUIContent label, SerializedProperty minProperty, SerializedProperty maxProperty, int min, int max)
+        public static bool MinMaxSlider(Rect position, GUIContent label, SerializedProperty minProperty, SerializedProperty maxProperty, int minLimit, int maxLimit)
         {
-            if (minProperty.propertyType != SerializedPropertyType.Integer) return false;
-            if (min == max) return false;
+            bool isValid = minLimit != maxLimit && minProperty.propertyType == SerializedPropertyType.Integer && maxProperty.propertyType == SerializedPropertyType.Integer;
 
-            if (min > max) (min, max) = (max, min);
+            if (isValid)
+            {
+                if (minLimit > maxLimit) (minLimit, maxLimit) = (maxLimit, minLimit);
 
-            float minValue = Mathf.Clamp(minProperty.intValue, min, max);
-            float maxValue = Mathf.Clamp(maxProperty.intValue, min, max);
+                int minI = minProperty.intValue;
+                int maxI = maxProperty.intValue;
 
-            var (sizeLabel, sizeMin, sizeSlider, sizeMax) = CalkPositionSlider(position);
+                float minF = Mathf.Clamp(minI, minLimit, maxLimit - 1);
+                float maxF = Mathf.Clamp(maxI, minI + 1, maxLimit);
 
-            EditorGUI.LabelField(sizeLabel, label);
-            minValue = EditorGUI.FloatField(sizeMin, minValue);
-            maxValue = EditorGUI.FloatField(sizeMax, maxValue);
-            EditorGUI.MinMaxSlider(sizeSlider, ref minValue, ref maxValue, min, max);
+                var (sizeLabel, sizeMin, sizeSlider, sizeMax) = CalkPositionSlider(position);
 
-            if (Mathf.Approximately(minValue, maxValue)) maxValue += 1f;
+                EditorGUI.LabelField(sizeLabel, label);
+                minF = EditorGUI.DelayedFloatField(sizeMin, minF);
+                maxF = EditorGUI.DelayedFloatField(sizeMax, maxF);
+                EditorGUI.MinMaxSlider(sizeSlider, ref minF, ref maxF, minLimit, maxLimit);
 
-            if (minValue > maxValue) (minValue, maxValue) = (maxValue, minValue);
+                minI = Math.Max(MathI.Round(minF), minLimit);
+                maxI = Math.Min(MathI.Round(maxF), maxLimit);
 
-            minProperty.intValue = MathI.Round(minValue);
-            maxProperty.intValue = MathI.Round(maxValue);
+                minProperty.intValue = Math.Clamp(minI, minLimit, maxI - 1);
+                maxProperty.intValue = Math.Clamp(maxI, minI + 1, maxLimit);
+            }
 
-            return true;
+            return isValid;
         }
         public static void MinMaxSlider(Rect position, ref int minValue, ref int maxValue, int minLimit, int maxLimit)
         {
@@ -91,9 +94,49 @@ namespace VurbiriEditor
             float max = EditorGUI.IntField(sizeMax, maxValue);
             EditorGUI.MinMaxSlider(sizeSlider, ref min, ref max, minLimit, maxLimit);
 
-            minValue = Math.Clamp(MathI.Round(min), minLimit, maxValue - 1);
-            maxValue = Math.Clamp(MathI.Round(max), minValue + 1, maxLimit);
+            minValue = Math.Max(MathI.Round(min), minLimit);
+            maxValue = Math.Min(MathI.Round(max), maxLimit);
+
+            minValue = Math.Clamp(minValue, minLimit, maxValue - 1);
+            maxValue = Math.Clamp(maxValue, minValue + 1, maxLimit);
         }
+
+        public static (Rect, Rect, Rect, Rect) CalkPositionSlider(Rect position)
+        {
+            float indentLevel = EditorGUI.indentLevel;
+            float offset = indentLevel * 15f;
+            float size  = SIZE_VALUE * (1f + indentLevel * 0.3f);
+            float sliderWidth = position.width - EditorGUIUtility.labelWidth - (size + SIZE_SPACE - offset) * 2f;
+            
+            Rect sizeLabel = position, sizeMin = position, sizeMax = position, sizeSlider = position;
+
+            sizeLabel.width = EditorGUIUtility.labelWidth - offset;
+            sizeMin.width = sizeMax.width = size;
+            sizeSlider.width = sliderWidth * (1f + indentLevel * 0.068f);
+
+            sizeMin.x += sizeLabel.width;
+            sizeSlider.x = sizeMin.x + (size + SIZE_SPACE) - offset;
+            sizeMax.x = sizeSlider.x + sliderWidth + SIZE_SPACE;
+            
+            return (sizeLabel, sizeMin, sizeSlider, sizeMax);
+        }
+
+        private static (Rect, Rect, Rect) CalkPositionSliderNotLabel(Rect position)
+        {
+            position.height = EditorGUIUtility.singleLineHeight;
+            position.x = SIZE_SPACE; position.width = EditorGUIUtility.currentViewWidth - SIZE_SPACE * 2f;
+
+            Rect sizeMin = position, sizeMax = position, sizeSlider = position;
+
+            sizeSlider.x += SIZE_VALUE + SIZE_SPACE;
+            sizeMax.x += position.width - SIZE_VALUE;
+
+            sizeMin.width = sizeMax.width = SIZE_VALUE;
+            sizeSlider.width = position.width - (SIZE_VALUE + SIZE_SPACE) * 2f;
+
+            return (sizeMin, sizeSlider, sizeMax);
+        }
+        #endregion
 
         public static Rect CustomPropertyField(Rect position, SerializedProperty property, string name)
         {
@@ -101,8 +144,6 @@ namespace VurbiriEditor
             position.y += EditorGUI.GetPropertyHeight(property) + s_ySpace;
             return position;
         }
-        #endregion
-
         public static Rect DefaultPropertyField(Rect position, SerializedProperty property, string name)
         {
             EditorGUI.PropertyField(position, property, new GUIContent(name));
@@ -132,36 +173,6 @@ namespace VurbiriEditor
             }
             return position;
 
-        }
-
-        private static (Rect, Rect, Rect, Rect) CalkPositionSlider(Rect position)
-        {
-            Rect sizeLabel = position, sizeMin = position, sizeMax = position, sizeSlider = position;
-            sizeLabel.width = EditorGUIUtility.labelWidth + OFFSET_SIZE_LABEL;
-            sizeMin.x = sizeLabel.width;
-            sizeSlider.x = sizeLabel.width + SIZE_VALUE + SIZE_SPACE;
-            sizeMax.x = EditorGUIUtility.currentViewWidth - SIZE_VALUE;
-
-            sizeMin.width = sizeMax.width = SIZE_VALUE;
-            sizeSlider.width = EditorGUIUtility.currentViewWidth - SIZE_VALUE * 2f - sizeLabel.width - SIZE_SPACE * 2f;
-
-            return (sizeLabel, sizeMin, sizeSlider, sizeMax);
-        }
-
-        private static (Rect, Rect, Rect) CalkPositionSliderNotLabel(Rect position)
-        {
-            position.height = EditorGUIUtility.singleLineHeight;
-            position.x = SIZE_SPACE; position.width = EditorGUIUtility.currentViewWidth - SIZE_SPACE * 2f;
-
-            Rect sizeMin = position, sizeMax = position, sizeSlider = position;
-
-            sizeSlider.x += SIZE_VALUE + SIZE_SPACE;
-            sizeMax.x += position.width - SIZE_VALUE;
-
-            sizeMin.width = sizeMax.width = SIZE_VALUE;
-            sizeSlider.width = position.width - (SIZE_VALUE + SIZE_SPACE) * 2f;
-
-            return (sizeMin, sizeSlider, sizeMax);
         }
     }
 }

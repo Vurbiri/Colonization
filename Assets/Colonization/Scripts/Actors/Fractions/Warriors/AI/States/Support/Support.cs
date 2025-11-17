@@ -4,11 +4,11 @@ namespace Vurbiri.Colonization
 {
     public partial class WarriorAI
     {
-        private class CombatSupport : AIState
+        private class Support : AIState
         {
-            public override int Id => WarriorAIStateId.CombatSupport;
+            public override int Id => WarriorAIStateId.Support;
 
-            public CombatSupport(WarriorAI parent) : base(parent)
+            public Support(WarriorAI parent) : base(parent)
             {
             }
 

@@ -3,7 +3,6 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using Vurbiri.Colonization.UI;
 
 namespace Vurbiri.Colonization
 {
@@ -24,9 +23,26 @@ namespace Vurbiri.Colonization
             for (int i = 0; i < _skillsSettings.Length; ++i)
                 _skillsSettings[i].typeActor_ed = type;
         }
+        public static void GetDefence_Ed(Skills skills, ref string[] names, ref int[] values) => skills.GetListSkills_Ed(ref names, ref values, (s) => s.Target == TargetOfSkill.Self);
+        public static void GetSelf_Ed(Skills skills, ref string[] names, ref int[] values) => skills.GetSkills_Ed(ref names, ref values, (s) => s.Target == TargetOfSkill.Self);
 
-        public void GetSelfSkills_Ed(ref string[] names, ref int[] values) => GetSkills_Ed(ref names, ref values, (s) => s.Target == TargetOfSkill.Self);
-        public void GetHeals_Ed(ref string[] names, ref int[] values) => GetSkills_Ed(ref names, ref values, (s) => s.IsHeal_Ed(), false);
+        public (string name, int value) GetHeals_Ed()
+        {
+            int count = _skillsSettings.Length;
+            var output = GetEmptySkillName();
+
+            for (int i = 0; i < count; ++i)
+            {
+                if (_skillsSettings[i].IsHeal_Ed())
+                {
+                    output.name = GetSkillName(i);
+                    output.value = i;
+                    break;
+                }
+            }
+
+            return output;
+        }
 
         public bool UpdateSFXName_Ed(string oldName, string newName)
         {
@@ -74,46 +90,53 @@ namespace Vurbiri.Colonization
                     animator[A_SKILLS[index]] = null;
         }
 
-        private void GetSkills_Ed(ref string[] names, ref int[] values, Func<SkillSettings, bool> valid, bool isNone = true, string keySpec = null)
+        private void GetListSkills_Ed(ref string[] names, ref int[] values, Func<SkillSettings, bool> valid)
         {
             int count = _skillsSettings.Length;
             List<string> listNames = new(count);
             List<int> listValues = new(count);
 
-            if(isNone)
-                AddEmpty(listNames, listValues);
+            AddEmpty(listNames, listValues);
 
             for (int i = 0; i < count; ++i)
             {
                 if (valid(_skillsSettings[i]))
                 {
-                    listNames.Add($"{_skillsSettings[i].GetName_Ed()} ({i.ToStr()})");
+                    listNames.Add(GetSkillName(i));
                     listValues.Add(i);
                 }
             }
 
-            if(!string.IsNullOrEmpty(keySpec))
-            {
-                listNames.Add(GetName_Ed(keySpec));
-                listValues.Add(CONST.SPEC_SKILL_ID);
-            }
-
-            if (listNames.Count == 0)
-                AddEmpty(listNames, listValues);
-
             names = listNames.ToArray(); values = listValues.ToArray();
-
-            // ========= Local========
-            static void AddEmpty(List<string> listNames, List<int> listValues)
-            {
-                listNames.Add("--------------");
-                listValues.Add(-1);
-            }
-            static string GetName_Ed(string key)
-            {
-                return Vurbiri.International.Localization.ForEditor(CONST_UI.FILE).GetText(CONST_UI.FILE, key);
-            }
         }
+
+        private void GetSkills_Ed(ref string[] names, ref int[] values, Func<SkillSettings, bool> valid)
+        {
+            int count = _skillsSettings.Length;
+            names = new string[count];
+            List<int> listValues = new(count);
+
+            for (int i = 0; i < count; ++i)
+            {
+                if (valid(_skillsSettings[i]))
+                {
+                    names[i] = GetSkillName(i);
+                    listValues.Add(i);
+                }
+            }
+
+            values = listValues.ToArray();
+        }
+
+        private static void AddEmpty(List<string> listNames, List<int> listValues)
+        {
+            var (name, value) = GetEmptySkillName();
+            listNames.Add(name);
+            listValues.Add(value);
+        }
+
+        private static (string name, int value) GetEmptySkillName() => ("----------------", -1);
+        private string GetSkillName(int i) => $"{_skillsSettings[i].GetName_Ed()} [ID {i.ToStr()}]";
     }
 }
 #endif

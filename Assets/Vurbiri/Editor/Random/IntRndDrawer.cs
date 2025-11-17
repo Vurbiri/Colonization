@@ -23,7 +23,7 @@ namespace VurbiriEditor
 
             if (range != null)
             {
-                var (sizeLabel, sizeMin, sizeSlider, sizeMax) = CalkPositionSlider(position);
+                var (sizeLabel, sizeMin, sizeSlider, sizeMax) = VEditorGUI.CalkPositionSlider(position);
                 float min, max, rMin = Mathf.Round(range.min), rMax = Mathf.Round(range.max);
                 min = Mathf.Clamp(minProperty.intValue, rMin, rMax);
                 max = Mathf.Clamp(maxProperty.intValue - 1, rMin, rMax);

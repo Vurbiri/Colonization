@@ -23,7 +23,7 @@ namespace VurbiriEditor
 
             if (range != null)
             {
-                var (sizeLabel, sizeMin, sizeSlider, sizeMax) = CalkPositionSlider(position);
+                var (sizeLabel, sizeMin, sizeSlider, sizeMax) = VEditorGUI.CalkPositionSlider(position);
 
                 EditorGUI.LabelField(sizeLabel, label);
 

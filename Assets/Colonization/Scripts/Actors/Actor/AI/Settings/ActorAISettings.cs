@@ -6,7 +6,7 @@ namespace Vurbiri.Colonization
 		public bool support;
         public bool raider;
         public UsedDefense defense;
-        public UsedSelfSkill selfBuffInCombat;
         public UsedHeal heal;
+        public UsedSelfSkills selfBuffs;
     }
 }
