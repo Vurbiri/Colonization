@@ -1,20 +1,39 @@
 using Newtonsoft.Json;
 using System;
+using System.Collections;
 using UnityEngine;
-using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization
 {
     [Serializable, JsonObject(MemberSerialization.Fields)]
-    public class UsedHeal : UsedTargetSkill
+    public class UsedHeal
     {
+        [SerializeField] private int _heal;
         [SerializeField] private int _maxHP;
         [SerializeField] private bool _useSelfHP;
 
-        [Impl(256)] public bool CanUsed(Actor user, Actor target)
+        public IEnumerator TryUse_Cn(Actor user, Actor target, IEnumerator waitBeforeSelecting)
         {
-            return user.Action.CanUsedSkill(_skill) && Chance.Rolling((_useSelfHP ? user.PercentHP - _maxHP : _maxHP) - target.PercentHP);
+            var action = user.Action;
+            if(action.CanUsedSkill(_heal) && Chance.Rolling((_useSelfHP ? user.PercentHP - _maxHP : _maxHP) - target.PercentHP))
+            {
+                yield return GameContainer.CameraController.ToPositionControlled(target);
+
+                var wait = action.UseSkill(_heal);
+
+                yield return waitBeforeSelecting;
+                user.Unselect(target);
+
+                yield return wait;
+            }
+            yield break;
         }
+
+#if UNITY_EDITOR
+        public const string skillField = nameof(_heal);
+        public const string maxHPField = nameof(_maxHP);
+        public const string useSelfHPField = nameof(_useSelfHP);
+#endif
     }
 }
 

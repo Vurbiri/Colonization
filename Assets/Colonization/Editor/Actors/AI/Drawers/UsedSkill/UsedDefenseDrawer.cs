@@ -1,7 +1,9 @@
 ﻿using UnityEditor;
 using UnityEngine;
+using Vurbiri;
 using Vurbiri.Colonization;
 using static UnityEditor.EditorGUILayout;
+using static Vurbiri.Colonization.UsedDefense;
 
 namespace VurbiriEditor.Colonization
 {
@@ -27,20 +29,20 @@ namespace VurbiriEditor.Colonization
 
             if (_isDefense)
             {
-                _buffProperty       = parentProperty.FindPropertyRelative("_buff");
-                _buffChanceProperty = parentProperty.FindPropertyRelative("_buffChance").FindPropertyRelative("_value");
+                _buffProperty       = parentProperty.FindPropertyRelative(buffField);
+                _buffChanceProperty = parentProperty.FindPropertyRelative(buffChanceField).FindPropertyRelative(Chance.valueField);
             }
             else
             {
-                parentProperty.FindPropertyRelative("_buff").intValue = -1;
-                parentProperty.FindPropertyRelative("_buffChance").FindPropertyRelative("_value").intValue = 0;
+                parentProperty.FindPropertyRelative(buffField).intValue = -1;
+                parentProperty.FindPropertyRelative(buffChanceField).FindPropertyRelative(Chance.valueField).intValue = 0;
             }
 
-            parentProperty.FindPropertyRelative("_block").boolValue = _isBlock;
+            parentProperty.FindPropertyRelative(blockField).boolValue = _isBlock;
             if (_isBlock)
-                _blockChanceProperty = parentProperty.FindPropertyRelative("_blockChance").FindPropertyRelative("_value");
+                _blockChanceProperty = parentProperty.FindPropertyRelative(blockChanceField).FindPropertyRelative(Chance.valueField);
             else
-                 parentProperty.FindPropertyRelative("_blockChance").FindPropertyRelative("_value").intValue = 0;
+                 parentProperty.FindPropertyRelative(blockChanceField).FindPropertyRelative(Chance.valueField).intValue = 0;
         }
 
         public void Draw()

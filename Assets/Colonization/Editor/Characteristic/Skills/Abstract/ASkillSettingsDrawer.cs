@@ -1,20 +1,16 @@
 using UnityEditor;
 using UnityEngine;
 using Vurbiri.Colonization;
+using Vurbiri.Colonization.UI;
 using static UnityEditor.EditorGUI;
+using static Vurbiri.Colonization.ASkillSettings;
 
 namespace VurbiriEditor.Colonization
 {
 	public abstract class ASkillSettingsDrawer : PropertyDrawerUtility
     {
-        private const string P_RANGE = "_range", P_DISTANCE = "_distance";
-        private const string P_CHILD_TARGET = "_parentTarget_ed", P_CHILD_TYPE = "_isWarrior_ed";
-
-        protected const string P_TARGET = "_target", P_COST = "_cost";
-        protected const string P_HITS = "_effectsHitsSettings";
-        protected const string P_EFFECTS = "_effects";
-        protected const string P_SPRITE_UI = "sprite", P_KEY_NAME_UI = "keySkillName";
-        protected const string P_CLIP = "clipSettings_ed", P_TYPE = "typeActor_ed";
+        protected const string P_SPRITE_UI = nameof(SkillUI.Settings.sprite), P_KEY_NAME_UI = nameof(SkillUI.Settings.keySkillName);
+        protected const string P_CLIP = nameof(ASkillSettings.clipSettings_ed), P_TYPE = nameof(ASkillSettings.typeActor_ed);
 
         protected int DrawClip(AnimationClipSettingsScriptable clip, float offsetLine = 40f, bool drawName = false)
         {
@@ -41,8 +37,8 @@ namespace VurbiriEditor.Colonization
 
                 DrawLine(offsetLine);
 
-                DrawSlider(P_RANGE, 12f);
-                DrawSlider(P_DISTANCE, 22f);
+                DrawSlider(rangeField, 12f);
+                DrawSlider(distanceField, 22f);
 
                 DrawLine(offsetLine);
                 Space();
@@ -104,7 +100,7 @@ namespace VurbiriEditor.Colonization
         {
             if (count <= 0) return;
 
-            SerializedProperty hitsProperty = GetProperty(P_HITS);
+            SerializedProperty hitsProperty = GetProperty(effectsHitsField);
 
             bool isWarrior = GetProperty(P_TYPE).intValue == ActorTypeId.Warrior;
 
@@ -116,7 +112,7 @@ namespace VurbiriEditor.Colonization
             SerializedProperty effectsProperty, effectProperty;
             for (int i = 0; i < count; ++i)
             {
-                effectsProperty = GetProperty(hitsProperty.GetArrayElementAtIndex(i), P_EFFECTS);
+                effectsProperty = GetProperty(hitsProperty.GetArrayElementAtIndex(i), HitEffectsSettings.effectsField);
                 if (effectsProperty.arraySize == 0)
                     effectsProperty.InsertArrayElementAtIndex(0);
 
@@ -126,8 +122,8 @@ namespace VurbiriEditor.Colonization
                 for (int j = 0; j < effectsProperty.arraySize; ++j)
                 {
                     effectProperty = effectsProperty.GetArrayElementAtIndex(j);
-                    SetEnum(effectProperty, P_CHILD_TARGET, target);
-                    SetBool(effectProperty, P_CHILD_TYPE, isWarrior);
+                    SetEnum(effectProperty, HitEffectSettings.parentTargetField, target);
+                    SetBool(effectProperty, HitEffectSettings.isWarriorField, isWarrior);
 
                     if (effectsProperty.isExpanded)
                         _position.y += _height * HitEffectSettingsDrawer.GetPropertyRateHeight(effectProperty, j);
@@ -151,13 +147,13 @@ namespace VurbiriEditor.Colonization
                 {
                     rate += (isClip ? 14f : 5.9f) + offset;
 
-                    SerializedProperty hitsProperty = property.FindPropertyRelative(P_HITS);
+                    SerializedProperty hitsProperty = property.FindPropertyRelative(effectsHitsField);
                     SerializedProperty effectsProperty;
 
                     for (int i = 0; i < hitsProperty.arraySize; ++i)
                     {
                         rate += 1.1f;
-                        effectsProperty = hitsProperty.GetArrayElementAtIndex(i).FindPropertyRelative(P_EFFECTS);
+                        effectsProperty = hitsProperty.GetArrayElementAtIndex(i).FindPropertyRelative(HitEffectsSettings.effectsField);
                         if (effectsProperty.isExpanded)
                         {
                             rate += 1.8f;

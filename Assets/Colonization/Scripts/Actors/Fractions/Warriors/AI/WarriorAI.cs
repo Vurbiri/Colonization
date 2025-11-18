@@ -1,12 +1,13 @@
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using Vurbiri.Reactive.Collections;
-using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization
 {
     public partial class WarriorAI : Actor.AI<WarriorsAISettings, WarriorId, WarriorAIStateId>
     {
-        [Impl(256)] public WarriorAI(Actor actor, Goals goals) : base(actor, goals) { }
+        [MethodImplAttribute(MethodImplOptions.AggressiveInlining)]
+        public WarriorAI(Actor actor, Goals goals) : base(actor, goals) { }
 
         protected override State[] GetStates()
         {

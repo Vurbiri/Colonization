@@ -47,5 +47,12 @@ namespace Vurbiri.Colonization
         {
             return _block && action.CanUsedSpecSkill() && (notRoll || _blockChance.Roll);
         }
+
+#if UNITY_EDITOR
+        public const string buffField = nameof(_buff);
+        public const string buffChanceField = nameof(_buffChance);
+        public const string blockField = nameof(_block);
+        public const string blockChanceField = nameof(_blockChance);
+#endif
     }
 }

@@ -34,5 +34,13 @@ namespace Vurbiri.Colonization
             }
         }
         #endregion
+
+#if UNITY_EDITOR
+        public const string arrayField = nameof(_skills);
+
+        public const string skillField = nameof(UsedSelfSkill.skill);
+        public const string currentHPField = nameof(UsedSelfSkill.currentHP);
+        public const string chanceField = nameof(UsedSelfSkill.chance);
+#endif
     }
 }

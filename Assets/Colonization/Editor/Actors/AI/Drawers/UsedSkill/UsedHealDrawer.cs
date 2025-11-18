@@ -1,5 +1,6 @@
 ﻿using UnityEditor;
 using UnityEngine;
+using Vurbiri.Colonization;
 using static UnityEditor.EditorGUILayout;
 
 namespace VurbiriEditor.Colonization
@@ -21,18 +22,18 @@ namespace VurbiriEditor.Colonization
             (string name, int value) = SkillDrawer.GetHeals_Ed(typeId, id);
 
             _name = name;
-            parentProperty.FindPropertyRelative(SkillDrawer.F_SKILL).intValue = value;
+            parentProperty.FindPropertyRelative(UsedHeal.skillField).intValue = value;
 
             if (_isDraw = value >= 0)
             {
                 _parentProperty    = parentProperty;
-                _maxHPProperty     = parentProperty.FindPropertyRelative("_maxHP");
-                _useSelfHPProperty = parentProperty.FindPropertyRelative("_useSelfHP");
+                _maxHPProperty     = parentProperty.FindPropertyRelative(UsedHeal.maxHPField);
+                _useSelfHPProperty = parentProperty.FindPropertyRelative(UsedHeal.useSelfHPField);
             }
             else
             {
-                parentProperty.FindPropertyRelative("_maxHP").intValue = 0;
-                parentProperty.FindPropertyRelative("_useSelfHP").boolValue = false;
+                parentProperty.FindPropertyRelative(UsedHeal.maxHPField).intValue = 0;
+                parentProperty.FindPropertyRelative(UsedHeal.useSelfHPField).boolValue = false;
             }
         }
 

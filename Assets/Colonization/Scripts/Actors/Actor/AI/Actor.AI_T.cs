@@ -13,7 +13,11 @@ namespace Vurbiri.Colonization
             protected static readonly WaitFrames s_waitBeforeSelecting = new(10);
             protected static readonly TSettings s_settings;
 
-            static AI() => s_settings = SettingsFile.Load<TSettings>();
+            static AI()
+            {
+                s_settings = SettingsFile.Load<TSettings>();
+                s_settings.Init();
+            }
 
             private readonly Status _status;
             private readonly Actor _actor;

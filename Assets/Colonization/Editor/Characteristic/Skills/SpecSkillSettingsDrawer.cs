@@ -2,15 +2,14 @@ using UnityEditor;
 using UnityEngine;
 using Vurbiri.Colonization;
 using static UnityEditor.EditorGUI;
+using static Vurbiri.Colonization.ASkillSettings;
+using static Vurbiri.Colonization.SpecSkillSettings;
 
 namespace VurbiriEditor.Colonization
 {
 	[CustomPropertyDrawer(typeof(SpecSkillSettings))]
     sealed public class SpecSkillSettingsDrawer : ASkillSettingsDrawer
     {
-        private const string P_SFX = "_hitSFXName", P_VALUE = "_value";
-        private const string P_ID = "_actorId_Ed";
-
         protected override void OnGUI()
 		{
 
@@ -26,7 +25,7 @@ namespace VurbiriEditor.Colonization
                 {
                     _position.y += _ySpace;
                     int hitsCount = 1;
-                    if (!SpecSkillSettings.nonClip.Contains(GetProperty(P_ID).intValue))
+                    if (!nonClip.Contains(GetProperty(actorIdField).intValue))
                         hitsCount = DrawClip(GetObject<AnimationClipSettingsScriptable>(P_CLIP), 15f, true);
                     DrawMain(hitsCount);
                 }
@@ -50,12 +49,12 @@ namespace VurbiriEditor.Colonization
             {
                 if (_mainProperty.isExpanded)
                 {
-                    var effectProperty = GetProperty(P_VALUE);
+                    var effectProperty = GetProperty(valueField);
 
                     _position.y += _ySpace;
                     BeginProperty();
                     {
-                        DrawInt(P_COST, 1, 4, 1);
+                        DrawInt(costField, 1, 4, 1);
                         effectProperty.intValue = DrawInt(effectProperty, 5, 60, effectProperty.intValue >> ActorAbilityId.SHIFT_ABILITY) << ActorAbilityId.SHIFT_ABILITY;
                     }
                     EndProperty();
@@ -68,14 +67,14 @@ namespace VurbiriEditor.Colonization
                 {
                     BeginProperty();
                     {
-                        TargetOfSkill target = DrawEnum<TargetOfSkill>(P_TARGET);
+                        TargetOfSkill target = DrawEnum<TargetOfSkill>(targetField);
 
                         Space();
-                        DrawInt(P_COST, 0, 4, 1);
-                        DrawInt(P_VALUE, "Adv Value", -100, 100, 0);
+                        DrawInt(costField, 0, 4, 1);
+                        DrawInt(valueField, "Adv Value", -100, 100, 0);
 
                         DrawLine(15f);
-                        DrawProperty(P_SFX, "SFX Name");
+                        DrawProperty(hitSFXField, "SFX Name");
                         indentLevel++;
                         DrawHits(hitsCount, target);
                         indentLevel--;
@@ -108,7 +107,7 @@ namespace VurbiriEditor.Colonization
                 if (mainProperty.FindPropertyRelative(P_TYPE).intValue == ActorTypeId.Warrior)
                     rate = 3.2f;
                 else
-                    rate = GetPropertyRate(mainProperty, !SpecSkillSettings.nonClip.Contains(mainProperty.FindPropertyRelative(P_ID).intValue), -2.4f);
+                    rate = GetPropertyRate(mainProperty, !nonClip.Contains(mainProperty.FindPropertyRelative(actorIdField).intValue), -2.4f);
             }
 
             return _height * rate;

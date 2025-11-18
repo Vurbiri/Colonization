@@ -4,6 +4,7 @@ using Vurbiri;
 using Vurbiri.Colonization;
 using Vurbiri.International;
 using static UnityEditor.EditorGUI;
+using static Vurbiri.Colonization.HitEffectSettings;
 using static Vurbiri.Colonization.UI.CONST_UI;
 
 namespace VurbiriEditor.Colonization
@@ -13,15 +14,7 @@ namespace VurbiriEditor.Colonization
     [CustomPropertyDrawer(typeof(HitEffectSettings))]
     public class HitEffectSettingsDrawer : PropertyDrawerUtility
     {
-      
-        #region Consts
-        private const string NAME_POSITIVE = "Positive Effect {0}", NAME_NEGATIVE = "Negative Effect {0}", NAME_VOID ="Void Effect {0}";
-        private const string P_IS_SELF = "_isSelf", P_TARGET_ABILITY = "_targetAbility", P_TYPE_OP = "_typeModifier", P_VALUE = "_value", P_DUR = "_duration";
-        private const string P_USED_ATTACK = "_useAttack", P_HOLY = "_holy", P_PIERCE = "_pierce", P_REFLECT = "_reflect";
-        private const string P_DESC_KEY = "_descKey";
-        private const string P_PARENT_TARGET = "_parentTarget_ed", P_PARENT_TYPE = "_isWarrior_ed";
-
-        #endregion
+        private const string NAME_POSITIVE = "Positive Effect {0}", NAME_NEGATIVE = "Negative Effect {0}", NAME_VOID = "Void Effect {0}";
 
         #region Values
         private readonly string[] _namesAbilitiesDuration =
@@ -42,7 +35,7 @@ namespace VurbiriEditor.Colonization
 
         protected override void OnGUI()
         {
-            var propertyTargetAbility = GetProperty(P_TARGET_ABILITY);
+            var propertyTargetAbility = GetProperty(targetAbilityField);
 
             int id = IdFromLabel();
             var (name, color) = GetSkin(propertyTargetAbility);
@@ -60,23 +53,23 @@ namespace VurbiriEditor.Colonization
                 int targetAbility = CurrentHP;
 
                 if (isTargetSkillSelf)
-                    SetBool(P_IS_SELF, true);
+                    SetBool(isSelfField, true);
                 else
-                    isTarget = !(isTargetSkillSelf = DrawBool(P_IS_SELF));
+                    isTarget = !(isTargetSkillSelf = DrawBool(isSelfField));
 
                 bool isTargetEnemy = isTargetSkillEnemy & isTarget;
 
                 Space();
 
-                isNotDuration = DrawInt(P_DUR, 0, 3) <= 0;
+                isNotDuration = DrawInt(durationField, 0, 3) <= 0;
 
-                if (isNotDuration & id == 0 && (isUsedAttack = DrawBool(P_USED_ATTACK, isTargetEnemy ? "Is Attack" : "Is Heal")))
+                if (isNotDuration & id == 0 && (isUsedAttack = DrawBool(useAttackField, isTargetEnemy ? "Is Attack" : "Is Heal")))
                 {
                     Space();
                     indentLevel++;
 
                     propertyTargetAbility.intValue = targetAbility;
-                    SetInt(P_TYPE_OP, TypeModifierId.TotalPercent);
+                    SetInt(typeModifierField, TypeModifierId.TotalPercent);
 
                     if (isTargetEnemy)
                         DrawForEnemy();
@@ -112,7 +105,7 @@ namespace VurbiriEditor.Colonization
                 (string name, Color color) output;
                 if (targetAbility.intValue == ClearEffectsId.Code)
                 {
-                    int mod = GetInt(P_TYPE_OP);
+                    int mod = GetInt(typeModifierField);
                     
                     if (mod == ClearEffectsId.Positive)
                         output = (NAME_NEGATIVE, _negative);
@@ -123,7 +116,7 @@ namespace VurbiriEditor.Colonization
                 }
                 else
                 {
-                    int value = GetInt(P_VALUE);
+                    int value = GetInt(valueField);
 
                     if (value > 0)
                         output = (NAME_POSITIVE, _positive);
@@ -137,44 +130,44 @@ namespace VurbiriEditor.Colonization
             //==============================================
             void GetTargetSkill(out bool isTargetSkillSelf, out bool isTargetSkillEnemy)
             {
-                var parentTarget = GetProperty(P_PARENT_TARGET).GetEnum<TargetOfSkill>();
+                var parentTarget = GetProperty(parentTargetField).GetEnum<TargetOfSkill>();
                 isTargetSkillSelf = parentTarget == TargetOfSkill.Self;
                 isTargetSkillEnemy = parentTarget == TargetOfSkill.Enemy;
             }
             //==============================================
             void SetNotAttack()
             {
-                SetBool(P_USED_ATTACK, false);
-                SetInt(P_HOLY, 0);
-                SetInt(P_PIERCE, 0);
-                SetInt(P_REFLECT, 0);
+                SetBool(useAttackField, false);
+                SetInt(holyField, 0);
+                SetInt(pierceField, 0);
+                SetInt(reflectField, 0);
             }
             //==============================================
             void DrawForEnemy()
             {
                 DrawAttack(5, 300, 100);
-                if(GetProperty(P_PARENT_TYPE).boolValue)
-                    DrawInt(P_HOLY, "Holy (%)", 0, 305);
+                if(GetProperty(isWarriorField).boolValue)
+                    DrawInt(holyField, "Holy (%)", 0, 305);
                 else
-                    SetInt(P_HOLY, 0);
-                DrawInt(P_PIERCE, "Pierce (%)", 0, 100);
-                DrawInt(P_REFLECT, "Leech (%)", 0, 200);
+                    SetInt(holyField, 0);
+                DrawInt(pierceField, "Pierce (%)", 0, 100);
+                DrawInt(reflectField, "Leech (%)", 0, 200);
             }
             //==============================================
             void DrawForFriend()
             {
-                DrawInt(P_VALUE, "Heal (%)", 5, 300, 100);
-                SetInt(P_HOLY, 0);
-                SetInt(P_PIERCE, 0);
-                DrawInt(P_REFLECT, "Loss (%)", 0, 200);
+                DrawInt(valueField, "Heal (%)", 5, 300, 100);
+                SetInt(holyField, 0);
+                SetInt(pierceField, 0);
+                DrawInt(reflectField, "Loss (%)", 0, 200);
             }
             //==============================================
             void DrawForSelf()
             {
-                DrawInt(P_VALUE, "Heal (%)", 5, 300, 100);
-                SetInt(P_HOLY, 0);
-                SetInt(P_PIERCE, 0);
-                SetInt(P_REFLECT, 0);
+                DrawInt(valueField, "Heal (%)", 5, 300, 100);
+                SetInt(holyField, 0);
+                SetInt(pierceField, 0);
+                SetInt(reflectField, 0);
             }
             //==============================================
             int DrawTargetEffect(bool isDuration, SerializedProperty targetAbility)
@@ -200,12 +193,12 @@ namespace VurbiriEditor.Colonization
 
                 if (usedAbility == MaxAP || usedAbility == APPerTurn)
                 {
-                    SetInt(P_TYPE_OP, TypeModifierId.Addition);
+                    SetInt(typeModifierField, TypeModifierId.Addition);
                     DrawFlatValue(-2, 2);
                 }
                 else
                 {
-                    if (DrawIntPopup(P_TYPE_OP, _namesModifiersDuration, _valuesModifiersDuration) == TypeModifierId.TotalPercent)
+                    if (DrawIntPopup(typeModifierField, _namesModifiersDuration, _valuesModifiersDuration) == TypeModifierId.TotalPercent)
                         DrawPercentValue(-200, 200, 100);
                     else if (usedAbility == Pierce)
                         DrawFlatValue(-50, 50);
@@ -225,19 +218,19 @@ namespace VurbiriEditor.Colonization
 
                 if (usedAbility == CurrentHP)
                 {
-                    if (DrawIntPopup(P_TYPE_OP, _namesModifiersCurrentHP, ActorAbilityId.Values_Ed) == TypeModifierId.Addition)
+                    if (DrawIntPopup(typeModifierField, _namesModifiersCurrentHP, ActorAbilityId.Values_Ed) == TypeModifierId.Addition)
                         DrawShiftValue(-75, 75);
                     else
                         DrawPercentValue(-100, 100);
                 }
                 else if (usedAbility == ClearEffectsId.Code)
                 {
-                    DrawId<ClearEffectsId>(P_TYPE_OP, false);
+                    DrawId<ClearEffectsId>(typeModifierField, false);
                     DrawFlatValue(1, 3, 1);
                 }
                 else
                 {
-                    SetInt(P_TYPE_OP, TypeModifierId.Addition);
+                    SetInt(typeModifierField, TypeModifierId.Addition);
 
                     if (usedAbility == CurrentAP)
                         DrawFlatValue(-3, 3);
@@ -252,7 +245,7 @@ namespace VurbiriEditor.Colonization
             //==============================================
             void DrawAttack(int min, int max, int defaultValue)
             {
-                SerializedProperty property = GetProperty(P_VALUE);
+                SerializedProperty property = GetProperty(valueField);
                 int value = property.intValue * -1;
 
                 if (value < min | value > max)
@@ -264,13 +257,13 @@ namespace VurbiriEditor.Colonization
                 property.intValue = IntSlider(_position, "Attack (%)", defaultValue, min, max) * -1;
             }
             //==============================================
-            void DrawPercentValue(int min, int max, int defaultValue = 0) => DrawInt(P_VALUE, "Value (%)", min, max, defaultValue);
+            void DrawPercentValue(int min, int max, int defaultValue = 0) => DrawInt(valueField, "Value (%)", min, max, defaultValue);
             //==============================================
-            void DrawFlatValue(int min, int max, int defaultValue = 0) => DrawInt(P_VALUE, "Value", min, max, defaultValue);
+            void DrawFlatValue(int min, int max, int defaultValue = 0) => DrawInt(valueField, "Value", min, max, defaultValue);
             //==============================================
             void DrawShiftValue(int min, int max)
             {
-                SerializedProperty property = GetProperty(P_VALUE);
+                SerializedProperty property = GetProperty(valueField);
                 int value = property.intValue >> SHIFT_ABILITY;  
 
                 _position.y += _height;
@@ -279,7 +272,7 @@ namespace VurbiriEditor.Colonization
             //==============================================
             void DrawMoveValue()
             {
-                SerializedProperty property = GetProperty(P_VALUE);
+                SerializedProperty property = GetProperty(valueField);
 
                 _position.y += _height;
                 property.intValue = Toggle(_position, "Is Move", property.intValue > 0) ? 1 : -1;
@@ -302,26 +295,26 @@ namespace VurbiriEditor.Colonization
                 _position.x += 35;
 
                 Color defaultColor = GUI.contentColor;
-                int value = GetInt(P_VALUE);
+                int value = GetInt(valueField);
                 string key;
 
                 if (isUsedAttack)
                 {
                     if (value > 0)
-                        key = GetAndDrawHealDesc(localization, value, GetInt(P_REFLECT));
+                        key = GetAndDrawHealDesc(localization, value, GetInt(reflectField));
                     else
-                        key = GetAndDrawAttackDesc(localization, value, GetInt(P_REFLECT));
+                        key = GetAndDrawAttackDesc(localization, value, GetInt(reflectField));
                 }
                 else
                 {
-                    int duration = GetInt(P_DUR);
+                    int duration = GetInt(durationField);
 
                     GUI.contentColor = value > 0 ? _positive : _negative;
 
                     if (duration > 0)
                     {
                         key = ActorAbilityId.Names_Ed[ability].Concat("Temp");
-                        DrawLabel(localization.GetFormatText(FILE, key, HitEffectSettings.ValueToString(value, ability, GetInt(P_TYPE_OP)), duration).Delete("<b>", "</b>"));
+                        DrawLabel(localization.GetFormatText(FILE, key, HitEffectSettings.ValueToString(value, ability, GetInt(typeModifierField)), duration).Delete("<b>", "</b>"));
                     }
                     else 
                     {
@@ -330,7 +323,7 @@ namespace VurbiriEditor.Colonization
                 }
 
                 // Set Desc
-                SetString(P_DESC_KEY, key);
+                SetString(descKeyField, key);
 
                 GUI.contentColor = defaultColor;
                 _position.x -= 35;
@@ -344,7 +337,7 @@ namespace VurbiriEditor.Colonization
                 if (reflect > 0)
                 {
                     GUI.contentColor = _negative;
-                    DrawLabel(localization.GetFormatText(FILE, REFLECT_MINUS, GetInt(P_REFLECT)).Delete("<b>", "</b>"));
+                    DrawLabel(localization.GetFormatText(FILE, REFLECT_MINUS, GetInt(reflectField)).Delete("<b>", "</b>"));
                 }
                 return key;
             }
@@ -354,8 +347,8 @@ namespace VurbiriEditor.Colonization
                 value = -value;
 
                 string key;
-                int holy = GetInt(P_HOLY);
-                int pierce = GetInt(P_PIERCE);
+                int holy = GetInt(holyField);
+                int pierce = GetInt(pierceField);
                 if (pierce == 0)
                 {
                     if (holy == 0)
@@ -391,7 +384,7 @@ namespace VurbiriEditor.Colonization
                 if (reflect > 0)
                 {
                     GUI.contentColor = _positive;
-                    DrawLabel(localization.GetFormatText(FILE, REFLECT_PLUS, GetInt(P_REFLECT)).Delete("<b>", "</b>"));
+                    DrawLabel(localization.GetFormatText(FILE, REFLECT_PLUS, GetInt(reflectField)).Delete("<b>", "</b>"));
                 }
 
                 return key;
@@ -400,12 +393,12 @@ namespace VurbiriEditor.Colonization
             string GetAndDrawPermDesc(Localization localization, int value, int ability)
             {
                 string key;
-                int mod = GetInt(P_TYPE_OP);
+                int mod = GetInt(typeModifierField);
 
                 if (ability == CurrentHP)
                 {
                     key = mod == TypeModifierId.TotalPercent ? "CurrentHPOfMaxPerm" : "CurrentHPPerm";
-                    DrawLabel(localization.GetFormatText(FILE, key, HitEffectSettings.ValueToString(value, ability, GetInt(P_TYPE_OP))).Delete("<b>", "</b>"));
+                    DrawLabel(localization.GetFormatText(FILE, key, HitEffectSettings.ValueToString(value, ability, GetInt(typeModifierField))).Delete("<b>", "</b>"));
                 }
                 else if (ability == CurrentAP)
                 {
@@ -442,35 +435,35 @@ namespace VurbiriEditor.Colonization
                 return 1.1f;
             
             float size = 7f;
-            var target = GetProperty(P_PARENT_TARGET).GetEnum<TargetOfSkill>();
+            var target = GetProperty(parentTargetField).GetEnum<TargetOfSkill>();
 
-            if (GetProperty(P_USED_ATTACK).boolValue)
+            if (GetProperty(useAttackField).boolValue)
             {
                 if (target != TargetOfSkill.Self)
                 {
                     size += 1f;
-                    if (!GetProperty(P_IS_SELF).boolValue)
+                    if (!GetProperty(isSelfField).boolValue)
                     { 
                         size += 1f;
                         if (target == TargetOfSkill.Enemy)
                         {
                             size += 1f;
-                            if (GetProperty(P_PARENT_TYPE).boolValue)
+                            if (GetProperty(isWarriorField).boolValue)
                                 size += 1f;
-                            if (GetProperty(P_PIERCE).intValue > 0)
+                            if (GetProperty(pierceField).intValue > 0)
                                 size += 1f;
                         }
 
-                        if (GetProperty(P_REFLECT).intValue > 0)
+                        if (GetProperty(reflectField).intValue > 0)
                             size += 1f;
                     }
                 }
             }
             else
             {
-                int targetAbility = GetProperty(P_TARGET_ABILITY).intValue;
+                int targetAbility = GetProperty(targetAbilityField).intValue;
 
-                if (id == 0 && GetProperty(P_DUR).intValue == 0)
+                if (id == 0 && GetProperty(durationField).intValue == 0)
                     size += 1f;
                 if (target != TargetOfSkill.Self)
                     size += 1f;

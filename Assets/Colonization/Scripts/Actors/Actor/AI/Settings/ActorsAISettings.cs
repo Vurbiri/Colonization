@@ -23,6 +23,12 @@ namespace Vurbiri.Colonization
 
         public ActorsAISettings() { }
 
+        public void Init()
+        {
+            for(int i = 0; i < ActorId<TActorId>.Count; ++i)
+                _settings[i].Init();
+        }
+
 #if UNITY_EDITOR
         public void OnValidate()
         {

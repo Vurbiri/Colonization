@@ -30,6 +30,8 @@ namespace Vurbiri.Colonization
         }
 
 #if UNITY_EDITOR
+        public const string effectsField = nameof(_effects);
+
         public bool IsUsedAttack_Ed() => _effects != null && _effects.Length > 0 && _effects[0].UseAttack_Ed;
 #endif
     }

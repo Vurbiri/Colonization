@@ -4,6 +4,8 @@ using Vurbiri;
 using Vurbiri.Colonization;
 using Vurbiri.International;
 using static UnityEditor.EditorGUI;
+using static Vurbiri.Colonization.ASkillSettings;
+using static Vurbiri.Colonization.SkillSettings;
 using static Vurbiri.Colonization.UI.CONST_UI;
 
 namespace VurbiriEditor.Colonization
@@ -11,15 +13,14 @@ namespace VurbiriEditor.Colonization
     [CustomPropertyDrawer(typeof(SkillSettings), false)]
     sealed public class SkillSettingsDrawer : ASkillSettingsDrawer
     {
-        private const string P_UI = "_ui";
-        private const string P_SFX = "hitSFXName_ed";
+        private const string P_SFX = nameof(SkillSettings.hitSFXName_ed);
 
         private static readonly string[] KEYS_NAME_SKILLS =
         { "Strike", "Swipe", "Combo", "Heal", "Sparks", "Toxin", "Bolt", "Swarm", "Battlecry", "Fortify", "WeaponEnhancement", "ArmorEnhancement", "Kick", "Leap" };
 
         protected override void OnGUI()
         {
-            SerializedProperty uiProperty = GetProperty(P_UI);
+            SerializedProperty uiProperty = GetProperty(uiField);
             SerializedProperty keyNameProperty = GetProperty(uiProperty, P_KEY_NAME_UI);
 
             SetName(keyNameProperty);
@@ -35,10 +36,10 @@ namespace VurbiriEditor.Colonization
 
                 if (hitsCount > 0)
                 {
-                    TargetOfSkill target = DrawEnum<TargetOfSkill>(P_TARGET);
+                    TargetOfSkill target = DrawEnum<TargetOfSkill>(targetField);
 
                     Space();
-                    DrawInt(P_COST, 1, 4, 1);
+                    DrawInt(costField, 1, 4, 1);
 
                     Space(2f);
                     DrawLabel("UI:");

@@ -98,5 +98,10 @@ namespace Vurbiri
             }
         }
         #endregion
+
+#if UNITY_EDITOR
+        public const string valueField = nameof(_value);
+        public const string negentropyField = nameof(_negentropy);
+#endif
     }
 }

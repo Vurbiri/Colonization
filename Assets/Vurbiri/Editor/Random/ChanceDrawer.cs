@@ -7,12 +7,10 @@ namespace VurbiriEditor
     [CustomPropertyDrawer(typeof(Chance))]
     public class ChanceDrawer : PropertyDrawer
     {
-        private readonly string NAME_VALUE = "_value", NAME_ENT = "_negentropy";
-
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
-            SerializedProperty valueProperty = property.FindPropertyRelative(NAME_VALUE);
-            SerializedProperty negentropyProperty = property.FindPropertyRelative(NAME_ENT);
+            SerializedProperty valueProperty = property.FindPropertyRelative(Chance.valueField);
+            SerializedProperty negentropyProperty = property.FindPropertyRelative(Chance.negentropyField);
 
             if (negentropyProperty.intValue == 0)
                 negentropyProperty.intValue = Random.Range(1, Chance.MAX_CHANCE);

@@ -1,10 +1,9 @@
 using UnityEngine;
 using Vurbiri.Colonization.UI;
+using static Vurbiri.Colonization.UI.CONST_UI;
 
 namespace Vurbiri.Colonization
 {
-    using static CONST_UI;
-
     [System.Serializable]
     public class HitEffectSettings
     {
@@ -133,7 +132,22 @@ namespace Vurbiri.Colonization
         [SerializeField] private bool _isWarrior_ed;
 #pragma warning restore
 
+        public const string isSelfField = nameof(_isSelf);
+        public const string useAttackField = nameof(_useAttack);
+        public const string durationField = nameof(_duration);
+        public const string targetAbilityField = nameof(_targetAbility);
+        public const string typeModifierField = nameof(_typeModifier);
+        public const string valueField = nameof(_value);
+        public const string pierceField = nameof(_pierce);
+        public const string holyField = nameof(_holy);
+        public const string reflectField = nameof(_reflect);
+        public const string descKeyField = nameof(_descKey);
+
+        public const string parentTargetField = nameof(_parentTarget_ed);
+        public const string isWarriorField = nameof(_isWarrior_ed);
+
         public bool UseAttack_Ed => _useAttack;
+        public bool IsHoly_Ed => _holy != 0;
 #endif
     }
 }

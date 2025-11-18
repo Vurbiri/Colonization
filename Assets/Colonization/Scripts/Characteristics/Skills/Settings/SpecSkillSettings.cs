@@ -54,11 +54,15 @@ namespace Vurbiri.Colonization
 
 
 #if UNITY_EDITOR
-
+                
         [SerializeField] private int _actorId_Ed;
         [SerializeField] private string _nameClip_Ed;
 
-        public readonly static System.Collections.Generic.HashSet<int> nonClip = new() { DemonId.Imp, DemonId.Grunt };
+        public const string valueField = nameof(_value);
+        public const string hitSFXField = nameof(_hitSFXName);
+        public const string actorIdField = nameof(_actorId_Ed);
+
+        public readonly static System.Collections.Generic.List<int> nonClip = new() { DemonId.Imp, DemonId.Grunt };
 
         public void OnValidate(int type, int id)
         {

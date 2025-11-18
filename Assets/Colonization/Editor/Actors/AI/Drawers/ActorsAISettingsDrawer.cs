@@ -75,9 +75,9 @@ namespace VurbiriEditor.Colonization
                         {
                             PropertyField(_raiderProperty);
                             PropertyField(_supportProperty);
-                            Space(1f);
+                            Space();
                             _defenseDrawer.Draw();
-                            Space(3f);
+                            Space();
                             if (_raiderProperty.isExpanded = Foldout(_raiderProperty.isExpanded, "Combat"))
                             {
                                 BeginVertical(STYLES.border);

@@ -7,9 +7,6 @@ namespace Vurbiri.Colonization
 {
     public abstract partial class ActorSettingsScriptable<TId, TSettings>
     {
-        private delegate void InitArrays(Skills skills, ref string[] names, ref int[] values);
-
-
         public int TypeId_Ed => _settings[0].TypeId;
         
         private void OnValidate()
@@ -53,22 +50,26 @@ namespace Vurbiri.Colonization
             Debug.Log("======================");
         }
 
-        public void GetDefenseSkills_Ed(ref string[][] names, ref int[][] values) => GetValues_Ed(ref names, ref values, Skills.GetDefence_Ed);
-        public void GetSelfSkills_Ed(ref string[][] names, ref int[][] values) => GetValues_Ed(ref names, ref values, Skills.GetSelf_Ed);
+        public void GetDefenseSkills_Ed(ref string[][] names, ref int[][] values)
+        {
+            names = new string[ActorId<TId>.Count][];
+            values = new int[ActorId<TId>.Count][];
+            for (int i = 0; i < ActorId<TId>.Count; ++i)
+                _settings[i].Skills.GetDefence_Ed(ref names[i], ref values[i]);
+        }
+        public void GetSkills_Ed(int skillType, ref GUIContent[][] labels, ref int[][] values)
+        {
+            labels = new GUIContent[ActorId<TId>.Count][];
+            values = new int[ActorId<TId>.Count][];
+            for (int i = 0; i < ActorId<TId>.Count; ++i)
+                _settings[i].Skills.GetSkills_Ed(skillType, ref labels[i], ref values[i]);
+        }
         public void GetHeals_Ed(ref string[] names, ref int[] values)
         {
             names = new string[ActorId<TId>.Count];
             values = new int[ActorId<TId>.Count];
             for (int i = 0; i < ActorId<TId>.Count; ++i)
                 (names[i], values[i]) = _settings[i].Skills.GetHeals_Ed();
-        }
-
-        private void GetValues_Ed(ref string[][] names, ref int[][] values, InitArrays initArrays)
-        {
-            names = new string[ActorId<TId>.Count][];
-            values = new int[ActorId<TId>.Count][];
-            for (int i = 0; i < ActorId<TId>.Count; ++i)
-                initArrays(_settings[i].Skills, ref names[i], ref values[i]);
         }
     }
 }

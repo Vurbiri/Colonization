@@ -9,6 +9,7 @@ namespace Vurbiri.Colonization
     public partial class Skills
     {
         private static readonly string[] A_SKILLS = { "A_Skill_0", "A_Skill_1", "A_Skill_2", "A_Skill_3" };
+        private static readonly Func<SkillSettings, bool>[] s_valid = { SkillSettings.IsAttack_Ed, SkillSettings.IsSelf_Ed, SkillSettings.IsBuff_Ed, SkillSettings.IsDebuff_Ed };
 
         [SerializeField] private int _swapA = -1;
         [SerializeField] private int _swapB = -1;
@@ -23,8 +24,45 @@ namespace Vurbiri.Colonization
             for (int i = 0; i < _skillsSettings.Length; ++i)
                 _skillsSettings[i].typeActor_ed = type;
         }
-        public static void GetDefence_Ed(Skills skills, ref string[] names, ref int[] values) => skills.GetListSkills_Ed(ref names, ref values, (s) => s.Target == TargetOfSkill.Self);
-        public static void GetSelf_Ed(Skills skills, ref string[] names, ref int[] values) => skills.GetSkills_Ed(ref names, ref values, (s) => s.Target == TargetOfSkill.Self);
+
+        public void GetDefence_Ed(ref string[] names, ref int[] values)
+        {
+            int count = _skillsSettings.Length;
+            List<string> listNames = new(count);
+            List<int> listValues = new(count);
+
+            AddEmpty(listNames, listValues);
+
+            for (int i = 0; i < count; ++i)
+            {
+                if (SkillSettings.IsSelf_Ed(_skillsSettings[i]))
+                {
+                    listNames.Add(GetSkillName(i));
+                    listValues.Add(i);
+                }
+            }
+
+            names = listNames.ToArray(); values = listValues.ToArray();
+        }
+
+        public void GetSkills_Ed(int skillType, ref GUIContent[] labels, ref int[] values)
+        {
+            var valid = s_valid[skillType];
+            int count = _skillsSettings.Length;
+            labels = new GUIContent[count];
+            List<int> listValues = new(count);
+
+            for (int i = 0; i < count; ++i)
+            {
+                if (valid(_skillsSettings[i]))
+                {
+                    labels[i] = new(GetSkillName(i));
+                    listValues.Add(i);
+                }
+            }
+
+            values = listValues.ToArray();
+        }
 
         public (string name, int value) GetHeals_Ed()
         {
@@ -90,37 +128,19 @@ namespace Vurbiri.Colonization
                     animator[A_SKILLS[index]] = null;
         }
 
-        private void GetListSkills_Ed(ref string[] names, ref int[] values, Func<SkillSettings, bool> valid)
+        
+
+        private void GetSkills_Ed(ref GUIContent[] labels, ref int[] values, Func<SkillSettings, bool> valid)
         {
             int count = _skillsSettings.Length;
-            List<string> listNames = new(count);
-            List<int> listValues = new(count);
-
-            AddEmpty(listNames, listValues);
-
-            for (int i = 0; i < count; ++i)
-            {
-                if (valid(_skillsSettings[i]))
-                {
-                    listNames.Add(GetSkillName(i));
-                    listValues.Add(i);
-                }
-            }
-
-            names = listNames.ToArray(); values = listValues.ToArray();
-        }
-
-        private void GetSkills_Ed(ref string[] names, ref int[] values, Func<SkillSettings, bool> valid)
-        {
-            int count = _skillsSettings.Length;
-            names = new string[count];
+            labels = new GUIContent[count];
             List<int> listValues = new(count);
 
             for (int i = 0; i < count; ++i)
             {
                 if (valid(_skillsSettings[i]))
                 {
-                    names[i] = GetSkillName(i);
+                    labels[i] = new(GetSkillName(i));
                     listValues.Add(i);
                 }
             }

@@ -8,5 +8,10 @@ namespace Vurbiri.Colonization
         public UsedDefense defense;
         public UsedHeal heal;
         public UsedSelfSkills selfBuffs;
+
+        public void Init()
+        {
+
+        }
     }
 }

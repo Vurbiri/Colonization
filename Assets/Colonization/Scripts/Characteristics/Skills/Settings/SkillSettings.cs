@@ -46,6 +46,8 @@ namespace Vurbiri.Colonization
 #if UNITY_EDITOR
         public HitSFXName hitSFXName_ed;
 
+        public const string uiField = nameof(_ui);
+
         public string GetName_Ed()
         {
             return Vurbiri.International.Localization.ForEditor(CONST_UI.FILE).GetText(CONST_UI.FILE, _ui.keySkillName).Delete("<b>", "</b>");
@@ -54,6 +56,22 @@ namespace Vurbiri.Colonization
         public bool IsHeal_Ed()
         {
             return _target == TargetOfSkill.Friend && _effectsHitsSettings != null && _effectsHitsSettings.Length > 0 && _effectsHitsSettings[0].IsUsedAttack_Ed();
+        }
+        public static bool IsSelf_Ed(SkillSettings skill)
+        {
+            return skill._target == TargetOfSkill.Self && skill._effectsHitsSettings != null && skill._effectsHitsSettings.Length > 0 && !skill._effectsHitsSettings[0].IsUsedAttack_Ed();
+        }
+        public static bool IsBuff_Ed(SkillSettings skill)
+        {
+            return skill._target == TargetOfSkill.Friend && skill._effectsHitsSettings != null && skill._effectsHitsSettings.Length > 0 && !skill._effectsHitsSettings[0].IsUsedAttack_Ed();
+        }
+        public static bool IsAttack_Ed(SkillSettings skill)
+        {
+            return skill._target == TargetOfSkill.Enemy && skill._effectsHitsSettings != null && skill._effectsHitsSettings.Length > 0 && skill._effectsHitsSettings[0].IsUsedAttack_Ed();
+        }
+        public static bool IsDebuff_Ed(SkillSettings skill)
+        {
+            return skill._target == TargetOfSkill.Enemy && skill._effectsHitsSettings != null && skill._effectsHitsSettings.Length > 0 && !skill._effectsHitsSettings[0].IsUsedAttack_Ed();
         }
 #endif
     }

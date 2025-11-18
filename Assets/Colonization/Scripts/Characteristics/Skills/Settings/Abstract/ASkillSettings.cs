@@ -25,6 +25,12 @@ namespace Vurbiri.Colonization
 #if UNITY_EDITOR
         public AnimationClipSettingsScriptable clipSettings_ed;
         public int typeActor_ed;
+
+        public const string targetField = nameof(_target);
+        public const string rangeField = nameof(_range);
+        public const string distanceField = nameof(_distance);
+        public const string costField = nameof(_cost);
+        public const string effectsHitsField = nameof(_effectsHitsSettings);
 #endif
     }
 }

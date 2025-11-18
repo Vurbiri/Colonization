@@ -1,22 +1,23 @@
+using System.Collections.Generic;
 using UnityEditor;
+using UnityEngine;
 using Vurbiri;
+using Vurbiri.Collections;
 using Vurbiri.Colonization;
 using static UnityEditor.EditorGUILayout;
 
 namespace VurbiriEditor.Colonization
 {
-	internal static class SkillDrawer
-	{
-        public const string F_SKILL = "_skill";
 
+    internal static class SkillDrawer
+	{
         private static readonly string[][][] s_defenseNames = new string[ActorTypeId.Count][][];
         private static readonly int[][][] s_defenseValues = new int[ActorTypeId.Count][][];
 
-        private static readonly string[][][] s_selfSkillNames = new string[ActorTypeId.Count][][];
-        private static readonly int[][][] s_selfSkillValues = new int[ActorTypeId.Count][][];
-
         private static readonly string[][] s_healNames = new string[ActorTypeId.Count][];
         private static readonly int[][] s_healValues = new int[ActorTypeId.Count][];
+
+        private static readonly ReadOnlyIdArray<SkillType_Ed, Skills> s_skills = new(() => new());
 
         static SkillDrawer()
         {
@@ -29,28 +30,60 @@ namespace VurbiriEditor.Colonization
 
         public static (string name, int value) GetHeals_Ed(int type, int id) => (s_healNames[type][id], s_healValues[type][id]);
 
-        public static int SelfCount(int type, int id) => s_selfSkillValues[type][id].Length;
-        public static string GetSelfName(int type, int id, int index) => s_selfSkillNames[type][id][index];
-        public static int[] GetSelfValues(int type, int id) => s_selfSkillValues[type][id];
-        public static int Self(int type, int id, string label, SerializedProperty property) => Draw(label, property, s_selfSkillNames[type][id], s_selfSkillValues[type][id]);
+        public static int GetCount(Id<SkillType_Ed> skill, int type, int id) => s_skills[skill].values[type][id].Length;
+        public static GUIContent[] GetLabels(Id<SkillType_Ed> skill, int type, int id) => s_skills[skill].labels[type][id];
+        public static int[] GetValues(Id<SkillType_Ed> skill, int type, int id) => s_skills[skill].values[type][id];
+
+        public static bool OnValidate(SerializedProperty property, int[] values, string name)
+        {
+            int count = values.Length;
+            bool isValid = property.arraySize == count;
+            if (isValid)
+            {
+                List<int> list = new(values);
+                for(int i = 0; isValid & i < count; ++i)
+                    isValid = list.Remove(property.GetArrayElementAtIndex(i).FindPropertyRelative(name).intValue);
+            }
+
+            if(!isValid)
+            {
+                property.arraySize = 0;
+                property.serializedObject.ApplyModifiedProperties();
+                property.arraySize = count;
+                for (int i = 0; i < count; ++i)
+                    property.GetArrayElementAtIndex(i).FindPropertyRelative(name).intValue = values[i];
+                property.serializedObject.ApplyModifiedProperties();
+            }
+            return isValid;
+        }
 
         public static void Update<TScriptable, TId, TValue>(TScriptable scriptable, int type)
              where TScriptable : ActorSettingsScriptable<TId, TValue>
              where TId : ActorId<TId> where TValue : ActorSettings
         {
             scriptable.GetDefenseSkills_Ed(ref s_defenseNames[type], ref s_defenseValues[type]);
-            scriptable.GetSelfSkills_Ed(ref s_selfSkillNames[type], ref s_selfSkillValues[type]);
             scriptable.GetHeals_Ed(ref s_healNames[type], ref s_healValues[type]);
+
+            for (int i = 0; i < SkillType_Ed.Count; ++i)
+            {
+                var skills = s_skills[i];
+                scriptable.GetSkills_Ed(i, ref skills.labels[type], ref skills.values[type]);
+            }
         }
 
         private static bool IsValues(int[] values) => values.Length > 1 || (values.Length == 1 && values[0] != -1);
-
         private static int Draw(string label, SerializedProperty property, string[] names, int[] values)
         {
             int value = property.intValue;
             if(!values.Contains(value)) 
                 value = - 1;
             return property.intValue = IntPopup(label, value, names, values);
+        }
+
+        private class Skills
+        {
+            public readonly GUIContent[][][] labels = new GUIContent[ActorTypeId.Count][][];
+            public readonly int[][][] values = new int[ActorTypeId.Count][][];
         }
     }
 }
