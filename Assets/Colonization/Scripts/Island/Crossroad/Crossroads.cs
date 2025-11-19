@@ -81,7 +81,7 @@ namespace Vurbiri.Colonization
         [Impl(256)] public int DeadEndCount(Key start, Key end, Id<PlayerId> playerId) => (_crossroads[start].IsDeadEnd(playerId) ? 1:0) + (_crossroads[end].IsDeadEnd(playerId) ? 1:0);
 
 
-        #region Nested: Shore
+        #region Nested: Coast
         //***********************************
         private class Coast : WeightsList<Key>
         {
@@ -108,7 +108,7 @@ namespace Vurbiri.Colonization
                 return true;
             }
 
-            private void RemoveKey(Key key) => Remove(FindIndex(key));
+            private void RemoveKey(Key key) => RemoveAtInternal(FindIndex(key));
         }
         #endregion
     }

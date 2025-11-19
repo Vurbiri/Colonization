@@ -8,8 +8,8 @@ namespace VurbiriEditor.Colonization
 {
 	public abstract class ASkillsDrawer
 	{
-        private readonly bool _isDraw;
-        private readonly GUIContent _name;
+        protected readonly bool _isDraw;
+        protected readonly GUIContent _name;
 
         protected readonly GUIContent[] _labels;
         protected readonly ReorderableList _list;
@@ -24,11 +24,7 @@ namespace VurbiriEditor.Colonization
 
             if (_isDraw)
             {
-                if(!SkillDrawer.OnValidate(skills, values, skillFieldName))
-                {
-                    for (int i = 0; i < count; ++i)
-                        SetDefault(skills.GetArrayElementAtIndex(i), typeId, id, i);
-                }
+                SkillDrawer.OnValidate(skills, values, skillFieldName);
 
                 _labels = SkillDrawer.GetLabels(skill, typeId, id);
                 _list = new(skills.serializedObject, skills, true, false, false, false)
@@ -55,8 +51,6 @@ namespace VurbiriEditor.Colonization
                 Space();
             }
         }
-
-        protected virtual void SetDefault(SerializedProperty skill, int typeId, int id, int index) { }
 
         protected abstract void DrawListItems(Rect position, int index, bool isActive, bool isFocused);
         protected abstract float GetHeight(int index);

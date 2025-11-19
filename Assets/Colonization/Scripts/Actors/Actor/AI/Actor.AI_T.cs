@@ -10,7 +10,6 @@ namespace Vurbiri.Colonization
         public abstract partial class AI<TSettings, TActorId, TStateId> : AI, IEquatable<Actor>, IDisposable
             where TSettings : ActorsAISettings<TActorId, TStateId> where TActorId : ActorId<TActorId> where TStateId : ActorAIStateId<TStateId>
         {
-            protected static readonly WaitFrames s_waitBeforeSelecting = new(10);
             protected static readonly TSettings s_settings;
 
             static AI()
@@ -56,6 +55,9 @@ namespace Vurbiri.Colonization
 
             protected static void StatesSort(State[] states)
             {
+#if UNITY_EDITOR
+                OnValidate(states);
+#endif
                 var priority = s_settings.Priority;
 
                 for (int i = states.Length - 1, j; i > 0;)
@@ -72,6 +74,16 @@ namespace Vurbiri.Colonization
             [Impl(256)] protected void StopCoroutine(Coroutine coroutine) => _actor.StopCoroutine(coroutine);
 
             public bool Equals(Actor actor) => _actor == actor;
+
+#if UNITY_EDITOR
+            private static void OnValidate(State[] states)
+            {
+                for (int i = states.Length - 1; i > 0; --i)
+                    for (int j = i - 1; j >= 0; --j)
+                        if (states[i].Id == states[j].Id)
+                            UnityEngine.Debug.LogError($"ID {states[i].GetType().Name} and {states[j].GetType().Name} equals ({states[i].Id})");
+            }
+#endif
         }
     }
 }

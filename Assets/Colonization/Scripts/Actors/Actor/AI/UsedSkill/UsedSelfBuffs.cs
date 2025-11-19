@@ -5,21 +5,19 @@ using UnityEngine;
 
 namespace Vurbiri.Colonization
 {
-    [Serializable, JsonObject(MemberSerialization.Fields)]
-    public class UsedSelfSkills
+    [Serializable]
+    public class UsedSelfBuffs
 	{
-        [SerializeField] private UsedSelfSkill[] _skills;
+        [SerializeField, JsonProperty] private UsedSelfBuff[] _skills;
 
         public IEnumerator TryUse_Cn(Actor target)
         {
             for(int i = 0; i < _skills.Length; ++i)
                 yield return _skills[i].TryUse(target);
-            yield return null;
+            yield break;
         }
 
-        #region UsedSelfSkill
-        [Serializable]
-        private struct UsedSelfSkill
+        [Serializable] private struct UsedSelfBuff
         {
             public int skill;
             public MinMaxHP currentHP;
@@ -33,14 +31,13 @@ namespace Vurbiri.Colonization
                 return null;
             }
         }
-        #endregion
 
 #if UNITY_EDITOR
         public const string arrayField = nameof(_skills);
 
-        public const string skillField = nameof(UsedSelfSkill.skill);
-        public const string currentHPField = nameof(UsedSelfSkill.currentHP);
-        public const string chanceField = nameof(UsedSelfSkill.chance);
+        public const string skillField = nameof(UsedSelfBuff.skill);
+        public const string currentHPField = nameof(UsedSelfBuff.currentHP);
+        public const string chanceField = nameof(UsedSelfBuff.chance);
 #endif
     }
 }

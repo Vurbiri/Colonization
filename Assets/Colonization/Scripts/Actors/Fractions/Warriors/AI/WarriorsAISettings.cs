@@ -7,6 +7,7 @@ namespace Vurbiri.Colonization
     {
         [Space]
         [Range(0, 100)] public int ratioForEscape;
+        [Range(0, 100)] public int ratioForBlock;
         [Range(0, 100)] public int ratioForAttack;
         [Space]
         [Range(0, 5)]   public int maxDistanceUnsiege;

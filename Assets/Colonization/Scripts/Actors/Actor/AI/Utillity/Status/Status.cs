@@ -58,7 +58,6 @@ namespace Vurbiri.Colonization
                             {
                                 isGuard |= playerId == owner;
                                 isSiege = isSiege || GameContainer.Diplomacy.IsEnemy(playerId, owner);
-
                             }
                         }
                     }

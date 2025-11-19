@@ -6,7 +6,7 @@ namespace Vurbiri.Colonization
     {
         sealed private class EscapeSupport : EscapeSupport<WarriorAI>
         {
-            public override int Id => WarriorAIStateId.Defense;
+            public override int Id => WarriorAIStateId.EscapeSupport;
 
             [Impl(256)] public EscapeSupport(WarriorAI parent) : base(parent) { }
         }

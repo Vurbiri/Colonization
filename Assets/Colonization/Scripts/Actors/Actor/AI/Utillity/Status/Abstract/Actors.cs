@@ -8,6 +8,8 @@ namespace Vurbiri.Colonization
         {
             protected abstract class Actors
             {
+                protected const int BASE_HP = 105;
+                
                 protected readonly WeightsList<Actor> _list = new(3);
 
                 public int Count { [Impl(256)] get => _list.Count; }

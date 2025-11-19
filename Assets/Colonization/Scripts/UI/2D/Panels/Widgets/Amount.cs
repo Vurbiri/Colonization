@@ -47,7 +47,7 @@ namespace Vurbiri.Colonization.UI
         protected override void OnDestroy()
         {
             base.OnDestroy();
-            _reactiveAmountMax.Dispose();
+            _reactiveAmountMax?.Dispose();
         }
 
 #if UNITY_EDITOR

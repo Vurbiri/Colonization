@@ -12,20 +12,11 @@ namespace Vurbiri.Colonization
         [SerializeField] private int _maxHP;
         [SerializeField] private bool _useSelfHP;
 
-        public IEnumerator TryUse_Cn(Actor user, Actor target, IEnumerator waitBeforeSelecting)
+        public IEnumerator TryUse_Cn(Actor user, Actor target)
         {
             var action = user.Action;
-            if(action.CanUsedSkill(_heal) && Chance.Rolling((_useSelfHP ? user.PercentHP - _maxHP : _maxHP) - target.PercentHP))
-            {
-                yield return GameContainer.CameraController.ToPositionControlled(target);
-
-                var wait = action.UseSkill(_heal);
-
-                yield return waitBeforeSelecting;
-                user.Unselect(target);
-
-                yield return wait;
-            }
+            if (action.CanUsedSkill(_heal) && Chance.Rolling((_useSelfHP ? user.PercentHP - _maxHP : _maxHP) - target.PercentHP))
+                yield return user.UseSkill_Cn(target, _heal);
             yield break;
         }
 

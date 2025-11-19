@@ -7,11 +7,13 @@ namespace Vurbiri.Colonization
         public bool raider;
         public UsedDefense defense;
         public UsedHeal heal;
-        public UsedSelfSkills selfBuffs;
+        public UsedSelfBuffs selfBuffs;
+        public UsedDebuffs debuffs;
+        public UsedAttacks attacks;
 
         public void Init()
         {
-
+            attacks.Init();
         }
     }
 }

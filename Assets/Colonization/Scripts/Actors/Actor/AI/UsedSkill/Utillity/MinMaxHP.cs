@@ -12,7 +12,7 @@ namespace Vurbiri.Colonization
 
         [Impl(256)] public readonly bool IsValid(Actor actor)
         {
-            int current = actor.CurrentHP;
+            int current = actor.PercentHP;
             return current >= _min && current <= _max;
         }
 	}

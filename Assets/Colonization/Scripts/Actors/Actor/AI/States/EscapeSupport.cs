@@ -35,7 +35,7 @@ namespace Vurbiri.Colonization
 
                 sealed public override IEnumerator Execution_Cn(Out<bool> isContinue)
                 {
-                    yield return Move_Cn(_targetHexagon);
+                    yield return Actor.Move_Cn(_targetHexagon);
 
                     isContinue.Set(true);
                     Exit();

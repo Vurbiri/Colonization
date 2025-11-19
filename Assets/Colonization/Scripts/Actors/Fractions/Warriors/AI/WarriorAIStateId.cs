@@ -13,5 +13,6 @@ namespace Vurbiri.Colonization
         public const int MoveToHome     = 8;
         public const int FindResources  = 9;
         public const int EscapeSupport  = 10;
+        public const int BlockInCombat  = 11;
     }
 }

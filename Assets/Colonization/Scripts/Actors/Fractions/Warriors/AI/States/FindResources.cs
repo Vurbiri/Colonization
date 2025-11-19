@@ -40,7 +40,7 @@ namespace Vurbiri.Colonization
 
                 var target = _hexagons.Rand();
                 if (target != Hexagon)
-                    yield return Move_Cn(target);
+                    yield return Actor.Move_Cn(target);
 
                 _hexagons.Clear();
                 _minResources.Clear();

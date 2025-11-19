@@ -43,8 +43,10 @@ namespace VurbiriEditor.Colonization
             private readonly SerializedProperty _raiderProperty;
 
             private readonly UsedDefenseDrawer _defenseDrawer;
-            private readonly UsedSelfSkillsDrawer _selfBuffsDrawer;
             private readonly UsedHealDrawer _healDrawer;
+            private readonly UsedSelfBuffsDrawer _selfBuffsDrawer;
+            private readonly UsedDebuffsDrawer _debuffsDrawer;
+            private readonly UsedAttacksDrawer _attacksDrawer;
 
             private readonly string _name;
 
@@ -61,7 +63,8 @@ namespace VurbiriEditor.Colonization
 
                 _healDrawer      = new(parentProperty.FindPropertyRelative(nameof(ActorAISettings.heal)), typeId, id);
                 _selfBuffsDrawer = new(parentProperty.FindPropertyRelative(nameof(ActorAISettings.selfBuffs)), typeId, id);
-
+                _debuffsDrawer   = new(parentProperty.FindPropertyRelative(nameof(ActorAISettings.debuffs)), typeId, id);
+                _attacksDrawer   = new(parentProperty.FindPropertyRelative(nameof(ActorAISettings.attacks)), typeId, id);
             }
 
             public void Draw()
@@ -84,6 +87,8 @@ namespace VurbiriEditor.Colonization
                                 {
                                     _healDrawer.Draw();
                                     _selfBuffsDrawer.Draw();
+                                    _debuffsDrawer.Draw();
+                                    _attacksDrawer.Draw();
                                 }
                                 EndVertical();
                             }

@@ -45,7 +45,7 @@ namespace Vurbiri.Colonization
                 yield return GameContainer.CameraController.ToPositionControlled(Actor.Position);
 
                 if (TryEscape(out Hexagon target))
-                    yield return Move_Cn(target);
+                    yield return Actor.Move_Cn(target);
 
                 yield return Settings.defense.TryUse_Cn(Actor, true, true, true);
 

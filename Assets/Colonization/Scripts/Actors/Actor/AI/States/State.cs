@@ -37,7 +37,7 @@ namespace Vurbiri.Colonization
                 protected Actor Actor { [Impl(256)] get => _parent._actor; }
                 protected Hexagon Hexagon { [Impl(256)] get => _parent._actor._currentHex; }
                 protected Id<PlayerId> OwnerId { [Impl(256)] get => _parent._actor._owner; }
-                protected AStates Action { [Impl(256)] get => _parent._actor._states; }
+                protected States Action { [Impl(256)] get => _parent._actor._states; }
                 protected Goals Goals { [Impl(256)] get => _parent._goals; }
                 protected Status Status { [Impl(256)] get => _parent._status; }
                 protected ActorAISettings Settings { [Impl(256)] get => _parent._aISettings; }
@@ -91,24 +91,12 @@ namespace Vurbiri.Colonization
                         isExit = !TryGetNextHexagon(Actor, target, out Hexagon next);
                         if (!isExit)
                         {
-                            yield return Actor.StartCoroutine(Move_Cn(next));
+                            yield return Actor.Move_Cn(next);
                             isExit = target.Distance(next) == distance;
                         }
                     }
                     isContinue.Set(isExit);
                     if (isExit) Exit();
-                }
-
-                protected IEnumerator Move_Cn(Hexagon target)
-                {
-                    yield return GameContainer.CameraController.ToPositionControlled(target.Position);
-
-                    var wait = Action.UseMoveSkill();
-
-                    yield return s_waitBeforeSelecting;
-                    Action.Unselect(target);
-
-                    yield return wait;
                 }
             }
         }

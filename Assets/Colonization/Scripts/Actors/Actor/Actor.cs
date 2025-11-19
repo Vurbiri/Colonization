@@ -29,8 +29,8 @@ namespace Vurbiri.Colonization
 
         #region  --------------- Abilities ---------------
         private AbilitiesSet<ActorAbilityId> _abilities;
-        private SubAbility<ActorAbilityId> _currentHP;
-        private SubAbility<ActorAbilityId> _currentAP;
+        private SubAbility<ActorAbilityId> _HP;
+        private SubAbility<ActorAbilityId> _AP;
         private BooleanAbility<ActorAbilityId> _move;
         private ChanceAbility<ActorAbilityId> _profitMain;
         private ChanceAbility<ActorAbilityId> _profitAdv;
@@ -39,7 +39,7 @@ namespace Vurbiri.Colonization
         private Hexagon _currentHex;
         private BoxCollider _thisCollider;
         private EffectsSet _effects;
-        private AStates _states;
+        private States _states;
 
         private float _zSize;
 
@@ -56,16 +56,17 @@ namespace Vurbiri.Colonization
         public bool IsDemon { [Impl(256)] get; [Impl(256)] private set; }
         public Id<PlayerId> Owner { [Impl(256)] get => _owner; }
         public Hexagon Hexagon { [Impl(256)] get => _currentHex; }
-        public int ActionPoint { [Impl(256)] get => _currentAP.Value; }
+        public int CurrentAP { [Impl(256)] get => _AP.Value; }
+        public bool IsMaxAP { [Impl(256)] get => _HP.IsMax; }
         public bool CanUseSkills { [Impl(256)] get => _states.IsDefault & _isPersonTurn; }
-        public int CurrentHP { [Impl(256)] get => _currentHP.Value; }
-        public int PercentHP { [Impl(256)] get => _currentHP.Percent; }
-        public bool IsFullHP { [Impl(256)] get => _currentHP.IsMax; }
-        public bool IsWounded { [Impl(256)] get => _currentHP.IsNotMax; }
-        public bool IsDead { [Impl(256)] get => _currentHP.Value <= 0; }
+        public int CurrentHP { [Impl(256)] get => _HP.Value; }
+        public int PercentHP { [Impl(256)] get => _HP.Percent; }
+        public bool IsFullHP { [Impl(256)] get => _HP.IsMax; }
+        public bool IsWounded { [Impl(256)] get => _HP.IsNotMax; }
+        public bool IsDead { [Impl(256)] get => _HP.Value <= 0; }
         public bool ZealCharge { [Impl(256)] get => _zealCharge; [Impl(256)] set { _zealCharge = value; ChangeSignal(); } }
         public int Force { [Impl(256)] get => _force; }
-        public int CurrentForce { [Impl(256)] get => _force * _currentHP.Percent / 100; }
+        public int CurrentForce { [Impl(256)] get => _force * _HP.Percent / 100; }
         public Transform Transform { [Impl(256)] get => _thisTransform; }
         public ActorSkin Skin { [Impl(256)] get => _states.Skin; }
         public Actions Action { [Impl(256)] get => _states; }
@@ -136,7 +137,7 @@ namespace Vurbiri.Colonization
         #endregion
 
         #region ================== Setup ============================
-        protected abstract AStates StatesCreate(ActorSettings settings);
+        protected abstract States StatesCreate(ActorSettings settings);
 
         public void Setup(ActorSettings settings, ActorInitData initData, Hexagon startHex)
         {
@@ -157,11 +158,11 @@ namespace Vurbiri.Colonization
             #region Abilities
             _abilities = settings.Abilities;
 
-            _currentHP  = _abilities.ReplaceToSub(ActorAbilityId.CurrentHP, ActorAbilityId.MaxHP, ActorAbilityId.HPPerTurn);
-            _currentAP  = _abilities.ReplaceToSub(ActorAbilityId.CurrentAP, ActorAbilityId.MaxAP, ActorAbilityId.APPerTurn);
+            _HP  = _abilities.ReplaceToSub(ActorAbilityId.CurrentHP, ActorAbilityId.MaxHP, ActorAbilityId.HPPerTurn);
+            _AP  = _abilities.ReplaceToSub(ActorAbilityId.CurrentAP, ActorAbilityId.MaxAP, ActorAbilityId.APPerTurn);
             _move       = _abilities.ReplaceToBoolean(ActorAbilityId.IsMove);
-            _profitMain = _abilities.ReplaceToChance(ActorAbilityId.ProfitMain, _currentAP);
-            _profitAdv  = _abilities.ReplaceToChance(ActorAbilityId.ProfitAdv, _currentAP);
+            _profitMain = _abilities.ReplaceToChance(ActorAbilityId.ProfitMain, _AP);
+            _profitAdv  = _abilities.ReplaceToChance(ActorAbilityId.ProfitAdv, _AP);
 
             for (int i = 0; i < initData.buffs.Count; ++i)
                 _subscription += initData.buffs[i].Subscribe(OnBuff);
@@ -170,7 +171,7 @@ namespace Vurbiri.Colonization
             #region Effects
             _effects = new(_abilities);
 
-            _currentHP.Subscribe(OnDeath, false);
+            _HP.Subscribe(OnDeath, false);
             _effects.Subscribe(RedirectEvents);
             #endregion
 
@@ -198,8 +199,8 @@ namespace Vurbiri.Colonization
 
         public void SetLoadData(ActorLoadData data)
         {
-            _currentHP.Set(data.state.currentHP);
-            _currentAP.Set(data.state.currentAP);
+            _HP.Set(data.state.currentHP);
+            _AP.Set(data.state.currentAP);
             _move.Set(data.state.move);
 
             _zealCharge = data.state.zealCharge;
@@ -258,7 +259,7 @@ namespace Vurbiri.Colonization
         {
             int delta = _abilities.AddPerk(effect);
 
-            if(delta != 0 & _currentHP.IsTrue)
+            if(delta != 0 & _HP.IsTrue)
                 ChangeSignal();
 
             return delta;
@@ -269,8 +270,8 @@ namespace Vurbiri.Colonization
         #region ================== Start/End turn ========================
         public void StatesUpdate()
         {
-            _currentHP.Next();
-            _currentAP.Next();
+            _HP.Next();
+            _AP.Next();
             _move.On();
         }
         public void EffectsUpdate(int defense)
@@ -299,7 +300,7 @@ namespace Vurbiri.Colonization
         }
         public void FromTargetState()
         {
-            if (_currentHP.IsTrue && _states.FromTarget())
+            if (_HP.IsTrue && _states.FromTarget())
                 ChangeSignal();
         }
         #endregion

@@ -1,5 +1,6 @@
 {
   "ratioForEscape": 11,
+  "ratioForBlock": 15,
   "ratioForAttack": 30,
   "maxDistanceUnsiege": 4,
   "minHPUnsiege": 22,
@@ -12,6 +13,7 @@
   "_priority": [
     0,
     10,
+    11,
     1,
     2,
     3,
@@ -48,6 +50,67 @@
             "chance": 92
           }
         ]
+      },
+      "debuffs": {
+        "_skills": []
+      },
+      "attacks": {
+        "_skills": [
+          {
+            "skill": 2,
+            "chance": 90,
+            "applied": {
+              "_maxAP": true,
+              "_onlyAntipode": false,
+              "_self": false,
+              "_target": false
+            },
+            "selfHP": {
+              "_min": 75,
+              "_max": 100
+            },
+            "targetHP": {
+              "_min": 26,
+              "_max": 100
+            }
+          },
+          {
+            "skill": 1,
+            "chance": 66,
+            "applied": {
+              "_maxAP": false,
+              "_onlyAntipode": false,
+              "_self": false,
+              "_target": false
+            },
+            "selfHP": {
+              "_min": 0,
+              "_max": 100
+            },
+            "targetHP": {
+              "_min": 39,
+              "_max": 100
+            }
+          },
+          {
+            "skill": 0,
+            "chance": 100,
+            "applied": {
+              "_maxAP": false,
+              "_onlyAntipode": false,
+              "_self": false,
+              "_target": false
+            },
+            "selfHP": {
+              "_min": 0,
+              "_max": 100
+            },
+            "targetHP": {
+              "_min": 0,
+              "_max": 100
+            }
+          }
+        ]
       }
     },
     {
@@ -72,7 +135,68 @@
               "_min": 15,
               "_max": 65
             },
-            "chance": 50
+            "chance": 45
+          }
+        ]
+      },
+      "debuffs": {
+        "_skills": []
+      },
+      "attacks": {
+        "_skills": [
+          {
+            "skill": 2,
+            "chance": 75,
+            "applied": {
+              "_maxAP": true,
+              "_onlyAntipode": false,
+              "_self": false,
+              "_target": false
+            },
+            "selfHP": {
+              "_min": 37,
+              "_max": 100
+            },
+            "targetHP": {
+              "_min": 41,
+              "_max": 100
+            }
+          },
+          {
+            "skill": 1,
+            "chance": 78,
+            "applied": {
+              "_maxAP": false,
+              "_onlyAntipode": false,
+              "_self": false,
+              "_target": false
+            },
+            "selfHP": {
+              "_min": 0,
+              "_max": 100
+            },
+            "targetHP": {
+              "_min": 34,
+              "_max": 100
+            }
+          },
+          {
+            "skill": 0,
+            "chance": 100,
+            "applied": {
+              "_maxAP": false,
+              "_onlyAntipode": false,
+              "_self": false,
+              "_target": false
+            },
+            "selfHP": {
+              "_min": 0,
+              "_max": 100
+            },
+            "targetHP": {
+              "_min": 0,
+              "_max": 100
+            }
           }
         ]
       }
@@ -93,6 +217,31 @@
       },
       "selfBuffs": {
         "_skills": []
+      },
+      "debuffs": {
+        "_skills": []
+      },
+      "attacks": {
+        "_skills": [
+          {
+            "skill": 0,
+            "chance": 100,
+            "applied": {
+              "_maxAP": false,
+              "_onlyAntipode": false,
+              "_self": false,
+              "_target": false
+            },
+            "selfHP": {
+              "_min": 0,
+              "_max": 100
+            },
+            "targetHP": {
+              "_min": 0,
+              "_max": 100
+            }
+          }
+        ]
       }
     },
     {
@@ -111,6 +260,85 @@
       },
       "selfBuffs": {
         "_skills": []
+      },
+      "debuffs": {
+        "_skills": []
+      },
+      "attacks": {
+        "_skills": [
+          {
+            "skill": 3,
+            "chance": 94,
+            "applied": {
+              "_maxAP": true,
+              "_onlyAntipode": false,
+              "_self": false,
+              "_target": true
+            },
+            "selfHP": {
+              "_min": 0,
+              "_max": 100
+            },
+            "targetHP": {
+              "_min": 40,
+              "_max": 100
+            }
+          },
+          {
+            "skill": 2,
+            "chance": 88,
+            "applied": {
+              "_maxAP": false,
+              "_onlyAntipode": false,
+              "_self": false,
+              "_target": true
+            },
+            "selfHP": {
+              "_min": 0,
+              "_max": 100
+            },
+            "targetHP": {
+              "_min": 30,
+              "_max": 100
+            }
+          },
+          {
+            "skill": 1,
+            "chance": 85,
+            "applied": {
+              "_maxAP": false,
+              "_onlyAntipode": false,
+              "_self": false,
+              "_target": false
+            },
+            "selfHP": {
+              "_min": 23,
+              "_max": 100
+            },
+            "targetHP": {
+              "_min": 20,
+              "_max": 100
+            }
+          },
+          {
+            "skill": 0,
+            "chance": 100,
+            "applied": {
+              "_maxAP": false,
+              "_onlyAntipode": false,
+              "_self": false,
+              "_target": false
+            },
+            "selfHP": {
+              "_min": 0,
+              "_max": 100
+            },
+            "targetHP": {
+              "_min": 0,
+              "_max": 100
+            }
+          }
+        ]
       }
     },
     {
@@ -138,12 +366,56 @@
             "chance": 75
           }
         ]
+      },
+      "debuffs": {
+        "_skills": []
+      },
+      "attacks": {
+        "_skills": [
+          {
+            "skill": 1,
+            "chance": 100,
+            "applied": {
+              "_maxAP": false,
+              "_onlyAntipode": true,
+              "_self": false,
+              "_target": false
+            },
+            "selfHP": {
+              "_min": 0,
+              "_max": 100
+            },
+            "targetHP": {
+              "_min": 15,
+              "_max": 100
+            }
+          },
+          {
+            "skill": 0,
+            "chance": 100,
+            "applied": {
+              "_maxAP": false,
+              "_onlyAntipode": false,
+              "_self": false,
+              "_target": false
+            },
+            "selfHP": {
+              "_min": 0,
+              "_max": 100
+            },
+            "targetHP": {
+              "_min": 0,
+              "_max": 100
+            }
+          }
+        ]
       }
     }
   ],
   "Priority": [
     0,
     10,
+    11,
     1,
     2,
     3,

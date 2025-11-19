@@ -48,9 +48,8 @@ namespace Vurbiri.Colonization
 
                 [Impl(256)] private void Add(Actor enemy)
                 {
-                    int currentForce = enemy.CurrentForce;
-                    _force += currentForce;
-                    _list.Add(enemy, GameContainer.Actors.MaxForce - currentForce);
+                    _force += enemy.CurrentForce;
+                    _list.Add(enemy, BASE_HP - enemy._HP.Percent);
                 }
             }
         }

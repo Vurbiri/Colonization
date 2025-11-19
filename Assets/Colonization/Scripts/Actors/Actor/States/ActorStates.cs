@@ -12,6 +12,8 @@ namespace Vurbiri.Colonization
             public abstract bool CanUsedSpecSkill();
             public abstract bool CanUsedMoveSkill();
 
+            public abstract int GetCostSkill(int id);
+
             public abstract WaitSignal UseSkill(int id);
             public abstract WaitSignal UseSpecSkill();
             public abstract WaitSignal UseMoveSkill();
@@ -21,7 +23,7 @@ namespace Vurbiri.Colonization
             public abstract WaitStateSource<DeathStage> Death();
         }
         //============================================================================
-        public abstract class AStates : Actions
+        public abstract class States : Actions
         {
             private readonly TargetState _targetState = new();
             protected readonly StateMachineSelectable _stateMachine = new();
@@ -45,7 +47,7 @@ namespace Vurbiri.Colonization
             public virtual void Load() { }
         }
         //============================================================================
-        public abstract partial class AStates<TActor, TSkin> : AStates where TActor : Actor where TSkin : ActorSkin
+        public abstract partial class AStates<TActor, TSkin> : States where TActor : Actor where TSkin : ActorSkin
         {
             protected readonly TActor _actor;
             protected readonly TSkin _skin;
@@ -71,6 +73,8 @@ namespace Vurbiri.Colonization
             sealed public override bool CanUsedSkill(int id) => (id >= 0 & id < CONST.ACTION_SKILLS_COUNT) && _actionSkills[id].CanUse;
             sealed public override bool CanUsedMainSkill(int id) => (id >= 0 & id < CONST.MAIN_SKILLS_COUNT) && _actionSkills[id].CanUse;
             sealed public override bool CanUsedMoveSkill() => _moveState.CanUse;
+
+            sealed public override int GetCostSkill(int id) => _actionSkills[id].costAP.Value;
 
             sealed public override WaitSignal UseMoveSkill()
             {

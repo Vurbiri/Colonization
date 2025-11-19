@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
@@ -16,8 +17,16 @@ namespace Vurbiri.Colonization
         public FileIdAndKey giftMsg;
         [Button("Testing")]
         public Color value;
+        public SkillApplied skillApplied;
+        public TestSkillApplied testSkillApplied;
 
         private TMP_Dropdown _dropdown;
+
+        [Serializable]
+        public struct TestSkillApplied
+        {
+            public SkillApplied skillApplied;
+        }
 
         private void Start()
         {

@@ -41,8 +41,8 @@ namespace Vurbiri.Colonization
             {
                 writer.WriteStartArray();
                 writer.WriteValue(actor._id);
-                writer.WriteValue(actor._currentHP.Value);
-                writer.WriteValue(actor._currentAP.Value);
+                writer.WriteValue(actor._HP.Value);
+                writer.WriteValue(actor._AP.Value);
                 writer.WriteValue(actor._move.Value);
                 writer.WriteValue(actor._zealCharge ? 1 : 0);
                 writer.WriteEndArray();

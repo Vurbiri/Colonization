@@ -47,26 +47,19 @@ namespace Vurbiri
         {
             int index = GetRandomIndex();
             T value = _weights[index].value;
-            if (index > 0)
-                Remove(index);
-
+            RemoveAtInternal(index);
             return value;
         }
 
-        [Impl(256)] public void RemoveAt(int index)
+        [Impl(256)] public bool TryExtract(out T value)
         {
-            Throw.IfIndexOutOfRange(index, _count - 1);
-            Remove(index + 1);
+            int index = GetRandomIndex();
+            value = _weights[index].value;
+            return RemoveAtInternal(index);
         }
 
-        [Impl(256)] public bool Remove(T item)
-        {
-            int index = FindIndex(item);
-            bool result = index > 0;
-            if(result) Remove(index);
-            return result;
-        }
-
+        [Impl(256)] public bool RemoveAt(int index) => RemoveAtInternal(index + 1);
+        [Impl(256)] public bool Remove(T item) => RemoveAtInternal(FindIndex(item));
         [Impl(256)] public int IndexOf(T item) => FindIndex(item) - 1;
 
         public void Clear()
@@ -81,7 +74,7 @@ namespace Vurbiri
         protected int FindIndex(T item)
         {
             int index = _count;
-            while (index --> 1 && !s_comparer.Equals(_weights[index].value, item)) ;
+            while (index --> 1 && !s_comparer.Equals(item, _weights[index].value)) ;
             return index;
         }
 
@@ -106,14 +99,19 @@ namespace Vurbiri
             return index;
         }
 
-        protected void Remove(int index)
+        protected bool RemoveAtInternal(int index)
         {
-            _count--;
-            int delta = _weights[index] - _weights[index - 1];
-            for (; index < _count; ++index)
-                _weights[index] = _weights[index + 1].Remove(delta);
-            _weights[_count] = null;
-            _max -= delta;
+            bool result = index > 0 & index < _count;
+            if (result)
+            {
+                _count--;
+                int delta = _weights[index] - _weights[index - 1];
+                for (; index < _count; ++index)
+                    _weights[index] = _weights[index + 1].Remove(delta);
+                _weights[_count] = null;
+                _max -= delta;
+            }
+            return result;
         }
 
         protected T Search(int min, int max, int weight)

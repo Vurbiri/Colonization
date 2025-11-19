@@ -16,6 +16,8 @@ namespace Vurbiri.Colonization
                 new Escape(this),
                 new EscapeSupport(this),
 
+                new BlockInCombat(this),
+
                 new Combat(this),
                 new Support(this),
 

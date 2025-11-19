@@ -60,9 +60,15 @@ namespace VurbiriEditor.Colonization
                     EndScrollView();
                 }
                 EndVertical();
+
+                _serializedObject.ApplyModifiedProperties();
+                Space(10f);
+                if(GUILayout.Button("Refresh"))
+                    Repaint();
+                Space(10f);
             }
             EndWindows();
-            _serializedObject.ApplyModifiedProperties();
+            
         }
 
         private void CreateDrawers()

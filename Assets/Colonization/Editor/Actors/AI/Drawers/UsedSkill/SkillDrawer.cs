@@ -34,7 +34,7 @@ namespace VurbiriEditor.Colonization
         public static GUIContent[] GetLabels(Id<SkillType_Ed> skill, int type, int id) => s_skills[skill].labels[type][id];
         public static int[] GetValues(Id<SkillType_Ed> skill, int type, int id) => s_skills[skill].values[type][id];
 
-        public static bool OnValidate(SerializedProperty property, int[] values, string name)
+        public static void OnValidate(SerializedProperty property, int[] values, string name)
         {
             int count = values.Length;
             bool isValid = property.arraySize == count;
@@ -50,11 +50,10 @@ namespace VurbiriEditor.Colonization
                 property.arraySize = 0;
                 property.serializedObject.ApplyModifiedProperties();
                 property.arraySize = count;
-                for (int i = 0; i < count; ++i)
-                    property.GetArrayElementAtIndex(i).FindPropertyRelative(name).intValue = values[i];
+                for (int i = 0, j = count - 1; i < count; ++i, --j)
+                    property.GetArrayElementAtIndex(i).FindPropertyRelative(name).intValue = values[j];
                 property.serializedObject.ApplyModifiedProperties();
             }
-            return isValid;
         }
 
         public static void Update<TScriptable, TId, TValue>(TScriptable scriptable, int type)
