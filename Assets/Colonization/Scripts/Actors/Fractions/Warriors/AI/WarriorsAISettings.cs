@@ -5,18 +5,16 @@ namespace Vurbiri.Colonization
     [System.Serializable]
     public class WarriorsAISettings : ActorsAISettings<WarriorId, WarriorAIStateId>
     {
-        [Space]
         [Range(0, 100)] public int ratioForEscape;
         [Range(0, 100)] public int ratioForBlock;
-        [Range(0, 100)] public int ratioForAttack;
         [Space]
-        [Range(0, 5)]   public int maxDistanceUnsiege;
+        [Range(1, 5)]   public int maxDistanceUnsiege;
         [Range(0, 100)] public int minHPUnsiege;
         [Space]
-        [Range(0, 5)] public int maxDistanceRaid;
+        [Range(1, 5)] public int maxDistanceRaid;
         [Range(0, 100)] public int minHPRaid;
         [Space]
-        [Range(0, 5)] public int maxDistanceHome;
+        [Range(1, 5)] public int maxDistanceHome;
         [Space]
         public Chance chanceFreeFinding;
     }

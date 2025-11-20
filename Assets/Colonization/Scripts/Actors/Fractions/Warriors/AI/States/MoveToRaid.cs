@@ -1,11 +1,12 @@
 using System.Collections;
+using Vurbiri.Reactive.Collections;
 using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization
 {
     public partial class WarriorAI
     {
-        sealed private class MoveToRaid : AIState
+        sealed private class MoveToRaid : State<WarriorAI>
         {
             private Hexagon _targetHexagon;
             private Key _targetColony;
@@ -35,6 +36,9 @@ namespace Vurbiri.Colonization
                     }
                 }
                 return _targetHexagon != null && Goals.Raid.Add(_targetColony, Actor.Code);
+
+                // ========= Local ===============
+                [Impl(256)] static ReadOnlyReactiveList<Crossroad> GetColonies(int playerId) => GameContainer.Players.Humans[playerId].Colonies;
             }
 
             public override IEnumerator Execution_Cn(Out<bool> isContinue)

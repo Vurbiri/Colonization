@@ -61,6 +61,7 @@ namespace Vurbiri
         [Impl(256)] public bool RemoveAt(int index) => RemoveAtInternal(index + 1);
         [Impl(256)] public bool Remove(T item) => RemoveAtInternal(FindIndex(item));
         [Impl(256)] public int IndexOf(T item) => FindIndex(item) - 1;
+        [Impl(256)] public bool Contains(T item) => FindIndex(item) > 0;
 
         public void Clear()
         {

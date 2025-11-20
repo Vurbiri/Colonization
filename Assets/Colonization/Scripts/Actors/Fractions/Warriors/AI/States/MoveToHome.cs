@@ -5,7 +5,7 @@ namespace Vurbiri.Colonization
 {
     public partial class WarriorAI
     {
-        sealed private class MoveToHome : AIState
+        sealed private class MoveToHome : State<WarriorAI>
         {
             private Hexagon _targetHexagon;
             private Key _targetColony;
@@ -22,7 +22,7 @@ namespace Vurbiri.Colonization
                 {
                     int distance = s_settings.maxDistanceHome;
 
-                    if (TryGetEmptyColony(Colonies, ref distance, out Crossroad colony, out Hexagon target, Goals.CanGoHome))
+                    if (TryGetEmptyColony(GameContainer.Players.Humans[OwnerId].Colonies, ref distance, out Crossroad colony, out Hexagon target, Goals.CanGoHome))
                     {
                         _targetHexagon = target;
                         _targetColony = colony.Key;

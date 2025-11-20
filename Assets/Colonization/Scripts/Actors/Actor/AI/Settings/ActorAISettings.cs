@@ -10,6 +10,7 @@ namespace Vurbiri.Colonization
         public UsedSelfBuffs selfBuffs;
         public UsedDebuffs debuffs;
         public UsedAttacks attacks;
+        public UsedBuffs buffs;
 
         public void Init()
         {

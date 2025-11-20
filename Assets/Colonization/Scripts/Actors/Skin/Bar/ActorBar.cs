@@ -77,9 +77,11 @@ namespace Vurbiri.Colonization.UI
 
         private void OnStart()
         {
-            _subscription += GameContainer.CameraTransform.Subscribe(OnChangeCamera);
+            _thisTransform.rotation = Quaternion.LookRotation(GameContainer.CameraTransform.Transform.forward, Vector3.up);
+
             _subscription += _actor.Subscribe(OnRemoveActor, false);
             _subscription += _actor.Effects.Subscribe(OnAddEffect);
+            _subscription += GameContainer.CameraTransform.Subscribe(OnChangeCamera);
         }
 
         #region Nested: Settings

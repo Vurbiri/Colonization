@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization
@@ -8,16 +9,16 @@ namespace Vurbiri.Colonization
         {
             protected abstract class Actors
             {
-                protected const int BASE_HP = 105;
-                
-                protected readonly WeightsList<Actor> _list = new(3);
+                protected readonly List<Actor> _list = new(3);
 
                 public int Count { [Impl(256)] get => _list.Count; }
                 public bool NotEmpty { [Impl(256)] get => _list.Count > 0; }
 
 
-                [Impl(256)] public Actor Extract() => _list.Extract();
+                [Impl(256)] public Actor Extract() => _list.RandomExtract();
                 [Impl(256)] public void Clear() => _list.Clear();
+
+                [Impl(256)]  public static implicit operator List<Actor>(Actors self) => self._list;
             }
         }
     }

@@ -47,6 +47,7 @@ namespace VurbiriEditor.Colonization
             private readonly UsedSelfBuffsDrawer _selfBuffsDrawer;
             private readonly UsedDebuffsDrawer _debuffsDrawer;
             private readonly UsedAttacksDrawer _attacksDrawer;
+            private readonly UsedBuffsDrawer _buffsDrawer;
 
             private readonly string _name;
 
@@ -65,6 +66,7 @@ namespace VurbiriEditor.Colonization
                 _selfBuffsDrawer = new(parentProperty.FindPropertyRelative(nameof(ActorAISettings.selfBuffs)), typeId, id);
                 _debuffsDrawer   = new(parentProperty.FindPropertyRelative(nameof(ActorAISettings.debuffs)), typeId, id);
                 _attacksDrawer   = new(parentProperty.FindPropertyRelative(nameof(ActorAISettings.attacks)), typeId, id);
+                _buffsDrawer     = new(parentProperty.FindPropertyRelative(nameof(ActorAISettings.buffs)), typeId, id);
             }
 
             public void Draw()
@@ -91,6 +93,19 @@ namespace VurbiriEditor.Colonization
                                     _attacksDrawer.Draw();
                                 }
                                 EndVertical();
+                            }
+                            if (_supportProperty.boolValue)
+                            {
+                                Space();
+                                if (_supportProperty.isExpanded = Foldout(_supportProperty.isExpanded, "Support"))
+                                {
+                                    BeginVertical(STYLES.border);
+                                    {
+                                        _healDrawer.Draw();
+                                        _buffsDrawer.Draw();
+                                    }
+                                    EndVertical();
+                                }
                             }
                             Space(3f);
                         }

@@ -7,7 +7,7 @@ namespace Vurbiri.Colonization
 {
     public partial class WarriorAI
     {
-        sealed private class FindResources : AIState
+        sealed private class FindResources : State<WarriorAI>
         {
             private readonly ReadOnlyCurrencies _resources;
             private readonly List<Hexagon> _hexagons = new();

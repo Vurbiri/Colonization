@@ -21,7 +21,7 @@ namespace VurbiriEditor.Colonization
         private readonly int[][] _percent = { new int[EconomicPerksId.Count], new int[MilitaryPerksId.Count] };
         private readonly Perk[][,] _perkGrid = { new Perk[COUNT, COUNT], new Perk[COUNT, COUNT] };
         private readonly SerializedProperty[] _perksProperty = new SerializedProperty[AbilityTypeId.Count];
-        private readonly GUIContent _chanceName = new("Chance:"), _baseName = new("Base:"), _expName = new("Exp:");
+        private readonly GUIContent _chanceName = new("Other Specialization (%):"), _baseName = new("Base: "), _expName = new("Exp: ");
 
         private readonly float _height = EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing;
 
@@ -121,7 +121,7 @@ namespace VurbiriEditor.Colonization
                 LabelField("Scientist Settings", STYLES.H1);
                 Rect pos = BeginVertical(GUI.skin.box);
                 {
-                    pos.height = EditorGUIUtility.singleLineHeight; pos.width *= 0.24f; pos.x += 10f + 0.36f * position.width; pos.y += _height * 0.3f;
+                    pos.height = EditorGUIUtility.singleLineHeight; pos.width *= 0.35f; pos.x += 10f + 0.26f * position.width; pos.y += _height * 0.3f;
                     _chanceProperty.intValue = DrawSlider(pos, _chanceName, _chanceProperty.intValue, 5, 50);
                     
                     Space(_height * 1.25f);
@@ -132,7 +132,7 @@ namespace VurbiriEditor.Colonization
                 {
                     float x = pos.x += 10f;
                     pos.height = EditorGUIUtility.singleLineHeight; pos.width *= 0.35f; pos.x = x + 0.14f * position.width; pos.y += _height * 0.3f;
-                    _tempSettings.weight = DrawSlider(pos, _baseName, _tempSettings.weight, 50, 500);
+                    _tempSettings.weight = DrawSlider(pos, _baseName, _tempSettings.weight, 20, 100);
 
                     pos.width = 0.24f * position.width; pos.x = x + 0.51f * position.width;
                     _tempSettings.exp = DrawSlider(pos, _expName, _tempSettings.exp, 2, 5);
@@ -167,7 +167,7 @@ namespace VurbiriEditor.Colonization
 
         private int DrawSlider(Rect pos, GUIContent label, int value, int min, int max)
         {
-            float offset = label.text.Length * 9f;
+            float offset = label.text.Length * 6.1f;
             EditorGUI.PrefixLabel(pos, label);
             pos.x += offset; pos.width -= offset + 15f;
             return EditorGUI.IntSlider(pos, value, min, max);

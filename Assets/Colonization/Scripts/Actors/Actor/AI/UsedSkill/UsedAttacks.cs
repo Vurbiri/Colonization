@@ -14,13 +14,21 @@ namespace Vurbiri.Colonization
 
         private Attacks _attacks;
 
+        public bool CanUsed(Actor user, Actor target)
+        {
+            for (int i = _skills.Length - 1; i >= 0; --i)
+                if (_skills[i].CanUsed(user, target))
+                    return true;
+            return false;
+        }
+
         public IEnumerator TryUse_Cn(Actor user, Actor target)
         {
             UsedAttack attack;
             while (_attacks.Count > 0)
             {
-                attack = _attacks.Extract();
-                if (attack.CanUse(user, target))
+                attack = _attacks.RandomExtract();
+                if (attack.ChanceUse(user, target))
                 {
                     yield return user.UseSkill_Cn(target, attack.skill);
                     break;
@@ -44,11 +52,11 @@ namespace Vurbiri.Colonization
             public MinMaxHP selfHP;
             public MinMaxHP targetHP;
             
-            [Impl(256)]
-            public bool CanUse(Actor user, Actor target)
+            [Impl(256)] public bool CanUsed(Actor user, Actor target)
             {
-                return user.Action.CanUsedSkill(skill) && applied.IsValid(user, target, skill) && selfHP.IsValid(user) && targetHP.IsValid(target) && chance.Roll;
+                return user.Action.CanUsedSkill(skill) && applied.IsValid(user, target, skill) && selfHP.IsValid(user) && targetHP.IsValid(target);
             }
+            [Impl(256)] public bool ChanceUse(Actor user, Actor target) => CanUsed(user, target) && chance.Roll;
 
             public bool Equals(UsedAttack other) => other is not null && other.skill == skill;
         }
@@ -70,14 +78,6 @@ namespace Vurbiri.Colonization
                     if(IndexOf(skill) < 0)
                         Add(skill);
                 }
-            }
-
-            public UsedAttack Extract()
-            {
-                int index = UnityEngine.Random.Range(0, Count);
-                var skill = this[index];
-                RemoveAt(index);
-                return skill;
             }
         }
         //*********************************

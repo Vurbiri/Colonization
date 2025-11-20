@@ -5,7 +5,7 @@ namespace Vurbiri.Colonization
 {
     public partial class WarriorAI
     {
-        sealed private class BlockInCombat : AIState
+        sealed private class BlockInCombat : State<WarriorAI>
         {
             private readonly int _blockCost;
             
@@ -22,7 +22,7 @@ namespace Vurbiri.Colonization
                     if (Status.isGuard)
                         selfForce *= (Hexagon.GetMaxDefense() + 1);
 
-                    isBlock = Chance.Rolling((Status.nearEnemies.Force * s_settings.ratioForBlock) / selfForce - s_settings.ratioForBlock);
+                    isBlock = Chance.Rolling((Status.nearEnemies.Force * s_settings.ratioForBlock) / selfForce);
                 }
                 
                 return isBlock;

@@ -57,7 +57,7 @@ namespace Vurbiri.Colonization
         public Id<PlayerId> Owner { [Impl(256)] get => _owner; }
         public Hexagon Hexagon { [Impl(256)] get => _currentHex; }
         public int CurrentAP { [Impl(256)] get => _AP.Value; }
-        public bool IsMaxAP { [Impl(256)] get => _HP.IsMax; }
+        public bool IsMaxAP { [Impl(256)] get => _AP.IsMax; }
         public bool CanUseSkills { [Impl(256)] get => _states.IsDefault & _isPersonTurn; }
         public int CurrentHP { [Impl(256)] get => _HP.Value; }
         public int PercentHP { [Impl(256)] get => _HP.Percent; }

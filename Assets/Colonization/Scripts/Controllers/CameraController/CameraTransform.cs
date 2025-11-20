@@ -16,8 +16,8 @@ namespace Vurbiri.Colonization.Controllers
         private readonly VAction<Transform> _changedTransform = new();
         private Vector3 _velocity = Vector3.zero;
 
-        public Camera Camera => _camera;
-        public Transform Transform => _cameraTransform;
+        public Camera Camera { [Impl(256)] get => _camera; }
+        public Transform Transform { [Impl(256)] get => _cameraTransform; }
 
         public Vector3 CameraPosition
         {

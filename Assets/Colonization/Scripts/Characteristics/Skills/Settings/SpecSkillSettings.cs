@@ -22,7 +22,7 @@ namespace Vurbiri.Colonization
         {
             if (actorType == ActorTypeId.Warrior)
             {
-                _ui = new BlockUI(separator, _cost, _value >>= ActorAbilityId.SHIFT_ABILITY);
+                _ui = new BlockUI(separator, _cost, _value >> ActorAbilityId.SHIFT_ABILITY);
             }
             else
             {

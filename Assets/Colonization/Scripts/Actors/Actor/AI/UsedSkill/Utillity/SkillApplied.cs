@@ -17,7 +17,8 @@ namespace Vurbiri.Colonization
         public readonly bool IsValid(Actor user, Actor target, int skillId)
         {
             var action = user.Action;
-            return (!_maxAP || user.IsMaxAP) && !((_onlyAntipode && user.TypeId == target.TypeId) || (_self && action.IsApplied(skillId, user)) || (_target && action.IsApplied(skillId, target)));
+            return (!_maxAP || user.IsMaxAP) && 
+                  !((_onlyAntipode && user.TypeId == target.TypeId) || (_self && action.IsApplied(skillId, user)) || (_target && action.IsApplied(skillId, target)));
         }
 
 #if UNITY_EDITOR

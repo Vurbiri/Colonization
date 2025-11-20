@@ -19,6 +19,8 @@ namespace VurbiriEditor.Colonization
 
         private static readonly ReadOnlyIdArray<SkillType_Ed, Skills> s_skills = new(() => new());
 
+        private static readonly int[][] s_minCostBuffs = new int[ActorTypeId.Count][];
+
         static SkillDrawer()
         {
             Update<WarriorsSettingsScriptable, WarriorId, WarriorSettings>(EUtility.FindAnyScriptable<WarriorsSettingsScriptable>(), ActorTypeId.Warrior);
@@ -79,6 +81,7 @@ namespace VurbiriEditor.Colonization
             return property.intValue = IntPopup(label, value, names, values);
         }
 
+        // ************ Nested *******************
         private class Skills
         {
             public readonly GUIContent[][][] labels = new GUIContent[ActorTypeId.Count][][];

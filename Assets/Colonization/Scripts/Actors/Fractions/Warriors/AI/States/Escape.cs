@@ -5,7 +5,7 @@ namespace Vurbiri.Colonization
 {
     public partial class WarriorAI
     {
-        sealed private class Escape : AIState
+        sealed private class Escape : State<WarriorAI>
         {
             public override int Id => WarriorAIStateId.Escape;
 

@@ -49,13 +49,13 @@ namespace VurbiriEditor.Colonization
             {
                 if (_mainProperty.isExpanded)
                 {
-                    var effectProperty = GetProperty(valueField);
+                    var valueProperty = GetProperty(valueField);
 
                     _position.y += _ySpace;
                     BeginProperty();
                     {
                         DrawInt(costField, 1, 4, 1);
-                        effectProperty.intValue = DrawInt(effectProperty, 5, 60, effectProperty.intValue >> ActorAbilityId.SHIFT_ABILITY) << ActorAbilityId.SHIFT_ABILITY;
+                        valueProperty.intValue = DrawInt(valueProperty, 5, 60, valueProperty.intValue >> ActorAbilityId.SHIFT_ABILITY) << ActorAbilityId.SHIFT_ABILITY;
                     }
                     EndProperty();
                 }

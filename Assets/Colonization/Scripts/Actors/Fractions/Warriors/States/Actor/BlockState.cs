@@ -26,8 +26,8 @@ namespace Vurbiri.Colonization
                     if (!IsApplied)
                     {
                         Pay();
-                        ActorEffects.Add(new(_effectCode, ActorAbilityId.Defense, TypeModifierId.Addition, _value, CONST.BLOCK_DURATION, CONST.BLOCK_SKIP));
-                        
+                        ActorEffects.Add(new(_effectCode, ActorAbilityId.Defense, TypeModifierId.Addition, _value, CONST.BLOCK_DURATION, CONST.BLOCK_SKIP, true));
+
                         StartCoroutine(Apply_Cn());
                     }
 

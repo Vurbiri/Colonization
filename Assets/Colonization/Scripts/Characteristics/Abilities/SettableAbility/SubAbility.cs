@@ -43,13 +43,11 @@ namespace Vurbiri.Colonization
 
         private void OnMaxChange(int newMaxValue)
         {
-            int oldMaxValue = _maxValue, currentValue = _value;
+            int currentValue = Math.Clamp((int)((float)_value * newMaxValue / _maxValue + 0.5f), 0, newMaxValue);
+
             _maxValue = newMaxValue;
 
-            currentValue = (int)Math.Round((double)currentValue * newMaxValue / oldMaxValue);
-            currentValue = Math.Clamp(currentValue, 0, newMaxValue);
-
-            if(currentValue != _value)
+            if (currentValue != _value)
             {
                 _value = currentValue;
                 _changeEvent.Invoke(currentValue);

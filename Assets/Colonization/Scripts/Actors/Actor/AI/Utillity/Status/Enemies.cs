@@ -34,8 +34,6 @@ namespace Vurbiri.Colonization
                             Add(enemy);
                 }
 
-                
-
                 public int GetContraForce()
                 {
                     int contraForce = 0;
@@ -44,12 +42,10 @@ namespace Vurbiri.Colonization
                     return contraForce;
                 }
 
-                
-
                 [Impl(256)] private void Add(Actor enemy)
                 {
                     _force += enemy.CurrentForce;
-                    _list.Add(enemy, BASE_HP - enemy._HP.Percent);
+                    _list.Add(enemy);
                 }
             }
         }

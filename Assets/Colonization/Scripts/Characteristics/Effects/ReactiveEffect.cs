@@ -22,8 +22,8 @@ namespace Vurbiri.Colonization
         public bool IsPositive { [Impl(256)] get => _value > 0; }
 
         public ReactiveEffect(EffectCode code, int targetAbility, Id<TypeModifierId> typeModifier, int value, int duration, bool isSkip, bool fix = false)
-            : this(code, targetAbility, typeModifier, value, duration, isSkip ? 1 : 0) { }
-        public ReactiveEffect(EffectCode code, int targetAbility, Id<TypeModifierId> typeModifier, int value, int duration, int skip)
+            : this(code, targetAbility, typeModifier, value, duration, isSkip ? 1 : 0, fix) { }
+        public ReactiveEffect(EffectCode code, int targetAbility, Id<TypeModifierId> typeModifier, int value, int duration, int skip, bool fix = false)
         {
             _code = code;
             _targetAbility = targetAbility;
@@ -31,7 +31,7 @@ namespace Vurbiri.Colonization
             _value = value;
             _duration = duration;
             _skip = skip;
-            _fixed = (code.SourceType == ActorTypeId.Warrior && code.SkillId == CONST.SPEC_SKILL_ID) || code == WallEffectFactory.WallEffectCode;
+            _fixed = fix;
         }
 
         public bool TryUpdate(ReactiveEffect other, Func<IPerk, int> addPerk, out int delta)

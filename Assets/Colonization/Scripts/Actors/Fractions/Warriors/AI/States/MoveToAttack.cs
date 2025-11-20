@@ -5,7 +5,7 @@ namespace Vurbiri.Colonization
 {
     public partial class WarriorAI
     {
-        sealed private class MoveToAttack : AIState
+        sealed private class MoveToAttack : State<WarriorAI>
         {
             private Hexagon _targetHexagon;
 

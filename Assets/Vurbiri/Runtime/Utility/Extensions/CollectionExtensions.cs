@@ -58,6 +58,14 @@ namespace Vurbiri
             return false;
         }
 
+        public static T RandomExtract<T>(this List<T> self)
+        {
+            int index = UnityEngine.Random.Range(0, self.Count);
+            T value = self[index];
+            self.RemoveAt(index);
+            return value;
+        }
+
         public static void Shuffle<T>(this List<T> self)
         {
             for (int i = self.Count - 1, j; i > 0; --i)

@@ -1,15 +1,16 @@
 {
   "ratioForEscape": 11,
-  "ratioForBlock": 15,
-  "ratioForAttack": 30,
+  "ratioForBlock": 40,
   "maxDistanceUnsiege": 4,
   "minHPUnsiege": 22,
   "maxDistanceRaid": 2,
   "minHPRaid": 84,
   "maxDistanceHome": 3,
   "chanceFreeFinding": 7,
-  "maxDistanceHelp": 3,
+  "maxDistanceHelp": 4,
   "minHPHelp": 60,
+  "ratioForDefence": 90,
+  "ratioForAttack": 30,
   "_priority": [
     0,
     10,
@@ -32,7 +33,7 @@
         "_buff": 3,
         "_buffChance": 88,
         "_block": true,
-        "_blockChance": 50
+        "_blockChance": 80
       },
       "heal": {
         "_heal": -1,
@@ -62,7 +63,7 @@
             "applied": {
               "_maxAP": true,
               "_onlyAntipode": false,
-              "_self": false,
+              "_self": true,
               "_target": false
             },
             "selfHP": {
@@ -111,6 +112,9 @@
             }
           }
         ]
+      },
+      "buffs": {
+        "_skills": []
       }
     },
     {
@@ -120,7 +124,7 @@
         "_buff": 3,
         "_buffChance": 40,
         "_block": true,
-        "_blockChance": 86
+        "_blockChance": 90
       },
       "heal": {
         "_heal": -1,
@@ -199,6 +203,9 @@
             }
           }
         ]
+      },
+      "buffs": {
+        "_skills": []
       }
     },
     {
@@ -240,6 +247,18 @@
               "_min": 0,
               "_max": 100
             }
+          }
+        ]
+      },
+      "buffs": {
+        "_skills": [
+          {
+            "skill": 2,
+            "chance": 55
+          },
+          {
+            "skill": 3,
+            "chance": 100
           }
         ]
       }
@@ -339,6 +358,9 @@
             }
           }
         ]
+      },
+      "buffs": {
+        "_skills": []
       }
     },
     {
@@ -348,7 +370,7 @@
         "_buff": -1,
         "_buffChance": 0,
         "_block": true,
-        "_blockChance": 93
+        "_blockChance": 97
       },
       "heal": {
         "_heal": 2,
@@ -409,6 +431,9 @@
             }
           }
         ]
+      },
+      "buffs": {
+        "_skills": []
       }
     }
   ],

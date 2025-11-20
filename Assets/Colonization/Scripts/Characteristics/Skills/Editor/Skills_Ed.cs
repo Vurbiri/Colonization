@@ -128,26 +128,6 @@ namespace Vurbiri.Colonization
                     animator[A_SKILLS[index]] = null;
         }
 
-        
-
-        private void GetSkills_Ed(ref GUIContent[] labels, ref int[] values, Func<SkillSettings, bool> valid)
-        {
-            int count = _skillsSettings.Length;
-            labels = new GUIContent[count];
-            List<int> listValues = new(count);
-
-            for (int i = 0; i < count; ++i)
-            {
-                if (valid(_skillsSettings[i]))
-                {
-                    labels[i] = new(GetSkillName(i));
-                    listValues.Add(i);
-                }
-            }
-
-            values = listValues.ToArray();
-        }
-
         private static void AddEmpty(List<string> listNames, List<int> listValues)
         {
             var (name, value) = GetEmptySkillName();

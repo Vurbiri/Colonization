@@ -1,5 +1,5 @@
 using System.Collections;
-using System.Runtime.CompilerServices;
+using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization
 {
@@ -9,17 +9,25 @@ namespace Vurbiri.Colonization
         {
             protected abstract class Defense<T> : State<T> where T : AI<TSettings, TActorId, TStateId>
             {
+                private int _oldForce, _chance;
                 private bool _isBuff, _isBlock;
 
-                [MethodImpl(MethodImplOptions.AggressiveInlining)]
-                protected Defense(T parent) : base(parent) { }
+                [Impl(256)] protected Defense(T parent) : base(parent) { }
 
                 sealed public override bool TryEnter()
                 {
-                    _isBuff = _isBlock = false;
-                    if (IsEnemyComing)
+                    int enemiesForce = Status.nighEnemies.Force;
+                    if (enemiesForce <= _oldForce)
+                        _chance >>= 1;
+                    else
+                        _chance = enemiesForce * s_settings.ratioForDefence / Actor.CurrentForce;
+
+                   _isBuff = _isBlock = false;
+
+                    if (Chance.Rolling(_chance))
                         (_isBuff, _isBlock) = Settings.defense.CanUsed(Actor);
 
+                    _oldForce = enemiesForce;
                     return _isBuff | _isBlock;
                 }
 

@@ -8,7 +8,7 @@ namespace Vurbiri.Colonization
 
         public static ReactiveEffect Create(int value)
         {
-            return value > 0 ? new(WallEffectCode, ActorAbilityId.Defense, TypeModifierId.Addition, value << WALL_SHIFT, WALL_DURATION, WALL_SKIP) : null;
+            return value > 0 ? new(WallEffectCode, ActorAbilityId.Defense, TypeModifierId.Addition, value << WALL_SHIFT, WALL_DURATION, WALL_SKIP, true) : null;
         }
     }
 }

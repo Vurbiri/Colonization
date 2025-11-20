@@ -1,12 +1,13 @@
 using System.Collections;
 using Vurbiri.Collections;
+using Vurbiri.Reactive.Collections;
 using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization
 {
     public partial class WarriorAI
     {
-        sealed private class MoveToUnsiege : AIState
+        sealed private class MoveToUnsiege : State<WarriorAI>
         {
             private Hexagon _targetHexagon;
             private ActorCode _targetEnemy;
@@ -21,31 +22,42 @@ namespace Vurbiri.Colonization
 
                 if (Status.isMove && Status.percentHP > s_settings.minHPUnsiege)
                 {
+                    var player = GameContainer.Players.Humans[OwnerId];
 
+                    int distance = CheckingColonies(player.Colonies, s_settings.maxDistanceUnsiege);
+                    CheckingColonies(player.Ports, distance);
+                }
+                return _targetHexagon != null && Goals.Enemies.Add(_targetEnemy, new(Actor));
+
+                #region Local: CheckingColonies(..), TargetSelection(..)
+                // ===================================================
+                int CheckingColonies(ReadOnlyReactiveList<Crossroad> colonies, int distance)
+                {
+                    for (int i = 0; i < colonies.Count; ++i)
+                        distance = TargetSelection(colonies[i].Hexagons, distance);
+                    return distance;
+                }
+                // ===================================================
+                int TargetSelection(ReadOnlyArray<Hexagon> hexagons, int distance)
+                {
                     Hexagon current;
-                    ReadOnlyArray<Hexagon> hexagons;
-                    var colonies = Colonies;
-                    int distance = s_settings.maxDistanceUnsiege;
-
-                    for (int c = 0; c < colonies.Count; c++)
+                    for (int i = 0; i < Crossroad.HEX_COUNT; ++i)
                     {
-                        hexagons = colonies[c].Hexagons;
-                        for (int i = 0; i < Crossroad.HEX_COUNT; ++i)
+                        current = hexagons[i];
+                        if (current.IsEnemy(OwnerId))
                         {
-                            current = hexagons[i];
-                            if (current.IsEnemy(OwnerId))
+                            if (Goals.Enemies.CanAdd(current.Owner) && TryGetDistance(Actor, current, distance, out int newDistance))
                             {
-                                if (Goals.Enemies.CanAdd(current.Owner) && TryGetDistance(Actor, current, distance, out int newDistance))
-                                {
-                                    distance = newDistance;
-                                    _targetHexagon = current;
-                                    _targetEnemy = current.Owner.Code;
-                                }
+                                distance = newDistance;
+                                _targetHexagon = current;
+                                _targetEnemy = current.Owner.Code;
                             }
                         }
                     }
+                    return distance;
                 }
-                return _targetHexagon != null && Goals.Enemies.Add(_targetEnemy, new(Actor));
+                // ===================================================
+                #endregion
             }
 
             public override IEnumerator Execution_Cn(Out<bool> isContinue)
@@ -63,8 +75,6 @@ namespace Vurbiri.Colonization
                     Goals.Enemies.Remove(_targetEnemy, new(Actor.Code));
                 }
             }
-
-            
         }
     }
 }

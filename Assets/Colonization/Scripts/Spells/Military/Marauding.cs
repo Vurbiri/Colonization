@@ -36,12 +36,12 @@ namespace Vurbiri.Colonization
                             if (GameContainer.Diplomacy.IsEnemy(param.playerId, playerId))
                             {
                                 var colonies = Humans[playerId].GetEdifices(EdificeGroupId.Colony);
-                                for (int c = colonies.Count - 1; c >= 0; c--)
+                                for (int c = 0; c < colonies.Count; ++c)
                                 {
                                     hexagons = colonies[c].Hexagons;
                                     for (int h = 0; h < Crossroad.HEX_COUNT; h++)
-                                        if (hexagons[h].IsOwned)
-                                            _occupations.Push(new(hexagons[h].Owner, colonies[c]));
+                                        if (hexagons[h].IsOwner(param.playerId))
+                                            _occupations.Push(new(colonies[c], hexagons[h].GetProfit()));
                                 }
                             }
                         }
@@ -55,18 +55,18 @@ namespace Vurbiri.Colonization
             {
                 if (_canCast)
                 {
-                    Occupation.self = _currencies[param.playerId];
                     bool isPerson = param.playerId == PlayerId.Person;
 
                     while (_occupations.Count > 0)
-                        isPerson |= _occupations.Pop().Heist(_currencies);
+                        isPerson |= _occupations.Pop().Heist(_currencies, param.playerId);
 
                     Humans[param.playerId].Pay(_cost);
 
                     if (isPerson)
                     {
                         StringBuilder sb = new(200); 
-                        sb.AppendLine(_strMsg); Occupation.self.ToStringBuilder(sb);
+                        sb.AppendLine(_strMsg);
+                        _currencies[param.playerId].ToStringBuilder(sb);
                         int amount = _currencies[PlayerId.Person].Amount;
                         Banner.Open(sb.ToString(), amount == 0 ? MessageTypeId.Warning : amount > 0 ? MessageTypeId.Profit : MessageTypeId.Error, 15f);
                     }
@@ -78,7 +78,6 @@ namespace Vurbiri.Colonization
                     }
 
                     _canCast = false;
-                    Occupation.self = null;
                 }
             }
 
@@ -93,30 +92,28 @@ namespace Vurbiri.Colonization
             // =====================================================
             private class Occupation
             {
-                private readonly Actor _actor;
                 private readonly Crossroad _colony;
+                private readonly Id<CurrencyId> _profit;
 
-                public static MainCurrencies self;
-
-                public Occupation(Actor actor, Crossroad colony)
+                public Occupation(Crossroad colony, Id<CurrencyId> profit)
                 {
-                    _actor = actor;
                     _colony = colony;
+                    _profit = profit;
                 }
 
-                public bool Heist(MainCurrencies[] currencies)
+                public bool Heist(MainCurrencies[] currencies, Id<PlayerId> playerId)
                 {
                     int enemyId = _colony.Owner;
-                    int currencyId = _actor.Hexagon.GetProfit();
-                    int currency = Humans[enemyId].Resources[currencyId];
+                    int currency = Humans[enemyId].Resources[_profit];
                     var enemy = currencies[enemyId];
+                    var self = currencies[playerId];
 
-                    if (currency > -enemy[currencyId] && Chance.Rolling(100 - s_settings.reductionFromWall * _colony.GetDefense()))
+                    if (currency > -enemy[_profit] && Chance.Rolling(100 - s_settings.reductionFromWall * _colony.GetDefense()))
                     {
-                        enemy.Decrement(currencyId);
-                        self.Increment(currencyId);
+                        enemy.Decrement(_profit);
+                        self.Increment(_profit);
 
-                        GameContainer.Diplomacy.Marauding(enemyId, _actor.Owner);
+                        GameContainer.Diplomacy.Marauding(enemyId, playerId);
                     }
 
                     return enemyId == PlayerId.Person;

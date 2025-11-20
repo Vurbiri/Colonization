@@ -12,12 +12,29 @@ namespace Vurbiri
         [Impl(256)] public static int Sqrt(int num) => (int)MathF.Sqrt(num);
         [Impl(256)] public static int SqrtRound(int num) => (int)(MathF.Sqrt(num) + 0.5f);
 
-        [Impl(256)] public static int Clamp(int value, int min, int max) => Math.Clamp(value, min, max);
+        [Impl(256)] public static int Clamp(int value, int min, int max)
+        {
+            int temp = (min - value) >> 31;
+            value = (value & temp) | (min & ~temp);
+            temp = (value - max) >> 31;
+            return (value & temp) | (max & ~temp);
+        }
+
+        [Impl(256)] public static int Min(int x, int y)
+        {
+            int t = (x - y) >> 31;
+            return (x & t) | (y & ~t);
+        }
+        [Impl(256)] public static int Max(int x, int y)
+        {
+            int t = (y - x) >> 31;
+            return (x & t) | (y & ~t);
+        }
 
         [Impl(256)] public static int Abs(int x)
         {
-            int y = x >> 31;
-            return (x ^ y) - y;
+            int t = x >> 31;
+            return (x ^ t) - t;
         }
 
         public static int Pow(int num, int exp)

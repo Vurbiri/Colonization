@@ -6,10 +6,10 @@ using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization
 {
-    [Serializable]
-    public class UsedDebuffs
+    [Serializable, JsonObject(MemberSerialization.Fields)]
+    public class UsedBuffs
 	{
-        [SerializeField, JsonProperty] private UsedDebuff[] _skills;
+        [SerializeField] private UsedBuff[] _skills;
 
         public bool CanUsed(Actor user, Actor target)
         {
@@ -27,7 +27,7 @@ namespace Vurbiri.Colonization
             yield break;
         }
 
-        [Serializable] private struct UsedDebuff
+        [Serializable] private struct UsedBuff
         {
             public int skill;
             public Chance chance;
@@ -45,8 +45,8 @@ namespace Vurbiri.Colonization
 #if UNITY_EDITOR
         public const string arrayField = nameof(_skills);
 
-        public const string skillField = nameof(UsedDebuff.skill);
-        public const string chanceField = nameof(UsedDebuff.chance);
+        public const string skillField = nameof(UsedBuff.skill);
+        public const string chanceField = nameof(UsedBuff.chance);
 #endif
     }
 }
