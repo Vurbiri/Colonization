@@ -13,10 +13,12 @@ namespace Vurbiri.Colonization
         [SerializeField, JsonProperty, HideInInspector] 
         private ActorAISettings[] _settings;
 
+        [Header("Defense")]
+        [Range(0, 100)] public int ratioForDefence;
+        [Header("MoveToHelp")]
         [Range(1, 5)] public int maxDistanceHelp;
         [Range(0, 100)] public int minHPHelp;
-        [Space]
-        [Range(0, 100)] public int ratioForDefence;
+        [Header("MoveToAttack")]
         [Range(0, 100)] public int ratioForAttack;
 
         public ActorAISettings this[Id<TActorId> id] { [Impl(256)] get => _settings[id.Value]; }

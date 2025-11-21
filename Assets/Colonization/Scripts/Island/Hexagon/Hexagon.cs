@@ -235,7 +235,7 @@ namespace Vurbiri.Colonization
             int max = 0;
             if (!(_isGate | IsWater))
                 for (int i = 0; i < HEX.VERTICES; ++i)
-                    max = Mathf.Max(_crossroads[i].GetDefense(playerId), max);
+                    max = Math.Max(_crossroads[i].GetDefense(playerId), max);
 
             return max;
         }

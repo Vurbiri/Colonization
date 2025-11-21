@@ -1,15 +1,16 @@
 {
   "ratioForEscape": 11,
-  "ratioForBlock": 40,
+  "ratioForBlock": 53,
+  "maxHPForBlock": 86,
   "maxDistanceUnsiege": 4,
   "minHPUnsiege": 22,
   "maxDistanceRaid": 2,
   "minHPRaid": 84,
   "maxDistanceHome": 3,
   "chanceFreeFinding": 7,
+  "ratioForDefence": 90,
   "maxDistanceHelp": 4,
   "minHPHelp": 60,
-  "ratioForDefence": 90,
   "ratioForAttack": 30,
   "_priority": [
     0,
@@ -45,10 +46,10 @@
           {
             "skill": 3,
             "currentHP": {
-              "_min": 0,
-              "_max": 60
+              "_min": 25,
+              "_max": 95
             },
-            "chance": 92
+            "chance": 75
           }
         ]
       },

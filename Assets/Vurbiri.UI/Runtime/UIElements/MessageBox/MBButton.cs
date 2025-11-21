@@ -16,6 +16,10 @@ namespace Vurbiri.UI
         {
             base.Start();
 
+#if UNITY_EDITOR
+            if (!Application.isPlaying) return;
+#endif
+
             _thisObject = gameObject;
             _thisObject.SetActive(false);
         }

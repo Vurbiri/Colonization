@@ -15,17 +15,8 @@ namespace Vurbiri.Colonization
 
             public override bool TryEnter()
             {
-                bool isBlock = false;
-                if (IsInCombat && Actor.CurrentAP == _blockCost)
-                {
-                    int selfForce = Actor.CurrentForce;
-                    if (Status.isGuard)
-                        selfForce *= (Hexagon.GetMaxDefense() + 1);
-
-                    isBlock = Chance.Rolling((Status.nearEnemies.Force * s_settings.ratioForBlock) / selfForce);
-                }
-                
-                return isBlock;
+                return IsInCombat && Actor.CurrentAP == _blockCost && Actor.PercentHP < s_settings.maxHPForBlock && Action.CanUsedSpecSkill() &&
+                    Chance.Rolling((Status.nearEnemies.Force * s_settings.ratioForBlock) / (Actor.CurrentForce * (Hexagon.GetMaxDefense() + _blockCost)));
             }
 
             public override IEnumerator Execution_Cn(Out<bool> isContinue)

@@ -33,9 +33,9 @@ namespace Vurbiri.Colonization
 
             public override IEnumerator Execution_Cn()
             {
+                int warriorsCount = GameContainer.Actors[HumanId].Count;
                 if (_current == WarriorId.None)
                 {
-                    int warriorsCount = GameContainer.Actors[HumanId].Count;
                     if(Abilities.IsGreater(HumanAbilityId.MaxWarrior, warriorsCount) && (Colonies.Count << 1) > warriorsCount)
                         _current = _recruit.Roll;
                 }
@@ -58,9 +58,12 @@ namespace Vurbiri.Colonization
                             _current = WarriorId.None;
                         }
                     }
-                    else if(IsSiege(HumanId, Colonies))
+                    else if(IsSiege(HumanId, Colonies) || IsSiege(HumanId, Ports))
                     {
-                        Resources.AddToMin();
+                        if (_current != WarriorId.Militia && (Resources.Amount << 1) <= cost.Amount)
+                            _current = WarriorId.Militia;
+                        if (warriorsCount <= 1)
+                            Resources.AddToMin(s_settings.addRes);
                     }
 
                     // ====== Local ======

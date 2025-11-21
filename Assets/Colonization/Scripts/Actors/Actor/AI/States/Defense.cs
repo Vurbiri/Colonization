@@ -17,7 +17,7 @@ namespace Vurbiri.Colonization
                 sealed public override bool TryEnter()
                 {
                     int enemiesForce = Status.nighEnemies.Force;
-                    if (enemiesForce <= _oldForce)
+                    if (enemiesForce > 0 && enemiesForce <= _oldForce)
                         _chance >>= 1;
                     else
                         _chance = enemiesForce * s_settings.ratioForDefence / Actor.CurrentForce;
@@ -35,7 +35,7 @@ namespace Vurbiri.Colonization
 
                 sealed public override IEnumerator Execution_Cn(Out<bool> isContinue)
                 {
-                    yield return GameContainer.CameraController.ToPositionControlled(Actor.Position);
+                    yield return GameContainer.CameraController.ToPositionControlled(Actor);
                     yield return Settings.defense.Use_Cn(Actor, _isBuff, _isBlock);
 
                     isContinue.Set(false);

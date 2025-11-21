@@ -6,16 +6,18 @@ namespace Vurbiri.Colonization
     public class WarriorsAISettings : ActorsAISettings<WarriorId, WarriorAIStateId>
     {
         [Range(0, 100)] public int ratioForEscape;
+        [Header("BlockInCombat")]
         [Range(0, 100)] public int ratioForBlock;
-        [Space]
+        [Range(0, 100)] public int maxHPForBlock;
+        [Header("MoveToUnsiege")]
         [Range(1, 5)]   public int maxDistanceUnsiege;
         [Range(0, 100)] public int minHPUnsiege;
-        [Space]
+        [Header("MoveToRaid")]
         [Range(1, 5)] public int maxDistanceRaid;
         [Range(0, 100)] public int minHPRaid;
-        [Space]
+        [Header("MoveToHome")]
         [Range(1, 5)] public int maxDistanceHome;
-        [Space]
+        [Header("FindResources")]
         public Chance chanceFreeFinding;
     }
 }

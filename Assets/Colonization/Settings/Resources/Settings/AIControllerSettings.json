@@ -4,6 +4,6 @@
   "militarist": 1,
   "percentBloodOffset": 10,
   "minExchangeBlood": 3,
-  "minPercentRes": 50,
+  "minPercentRes": 20,
   "addRes": 2
 }
