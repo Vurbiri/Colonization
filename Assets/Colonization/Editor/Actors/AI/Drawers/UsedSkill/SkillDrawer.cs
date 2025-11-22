@@ -19,16 +19,25 @@ namespace VurbiriEditor.Colonization
 
         private static readonly ReadOnlyIdArray<SkillType_Ed, Skills> s_skills = new(() => new());
 
-        private static readonly int[][] s_minCostBuffs = new int[ActorTypeId.Count][];
-
         static SkillDrawer()
         {
             Update<WarriorsSettingsScriptable, WarriorId, WarriorSettings>(EUtility.FindAnyScriptable<WarriorsSettingsScriptable>(), ActorTypeId.Warrior);
             Update<DemonsSettingsScriptable, DemonId, DemonSettings>(EUtility.FindAnyScriptable<DemonsSettingsScriptable>(), ActorTypeId.Demon);
         }
 
-        public static bool IsDefense(int type, int id) => IsValues(s_defenseValues[type][id]);
-        public static int Defense(int type, int id, SerializedProperty property) => Draw(property.displayName, property, s_defenseNames[type][id], s_defenseValues[type][id]);
+        public static bool IsDefense(int type, int id)
+        {
+            var values = s_defenseValues[type][id];
+            return values.Length > 1 || (values.Length == 1 && values[0] != -1);
+        }
+        public static int Defense(int type, int id, SerializedProperty property)
+        {
+            var values = s_defenseValues[type][id];
+            int value = property.intValue;
+            if (!values.Contains(value))
+                value = -1;
+            return property.intValue = IntPopup(property.displayName, value, s_defenseNames[type][id], values);
+        }
 
         public static (string name, int value) GetHeals_Ed(int type, int id) => (s_healNames[type][id], s_healValues[type][id]);
 
@@ -70,15 +79,6 @@ namespace VurbiriEditor.Colonization
                 var skills = s_skills[i];
                 scriptable.GetSkills_Ed(i, ref skills.labels[type], ref skills.values[type]);
             }
-        }
-
-        private static bool IsValues(int[] values) => values.Length > 1 || (values.Length == 1 && values[0] != -1);
-        private static int Draw(string label, SerializedProperty property, string[] names, int[] values)
-        {
-            int value = property.intValue;
-            if(!values.Contains(value)) 
-                value = - 1;
-            return property.intValue = IntPopup(label, value, names, values);
         }
 
         // ************ Nested *******************

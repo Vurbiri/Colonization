@@ -7,38 +7,33 @@ namespace Vurbiri.Colonization
             sealed private class RageState : ASpecMoveState
             {
                 private readonly Chance _chance;
-                private bool _canUse;
 
-                public override bool CanUse => _canUse = Moving.IsTrue && NearWarriors(CurrentHex) && _chance.Roll;
+                public override bool CanUse => base.CanUse && _chance.Roll && TryGetTarget();
 
                 public RageState(SpecSkillSettings specSkill, float speed, ADemonSpecMoveStates parent) : base(specSkill, speed, parent)
                 {
-                    _chance = new(specSkill.Value);
+                    _chance = specSkill.Value;
                 }
 
-                protected override bool TryGetTarget(out Hexagon targetHex, out Key direction)
+                private bool TryGetTarget()
                 {
-                    targetHex = null; direction = new();
-                    if (_canUse)
-                    {
-                        _canUse = false;
-                        foreach (var key in HEX.NEAR_RND)
-                            if (IsEnter(ref targetHex, direction = key))
-                                break;
-                    }
+                    _target = null;
+                    foreach (var key in HEX.NEAR_RND)
+                    if (IsEnter(ref _target, CurrentHex.Key, _direction = key))
+                        break;
 
-                    return targetHex != null;
+                    return _target != null;
 
                     #region Local IsEnter(..)
                     // ================================================
-                    bool IsEnter(ref Hexagon targetHex, Key direction)
+                    static bool IsEnter(ref Hexagon target, Key start, Key direction)
                     {
-                        Hexagon temp = GameContainer.Hexagons[CurrentHex.Key + direction];
+                        Hexagon temp = GameContainer.Hexagons[start + direction];
                         while (temp.CanDemonEnter)
                         {
-                            if (NearWarriors(temp))
+                            if (temp.IsEnemyNear(PlayerId.Satan))
                             {
-                                targetHex = temp;
+                                target = temp;
                                 return true;
                             }
 

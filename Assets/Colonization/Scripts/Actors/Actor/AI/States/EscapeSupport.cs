@@ -7,11 +7,11 @@ namespace Vurbiri.Colonization
     {
         public partial class AI<TSettings, TActorId, TStateId>
         {
-            protected abstract class EscapeSupport<T> : State<T> where T : AI<TSettings, TActorId, TStateId>
+            sealed private class EscapeSupport : State
             {
                 private Hexagon _targetHexagon;
 
-                [Impl(256)] protected EscapeSupport(T parent) : base(parent) { }
+                [Impl(256)] public EscapeSupport(AI<TSettings, TActorId, TStateId> parent) : base(parent) { }
 
                 sealed public override bool TryEnter()
                 {

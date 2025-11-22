@@ -19,6 +19,8 @@ namespace Vurbiri.Colonization
                 private readonly float _speed;
                 private readonly HitEffects _effectsHint;
                 protected Coroutine _coroutine;
+                protected Hexagon _target;
+                protected Key _direction;
 
                 public ASpecMoveState(SpecSkillSettings specSkill, float speed, ADemonSpecMoveStates parent) : base(parent, CONST.SPEC_SKILL_ID, specSkill.Cost)
                 {
@@ -29,8 +31,8 @@ namespace Vurbiri.Colonization
 
                 sealed public override void Enter()
                 {
-                    if (TryGetTarget(out Hexagon targetHex, out Key direction))
-                        _coroutine = StartCoroutine(Move_Cn(targetHex, direction));
+                    if (_target != null)
+                        _coroutine = StartCoroutine(Move_Cn());
                     else
                         GetOutOfThisState();
                 }
@@ -43,31 +45,31 @@ namespace Vurbiri.Colonization
                         _coroutine = null;
                     }
 
+                    _target = null;
+
                     _move.Skip();
                     signal.Send();
                 }
 
-                protected IEnumerator Move_Cn(Hexagon targetHex, Key direction)
+                protected IEnumerator Move_Cn()
                 {
                     var currentHex = CurrentHex;
 
                     CurrentHex.ActorExit();
-                    CurrentHex = targetHex;
-
+ 
                    _effectsHint.Apply(Actor, Actor);
                     Pay();
                     yield return Skin.SpecMove();
 
-                    Rotation = HEX.ROTATIONS[direction];
-                    yield return _move.Run(currentHex.Position, targetHex.Position, _speed / HEX.Distance(currentHex.Key, targetHex.Key));
+                    Rotation = HEX.ROTATIONS[_direction];
+                    yield return _move.Run(currentHex.Position, _target.Position, _speed / HEX.Distance(currentHex.Key, _target.Key));
 
+                    CurrentHex = _target;
                     CurrentHex.ActorEnter(Actor);
 
                     _coroutine = null;
                     GetOutOfThisState();
                 }
-
-                protected abstract bool TryGetTarget(out Hexagon targetHex, out Key direction);
             }
             //******************************************************************************
             #endregion

@@ -12,6 +12,7 @@ namespace Vurbiri.Colonization
         private int _potential;
 
         public int Potential { [Impl(256)] get => _potential; }
+        public bool CanSpawn { [Impl(256)] get => _potential > 0 && _startHex.IsEmpty; }
 
         public DemonsSpawner(ActorInitData initData, int potential)
         {

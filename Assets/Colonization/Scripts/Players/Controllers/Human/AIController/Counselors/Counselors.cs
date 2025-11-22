@@ -18,7 +18,7 @@ namespace Vurbiri.Colonization
             public Counselors(AIController parent)
             {
                 _counselors = new( _diplomat = new(parent), _builder = new(parent), new Scientist(parent), new Caster(parent), new Recruiter(parent));
-                _commander = new(parent);
+                _commander = new(parent.Actors);
             }
 
             [Impl(256)] public IEnumerator Landing_Cn() => _builder.Landing_Cn();

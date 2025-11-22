@@ -35,6 +35,7 @@ namespace Vurbiri.Colonization
         public Actor Owner { [Impl(256)] get => _owner; }
         public Id<PlayerId> OwnerId { [Impl(256)] get => _ownerId; }
         public bool IsOwned { [Impl(256)] get => _ownerId != PlayerId.None; }
+        public bool IsEmpty { [Impl(256)] get => _ownerId == PlayerId.None; }
         public bool IsWarrior { [Impl(256)] get => _ownerId != PlayerId.None && _owner.IsWarrior; }
         public bool CanDemonEnter { [Impl(256)] get => !_isWater && _ownerId == PlayerId.None; }
         public bool CanWarriorEnter { [Impl(256)] get => !(_isGate | _isWater) && _ownerId == PlayerId.None; }

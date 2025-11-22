@@ -5,13 +5,11 @@ namespace Vurbiri.Colonization
 {
     public partial class WarriorAI
     {
-        sealed private class MoveToAttack : State<WarriorAI>
+        sealed private class MoveToAttack : State
         {
             private Hexagon _targetHexagon;
 
-            public override int Id => WarriorAIStateId.MoveToAttack;
-
-            [Impl(256)] public MoveToAttack(WarriorAI parent) : base(parent) { }
+            [Impl(256)] public MoveToAttack(Actor.AI<WarriorsAISettings, WarriorId, WarriorAIStateId> parent) : base(parent) { }
 
             public override bool TryEnter()
             {
@@ -34,14 +32,14 @@ namespace Vurbiri.Colonization
                 return _targetHexagon != null;
             }
 
-            public override void Dispose() => _targetHexagon = null;
-
             public override IEnumerator Execution_Cn(Out<bool> isContinue)
             {
                 yield return Move_Cn(isContinue, 1, _targetHexagon, !_targetHexagon.IsEnemy(OwnerId));
                 if (!isContinue && IsEnemyComing)
                     yield return Settings.defense.Use_Cn(Actor, true, true);
             }
+
+            public override void Dispose() => _targetHexagon = null;
         }
     }
 }

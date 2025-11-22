@@ -10,24 +10,6 @@ namespace Vurbiri.Colonization
             protected ADemonStates(Demon actor, ActorSettings settings) : base(actor, settings) { }
             
             sealed public override bool IsAvailable => _stateMachine.IsDefaultState;
-
-            protected static bool NearNoWarriors(Hexagon hexagon)
-            {
-                var neighbors = hexagon.Neighbors;
-                for (int i = 0; i < neighbors.Count; ++i)
-                    if (neighbors[i].IsWarrior)
-                        return false;
-                return true;
-            }
-
-            protected static bool NearWarriors(Hexagon hexagon)
-            {
-                var neighbors = hexagon.Neighbors;
-                for (int i = 0; i < neighbors.Count; ++i)
-                    if (neighbors[i].IsWarrior)
-                        return true;
-                return false;
-            }
         }
     }
 }

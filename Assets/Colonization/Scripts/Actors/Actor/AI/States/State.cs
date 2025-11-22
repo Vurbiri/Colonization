@@ -8,30 +8,11 @@ namespace Vurbiri.Colonization
 {
     public partial class Actor
     {
-        #region =========== AI.State ==================
-        public partial class AI
-        {
-
-            protected abstract class State
-            {
-                public abstract int Id { get; }
-
-                public abstract bool TryEnter();
-                public abstract void Dispose();
-                public abstract IEnumerator Execution_Cn(Out<bool> isContinue);
-
-                sealed public override string ToString() => GetType().Name;
-            }
-
-        }
-        #endregion
-
-        #region =========== AI.State<T>  ==================
         public abstract partial class AI<TSettings, TActorId, TStateId>
         {
-            protected abstract class State<T> : State where T : AI<TSettings, TActorId, TStateId>
+            protected abstract class State
             {
-                protected readonly T _parent;
+                protected readonly AI<TSettings, TActorId, TStateId> _parent;
 
                 #region Parent Properties
                 protected Actor Actor { [Impl(256)] get => _parent._actor; }
@@ -45,7 +26,13 @@ namespace Vurbiri.Colonization
                 protected bool IsEnemyComing { [Impl(256)] get => _parent._status.nighEnemies.IsForce; }
                 #endregion
 
-                [Impl(256)] protected State(T parent) => _parent = parent;
+                [Impl(256)] protected State(AI<TSettings, TActorId, TStateId> parent) => _parent = parent;
+
+                public abstract bool TryEnter();
+                public abstract void Dispose();
+                public abstract IEnumerator Execution_Cn(Out<bool> isContinue);
+
+                sealed public override string ToString() => GetType().Name;
 
                 [Impl(256)] protected void Exit()
                 {
@@ -100,7 +87,6 @@ namespace Vurbiri.Colonization
                 }
             }
         }
-        #endregion
     }
 }
 

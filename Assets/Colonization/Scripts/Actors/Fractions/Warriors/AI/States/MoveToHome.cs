@@ -1,18 +1,17 @@
 using System.Collections;
+using static Vurbiri.Colonization.Actor;
 using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization
 {
     public partial class WarriorAI
     {
-        sealed private class MoveToHome : State<WarriorAI>
+        sealed private class MoveToHome : State
         {
             private Hexagon _targetHexagon;
             private Key _targetColony;
 
-            public override int Id => WarriorAIStateId.MoveToHome;
-
-            [Impl(256)] public MoveToHome(WarriorAI parent) : base(parent) { }
+            [Impl(256)] public MoveToHome(AI<WarriorsAISettings, WarriorId, WarriorAIStateId> parent) : base(parent) { }
 
             public override bool TryEnter()
             {

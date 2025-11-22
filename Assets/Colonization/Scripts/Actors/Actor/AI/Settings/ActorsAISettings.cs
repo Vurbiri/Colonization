@@ -18,13 +18,12 @@ namespace Vurbiri.Colonization
         [Header("MoveToHelp")]
         [Range(1, 5)] public int maxDistanceHelp;
         [Range(0, 100)] public int minHPHelp;
-        [Header("MoveToAttack")]
-        [Range(0, 100)] public int ratioForAttack;
+        [Header("MoveToRaid")]
+        [Range(1, 5)] public int maxDistanceRaid;
+        [Range(0, 100)] public int minHPRaid;
 
         public ActorAISettings this[Id<TActorId> id] { [Impl(256)] get => _settings[id.Value]; }
         public ActorAISettings this[int index] { [Impl(256)] get => _settings[index]; }
-
-        public ReadOnlyArray<int> Priority { [Impl(256)] get => _priority; }
 
         public ActorsAISettings() { }
 
@@ -32,6 +31,12 @@ namespace Vurbiri.Colonization
         {
             for(int i = 0; i < ActorId<TActorId>.Count; ++i)
                 _settings[i].Init();
+        }
+
+        public ReadOnlyArray<int> GetPriority()
+        {
+            var temp = _priority; _priority = null;
+            return temp;
         }
 
 #if UNITY_EDITOR

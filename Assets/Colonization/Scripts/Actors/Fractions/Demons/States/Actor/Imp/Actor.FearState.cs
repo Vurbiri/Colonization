@@ -7,40 +7,35 @@ namespace Vurbiri.Colonization
             sealed private class FearState : ASpecMoveState
             {
                 private readonly int _hpOffset;
-                private bool _canUse;
 
-                public override bool CanUse => _canUse = Moving.IsTrue && !(Chance.Rolling(HP.Percent + _hpOffset) || NearNoWarriors(CurrentHex));
+                public override bool CanUse => base.CanUse && Chance.Rolling(HP.Percent + _hpOffset) && TryGetTarget();
 
                 public FearState(SpecSkillSettings specSkill, float speed, ADemonSpecMoveStates parent) : base(specSkill, speed, parent)
                 {
                     _hpOffset = specSkill.Value;
                 }
 
-                protected override bool TryGetTarget(out Hexagon targetHex, out Key direction)
+                private bool TryGetTarget()
                 {
-                    targetHex = null; direction = new();
-                    if (_canUse)
+                    Key current = CurrentHex.Key;
+                    Hexagon temp; _target = null;
+                    foreach (var direction in HEX.NEAR_RND)
                     {
-                        Key currentKey = CurrentHex.Key;
-                        Hexagon temp;
-                        foreach (var key in HEX.NEAR_RND)
+                        temp = GameContainer.Hexagons[current + direction];
+
+                        if (temp.CanDemonEnter)
                         {
-                            direction = key;
-                            temp = GameContainer.Hexagons[currentKey + direction];
-                            if (temp.CanDemonEnter)
+                            temp = GameContainer.Hexagons[temp.Key + direction];
+                            if (temp.CanWarriorEnter && !temp.IsEnemyNear(PlayerId.Satan))
                             {
-                                temp = GameContainer.Hexagons[temp.Key + direction];
-                                if (temp.CanDemonEnter && NearNoWarriors(temp))
-                                {
-                                    targetHex = temp;
-                                    break;
-                                }
+                                _target = temp;
+                                _direction = direction;
+                                break;
                             }
                         }
-                        _canUse = false;
                     }
 
-                    return targetHex != null;
+                    return _target != null;
                 }
             }
         }

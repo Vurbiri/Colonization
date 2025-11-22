@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 
 namespace Vurbiri.Colonization
 {
@@ -10,54 +9,38 @@ namespace Vurbiri.Colonization
             sealed private class JumpState : AActionState
             {
                 private readonly HitEffects _effects;
-                private readonly List<Actor> _targets = new(HEX.SIDES);
-                private readonly int _baseChance;
-                private bool _canUse;
-
-                public override bool CanUse
-                {
-                    get
-                    {
-                        _targets.Clear();
-                        if(base.CanUse)
-                        {
-                            var neighbors = CurrentHex.Neighbors;
-                            for (int i = 0; i < neighbors.Count; ++i)
-                                if (neighbors[i].IsWarrior)
-                                    _targets.Add(neighbors[i].Owner);
-                        }
-
-                        return _canUse = Chance.Rolling(_baseChance * _targets.Count - 1); 
-                    }
-                }
+                private Chance _chance;
+ 
+                public override bool CanUse => base.CanUse && _chance.Roll;
 
                 public JumpState(SpecSkillSettings specSkill, FattyStates parent) : base(parent, CONST.SPEC_SKILL_ID, specSkill.Cost)
                 {
                     _effects = specSkill.HitEffects[0];
-                    _baseChance = specSkill.Value;
+                    _chance = specSkill.Value;
                 }
 
                 public override void Enter()
                 {
-                    if(_canUse)
-                        StartCoroutine(ApplySkill_Cn());
-                    else
-                        GetOutOfThisState();
+                    StartCoroutine(ApplySkill_Cn());
                 }
 
                 private IEnumerator ApplySkill_Cn()
                 {
-                    _canUse = false;
                     var wait = Skin.SpecAttack();
 
-                    yield return wait; wait.Reset();
+                    yield return wait; 
+                    wait.Reset();
 
                     Actor target;
-                    for (int i = _targets.Count -  1; i >= 0; --i)
+                    var neighbors = CurrentHex.Neighbors;
+                    for (int i = 0; i < HEX.SIDES; ++i)
                     {
-                        target = _targets[i];
-                        _effects.Apply(Actor, target);
-                        target.Skin.Impact(null);
+                        if (neighbors[i].IsWarrior)
+                        {
+                            target = neighbors[i].Owner;
+                            _effects.Apply(Actor, target);
+                            target.Skin.Impact(null);
+                        }
                     }
                     Pay();
 

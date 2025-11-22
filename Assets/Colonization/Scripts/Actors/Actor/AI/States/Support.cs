@@ -8,11 +8,11 @@ namespace Vurbiri.Colonization
     {
         public partial class AI<TSettings, TActorId, TStateId>
         {
-            protected abstract class Support<T> : Heal<T> where T : AI<TSettings, TActorId, TStateId>
+            sealed private class Support : Heal
             {
                 private readonly List<Actor> _friends = new(3);
 
-                [Impl(256)] public Support(T parent) : base(parent) { }
+                [Impl(256)] public Support(AI<TSettings, TActorId, TStateId> parent) : base(parent) { }
 
                 sealed public override bool TryEnter()
                 {

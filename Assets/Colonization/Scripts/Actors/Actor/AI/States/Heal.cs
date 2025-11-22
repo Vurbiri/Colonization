@@ -8,12 +8,12 @@ namespace Vurbiri.Colonization
     {
         public partial class AI<TSettings, TActorId, TStateId>
         {
-            protected abstract class Heal<T> : State<T> where T : AI<TSettings, TActorId, TStateId>
+            protected abstract class Heal : State
             {
                 protected const int BASE_HP = 105;
                 private readonly WeightsList<Actor> _wounded = new(3);
 
-                [Impl(256)] protected Heal(T parent) : base(parent) { }
+                [Impl(256)] protected Heal(AI<TSettings, TActorId, TStateId> parent) : base(parent) { }
 
                 protected bool TryHeal()
                 {

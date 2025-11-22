@@ -1,15 +1,14 @@
 using System.Collections;
+using static Vurbiri.Colonization.Actor;
 using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization
 {
     public partial class WarriorAI
     {
-        sealed private class Escape : State<WarriorAI>
+        sealed private class Escape : State
         {
-            public override int Id => WarriorAIStateId.Escape;
-
-            [Impl(256)] public Escape(WarriorAI parent) : base(parent) { }
+            [Impl(256)] public Escape(AI<WarriorsAISettings, WarriorId, WarriorAIStateId> parent) : base(parent) { }
 
             public override bool TryEnter()
             {

@@ -1,16 +1,18 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using Vurbiri.Collections;
 using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization
 {
     public partial class Actor
     {
-        public abstract partial class AI<TSettings, TActorId, TStateId> : AI, IEquatable<Actor>, IDisposable
+        public abstract partial class AI<TSettings, TActorId, TStateId> : AI, IEquatable<Actor>
             where TSettings : ActorsAISettings<TActorId, TStateId> where TActorId : ActorId<TActorId> where TStateId : ActorAIStateId<TStateId>
         {
             protected static readonly TSettings s_settings;
+            private static readonly Func<AI<TSettings, TActorId, TStateId>, State>[] s_factories = new Func<AI<TSettings, TActorId, TStateId>, State>[ActorAIStateId<TStateId>.Count];
 
             static AI()
             {
@@ -18,8 +20,8 @@ namespace Vurbiri.Colonization
                 s_settings.Init();
             }
 
+            protected readonly Actor _actor;
             private readonly Status _status;
-            private readonly Actor _actor;
             private readonly Goals _goals;
             private readonly ActorAISettings _aISettings;
             private readonly State _goalSetting;
@@ -32,9 +34,19 @@ namespace Vurbiri.Colonization
                 _goals = goals;
                 _aISettings = s_settings[_actor._id];
                 _current = _goalSetting = new GoalSetting(this, GetStates());
+
+                // ========= Local ==========
+                State[] GetStates()
+                {
+                    State[] states = new State[ActorAIStateId<TStateId>.Count];
+                    for (int i = 0; i < ActorAIStateId<TStateId>.Count; ++i)
+                        states[i] = s_factories[i](this);
+
+                    return states;
+                }
             }
 
-            public IEnumerator Execution_Cn()
+            sealed public override IEnumerator Execution_Cn()
             {
                 int key;
                 do
@@ -49,41 +61,33 @@ namespace Vurbiri.Colonization
                 while (Out<bool>.Result(key));
             }
 
-            public void Dispose() => _current.Dispose();
-
-            protected abstract State[] GetStates();
-
-            protected static void StatesSort(State[] states)
-            {
-#if UNITY_EDITOR
-                OnValidate(states);
-#endif
-                var priority = s_settings.Priority;
-
-                for (int i = states.Length - 1, j; i > 0;)
-                {
-                    j = priority.IndexOf(states[i].Id);
-                    if (i != j)
-                        (states[i], states[j]) = (states[j], states[i]);
-                    else
-                        --i;
-                }
-            }
+            sealed public override void Dispose() => _current.Dispose();
 
             [Impl(256)] protected Coroutine StartCoroutine(IEnumerator routine) => _actor.StartCoroutine(routine);
             [Impl(256)] protected void StopCoroutine(Coroutine coroutine) => _actor.StopCoroutine(coroutine);
 
             public bool Equals(Actor actor) => _actor == actor;
 
-#if UNITY_EDITOR
-            private static void OnValidate(State[] states)
+            protected static void SetFactories(ReadOnlyIdArray<TStateId, Func<AI<TSettings, TActorId, TStateId>, State>> factories)
             {
-                for (int i = states.Length - 1; i > 0; --i)
-                    for (int j = i - 1; j >= 0; --j)
-                        if (states[i].Id == states[j].Id)
-                            UnityEngine.Debug.LogError($"ID {states[i].GetType().Name} and {states[j].GetType().Name} equals ({states[i].Id})");
-            }
+#if TEST_AI
+                // Validate
+                for (int i = 0; i < ActorAIStateId<TStateId>.Count; ++i)
+                    if (factories[i] == null)
+                        UnityEngine.Debug.LogError($"Factory {ActorAIStateId<TStateId>.Names_Ed[i]} = null)");
 #endif
+                var priority = s_settings.GetPriority();
+
+                for (int i = 0; i < ActorAIStateId<TStateId>.Count; ++i)
+                    s_factories[i] = factories[priority[i]];
+            }
+
+            protected static State GetEscapeSupport(AI<TSettings, TActorId, TStateId> parent) => new EscapeSupport(parent);
+            protected static State GetCombat(AI<TSettings, TActorId, TStateId> parent)        => new Combat(parent);
+            protected static State GetSupport(AI<TSettings, TActorId, TStateId> parent)       => new Support(parent);
+            protected static State GetMoveToHelp(AI<TSettings, TActorId, TStateId> parent)    => new MoveToHelp(parent);
+            protected static State GetDefense(AI<TSettings, TActorId, TStateId> parent)       => new Defense(parent);
+            protected static State GetMoveToRaid(AI<TSettings, TActorId, TStateId> parent)    => new MoveToRaid(parent);
         }
     }
 }

@@ -14,8 +14,6 @@ namespace Vurbiri.Colonization
                 private readonly List<Crossroad> _targets = new(HEX.SIDES);
                 private readonly ReadOnlyArray<HitEffects> _effects;
                 private readonly Chance _chance;
-                private readonly int _hpOffset;
-                private bool _canUse;
 
                 public override bool CanUse
                 {
@@ -24,8 +22,8 @@ namespace Vurbiri.Colonization
                         _targets.Clear();
                         if (base.CanUse && !ActorEffects.Contains(code) && _chance.Roll)
                         {
-                            var crossroads = CurrentHex.Crossroads;
                             Crossroad crossroad;
+                            var crossroads = CurrentHex.Crossroads;
                             for (int i = 0; i < HEX.SIDES; ++i)
                             {
                                 crossroad = crossroads[i];
@@ -34,9 +32,7 @@ namespace Vurbiri.Colonization
                             }
                         }
 
-                        //_targets.AddRange(CurrentHex.Crossroads);
-
-                        return _canUse = _targets.Count > 0;
+                        return _targets.Count > 0;
                     }
                 }
 
@@ -47,15 +43,16 @@ namespace Vurbiri.Colonization
                 }
                 public override void Enter()
                 {
-                    if (_canUse)
+                    if (_targets.Count > 0)
                         StartCoroutine(ApplySkill_Cn());
                     else
                         GetOutOfThisState();
                 }
 
+                public override void Exit() => _targets.Clear();
+
                 private IEnumerator ApplySkill_Cn()
                 {
-                    _canUse = false;
                     int countBuff = 1;
  
                     var colony = _targets.Rand();

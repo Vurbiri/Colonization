@@ -1,43 +1,62 @@
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using Vurbiri.Collections;
 using Vurbiri.Reactive.Collections;
+using static Vurbiri.Colonization.Actor;
 
 namespace Vurbiri.Colonization
 {
-    public partial class WarriorAI : Actor.AI<WarriorsAISettings, WarriorId, WarriorAIStateId>
+    public partial class WarriorAI : AI<WarriorsAISettings, WarriorId, WarriorAIStateId>
     {
-        [MethodImplAttribute(MethodImplOptions.AggressiveInlining)]
+        private static string s_msg;
+
+        static WarriorAI()
+        {
+            IdArray<WarriorAIStateId, System.Func<AI<WarriorsAISettings, WarriorId, WarriorAIStateId>, State>> factories = new();
+
+            factories[WarriorAIStateId.Escape]         = GetEscape;
+            factories[WarriorAIStateId.EscapeSupport]  = GetEscapeSupport;
+
+            factories[WarriorAIStateId.BlockInCombat]  = GetBlockInCombat;
+
+            factories[WarriorAIStateId.Combat]         = GetCombat;
+            factories[WarriorAIStateId.Support]        = GetSupport;
+
+            factories[WarriorAIStateId.MoveToHelp]     = GetMoveToHelp;
+
+            factories[WarriorAIStateId.Defense]        = GetDefense;
+
+            factories[WarriorAIStateId.MoveToUnsiege]  = GetMoveToUnsiege;
+            factories[WarriorAIStateId.MoveToAttack]   = GetMoveToAttack;
+            factories[WarriorAIStateId.MoveToRaid]     = GetMoveToRaid;
+
+            factories[WarriorAIStateId.MoveToHome]     = GetMoveToHome;
+
+            factories[WarriorAIStateId.FindResources]  = GetFindResources;
+
+            SetFactories(factories);
+
+            s_msg = "[WarriorAI] Initialized";
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public WarriorAI(Actor actor, Goals goals) : base(actor, goals) { }
 
-        protected override State[] GetStates()
+        public static void Start()
         {
-            State[] states = 
+            if (s_msg != null)
             {
-                new Escape(this),
-                new EscapeSupport(this),
-
-                new BlockInCombat(this),
-
-                new Combat(this),
-                new Support(this),
-
-                new MoveToHelp(this),
-
-                new Defense(this),
-
-                new MoveToUnsiege(this),
-                new MoveToAttack(this),
-                new MoveToRaid(this),
-
-                new MoveToHome(this),
-
-                new FindResources(this),
-            };
-
-            StatesSort(states);
-
-            return states;
+                Log.Info(s_msg); 
+                s_msg = null;
+            }
         }
+
+        private static State GetEscape(AI<WarriorsAISettings, WarriorId, WarriorAIStateId> parent)        => new Escape(parent);
+        private static State GetBlockInCombat(AI<WarriorsAISettings, WarriorId, WarriorAIStateId> parent) => new BlockInCombat(parent);
+        private static State GetMoveToUnsiege(AI<WarriorsAISettings, WarriorId, WarriorAIStateId> parent) => new MoveToUnsiege(parent);
+        private static State GetMoveToAttack(AI<WarriorsAISettings, WarriorId, WarriorAIStateId> parent)  => new MoveToAttack(parent);
+        private static State GetMoveToHome(AI<WarriorsAISettings, WarriorId, WarriorAIStateId> parent)    => new MoveToHome(parent);
+        private static State GetFindResources(AI<WarriorsAISettings, WarriorId, WarriorAIStateId> parent) => new FindResources(parent);
 
         public static bool TrySetSpawn(Human human, List<Hexagon> output)
         {

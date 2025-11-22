@@ -1,17 +1,16 @@
 using System.Collections;
+using static Vurbiri.Colonization.Actor;
 using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization
 {
     public partial class WarriorAI
     {
-        sealed private class BlockInCombat : State<WarriorAI>
+        sealed private class BlockInCombat : State
         {
             private readonly int _blockCost;
-            
-            public override int Id => WarriorAIStateId.BlockInCombat;
 
-            [Impl(256)] public BlockInCombat(WarriorAI parent) : base(parent) => _blockCost = Action.GetCostSkill(CONST.SPEC_SKILL_ID);
+            [Impl(256)] public BlockInCombat(AI<WarriorsAISettings, WarriorId, WarriorAIStateId> parent) : base(parent) => _blockCost = Action.GetCostSkill(CONST.SPEC_SKILL_ID);
 
             public override bool TryEnter()
             {

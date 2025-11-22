@@ -8,14 +8,10 @@ namespace Vurbiri.Colonization
         {
             sealed private class GoalSetting : State
             {
-                private readonly AI<TSettings, TActorId, TStateId> _parent;
                 private readonly State[] _states;
 
-                public override int Id => -1;
-
-                public GoalSetting(AI<TSettings, TActorId, TStateId> parent, State[] states)
+                public GoalSetting(AI<TSettings, TActorId, TStateId> parent, State[] states) : base(parent)
                 {
-                    _parent = parent;
                     _states = states;
                 }
 

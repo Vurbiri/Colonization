@@ -8,11 +8,11 @@ namespace Vurbiri.Colonization
     {
         public partial class AI<TSettings, TActorId, TStateId>
         {
-            protected abstract class Combat<T> : Heal<T> where T : AI<TSettings, TActorId, TStateId>
+            sealed private class Combat : Heal
             {
                 private readonly WeightsList<Actor> _enemies = new(3);
 
-                [Impl(256)] public Combat(T parent) : base(parent) { }
+                [Impl(256)] public Combat(AI<TSettings, TActorId, TStateId> parent) : base(parent) { }
 
                 sealed public override bool TryEnter()
                 {

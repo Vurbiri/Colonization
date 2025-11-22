@@ -1,10 +1,13 @@
 using System.Collections;
+using Vurbiri.Reactive.Collections;
+using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization
 {
 	sealed public class SatanController : Satan,  IPlayerController
 	{
-       
+        public bool CanEnterToGate { [Impl(256)] get => _spawner.Potential == 0; }
+
         public SatanController(Settings settings) : base(settings)
         {
 
@@ -83,5 +86,18 @@ namespace Vurbiri.Colonization
         {
             GameContainer.GameLoop.EndTurn();
         }
+
+        // ****************************** Nested ******************************
+        sealed private class Commander : Commander<DemonAI>
+        {
+            public Commander(ReadOnlyReactiveSet<Actor> actors) : base(CONST.DEFAULT_MAX_DEMONS)
+            {
+                DemonAI.Start();
+                actors.Subscribe(OnActor);
+            }
+
+            protected override DemonAI GetActorAI(Actor actor) => new(actor, _goals);
+        }
+        // ****************************** Nested ******************************
     }
 }

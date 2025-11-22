@@ -9,12 +9,11 @@ namespace Vurbiri.Colonization
         [Header("BlockInCombat")]
         [Range(0, 100)] public int ratioForBlock;
         [Range(0, 100)] public int maxHPForBlock;
+        [Header("MoveToAttack")]
+        [Range(0, 100)] public int ratioForAttack;
         [Header("MoveToUnsiege")]
         [Range(1, 5)]   public int maxDistanceUnsiege;
         [Range(0, 100)] public int minHPUnsiege;
-        [Header("MoveToRaid")]
-        [Range(1, 5)] public int maxDistanceRaid;
-        [Range(0, 100)] public int minHPRaid;
         [Header("MoveToHome")]
         [Range(1, 5)] public int maxDistanceHome;
         [Header("FindResources")]

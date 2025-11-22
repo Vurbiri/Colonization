@@ -9,12 +9,12 @@ namespace Vurbiri.Colonization
     {
         public partial class AI<TSettings, TActorId, TStateId>
         {
-            protected abstract class MoveToHelp<T> : State<T> where T : AI<TSettings, TActorId, TStateId>
+            sealed private class MoveToHelp : State
             {
                 private Hexagon _targetHexagon;
                 private ActorCode _targetEnemy;
 
-                [Impl(256)] public MoveToHelp(T parent) : base(parent) { }
+                [Impl(256)] public MoveToHelp(AI<TSettings, TActorId, TStateId> parent) : base(parent) { }
 
                 sealed public override bool TryEnter()
                 {

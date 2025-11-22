@@ -7,12 +7,12 @@ namespace Vurbiri.Colonization
     {
         public partial class AI<TSettings, TActorId, TStateId>
         {
-            protected abstract class Defense<T> : State<T> where T : AI<TSettings, TActorId, TStateId>
+            sealed private class Defense : State
             {
                 private int _oldForce, _chance;
                 private bool _isBuff, _isBlock;
 
-                [Impl(256)] protected Defense(T parent) : base(parent) { }
+                [Impl(256)] public Defense(AI<TSettings, TActorId, TStateId> parent) : base(parent) { }
 
                 sealed public override bool TryEnter()
                 {

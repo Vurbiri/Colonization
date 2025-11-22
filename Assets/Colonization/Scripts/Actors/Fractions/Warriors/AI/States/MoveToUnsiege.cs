@@ -1,20 +1,19 @@
 using System.Collections;
 using Vurbiri.Collections;
 using Vurbiri.Reactive.Collections;
+using static Vurbiri.Colonization.Actor;
 using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization
 {
     public partial class WarriorAI
     {
-        sealed private class MoveToUnsiege : State<WarriorAI>
+        sealed private class MoveToUnsiege : State
         {
             private Hexagon _targetHexagon;
             private ActorCode _targetEnemy;
 
-            public override int Id => WarriorAIStateId.MoveToUnsiege;
-
-            [Impl(256)] public MoveToUnsiege(WarriorAI parent) : base(parent) {}
+            [Impl(256)] public MoveToUnsiege(AI<WarriorsAISettings, WarriorId, WarriorAIStateId> parent) : base(parent) { }
 
             public override bool TryEnter()
             {

@@ -92,7 +92,7 @@ namespace Vurbiri.Colonization
 
             var person = GameContainer.Players.Person;
 
-            person.SpawnTest(WarriorId.Militia, HEX.RightUp);
+            //person.SpawnTest(WarriorId.Militia, HEX.RightUp);
             person.SpawnTest(WarriorId.Solder, HEX.Right);
             //person.SpawnTest(WarriorId.Wizard, HEX.LeftDown);
             //person.SpawnTest(WarriorId.Warlock, HEX.Left);
@@ -101,7 +101,7 @@ namespace Vurbiri.Colonization
             person.SpawnTest(WarriorId.Militia, HEX.RightDown);
             //person.SpawnDemonTest(DemonId.Bomb, Key.Zero);
 
-            //person.SpawnDemonTest(DemonId.Imp, HEX.RightUp);
+            person.SpawnDemonTest(DemonId.Imp, HEX.RightUp);
             //person.SpawnDemonTest(DemonId.Bomb, HEX.Right);
             //person.SpawnDemonTest(DemonId.Grunt, HEX.LeftDown);
             //person.SpawnDemonTest(DemonId.Fatty, HEX.Left);

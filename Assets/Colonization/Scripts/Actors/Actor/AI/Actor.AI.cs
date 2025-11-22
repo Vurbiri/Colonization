@@ -1,10 +1,12 @@
+using System;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace Vurbiri.Colonization
 {
     public partial class Actor
     {
-        public abstract partial class AI
+        public abstract partial class AI : IDisposable
         {
             private static readonly Dictionary<Hexagon, Hexagon> s_links = new();
             private static readonly Queue<Hexagon> s_finds = new();
@@ -12,9 +14,13 @@ namespace Vurbiri.Colonization
             protected static readonly RandomSequence s_crossroadHex = new(Crossroad.HEX_COUNT);
             protected static readonly RandomSequence s_hexagonIndexes = new(HEX.SIDES);
 
+            public abstract IEnumerator Execution_Cn();
+            public abstract void Dispose();
+
             #region ================= Pathfind ================== 
-            protected static bool TryGetDistance(Actor actor, Hexagon end, int oldLength, out int pathLength, bool isEnterToGate = false)
+            protected static bool TryGetDistance(Actor actor, Hexagon end, int oldLength, out int pathLength)
             {
+                bool isEnterToGate = actor._owner == PlayerId.Satan && GameContainer.Players.Satan.CanEnterToGate;
                 var start = actor._currentHex;
                 int distance = start.Distance(end);
                 pathLength = 0;
@@ -32,8 +38,9 @@ namespace Vurbiri.Colonization
                 return pathLength > 0 && (pathLength < oldLength || (pathLength == oldLength && Chance.Rolling()));
             }
 
-            protected static bool TryGetNextHexagon(Actor actor, Hexagon end, out Hexagon next, bool isEnterToGate = false)
+            protected static bool TryGetNextHexagon(Actor actor, Hexagon end, out Hexagon next)
             {
+                bool isEnterToGate = actor._owner == PlayerId.Satan && GameContainer.Players.Satan.CanEnterToGate;
                 next = null;
 
                 int distance = actor._currentHex.Distance(end);

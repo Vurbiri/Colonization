@@ -1,22 +1,21 @@
 using System.Collections;
 using System.Collections.Generic;
 using Vurbiri.Collections;
+using static Vurbiri.Colonization.Actor;
 using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization
 {
     public partial class WarriorAI
     {
-        sealed private class FindResources : State<WarriorAI>
+        sealed private class FindResources : State
         {
             private readonly ReadOnlyCurrencies _resources;
             private readonly List<Hexagon> _hexagons = new();
             private readonly List<Id<CurrencyId>> _minResources = new();
             private int _minResCount;
 
-            public override int Id => WarriorAIStateId.FindResources;
-
-            [Impl(256)] public FindResources(WarriorAI parent) : base(parent) 
+            [Impl(256)] public FindResources(AI<WarriorsAISettings, WarriorId, WarriorAIStateId> parent) : base(parent)
             {
                 _resources = GameContainer.Players.Humans[OwnerId].Resources;
             }
