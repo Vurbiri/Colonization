@@ -2,59 +2,63 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri
 {
-    public class CoroutinesQueue
+    public class CoroutinesQueue : Enumerator
     {
         private readonly Queue<IEnumerator> _coroutines = new();
-        private readonly MonoBehaviour _monoBehaviour;
-        private readonly Action finalAction;
+        private readonly MonoBehaviour _mono;
+        private readonly Action _finalAction;
         private Coroutine _runningCoroutine = null;
 
-        public int Count => _coroutines.Count;
-        public bool IsRunning => _runningCoroutine != null;
+        public int Count { [Impl(256)] get => _coroutines.Count; }
+        public bool IsRunning { [Impl(256)] get => _runningCoroutine != null; }
 
-        public CoroutinesQueue(MonoBehaviour monoBehaviour)
+        [Impl(256)] public CoroutinesQueue() => _mono = CoroutineInternal.Instance;
+        [Impl(256)] public CoroutinesQueue(MonoBehaviour mono) => _mono = mono;
+        [Impl(256)] public CoroutinesQueue(Action finalAction) : this(finalAction, CoroutineInternal.Instance) { }
+        [Impl(256)] public CoroutinesQueue(Action finalAction, MonoBehaviour mono)
         {
-            _monoBehaviour = monoBehaviour;
+            _mono = mono;
+            _finalAction = finalAction;
         }
-        public CoroutinesQueue(MonoBehaviour monoBehaviour, Action finalAction)
+        [Impl(256)] public CoroutinesQueue(IEnumerator coroutine) : this(coroutine, CoroutineInternal.Instance) { }
+        [Impl(256)] public CoroutinesQueue(IEnumerator coroutine, MonoBehaviour mono)
         {
-            _monoBehaviour = monoBehaviour;
-            this.finalAction = finalAction;
-        }
-        public CoroutinesQueue(MonoBehaviour monoBehaviour, IEnumerator coroutine)
-        {
-            _monoBehaviour = monoBehaviour;
+            _mono = mono;
             Enqueue(coroutine);
         }
-        public CoroutinesQueue(MonoBehaviour monoBehaviour, Action finalAction, IEnumerator coroutine)
+        [Impl(256)] public CoroutinesQueue(Action finalAction, IEnumerator coroutine) : this(finalAction, coroutine, CoroutineInternal.Instance) { }
+        [Impl(256)] public CoroutinesQueue(Action finalAction, IEnumerator coroutine, MonoBehaviour monoBehaviour)
         {
-            _monoBehaviour = monoBehaviour;
-            this.finalAction = finalAction;
+            _mono = monoBehaviour;
+            _finalAction = finalAction;
             Enqueue(coroutine);
         }
 
         public void Enqueue(IEnumerator coroutine)
         {
             _coroutines.Enqueue(coroutine);
-            _runningCoroutine ??= _monoBehaviour.StartCoroutine(Run_Cn());
+            _runningCoroutine ??= _mono.StartCoroutine(Run_Cn());
         }
 
         public void StopAndClear(bool runFinalAction)
         {
             if (_runningCoroutine != null)
             {
-                _monoBehaviour.StopCoroutine(_runningCoroutine);
+                _mono.StopCoroutine(_runningCoroutine);
                 _runningCoroutine = null;
             }
 
             _coroutines.Clear();
 
             if(runFinalAction)
-                finalAction?.Invoke();
+                _finalAction?.Invoke();
         }
+
+        public override bool MoveNext() => _runningCoroutine != null;
 
         private IEnumerator Run_Cn()
         {
@@ -62,7 +66,7 @@ namespace Vurbiri
                 yield return _coroutines.Dequeue();
 
             _runningCoroutine = null;
-            finalAction?.Invoke();
+            _finalAction?.Invoke();
         }
     }
 }

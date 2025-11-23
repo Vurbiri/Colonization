@@ -33,7 +33,7 @@ namespace Vurbiri.Colonization.UI
 
             _scaleColorSpeed = 1f / (1f - _startHide);
 
-            _queue = new(this, () => _thisGameObject.SetActive(false));
+            _queue = new(() => _thisGameObject.SetActive(false), this);
             _thisGameObject.SetActive(false);
         }
 

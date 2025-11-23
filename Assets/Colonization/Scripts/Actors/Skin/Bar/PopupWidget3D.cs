@@ -36,7 +36,7 @@ namespace Vurbiri.Colonization.UI
             _valueTMP.sortingOrder += orderLevel;
 
             _thisTransform = GetComponent<Transform>();
-            _queue = new(this, () => gameObject.SetActive(false));
+            _queue = new(() => gameObject.SetActive(false), this);
 
             _colorPlusStart = _colorPlusEnd = colors.TextPositive;
             _colorMinusStart = _colorMinusEnd = colors.TextNegative;

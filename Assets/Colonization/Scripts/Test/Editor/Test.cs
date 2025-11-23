@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
@@ -15,18 +16,14 @@ namespace Vurbiri.Colonization
 	{
         [Space]
         public FileIdAndKey giftMsg;
-        [Button("Testing")]
+        [Button(nameof(Testing))]
         public Color value;
+        [Button(nameof(Testing2), false)]
         public SkillApplied skillApplied;
-        public TestSkillApplied testSkillApplied;
 
         private TMP_Dropdown _dropdown;
 
-        [Serializable]
-        public struct TestSkillApplied
-        {
-            public SkillApplied skillApplied;
-        }
+ 
 
         private void Start()
         {
@@ -44,6 +41,8 @@ namespace Vurbiri.Colonization
                 "AddBlood",
             });
             _dropdown.value = 0;
+
+            CoroutinesQueue coroutinesQueue = new CoroutinesQueue();
         }
 
         public void RunTest()
@@ -122,10 +121,53 @@ namespace Vurbiri.Colonization
             foreach (var hex in hexagons.Values)
                 hex.Caption.ShowKey_Ed();
         }
-
+        RunAll _all;
         public void Testing()
         {
-            MathITesting();
+
+            StartCoroutine(TestCoroutine());
+        }
+        public void Testing2()
+        {
+
+            _all.Stop();
+        }
+
+        IEnumerator TestCoroutine()
+        {
+            _all = new(this);
+            yield return _all.Start(TestCoroutine1(), TestCoroutine2(), TestCoroutine4());
+            print($"RunAll {_all.Count}");
+        }
+
+        IEnumerator TestCoroutine1()
+        {
+            yield return new WaitForSeconds(4f);
+            print("TestCoroutine1");
+        }
+
+        IEnumerator TestCoroutine2()
+        {
+            yield return TestCoroutine3();
+            print("TestCoroutine2");
+        }
+
+        IEnumerator TestCoroutine3()
+        {
+            yield return new WaitRealtime(3f);
+            print("TestCoroutine3");
+        }
+
+        IEnumerator TestCoroutine4()
+        {
+            yield return StartCoroutine(TestCoroutine5());
+            print("TestCoroutine4");
+        }
+
+        IEnumerator TestCoroutine5()
+        {
+            yield return new WaitForSecondsRealtime(5f);
+            print("TestCoroutine5");
         }
 
         public void RosterTest()

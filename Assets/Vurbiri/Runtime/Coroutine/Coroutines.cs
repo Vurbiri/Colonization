@@ -23,12 +23,8 @@ namespace Vurbiri
 
         public static void Create()
         {
-            if (s_instance == null)
-            {
-                GameObject obj = new("[Coroutine]");
-                DontDestroyOnLoad(obj);
-                s_instance = obj.AddComponent<Coroutines>();
-            }
+            if (s_instance == null && Application.isPlaying)
+                new GameObject("[Coroutine]").AddComponent<Coroutines>();
         }
 
         private void OnDestroy()
