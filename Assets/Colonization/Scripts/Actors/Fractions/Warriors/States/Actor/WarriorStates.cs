@@ -24,8 +24,8 @@ namespace Vurbiri.Colonization
             {
                 if (_blockState.IsApplied)
                 {
-                    _skin.EventStart -= _stateMachine.ToDefaultState;
-                    _skin.EventStart += () => _stateMachine.SetState(_blockState);
+                    _skin.EventStart.Action -= _stateMachine.ToDefaultState;
+                    _skin.EventStart.Action += () => _stateMachine.SetState(_blockState);
                 }
             }
         }

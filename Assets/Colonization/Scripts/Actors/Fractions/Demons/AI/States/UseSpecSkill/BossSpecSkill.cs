@@ -7,7 +7,9 @@ namespace Vurbiri.Colonization
     {
         sealed private class BossSpecSkill : State
         {
-            [Impl(256)] public BossSpecSkill(Actor.AI<DemonsAISettings, DemonId, DemonAIStateId> parent) : base(parent) { }
+            [Impl(256)] private BossSpecSkill(Actor.AI<DemonsAISettings, DemonId, DemonAIStateId> parent) : base(parent) { }
+
+            public static State Create(Actor.AI<DemonsAISettings, DemonId, DemonAIStateId> parent) => new BossSpecSkill(parent);
 
             public override bool TryEnter() => Status.isSiege && Action.CanUsedSpecSkill();
 

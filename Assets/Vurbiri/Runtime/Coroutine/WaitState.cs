@@ -2,7 +2,7 @@ using System;
 
 namespace Vurbiri
 {
-    public class WaitState<T> : Enumerator where T : Enum
+    sealed public class WaitState<T> : Enumerator where T : Enum
     {
         private readonly WaitStateSource<T> _source;
         private readonly int _waitStateHashCode;
@@ -13,17 +13,17 @@ namespace Vurbiri
             _waitStateHashCode = waitValue.GetHashCode();
         }
 
-        sealed public override bool MoveNext() => _waitStateHashCode != _source._stateHashCode;
+        public override bool MoveNext() => _waitStateHashCode != _source._stateHashCode;
     }
 
     public abstract class WaitStateSource<T> where T : Enum
     {
         internal int _stateHashCode;
 
-        public WaitState<T> SetWaitState(T value) => new(this, value);
+        public WaitState<T> GetWaitState(T value) => new(this, value);
     }
 
-    public class WaitStateController<T> : WaitStateSource<T> where T : Enum
+    sealed public class WaitStateController<T> : WaitStateSource<T> where T : Enum
     {
         public WaitStateController() => _stateHashCode = default(T).GetHashCode();
         public WaitStateController(T defaultValue) => _stateHashCode = defaultValue.GetHashCode();

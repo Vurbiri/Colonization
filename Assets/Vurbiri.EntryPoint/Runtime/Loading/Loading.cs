@@ -17,11 +17,11 @@ namespace Vurbiri.EntryPoint
         private ILoadingStep _currentStep = null;
         private float _currentWeight, _maxWeight;
 
-        public static Loading Create(MonoBehaviour mono, ILoadingScreen screen) => s_instance ??= new(mono, screen);
-        private Loading(MonoBehaviour mono, ILoadingScreen screen)
+        public static Loading Create(ILoadingScreen screen, MonoBehaviour mono) => s_instance ??= new(screen, mono);
+        private Loading(ILoadingScreen screen, MonoBehaviour mono)
         {
-            _mono = mono;
             _screen = screen;
+            _mono = mono;
         }
 
         public void Add(IEnumerator coroutine) => Add(new CoroutineStep(coroutine));
@@ -88,8 +88,13 @@ namespace Vurbiri.EntryPoint
 
         public void Dispose()
         {
-            if(s_instance == this)
+            if (s_instance == this)
+            {
+                if (_runningCoroutine != null)
+                    _mono.StopCoroutine(_runningCoroutine);
+
                 s_instance = null;
+            }
         }
     }
 }

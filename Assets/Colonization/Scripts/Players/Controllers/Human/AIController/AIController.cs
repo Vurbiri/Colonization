@@ -6,9 +6,9 @@ namespace Vurbiri.Colonization
     sealed public partial class AIController : HumanController
     {
         private static readonly AIControllerSettings s_settings;
-        private static readonly WaitAll s_waitAll = new();
-
+        
         private readonly Counselors _counselors;
+        private readonly WaitAll _waitAll;
         private readonly int _specialization = AbilityTypeId.Economic;
 
         static AIController() => s_settings = SettingsFile.Load<AIControllerSettings>();
@@ -19,6 +19,7 @@ namespace Vurbiri.Colonization
                 _specialization = AbilityTypeId.Military;
 
             _counselors = new(this);
+            _waitAll = new(GameContainer.Shared);
         }
 
         public override WaitResult<bool> OnGift(int giver, MainCurrencies gift, string msg) => _counselors.GiftReceive(giver, gift);
@@ -54,7 +55,7 @@ namespace Vurbiri.Colonization
                     _resources.AddToMin(s_settings.addRes);
 
                 yield return s_settings.waitPlayStart.Restart();
-                yield return s_waitAll.Add(s_settings.waitPlay.Restart(), _counselors.Execution_Wait());
+                yield return _waitAll.Add(s_settings.waitPlay.Restart(), _counselors.Execution_Cn());
 
                 _interactable.False();
 #if TEST_AI
@@ -70,6 +71,12 @@ namespace Vurbiri.Colonization
             _counselors.Update();
 
             StartCoroutine(OnEndTurn_Cn());
+        }
+
+        public override void Dispose()
+        {
+            base.Dispose();
+            _waitAll.Dispose();
         }
 
         private IEnumerator Exchange_Cn(ReadOnlyMainCurrencies needed, Out<bool> output)

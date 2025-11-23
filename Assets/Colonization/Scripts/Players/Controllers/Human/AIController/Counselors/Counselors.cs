@@ -1,5 +1,4 @@
 using System.Collections;
-using UnityEngine;
 using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization
@@ -8,7 +7,6 @@ namespace Vurbiri.Colonization
     {
         private class Counselors
         {
-            private readonly WaitSignal _waitExecution = new();
             private readonly RandomSequence<Counselor> _counselors;
             private readonly Diplomat _diplomat;
             private readonly Builder _builder;
@@ -26,23 +24,13 @@ namespace Vurbiri.Colonization
 
             [Impl(256)] public void Update() => _diplomat.Update();
 
-            public WaitSignal Execution_Wait()
-            {
-                StartCoroutine(Execution_Cn());
-                return _waitExecution.Restart();
-            }
-
-            private IEnumerator Execution_Cn()
+            public IEnumerator Execution_Cn()
             {
                 foreach (var counsel in _counselors)
-                    yield return StartCoroutine(counsel.Execution_Cn());
+                    yield return counsel.Execution_Cn();
 
-                yield return StartCoroutine(_commander.Execution_Cn());
-
-                _waitExecution.Send();
+                yield return _commander.Execution_Cn();
             }
-
-            [Impl(256)] private Coroutine StartCoroutine(IEnumerator routine) => GameContainer.Shared.StartCoroutine(routine);
         }
     }
 }

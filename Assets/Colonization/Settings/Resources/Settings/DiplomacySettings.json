@@ -2,14 +2,14 @@
   "min": -99,
   "max": 100,
   "great": 75,
-  "defaultValue": -85,
-  "defaultDelta": 10,
+  "defaultValue": 7,
+  "defaultDelta": 13,
   "personPerRound": [
-    -6,
+    -2,
     2
   ],
   "aiPerRound": [
-    -5,
+    -1,
     3
   ],
   "rewardForBuff": 10,

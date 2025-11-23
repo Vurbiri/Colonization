@@ -22,6 +22,9 @@ namespace Vurbiri.Colonization
                 {
                     isContinue.Set(false);
 
+                    while(!Action.IsAvailable)
+                        yield return null;
+
                     for (int i = 0; !isContinue & i < _states.Length; ++i)
                     {
                         yield return null;

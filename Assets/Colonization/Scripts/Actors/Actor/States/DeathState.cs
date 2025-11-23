@@ -18,7 +18,7 @@ namespace Vurbiri.Colonization
 
                     Actor.Removing();
 
-                    StartCoroutine(Death_Cn(stage.SetWaitState(DeathStage.End)));
+                    StartCoroutine(Death_Cn(stage.GetWaitState(DeathStage.End)));
                 }
 
                 IEnumerator Death_Cn(WaitState<DeathStage> wait)

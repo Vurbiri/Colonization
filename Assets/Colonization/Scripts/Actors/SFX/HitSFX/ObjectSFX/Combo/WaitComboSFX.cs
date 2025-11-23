@@ -6,7 +6,7 @@ namespace Vurbiri.Colonization
     {
         private readonly string _nameUser, _nameTarget;
         private readonly WaitRealtime _delay;
-        private readonly WaitAll _waitAll = new();
+        private readonly WaitAllEnumerators _waitAll = new();
 
         public WaitComboSFX(string nameUser, string nameTarget, float delayTime)
         {

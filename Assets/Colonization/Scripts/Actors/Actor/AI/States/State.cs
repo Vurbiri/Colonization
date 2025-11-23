@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using Vurbiri.Collections;
-using Vurbiri.Reactive.Collections;
 using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization
@@ -40,8 +39,9 @@ namespace Vurbiri.Colonization
                     _parent._current = _parent._goalSetting;
                 }
 
-                protected bool TryGetEmptyColony(ReadOnlyReactiveList<Crossroad> colonies, ref int distance, out Crossroad colony, out Hexagon target, Func<Crossroad, bool> canAdd)
+                protected bool TryGetEmptyColony(int playerId, ref int distance, out Crossroad colony, out Hexagon target, Func<Crossroad, bool> canAdd)
                 {
+                    var colonies = GameContainer.Players.Humans[playerId].Colonies; ;
                     bool result = false;
                     colony = null; target = null;
                     ReadOnlyArray<Hexagon> hexagons;

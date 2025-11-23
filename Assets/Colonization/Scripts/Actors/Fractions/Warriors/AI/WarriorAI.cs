@@ -16,22 +16,15 @@ namespace Vurbiri.Colonization
 
             factories[WarriorAIStateId.Escape]         = GetEscape;
             factories[WarriorAIStateId.EscapeSupport]  = GetEscapeSupport;
-
             factories[WarriorAIStateId.BlockInCombat]  = GetBlockInCombat;
-
             factories[WarriorAIStateId.Combat]         = GetCombat;
             factories[WarriorAIStateId.Support]        = GetSupport;
-
             factories[WarriorAIStateId.MoveToHelp]     = GetMoveToHelp;
-
             factories[WarriorAIStateId.Defense]        = GetDefense;
-
             factories[WarriorAIStateId.MoveToUnsiege]  = GetMoveToUnsiege;
             factories[WarriorAIStateId.MoveToAttack]   = GetMoveToAttack;
             factories[WarriorAIStateId.MoveToRaid]     = GetMoveToRaid;
-
             factories[WarriorAIStateId.MoveToHome]     = GetMoveToHome;
-
             factories[WarriorAIStateId.FindResources]  = GetFindResources;
 
             SetFactories(factories);
@@ -54,7 +47,6 @@ namespace Vurbiri.Colonization
         private static State GetEscape(AI<WarriorsAISettings, WarriorId, WarriorAIStateId> parent)        => new Escape(parent);
         private static State GetBlockInCombat(AI<WarriorsAISettings, WarriorId, WarriorAIStateId> parent) => new BlockInCombat(parent);
         private static State GetMoveToUnsiege(AI<WarriorsAISettings, WarriorId, WarriorAIStateId> parent) => new MoveToUnsiege(parent);
-        private static State GetMoveToAttack(AI<WarriorsAISettings, WarriorId, WarriorAIStateId> parent)  => new MoveToAttack(parent);
         private static State GetMoveToHome(AI<WarriorsAISettings, WarriorId, WarriorAIStateId> parent)    => new MoveToHome(parent);
         private static State GetFindResources(AI<WarriorsAISettings, WarriorId, WarriorAIStateId> parent) => new FindResources(parent);
 

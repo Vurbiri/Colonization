@@ -113,7 +113,7 @@ namespace Vurbiri.Colonization
 
                 yield return CameraController.ToPositionControlled(sacrifice);
                 yield return SFX.Run(s_settings.sacrificeKnifeSFX, null, sacrifice.Skin);
-                yield return sacrifice.Action.Death().SetWaitState(DeathStage.EndAnimation);
+                yield return sacrifice.Action.Death().GetWaitState(DeathStage.EndAnimation);
 
                 yield return CameraController.ToPositionControlled(_target);
                 _damage.Apply(_target); Humans[_currentPlayer].Pay(_cost);

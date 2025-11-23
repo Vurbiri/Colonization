@@ -8,18 +8,18 @@ namespace Vurbiri.Colonization
     {
         protected readonly Goals _goals = new();
         private readonly RandomSequenceList<int> _indexes;
-        private readonly TAI[] _warriorsAI;
+        private readonly TAI[] _actorsAI;
 
         protected Commander(int maxCount) 
 		{
             _indexes = new(maxCount);
-            _warriorsAI = new TAI[maxCount];
+            _actorsAI = new TAI[maxCount];
         }
 
-        public IEnumerator Execution_Cn()
+        public virtual IEnumerator Execution_Cn()
         {
             foreach (var index in _indexes)
-                yield return GameContainer.Shared.StartCoroutine(_warriorsAI[index].Execution_Cn());
+                yield return GameContainer.Shared.StartCoroutine(_actorsAI[index].Execution_Cn());
         }
 
         protected abstract TAI GetActorAI(Actor actor);
@@ -28,13 +28,13 @@ namespace Vurbiri.Colonization
         {
             if (type == TypeEvent.Subscribe | type == TypeEvent.Add)
             {
-                _warriorsAI[actor.Index] = GetActorAI(actor);
+                _actorsAI[actor.Index] = GetActorAI(actor);
                 _indexes.Add(actor.Index);
             }
             else if (type == TypeEvent.Remove)
             {
-                _warriorsAI[actor.Index].Dispose();
-                _warriorsAI[actor.Index] = null;
+                _actorsAI[actor.Index].Dispose();
+                _actorsAI[actor.Index] = null;
                 _indexes.Remove(actor.Index);
             }
         }

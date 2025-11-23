@@ -1,84 +1,78 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
 using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri
 {
-    sealed public class WaitAll : Enumerator
+	public class WaitAll : Enumerator, System.IDisposable
     {
-        private readonly List<Routine> _coroutines = new();
+        private readonly Dictionary<int, Coroutine> _coroutines = new();
+        private readonly MonoBehaviour _mono;
+        private int _counter = -1;
 
         public int Count { [Impl(256)] get => _coroutines.Count; }
+        public bool IsRunning { [Impl(256)] get => _coroutines.Count > 0; }
 
-        [Impl(256)] public WaitAll() { }
-        [Impl(256)] public WaitAll(IEnumerator coroutine) => _coroutines.Add(new(coroutine));
-        [Impl(256)] public WaitAll(IEnumerator coroutine1, IEnumerator coroutine2) => Add(coroutine1, coroutine2);
-        [Impl(256)] public WaitAll(params IEnumerator[] coroutines) => Add(coroutines);
-        [Impl(256)] public WaitAll(IEnumerable<IEnumerator> enumerable) => AddRange(enumerable);
+        [Impl(256)] public WaitAll() => _mono = CoroutineInternal.Instance;
+        [Impl(256)] public WaitAll(MonoBehaviour mono) => _mono = mono;
 
-        [Impl(256)] public IEnumerator Add(IEnumerator coroutine)
+        public IEnumerator Add(IEnumerator routine)
         {
-            _coroutines.Add(new(coroutine));
+            Run(routine);
             return this;
         }
-        [Impl(256)] public IEnumerator Add(IEnumerator coroutine1, IEnumerator coroutine2)
+        public IEnumerator Add(IEnumerator routine1, IEnumerator routine2)
         {
-            _coroutines.Add(new(coroutine1));
-            _coroutines.Add(new(coroutine2));
+            Run(routine1); Run(routine2);
             return this;
         }
-        [Impl(256)] public IEnumerator Add(params IEnumerator[] coroutines)
+        public IEnumerator Add(IEnumerator routine1, IEnumerator routine2, IEnumerator routine3)
         {
-            for (int i = 0; i < coroutines.Length; ++i)
-                _coroutines.Add(new(coroutines[i]));
+            Run(routine1); Run(routine2); Run(routine3);
             return this;
         }
-        [Impl(256)] public IEnumerator AddRange(IEnumerable<IEnumerator> enumerable)
+        public IEnumerator Add(params IEnumerator[] routines)
         {
-            foreach (IEnumerator coroutine in enumerable)
-                _coroutines.Add(new(coroutine));
+            for (int i = routines.Length - 1; i >= 0; --i)
+                Run(routines[i]);
+            return this;
+        }
+        public IEnumerator Add(IEnumerable<IEnumerator> routines)
+        {
+            foreach (IEnumerator coroutine in routines)
+                Run(coroutine);
             return this;
         }
 
-        public override bool MoveNext()
+        public void Stop()
         {
-            for (int i = 0; i < _coroutines.Count; ++i)
-                if (!_coroutines[i].MoveNext())
-                    _coroutines.RemoveAt(i);
+            foreach(var coroutine in _coroutines.Values)
+                _mono.StopCoroutine(coroutine);
 
-            return _coroutines.Count > 0;
+            _coroutines.Clear();
         }
 
-        public void Clear() => _coroutines.Clear();
+        public override bool MoveNext() => _coroutines.Count > 0;
 
-        // ************* Nested *************
-        private class Routine
+        public void Dispose()
         {
-            private readonly Stack<IEnumerator> _stack = new();
-            private IEnumerator _current;
-
-            [Impl(256)] public Routine(IEnumerator current) => _current = current;
-
-            public bool MoveNext()
-            {
-                bool result = _current.MoveNext();
-                if (result)
-                {
-                    if (_current.Current is IEnumerator next)
-                    {
-                        _stack.Push(_current);
-                        _current = next;
-                    }
-                }
-                else if (_stack.Count > 0)
-                {
-                    _current = _stack.Pop();
-                    result = true;
-                }
-
-                return result;
-            }
+            foreach (var coroutine in _coroutines.Values)
+                _mono.StopCoroutine(coroutine);
         }
-        // ************* Nested *************
+
+        [Impl(256)] private void Run(IEnumerator routine)
+        {
+            int id = unchecked(++_counter);
+            var coroutine = _mono.StartCoroutine(Run_Cn(routine, id));
+            _coroutines.Add(id, coroutine);
+        }
+
+        private IEnumerator Run_Cn(IEnumerator routine, int id)
+        {
+            yield return routine;
+            _coroutines.Remove(id);
+        }
+
     }
 }

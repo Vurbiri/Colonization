@@ -41,8 +41,6 @@ namespace Vurbiri.Colonization
                 "AddBlood",
             });
             _dropdown.value = 0;
-
-            CoroutinesQueue coroutinesQueue = new CoroutinesQueue();
         }
 
         public void RunTest()
@@ -121,7 +119,7 @@ namespace Vurbiri.Colonization
             foreach (var hex in hexagons.Values)
                 hex.Caption.ShowKey_Ed();
         }
-        RunAll _all;
+        WaitAll _all;
         public void Testing()
         {
 
@@ -136,7 +134,7 @@ namespace Vurbiri.Colonization
         IEnumerator TestCoroutine()
         {
             _all = new(this);
-            yield return _all.Start(TestCoroutine1(), TestCoroutine2(), TestCoroutine4());
+            yield return _all.Add(TestCoroutine1(), TestCoroutine2(), TestCoroutine4());
             print($"RunAll {_all.Count}");
         }
 

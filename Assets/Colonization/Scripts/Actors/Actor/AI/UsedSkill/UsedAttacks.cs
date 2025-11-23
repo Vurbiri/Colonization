@@ -30,6 +30,7 @@ namespace Vurbiri.Colonization
                 attack = _attacks.RandomExtract();
                 if (attack.ChanceUse(user, target))
                 {
+                    yield return GameContainer.CameraController.ToPositionControlled(target);
                     yield return user.UseSkill_Cn(target, attack.skill);
                     break;
                 }

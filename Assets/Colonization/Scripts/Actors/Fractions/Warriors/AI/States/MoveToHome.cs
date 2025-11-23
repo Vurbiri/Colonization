@@ -21,7 +21,7 @@ namespace Vurbiri.Colonization
                 {
                     int distance = s_settings.maxDistanceHome;
 
-                    if (TryGetEmptyColony(GameContainer.Players.Humans[OwnerId].Colonies, ref distance, out Crossroad colony, out Hexagon target, Goals.CanGoHome))
+                    if (TryGetEmptyColony(OwnerId, ref distance, out Crossroad colony, out Hexagon target, Goals.CanGoHome))
                     {
                         _targetHexagon = target;
                         _targetColony = colony.Key;

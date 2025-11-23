@@ -42,7 +42,7 @@ namespace Vurbiri.Colonization.Controllers
 
                 if (_isReturn)
                 {
-                    _targetPosition = _oldPosition;
+                    _targetPosition = Vector3.zero;// _oldPosition;
                     _targetHeight = _oldHeight;
                 }
                 else

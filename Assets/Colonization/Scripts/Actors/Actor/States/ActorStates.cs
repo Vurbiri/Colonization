@@ -67,7 +67,7 @@ namespace Vurbiri.Colonization
                 _stateMachine.AssignDefaultState(new IdleState(this));
                 settings.Skills.CreateStates(this);
 
-                _skin.EventStart += _stateMachine.ToDefaultState;
+                _skin.EventStart.Add(_stateMachine.ToDefaultState);
             }
 
             sealed public override bool CanUsedSkill(int id) => (id >= 0 & id < CONST.ACTION_SKILLS_COUNT) && _actionSkills[id].CanUse;

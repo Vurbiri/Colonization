@@ -1,5 +1,4 @@
 using System.Collections;
-using Vurbiri.Reactive.Collections;
 using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization
@@ -27,7 +26,7 @@ namespace Vurbiri.Colonization
                         {
                             if (GameContainer.Diplomacy.IsGreatEnemy(playerId, i))
                             {
-                                if (TryGetEmptyColony(GetColonies(i), ref distance, out Crossroad colony, out Hexagon target, Goals.Raid.CanAdd))
+                                if (TryGetEmptyColony(i, ref distance, out Crossroad colony, out Hexagon target, Goals.Raid.CanAdd))
                                 {
                                     _targetHexagon = target;
                                     _targetColony = colony.Key;
@@ -36,9 +35,6 @@ namespace Vurbiri.Colonization
                         }
                     }
                     return _targetHexagon != null && Goals.Raid.Add(_targetColony, Actor.Code);
-
-                    // ========= Local ===============
-                    [Impl(256)] static ReadOnlyReactiveList<Crossroad> GetColonies(int playerId) => GameContainer.Players.Humans[playerId].Colonies;
                 }
 
                 public override IEnumerator Execution_Cn(Out<bool> isContinue)

@@ -52,10 +52,13 @@ namespace Vurbiri.Colonization.UI
 
         public void Run(int delta, Sprite sprite)
         {
-            if (delta != 0 & delta > MIN_VALUE)
+            if (delta != 0 && delta > MIN_VALUE)
             {
                 gameObject.SetActive(true);
-                _queue.Enqueue(Run_Cn(delta, sprite));
+                if(gameObject.activeInHierarchy)
+                    _queue.Enqueue(Run_Cn(delta, sprite));
+                else
+                    gameObject.SetActive(false);
             }
         }
 

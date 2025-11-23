@@ -5,7 +5,7 @@ namespace Vurbiri.Colonization
         private readonly Ability _ratio;
         private Chance _chance;
 
-        public ChanceAbility(AAbility<TId> other, Ability ratio) : base(other.Id, other.Value)
+        public ChanceAbility(AAbility<TId> original, Ability ratio) : base(original.Id, original.Value)
         {
             _ratio = ratio;
         }

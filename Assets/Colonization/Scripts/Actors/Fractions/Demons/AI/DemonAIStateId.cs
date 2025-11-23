@@ -1,6 +1,6 @@
 namespace Vurbiri.Colonization
 {
-	public class DemonAIStateId : ActorAIStateId<DemonAIStateId>
+	public abstract class DemonAIStateId : ActorAIStateId<DemonAIStateId>
     {
         public const int ExitFromGate  = 0;
         public const int UseSpecSkill  = 1;
@@ -8,8 +8,9 @@ namespace Vurbiri.Colonization
         public const int Combat        = 3;
         public const int Support       = 4;
         public const int MoveToHelp    = 5;
-        public const int MoveToAttack  = 6;
+        public const int MoveToEnemy   = 6;
         public const int MoveToRaid    = 7;
-        public const int Defense       = 8;
+        public const int MoveToAttack  = 8;
+        public const int Defense       = 9;
     }
 }

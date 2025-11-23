@@ -8,8 +8,8 @@ namespace Vurbiri.Colonization
 
             public BombStates(Demon actor, ActorSettings settings) : base(actor, settings) 
             {
-                _skin.EventStart -= _stateMachine.ToDefaultState;
-                _skin.EventStart += SpecSpawn;
+                _skin.EventStart.Action -= _stateMachine.ToDefaultState;
+                _skin.EventStart.Action += SpecSpawn;
             }
 
             public override void AddSpecSkillState(SpecSkillSettings specSkill, float runSpeed, float walkSpeed)
@@ -27,8 +27,8 @@ namespace Vurbiri.Colonization
 
             public override void Load()
             {
-                _skin.EventStart -= SpecSpawn;
-                _skin.EventStart += _stateMachine.ToDefaultState;
+                _skin.EventStart.Action -= SpecSpawn;
+                _skin.EventStart.Action += _stateMachine.ToDefaultState;
             }
 
             private void SpecSpawn()

@@ -6,11 +6,11 @@ using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri
 {
-    public class CoroutinesQueue : Enumerator
+    public class CoroutinesQueue : Enumerator, System.IDisposable
     {
         private readonly Queue<IEnumerator> _coroutines = new();
-        private readonly MonoBehaviour _mono;
         private readonly Action _finalAction;
+        private MonoBehaviour _mono;
         private Coroutine _runningCoroutine = null;
 
         public int Count { [Impl(256)] get => _coroutines.Count; }
@@ -59,6 +59,12 @@ namespace Vurbiri
         }
 
         public override bool MoveNext() => _runningCoroutine != null;
+
+        public void Dispose()
+        {
+            if (_runningCoroutine != null)
+                _mono.StopCoroutine(_runningCoroutine);
+        }
 
         private IEnumerator Run_Cn()
         {

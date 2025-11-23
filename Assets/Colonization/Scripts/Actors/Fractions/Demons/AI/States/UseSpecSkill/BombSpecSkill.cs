@@ -1,5 +1,4 @@
 using System.Collections;
-using static Vurbiri.Colonization.Actor;
 using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization
@@ -8,7 +7,9 @@ namespace Vurbiri.Colonization
     {
         sealed private class BombSpecSkill : State
         {
-            [Impl(256)] public BombSpecSkill(AI<DemonsAISettings, DemonId, DemonAIStateId> parent) : base(null) { }
+            [Impl(256)] private BombSpecSkill(Actor.AI<DemonsAISettings, DemonId, DemonAIStateId> parent) : base(null) { }
+
+            public static State Create(Actor.AI<DemonsAISettings, DemonId, DemonAIStateId> parent) => new BombSpecSkill(parent);
 
             public override bool TryEnter() => false;
 

@@ -18,15 +18,25 @@ namespace Vurbiri.Colonization
             public abstract void Dispose();
 
             #region ================= Pathfind ================== 
-            protected static bool TryGetDistance(Actor actor, Hexagon end, int oldLength, out int pathLength)
+            protected static bool TryGetDistance(Actor actor, Hexagon end, int maxLength, out int pathLength)
+            {
+                pathLength = GetDistance(actor, end);
+                return pathLength > 0 && (pathLength < maxLength || (pathLength == maxLength && Chance.Rolling()));
+            }
+
+            protected static int GetDistance(Actor actor, Hexagon end)
             {
                 bool isEnterToGate = actor._owner == PlayerId.Satan && GameContainer.Players.Satan.CanEnterToGate;
                 var start = actor._currentHex;
                 int distance = start.Distance(end);
-                pathLength = 0;
 
-                if (distance > (end.CanActorEnter(isEnterToGate) ? 0 : 1) && Pathfind(actor, end, distance, isEnterToGate))
+                if (distance == (end.CanActorEnter(isEnterToGate) ? 0 : 1))
+                    return 0;
+
+                int pathLength = -1;
+                if (Pathfind(actor, end, distance, isEnterToGate))
                 {
+                    pathLength = 0;
                     while (s_links.TryGetValue(start, out end))
                     {
                         start = end;
@@ -35,7 +45,7 @@ namespace Vurbiri.Colonization
                 }
                 s_links.Clear();
 
-                return pathLength > 0 && (pathLength < oldLength || (pathLength == oldLength && Chance.Rolling()));
+                return pathLength;
             }
 
             protected static bool TryGetNextHexagon(Actor actor, Hexagon end, out Hexagon next)

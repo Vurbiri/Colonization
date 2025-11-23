@@ -23,12 +23,15 @@ namespace Vurbiri.Colonization
             public MinMaxHP currentHP;
             public Chance chance;
 
-            public WaitSignal TryUse(Actor target)
+            public IEnumerator TryUse(Actor target)
             {
                 var action = target.Action;
-                if(currentHP.IsValid(target) && action.CanUsedSkill(skill) && !action.IsApplied(skill, target) && chance.Roll)
-                    return action.UseSkill(skill);
-                return null;
+                if (currentHP.IsValid(target) && action.CanUsedSkill(skill) && !action.IsApplied(skill, target) && chance.Roll)
+                {
+                    yield return GameContainer.CameraController.ToPositionControlled(target);
+                    yield return action.UseSkill(skill);
+                }
+                yield break;
             }
         }
 

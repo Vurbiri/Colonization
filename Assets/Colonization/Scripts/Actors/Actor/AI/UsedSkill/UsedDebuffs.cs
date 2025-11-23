@@ -37,7 +37,10 @@ namespace Vurbiri.Colonization
             public IEnumerator TryUse_Cn(Actor user, Actor target)
             {
                 if (CanUsed(user.Action, target) && chance.Roll)
+                {
+                    yield return GameContainer.CameraController.ToPositionControlled(target);
                     yield return user.UseSkill_Cn(target, skill);
+                }
                 yield break;
             }
         }

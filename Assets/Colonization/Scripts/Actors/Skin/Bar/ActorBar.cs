@@ -30,11 +30,8 @@ namespace Vurbiri.Colonization.UI
             _actorTransform = _actor.Transform;
             _thisTransform = GetComponent<Transform>();
 
-            _settings.Init(this, _actor);
+            _actor.Skin.EventStart.Add(OnStart);
 
-            _actor.Skin.EventStart += OnStart;
-
-            _settings = null;
             gameObject.SetActive(_isActive = false);
         }
 
@@ -77,6 +74,8 @@ namespace Vurbiri.Colonization.UI
 
         private void OnStart()
         {
+            _settings.Init(this, _actor); _settings = null;
+
             _thisTransform.rotation = Quaternion.LookRotation(GameContainer.CameraTransform.Transform.forward, Vector3.up);
 
             _subscription += _actor.Subscribe(OnRemoveActor, false);

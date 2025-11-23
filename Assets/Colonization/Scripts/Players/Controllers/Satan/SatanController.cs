@@ -1,16 +1,23 @@
 using System.Collections;
-using Vurbiri.Reactive.Collections;
 using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization
 {
-	sealed public class SatanController : Satan,  IPlayerController
+	sealed public partial class SatanController : Satan,  IPlayerController
 	{
+        private static readonly SatanControllerSettings s_settings;
+
+        private readonly Commander _commander;
+        private readonly WaitAll _waitAll;
+
         public bool CanEnterToGate { [Impl(256)] get => _spawner.Potential == 0; }
+
+        static SatanController() => s_settings = SettingsFile.Load<SatanControllerSettings>();
 
         public SatanController(Settings settings) : base(settings)
         {
-
+            _commander = new(Actors, _spawner);
+            _waitAll = new(GameContainer.Shared);
         }
 
         public void ActorKill(Id<ActorTypeId> type, int id)
@@ -23,6 +30,34 @@ namespace Vurbiri.Colonization
             GameContainer.GameLoop.EndTurn();
         }
         public void OnEndLanding() { }
+
+
+        public void OnStartTurn()
+        {
+            foreach (var demon in Actors)
+                demon.EffectsUpdate(demon.Hexagon.IsGate ? s_parameters.gateDefense : 0);
+        }
+
+        public void OnPlay()
+        {
+            StartCoroutine(OnPlay_Cn());
+
+            IEnumerator OnPlay_Cn()
+            {
+#if TEST_AI
+                Log.Info("====================== Satan ======================");
+#endif
+
+                yield return s_settings.waitPlayStart.Restart();
+                yield return _waitAll.Add(s_settings.waitPlay.Restart(), _commander.Execution_Cn());
+
+#if TEST_AI
+                Log.Info("===================================================");
+#endif
+
+                GameContainer.GameLoop.EndTurn();
+            }
+        }
 
         public void OnEndTurn()
         {
@@ -64,7 +99,7 @@ namespace Vurbiri.Colonization
 
         public void OnProfit(Id<PlayerId> id, int hexId)
         {
-            int progress = _parameters.cursePerTurn + s_shrinesCount * _parameters.cursePerShrine;
+            int progress = s_parameters.cursePerTurn + s_shrinesCount * s_parameters.cursePerShrine;
             if (hexId > HEX.GATE)
                 hexId = (HEX.GATE << 1) - hexId;
 
@@ -75,29 +110,5 @@ namespace Vurbiri.Colonization
 
             _eventChanged.Invoke(this);
         }
-
-        public void OnStartTurn()
-        {
-            foreach (var demon in Actors)
-                demon.EffectsUpdate(demon.Hexagon.IsGate ? _parameters.gateDefense : 0);
-        }
-
-        public void OnPlay()
-        {
-            GameContainer.GameLoop.EndTurn();
-        }
-
-        // ****************************** Nested ******************************
-        sealed private class Commander : Commander<DemonAI>
-        {
-            public Commander(ReadOnlyReactiveSet<Actor> actors) : base(CONST.DEFAULT_MAX_DEMONS)
-            {
-                DemonAI.Start();
-                actors.Subscribe(OnActor);
-            }
-
-            protected override DemonAI GetActorAI(Actor actor) => new(actor, _goals);
-        }
-        // ****************************** Nested ******************************
     }
 }

@@ -17,7 +17,10 @@ namespace Vurbiri.Colonization
         public IEnumerator TryUse_Cn(Actor user, Actor target)
         {
             if (user.Action.CanUsedSkill(_heal) && Chance.Rolling(ChanceValue(user, target)))
+            {
+                yield return GameContainer.CameraController.ToPositionControlled(target);
                 yield return user.UseSkill_Cn(target, _heal);
+            }
             yield break;
         }
 

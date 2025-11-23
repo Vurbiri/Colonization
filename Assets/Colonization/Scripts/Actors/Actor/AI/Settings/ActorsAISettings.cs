@@ -12,12 +12,14 @@ namespace Vurbiri.Colonization
 
         [SerializeField, JsonProperty, HideInInspector] 
         private ActorAISettings[] _settings;
-
-        [Header("Defense")]
-        [Range(0, 100)] public int ratioForDefence;
+        
         [Header("MoveToHelp")]
         [Range(1, 5)] public int maxDistanceHelp;
         [Range(0, 100)] public int minHPHelp;
+        [Header("Defense")]
+        [Range(0, 100)] public int ratioForDefence;
+        [Header("MoveToAttack")]
+        [Range(0, 100)] public int ratioForAttack;
         [Header("MoveToRaid")]
         [Range(1, 5)] public int maxDistanceRaid;
         [Range(0, 100)] public int minHPRaid;

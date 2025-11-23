@@ -1,21 +1,14 @@
 {
-  "ratioForEscape": 11,
-  "ratioForBlock": 53,
-  "maxHPForBlock": 86,
-  "maxDistanceUnsiege": 4,
-  "minHPUnsiege": 22,
-  "maxDistanceHome": 3,
-  "chanceFreeFinding": 7,
+  "maxDistanceToEnemy": 4,
+  "enemyForceRatio": 2.113,
   "maxDistanceHelp": 4,
-  "minHPHelp": 60,
-  "ratioForDefence": 90,
-  "ratioForAttack": 30,
-  "maxDistanceRaid": 2,
-  "minHPRaid": 84,
+  "minHPHelp": 50,
+  "ratioForDefence": 70,
+  "ratioForAttack": 35,
+  "maxDistanceRaid": 5,
+  "minHPRaid": 15,
   "_priority": [
     0,
-    10,
-    11,
     1,
     2,
     3,
@@ -28,30 +21,21 @@
   ],
   "_settings": [
     {
-      "support": false,
-      "raider": false,
+      "support": true,
+      "raider": true,
       "defense": {
-        "_buff": 3,
-        "_buffChance": 88,
-        "_block": true,
-        "_blockChance": 80
+        "_buff": -1,
+        "_buffChance": 0,
+        "_block": false,
+        "_blockChance": 0
       },
       "heal": {
-        "_heal": -1,
-        "_maxHP": 0,
-        "_useSelfHP": false
+        "_heal": 3,
+        "_maxHP": 6,
+        "_useSelfHP": true
       },
       "selfBuffs": {
-        "_skills": [
-          {
-            "skill": 3,
-            "currentHP": {
-              "_min": 25,
-              "_max": 95
-            },
-            "chance": 75
-          }
-        ]
+        "_skills": []
       },
       "debuffs": {
         "_skills": []
@@ -60,25 +44,7 @@
         "_skills": [
           {
             "skill": 2,
-            "chance": 90,
-            "applied": {
-              "_maxAP": true,
-              "_onlyAntipode": false,
-              "_self": true,
-              "_target": false
-            },
-            "selfHP": {
-              "_min": 75,
-              "_max": 100
-            },
-            "targetHP": {
-              "_min": 26,
-              "_max": 100
-            }
-          },
-          {
-            "skill": 1,
-            "chance": 66,
+            "chance": 50,
             "applied": {
               "_maxAP": false,
               "_onlyAntipode": false,
@@ -90,7 +56,25 @@
               "_max": 100
             },
             "targetHP": {
-              "_min": 39,
+              "_min": 27,
+              "_max": 100
+            }
+          },
+          {
+            "skill": 1,
+            "chance": 80,
+            "applied": {
+              "_maxAP": false,
+              "_onlyAntipode": false,
+              "_self": false,
+              "_target": false
+            },
+            "selfHP": {
+              "_min": 0,
+              "_max": 100
+            },
+            "targetHP": {
+              "_min": 13,
               "_max": 100
             }
           },
@@ -122,10 +106,10 @@
       "support": false,
       "raider": true,
       "defense": {
-        "_buff": 3,
-        "_buffChance": 40,
-        "_block": true,
-        "_blockChance": 90
+        "_buff": -1,
+        "_buffChance": 0,
+        "_block": false,
+        "_blockChance": 0
       },
       "heal": {
         "_heal": -1,
@@ -137,10 +121,10 @@
           {
             "skill": 3,
             "currentHP": {
-              "_min": 15,
-              "_max": 65
+              "_min": 10,
+              "_max": 80
             },
-            "chance": 45
+            "chance": 56
           }
         ]
       },
@@ -151,26 +135,26 @@
         "_skills": [
           {
             "skill": 2,
+            "chance": 60,
+            "applied": {
+              "_maxAP": false,
+              "_onlyAntipode": false,
+              "_self": false,
+              "_target": false
+            },
+            "selfHP": {
+              "_min": 50,
+              "_max": 100
+            },
+            "targetHP": {
+              "_min": 20,
+              "_max": 100
+            }
+          },
+          {
+            "skill": 1,
             "chance": 75,
             "applied": {
-              "_maxAP": true,
-              "_onlyAntipode": false,
-              "_self": false,
-              "_target": false
-            },
-            "selfHP": {
-              "_min": 37,
-              "_max": 100
-            },
-            "targetHP": {
-              "_min": 41,
-              "_max": 100
-            }
-          },
-          {
-            "skill": 1,
-            "chance": 78,
-            "applied": {
               "_maxAP": false,
               "_onlyAntipode": false,
               "_self": false,
@@ -181,7 +165,7 @@
               "_max": 100
             },
             "targetHP": {
-              "_min": 34,
+              "_min": 0,
               "_max": 100
             }
           },
@@ -207,71 +191,16 @@
       },
       "buffs": {
         "_skills": []
-      }
-    },
-    {
-      "support": true,
-      "raider": false,
-      "defense": {
-        "_buff": -1,
-        "_buffChance": 0,
-        "_block": true,
-        "_blockChance": 86
-      },
-      "heal": {
-        "_heal": 1,
-        "_maxHP": 90,
-        "_useSelfHP": false
-      },
-      "selfBuffs": {
-        "_skills": []
-      },
-      "debuffs": {
-        "_skills": []
-      },
-      "attacks": {
-        "_skills": [
-          {
-            "skill": 0,
-            "chance": 100,
-            "applied": {
-              "_maxAP": false,
-              "_onlyAntipode": false,
-              "_self": false,
-              "_target": false
-            },
-            "selfHP": {
-              "_min": 0,
-              "_max": 100
-            },
-            "targetHP": {
-              "_min": 0,
-              "_max": 100
-            }
-          }
-        ]
-      },
-      "buffs": {
-        "_skills": [
-          {
-            "skill": 2,
-            "chance": 55
-          },
-          {
-            "skill": 3,
-            "chance": 100
-          }
-        ]
       }
     },
     {
       "support": false,
       "raider": true,
       "defense": {
-        "_buff": -1,
-        "_buffChance": 0,
-        "_block": true,
-        "_blockChance": 62
+        "_buff": 3,
+        "_buffChance": 70,
+        "_block": false,
+        "_blockChance": 0
       },
       "heal": {
         "_heal": -1,
@@ -279,7 +208,24 @@
         "_useSelfHP": false
       },
       "selfBuffs": {
-        "_skills": []
+        "_skills": [
+          {
+            "skill": 3,
+            "currentHP": {
+              "_min": 0,
+              "_max": 51
+            },
+            "chance": 44
+          },
+          {
+            "skill": 2,
+            "currentHP": {
+              "_min": 11,
+              "_max": 83
+            },
+            "chance": 63
+          }
+        ]
       },
       "debuffs": {
         "_skills": []
@@ -287,44 +233,8 @@
       "attacks": {
         "_skills": [
           {
-            "skill": 3,
-            "chance": 94,
-            "applied": {
-              "_maxAP": true,
-              "_onlyAntipode": false,
-              "_self": false,
-              "_target": true
-            },
-            "selfHP": {
-              "_min": 0,
-              "_max": 100
-            },
-            "targetHP": {
-              "_min": 40,
-              "_max": 100
-            }
-          },
-          {
-            "skill": 2,
-            "chance": 88,
-            "applied": {
-              "_maxAP": false,
-              "_onlyAntipode": false,
-              "_self": false,
-              "_target": true
-            },
-            "selfHP": {
-              "_min": 0,
-              "_max": 100
-            },
-            "targetHP": {
-              "_min": 30,
-              "_max": 100
-            }
-          },
-          {
             "skill": 1,
-            "chance": 85,
+            "chance": 80,
             "applied": {
               "_maxAP": false,
               "_onlyAntipode": false,
@@ -332,7 +242,7 @@
               "_target": false
             },
             "selfHP": {
-              "_min": 23,
+              "_min": 0,
               "_max": 100
             },
             "targetHP": {
@@ -370,25 +280,16 @@
       "defense": {
         "_buff": -1,
         "_buffChance": 0,
-        "_block": true,
-        "_blockChance": 97
+        "_block": false,
+        "_blockChance": 0
       },
       "heal": {
-        "_heal": 2,
-        "_maxHP": 20,
-        "_useSelfHP": true
+        "_heal": -1,
+        "_maxHP": 0,
+        "_useSelfHP": false
       },
       "selfBuffs": {
-        "_skills": [
-          {
-            "skill": 3,
-            "currentHP": {
-              "_min": 70,
-              "_max": 100
-            },
-            "chance": 75
-          }
-        ]
+        "_skills": []
       },
       "debuffs": {
         "_skills": []
@@ -396,11 +297,29 @@
       "attacks": {
         "_skills": [
           {
-            "skill": 1,
-            "chance": 100,
+            "skill": 3,
+            "chance": 88,
             "applied": {
               "_maxAP": false,
-              "_onlyAntipode": true,
+              "_onlyAntipode": false,
+              "_self": false,
+              "_target": true
+            },
+            "selfHP": {
+              "_min": 0,
+              "_max": 100
+            },
+            "targetHP": {
+              "_min": 11,
+              "_max": 100
+            }
+          },
+          {
+            "skill": 2,
+            "chance": 62,
+            "applied": {
+              "_maxAP": false,
+              "_onlyAntipode": false,
               "_self": false,
               "_target": false
             },
@@ -409,7 +328,112 @@
               "_max": 100
             },
             "targetHP": {
-              "_min": 15,
+              "_min": 21,
+              "_max": 100
+            }
+          },
+          {
+            "skill": 1,
+            "chance": 52,
+            "applied": {
+              "_maxAP": false,
+              "_onlyAntipode": false,
+              "_self": false,
+              "_target": false
+            },
+            "selfHP": {
+              "_min": 0,
+              "_max": 100
+            },
+            "targetHP": {
+              "_min": 10,
+              "_max": 100
+            }
+          },
+          {
+            "skill": 0,
+            "chance": 100,
+            "applied": {
+              "_maxAP": false,
+              "_onlyAntipode": false,
+              "_self": false,
+              "_target": false
+            },
+            "selfHP": {
+              "_min": 0,
+              "_max": 100
+            },
+            "targetHP": {
+              "_min": 0,
+              "_max": 100
+            }
+          }
+        ]
+      },
+      "buffs": {
+        "_skills": []
+      }
+    },
+    {
+      "support": false,
+      "raider": true,
+      "defense": {
+        "_buff": -1,
+        "_buffChance": 0,
+        "_block": false,
+        "_blockChance": 0
+      },
+      "heal": {
+        "_heal": -1,
+        "_maxHP": 0,
+        "_useSelfHP": false
+      },
+      "selfBuffs": {
+        "_skills": []
+      },
+      "debuffs": {
+        "_skills": [
+          {
+            "skill": 3,
+            "chance": 75
+          }
+        ]
+      },
+      "attacks": {
+        "_skills": [
+          {
+            "skill": 2,
+            "chance": 75,
+            "applied": {
+              "_maxAP": false,
+              "_onlyAntipode": false,
+              "_self": false,
+              "_target": false
+            },
+            "selfHP": {
+              "_min": 0,
+              "_max": 100
+            },
+            "targetHP": {
+              "_min": 20,
+              "_max": 100
+            }
+          },
+          {
+            "skill": 1,
+            "chance": 50,
+            "applied": {
+              "_maxAP": false,
+              "_onlyAntipode": false,
+              "_self": false,
+              "_target": false
+            },
+            "selfHP": {
+              "_min": 0,
+              "_max": 100
+            },
+            "targetHP": {
+              "_min": 0,
               "_max": 100
             }
           },

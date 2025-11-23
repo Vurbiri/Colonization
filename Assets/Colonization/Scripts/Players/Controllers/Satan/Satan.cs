@@ -6,11 +6,11 @@ namespace Vurbiri.Colonization
 {
     public partial class Satan : Player, IReactive<Satan>
     {
-        protected readonly SatanAbilities _parameters;
+        protected static readonly SatanAbilities s_parameters;
         protected readonly SatanLeveling _leveling;
         protected readonly Artefact _artefact;
 
-        protected readonly DemonsSpawner _spawner;
+        protected readonly Spawner _spawner;
 
         protected readonly VAction<Satan> _eventChanged = new();
 
@@ -18,19 +18,19 @@ namespace Vurbiri.Colonization
 
         public int Level { [Impl(256)] get => _leveling.Level; }
         public int MaxLevel { [Impl(256)] get => _leveling.MaxLevel; }
-        public int Curse { [Impl(256)] get => _curse / _parameters.maxCursePerLevel; }
-        public int MaxCurse { [Impl(256)] get => _maxCurse / _parameters.maxCursePerLevel; }
+        public int Curse { [Impl(256)] get => _curse / s_parameters.maxCursePerLevel; }
+        public int MaxCurse { [Impl(256)] get => _maxCurse / s_parameters.maxCursePerLevel; }
         public float CursePercent { [Impl(256)] get => (float)_curse/_maxCurse; }
+
+        static Satan() => s_parameters = SettingsFile.Load<SatanAbilities>();
 
         protected Satan(Settings settings) : base(PlayerId.Satan, false)
         {
             var storage = GameContainer.Storage.Satan;
-            _parameters = SettingsFile.Load<SatanAbilities>();
-
             var loadData = storage.LoadData;
 
             _curse = loadData.state.curse;
-            _maxCurse = _parameters.maxCurseBase + loadData.state.level * _parameters.maxCursePerLevel;
+            _maxCurse = s_parameters.maxCurseBase + loadData.state.level * s_parameters.maxCursePerLevel;
 
             _leveling = new(settings.satanLeveling, loadData.state.level);
             _artefact = Artefact.Create(settings.artefact, loadData);
@@ -51,10 +51,10 @@ namespace Vurbiri.Colonization
         [Impl(256)] protected void LevelUp()
         {
             if(_leveling.Next())
-                _maxCurse = _parameters.maxCurseBase + _leveling.Level * _parameters.maxCursePerLevel;
+                _maxCurse = s_parameters.maxCurseBase + _leveling.Level * s_parameters.maxCursePerLevel;
 
             _curse -= _maxCurse;
-            _spawner.AddPotential(Math.Min(_parameters.maxPotentialPerLvl, _leveling.Level));
+            _spawner.AddPotential(Math.Min(s_parameters.maxPotentialPerLvl, 1 + (_leveling.Level >> 1)));
             GameContainer.Chaos.ForSatanLevelUP();
         }
     }

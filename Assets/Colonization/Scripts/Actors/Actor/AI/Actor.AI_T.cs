@@ -20,12 +20,14 @@ namespace Vurbiri.Colonization
                 s_settings.Init();
             }
 
-            protected readonly Actor _actor;
+            private readonly Actor _actor;
             private readonly Status _status;
             private readonly Goals _goals;
             private readonly ActorAISettings _aISettings;
             private readonly State _goalSetting;
             private State _current;
+
+            public int ActorId { [Impl(256)] get => _actor._id; }
 
             protected AI(Actor actor, Goals goals)
             {
@@ -88,6 +90,7 @@ namespace Vurbiri.Colonization
             protected static State GetMoveToHelp(AI<TSettings, TActorId, TStateId> parent)    => new MoveToHelp(parent);
             protected static State GetDefense(AI<TSettings, TActorId, TStateId> parent)       => new Defense(parent);
             protected static State GetMoveToRaid(AI<TSettings, TActorId, TStateId> parent)    => new MoveToRaid(parent);
+            protected static State GetMoveToAttack(AI<TSettings, TActorId, TStateId> parent)  => new MoveToAttack(parent);
         }
     }
 }

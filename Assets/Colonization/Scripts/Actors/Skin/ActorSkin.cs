@@ -31,7 +31,7 @@ namespace Vurbiri.Colonization
         private DeathState _deathState;
         private ReactState _reactState;
 
-        public event System.Action EventStart { [Impl(256)] add { _start.Action += value; } [Impl(256)] remove { _start.Action -= value; } }
+        public Event EventStart { [Impl(256)] get => _start; }
 
         public ActorSFX SFX { [Impl(256)] get => _sfx; }
         public Vector3 Size { [Impl(256)] get => _bounds.size; }

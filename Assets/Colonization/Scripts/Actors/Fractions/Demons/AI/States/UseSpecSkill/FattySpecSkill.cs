@@ -7,7 +7,9 @@ namespace Vurbiri.Colonization
     {
         sealed private class FattySpecSkill : State
         {
-            [Impl(256)] public FattySpecSkill(Actor.AI<DemonsAISettings, DemonId, DemonAIStateId> parent) : base(parent) { }
+            [Impl(256)] private FattySpecSkill(Actor.AI<DemonsAISettings, DemonId, DemonAIStateId> parent) : base(parent) { }
+
+            public static State Create(Actor.AI<DemonsAISettings, DemonId, DemonAIStateId> parent) => new FattySpecSkill(parent);
 
             public override bool TryEnter() => Status.nearEnemies.Count > 1 && Action.CanUsedSpecSkill();
 

@@ -11,13 +11,13 @@ namespace Vurbiri
 
         public const int MAX_CHANCE = 100;
 
-        public int Value { [Impl(256)] readonly get => _value; [Impl(256)] set => _value = Mathf.Clamp(value, 0, MAX_CHANCE); }
+        public int Value { [Impl(256)] readonly get => _value; [Impl(256)] set => _value = MathI.Clamp(value, 0, MAX_CHANCE); }
 
         public bool Roll
         {
             get
             {
-                bool result = (_negentropy += _value) >= MAX_CHANCE || (_negentropy > 0 && Random.Range(0, MAX_CHANCE) < _negentropy);
+                bool result = _value > 0 && ((_negentropy += _value) >= MAX_CHANCE || (_negentropy > 0 && Random.Range(0, MAX_CHANCE) < _negentropy));
                 if(result) _negentropy -= MAX_CHANCE;
                 return result;
             }
@@ -26,7 +26,7 @@ namespace Vurbiri
         [Impl(256)] public Chance(int value) : this(value, SysRandom.Next(MAX_CHANCE)) { }
         [Impl(256)] private Chance(int value, int negentropy)
         {
-            _value = Mathf.Clamp(value, 0, MAX_CHANCE);
+            _value = MathI.Clamp(value, 0, MAX_CHANCE);
             _negentropy = negentropy;
         }
 

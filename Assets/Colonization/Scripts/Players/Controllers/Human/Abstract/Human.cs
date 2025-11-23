@@ -197,7 +197,7 @@ namespace Vurbiri.Colonization
 
             var actor = _spawner.Create(id, hexagon);
             actor.IsPersonTurn = _isPerson;
-            actor.Skin.EventStart += signal.Send;
+            actor.Skin.EventStart.Add(signal.Send);
 
             return signal;
         }

@@ -40,10 +40,11 @@ namespace Vurbiri.Colonization
         [Impl(256)] protected Coroutine StartCoroutine(IEnumerator routine) => GameContainer.Shared.StartCoroutine(routine);
         [Impl(256)] protected void StopCoroutine(Coroutine coroutine) => GameContainer.Shared.StopCoroutine(coroutine);
 
-        public void Dispose()
+        public virtual void Dispose()
         {
             _subscription?.Dispose();
         }
+
         public static void Reset()
         {
             s_shrinesCount.UnsubscribeAll();

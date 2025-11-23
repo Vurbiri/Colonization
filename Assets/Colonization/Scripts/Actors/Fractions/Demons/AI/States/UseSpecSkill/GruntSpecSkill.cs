@@ -7,7 +7,9 @@ namespace Vurbiri.Colonization
     {
         sealed private class GruntSpecSkill : State
         {
-            [Impl(256)] public GruntSpecSkill(Actor.AI<DemonsAISettings, DemonId, DemonAIStateId> parent) : base(parent) { }
+            [Impl(256)] private GruntSpecSkill(Actor.AI<DemonsAISettings, DemonId, DemonAIStateId> parent) : base(parent) { }
+
+            public static State Create(Actor.AI<DemonsAISettings, DemonId, DemonAIStateId> parent) => new GruntSpecSkill(parent);
 
             public override bool TryEnter() => Status.isMove && !IsInCombat && Action.CanUsedSpecSkill();
 
