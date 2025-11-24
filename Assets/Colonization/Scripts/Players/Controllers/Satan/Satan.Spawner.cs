@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using Vurbiri.Colonization.Storage;
 using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
@@ -24,23 +25,21 @@ namespace Vurbiri.Colonization
                 _potential = potential;
             }
 
-            public WaitSignal TryCreate_Wait()
+            public IEnumerator TryCreate_Cn()
             {
-                if (_potential != 0 && _startHex.CanDemonEnter)
+                if (_potential != 0 && _startHex.IsEmpty)
                 {
-                    int minId = Mathf.Min(_potential >> 2, DemonId.Fatty);
-                    int maxId = Mathf.Min(_potential, DemonId.Count);
+                    yield return GameContainer.CameraController.ToPositionControlled(Vector3.zero);
+
+                    int minId = MathI.Min(_potential >> 2, DemonId.Fatty);
+                    int maxId = MathI.Min(_potential, DemonId.Count);
                     int id = Random.Range(minId, maxId);
 
                     _potential -= (id + 1);
-                    var demon = GameContainer.Actors.Create(ActorTypeId.Demon, id, _initData, _startHex);
-                    demon.AddWallDefenceEffect(s_parameters.gateDefense);
-                    demon.Skin.EventStart.Add(_waitSpawn.Send);
-
-                    GameContainer.CameraController.ToPositionControlled(Vector3.zero);
-                    return _waitSpawn;
+                    GameContainer.Actors.Create(ActorTypeId.Demon, id, _initData, _startHex).Skin.EventStart.Add(_waitSpawn.Send);
+                    yield return _waitSpawn.Restart();
                 }
-                return null;
+                yield break;
             }
 
             [Impl(256)] public Actor Load(ActorLoadData loadData) => GameContainer.Actors.Load(ActorTypeId.Demon, _initData, loadData);

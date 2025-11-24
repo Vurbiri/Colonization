@@ -26,7 +26,7 @@ namespace Vurbiri.Colonization
 
             protected static int GetDistance(Actor actor, Hexagon end)
             {
-                bool isEnterToGate = actor._owner == PlayerId.Satan && GameContainer.Players.Satan.CanEnterToGate;
+                bool isEnterToGate = actor._owner == PlayerId.Satan && GameContainer.Satan.CanEnterToGate;
                 var start = actor._currentHex;
                 int distance = start.Distance(end);
 
@@ -50,7 +50,7 @@ namespace Vurbiri.Colonization
 
             protected static bool TryGetNextHexagon(Actor actor, Hexagon end, out Hexagon next)
             {
-                bool isEnterToGate = actor._owner == PlayerId.Satan && GameContainer.Players.Satan.CanEnterToGate;
+                bool isEnterToGate = actor._owner == PlayerId.Satan && GameContainer.Satan.CanEnterToGate;
                 next = null;
 
                 int distance = actor._currentHex.Distance(end);

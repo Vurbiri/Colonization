@@ -17,12 +17,10 @@ namespace Vurbiri.Colonization
 
             [Impl(256)] public FindResources(AI<WarriorsAISettings, WarriorId, WarriorAIStateId> parent) : base(parent)
             {
-                _resources = GameContainer.Players.Humans[OwnerId].Resources;
+                _resources = GameContainer.Humans[OwnerId].Resources;
             }
 
             public override bool TryEnter() => Status.isMove && !(IsInCombat || IsEnemyComing);
-
-            public override void Dispose() { }
 
             public override IEnumerator Execution_Cn(Out<bool> isContinue)
             {
@@ -49,6 +47,8 @@ namespace Vurbiri.Colonization
 
                 yield break;
             }
+
+            public override void Dispose() { }
 
             private void SetColoniesHexagon()
             {

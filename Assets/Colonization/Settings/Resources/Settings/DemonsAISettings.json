@@ -1,6 +1,7 @@
 {
   "maxDistanceToEnemy": 4,
-  "enemyForceRatio": 2.113,
+  "enemyForceRatio": 1.666,
+  "chanceFreeFinding": 28,
   "maxDistanceHelp": 4,
   "minHPHelp": 50,
   "ratioForDefence": 70,
@@ -16,12 +17,11 @@
     5,
     6,
     7,
-    8,
-    9
+    8
   ],
   "_settings": [
     {
-      "support": true,
+      "support": false,
       "raider": true,
       "defense": {
         "_buff": -1,

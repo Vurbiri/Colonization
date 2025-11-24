@@ -17,7 +17,7 @@ namespace Vurbiri.Colonization.UI
 
         public void Init(Action action)
         {
-            _cash = GameContainer.Players.Person.Resources;
+            _cash = GameContainer.Person.Resources;
             base.InternalInit(action, true);
         }
 

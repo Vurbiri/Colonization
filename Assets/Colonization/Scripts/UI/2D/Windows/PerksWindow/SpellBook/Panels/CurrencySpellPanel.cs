@@ -12,7 +12,7 @@ namespace Vurbiri.Colonization
         {
             base.InitInternal(spellBook, closeWindow);
 
-            _currency.Init(GameContainer.Players.Person.Resources, ChangedCurrency);
+            _currency.Init(GameContainer.Person.Resources, ChangedCurrency);
         }
 
         protected override void StateReset()

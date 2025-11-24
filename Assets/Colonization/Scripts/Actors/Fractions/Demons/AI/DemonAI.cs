@@ -21,14 +21,13 @@ namespace Vurbiri.Colonization
             IdArray<DemonAIStateId, System.Func<AI<DemonsAISettings, DemonId, DemonAIStateId>, State>> factories = new();
             factories[DemonAIStateId.ExitFromGate]  = GetExitFromGate;
             factories[DemonAIStateId.UseSpecSkill]  = GetUseSpecSkill;
-            factories[DemonAIStateId.EscapeSupport] = GetEscapeSupport;
             factories[DemonAIStateId.Combat]        = GetCombat;
-            factories[DemonAIStateId.Support]       = GetSupport;
             factories[DemonAIStateId.MoveToHelp]    = GetMoveToHelp;
             factories[DemonAIStateId.MoveToEnemy]   = GetMoveToEnemy;
             factories[DemonAIStateId.MoveToRaid]    = GetMoveToRaid;
             factories[DemonAIStateId.MoveToAttack]  = GetMoveToAttack;
             factories[DemonAIStateId.Defense]       = GetDefense;
+            factories[DemonAIStateId.FreeFinding]   = GetFreeFinding;
             SetFactories(factories);
 
             s_msg = "[DemonAI] Initialized";
@@ -49,5 +48,6 @@ namespace Vurbiri.Colonization
         private static State GetExitFromGate(AI<DemonsAISettings, DemonId, DemonAIStateId> parent) => new ExitFromGate(parent);
         private static State GetUseSpecSkill(AI<DemonsAISettings, DemonId, DemonAIStateId> parent) => s_spec[parent.ActorId](parent);
         private static State GetMoveToEnemy(AI<DemonsAISettings, DemonId, DemonAIStateId> parent)  => new MoveToEnemy(parent);
+        private static State GetFreeFinding(AI<DemonsAISettings, DemonId, DemonAIStateId> parent)  => new FreeFinding(parent);
     }
 }

@@ -6,13 +6,13 @@ namespace Vurbiri.Colonization.UI
         {
             base.Setup(crossroad);
 
-            InteractableAndUnlock(_cash >= _cost, GameContainer.Players.Person.CanRecruiting(_id));
+            InteractableAndUnlock(_cash >= _cost, GameContainer.Person.CanRecruiting(_id));
         }
 
         protected override void OnClick()
         {
             _parent.Close();
-            GameContainer.Players.Person.Recruiting(_id, _currentCrossroad);
+            GameContainer.Person.Recruiting(_id, _currentCrossroad);
         }
 
 #if UNITY_EDITOR

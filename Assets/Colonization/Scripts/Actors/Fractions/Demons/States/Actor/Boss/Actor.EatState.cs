@@ -53,8 +53,9 @@ namespace Vurbiri.Colonization
 
                 private IEnumerator ApplySkill_Cn()
                 {
+                    yield return GameContainer.CameraController.ToPositionControlled(CurrentHex.Position);
+
                     int countBuff = 1;
- 
                     var colony = _targets.Rand();
                     Transform.LookAt(colony.Position, Vector3.up);
 

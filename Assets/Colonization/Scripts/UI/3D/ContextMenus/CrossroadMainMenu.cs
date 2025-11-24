@@ -37,7 +37,7 @@ namespace Vurbiri.Colonization.UI
         {
             _currentCrossroad = crossroad;
 
-            var person = GameContainer.Players.Person;
+            var person = GameContainer.Person;
             _buttonRecruiting.Setup(person.CanAnyRecruiting(crossroad));
             _buttonUpgrade.Setup(person.CanEdificeUpgrade(crossroad), person.IsEdificeUnlock(crossroad.NextId), crossroad.NextId);
             _buttonWall.Setup(person.CanWallBuild(crossroad), person.IsWallUnlock());
@@ -60,13 +60,13 @@ namespace Vurbiri.Colonization.UI
         private void OnUpgrade()
         {
             base.Close();
-            GameContainer.Players.Person.BuyEdificeUpgrade(_currentCrossroad);
+            GameContainer.Person.BuyEdificeUpgrade(_currentCrossroad);
         }
 
         private void OnWall()
         {
             base.Close();
-            GameContainer.Players.Person.BuyWall(_currentCrossroad);
+            GameContainer.Person.BuyWall(_currentCrossroad);
         }
 
         private void OnRoads()

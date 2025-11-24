@@ -65,8 +65,7 @@ namespace Vurbiri.Colonization
         public bool IsWounded { [Impl(256)] get => _HP.IsNotMax; }
         public bool IsDead { [Impl(256)] get => _HP.Value <= 0; }
         public bool ZealCharge { [Impl(256)] get => _zealCharge; [Impl(256)] set { _zealCharge = value; ChangeSignal(); } }
-        public int Force { [Impl(256)] get => _force; }
-        public int CurrentForce { [Impl(256)] get => _force * _HP.Percent / 100; }
+        public int CurrentForce { [Impl(256)] get => (_force * _HP.Percent << (IsWallDefenceEffect() ? 1 : 0) ) / 100 ; }
         public Transform Transform { [Impl(256)] get => _thisTransform; }
         public ActorSkin Skin { [Impl(256)] get => _states.Skin; }
         public Actions Action { [Impl(256)] get => _states; }

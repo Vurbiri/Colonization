@@ -29,7 +29,7 @@ namespace Vurbiri.Colonization.UI
             _closeButton.AddListener(_switcher.Close);
             switchButton.Init(_switcher.Switch);
 
-            var person = GameContainer.Players.Person;
+            var person = GameContainer.Person;
             var perkTree = person.Perks;
             var blood = person.Resources.Get(CurrencyId.Blood);
 

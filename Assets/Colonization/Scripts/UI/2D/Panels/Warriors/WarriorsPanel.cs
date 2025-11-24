@@ -14,7 +14,7 @@ namespace Vurbiri.Colonization.UI
 
         public void Init()
         {
-            var player = GameContainer.Players.Person;
+            var player = GameContainer.Person;
             var warriors = player.Actors;
             var maxWarrior = player.GetAbility(HumanAbilityId.MaxWarrior);
 

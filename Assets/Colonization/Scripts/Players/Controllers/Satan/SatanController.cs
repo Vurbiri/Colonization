@@ -12,6 +12,8 @@ namespace Vurbiri.Colonization
 
         public bool CanEnterToGate { [Impl(256)] get => _spawner.Potential == 0; }
 
+
+
         static SatanController() => s_settings = SettingsFile.Load<SatanControllerSettings>();
 
         public SatanController(Settings settings) : base(settings)
@@ -22,7 +24,8 @@ namespace Vurbiri.Colonization
 
         public void ActorKill(Id<ActorTypeId> type, int id)
         {
-            UnityEngine.Debug.Log($"ActorKilling: {type}, {id}");
+            if (type == ActorTypeId.Warrior)
+                AddCurse(s_parameters.cursePerKillWarrior[id]);
         }
 
         public void OnLanding()
@@ -103,12 +106,7 @@ namespace Vurbiri.Colonization
             if (hexId > HEX.GATE)
                 hexId = (HEX.GATE << 1) - hexId;
 
-            _curse += progress * hexId / HEX.GATE << hexId / HEX.GATE;
-
-            if (_curse >= _maxCurse)
-                LevelUp();
-
-            _eventChanged.Invoke(this);
+            AddCurse(progress * hexId / HEX.GATE << hexId / HEX.GATE);
         }
     }
 }

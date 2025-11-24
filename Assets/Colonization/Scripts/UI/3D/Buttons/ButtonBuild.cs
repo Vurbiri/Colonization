@@ -18,7 +18,7 @@ namespace Vurbiri.Colonization.UI
         {
             base.InternalInit(action, true);
             _cost = cost;
-            _cash = GameContainer.Players.Person.Resources;
+            _cash = GameContainer.Person.Resources;
             _subscription = Localization.Instance.Subscribe(SetText);
         }
 

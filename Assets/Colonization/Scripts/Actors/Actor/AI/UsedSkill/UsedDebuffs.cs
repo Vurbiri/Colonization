@@ -29,8 +29,10 @@ namespace Vurbiri.Colonization
 
         [Serializable] private struct UsedDebuff
         {
+#pragma warning disable 649
             public int skill;
             public Chance chance;
+#pragma warning restore
 
             [Impl(256)] public readonly bool CanUsed(Actor.Actions action, Actor target) => action.CanUsedSkill(skill) && !action.IsApplied(skill, target);
 

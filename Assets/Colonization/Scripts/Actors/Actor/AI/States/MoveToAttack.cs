@@ -7,10 +7,8 @@ namespace Vurbiri.Colonization
     {
         public partial class AI<TSettings, TActorId, TStateId>
         {
-            sealed private class MoveToAttack : State
+            sealed private class MoveToAttack : MoveTo
             {
-                private Hexagon _targetHexagon;
-
                 [Impl(256)] public MoveToAttack(AI<TSettings, TActorId, TStateId> parent) : base(parent) { }
 
                 public override bool TryEnter()
@@ -36,9 +34,7 @@ namespace Vurbiri.Colonization
 
                 public override IEnumerator Execution_Cn(Out<bool> isContinue)
                 {
-                    yield return Move_Cn(isContinue, 1, _targetHexagon, !_targetHexagon.IsEnemy(OwnerId));
-                    if (!isContinue && IsEnemyComing)
-                        yield return Settings.defense.Use_Cn(Actor, true, true);
+                    return Move_Cn(isContinue, 1, !_targetHexagon.IsEnemy(OwnerId), true, true);
                 }
 
                 public override void Dispose() => _targetHexagon = null;

@@ -190,14 +190,6 @@ namespace Vurbiri.Reactive.Collections
         }
         #endregion
 
-        private void GrowArray()
-        {
-            _capacity = _capacity << 1 | BASE_CAPACITY;
-
-            var array = new T[_capacity];
-            for(int i = 0; i < _count; ++i)
-                array[i] = _values[i];
-            _values = array;
-        }
+        [Impl(256)] private void GrowArray() => _values = _values.Grow(_count, _capacity = _capacity << 1 | BASE_CAPACITY);
     }
 }

@@ -34,7 +34,7 @@ namespace Vurbiri.Colonization.UI
 
             _diceWindow.Init();
 
-            GameContainer.Players.Person.Interactable.Subscribe(OnInteractable);
+            GameContainer.Person.Interactable.Subscribe(OnInteractable);
 
             _perksWindow = null; _exchangeWindow = null; _giftWindow = null; _diceWindow = null;
             _perksButton = null; _exchangeButton = null;

@@ -35,7 +35,7 @@ namespace Vurbiri.Colonization.UI
 
         public void BuyPerk(Color colorLearn)
         {
-            var person = GameContainer.Players.Person;
+            var person = GameContainer.Person;
             if (person.CanLearnPerk(_typePerkId, _perkId, _cost))
             {
                 Learn(colorLearn);

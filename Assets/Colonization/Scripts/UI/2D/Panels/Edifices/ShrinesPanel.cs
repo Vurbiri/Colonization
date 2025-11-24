@@ -8,7 +8,7 @@ namespace Vurbiri.Colonization.UI
     {
         public void Init(IdArray<EdificeId, Sprite> sprites)
         {
-            var person = GameContainer.Players.Person;
+            var person = GameContainer.Person;
 
             InitEdifice(person.Shrines, sprites);
             _widget.Init(person.Shrines.CountReactive, person.GetAbility(MaxShrine), person.GetAbility(ShrineProfit), person.GetAbility(ShrinePassiveProfit));

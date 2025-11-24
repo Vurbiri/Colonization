@@ -52,12 +52,15 @@ namespace Vurbiri.Colonization
 
                     if (_enemies.Count > 0)
                     {
-                        var enemy = _enemies.Extract();
+                        var enemy = _enemies.Roll;
                         yield return Settings.debuffs.TryUse_Cn(Actor, enemy);
                         yield return Settings.attacks.TryUse_Cn(Actor, enemy);
                     }
 
-                    isContinue.Set(Actor.CurrentAP > 0);
+                    if (OwnerId != PlayerId.Satan && Actor._AP == 0 && Actor._zealCharge && Actor.CurrentForce < Status.nearEnemies.Force)
+                        yield return Actor.Zeal_Cn();
+
+                    isContinue.Set(Actor._AP > 0);
                     Exit();
                     yield break;
                 }

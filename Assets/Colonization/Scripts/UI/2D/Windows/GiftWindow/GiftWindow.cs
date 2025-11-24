@@ -38,7 +38,7 @@ namespace Vurbiri.Colonization.UI
             for(int i = giftButtons.Length - 1; i >= 0; i--)
                 giftButtons[i].Init(Switch);
 
-            var resources = GameContainer.Players.Person.Resources;
+            var resources = GameContainer.Person.Resources;
             for (int i = 0; i < CurrencyId.MainCount; i++)
                 _playerCurrencies[i].Init(resources, OnChangeCount);
 
@@ -74,7 +74,7 @@ namespace Vurbiri.Colonization.UI
         {
             if (GameContainer.Humans[_currentPlayer].OnGift(PlayerId.Person, _gift, null))
             {
-                GameContainer.Players.Person.Pay(_gift);
+                GameContainer.Person.Pay(_gift);
                 Banner.Open(_ok[_currentPlayer - PlayerId.AI_01], MessageTypeId.Profit, 5f, true);
                 _switcher.Close();
             }

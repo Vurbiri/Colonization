@@ -5,29 +5,28 @@ namespace Vurbiri.Colonization
 {
     public partial class DemonAI
     {
-        sealed private class ExitFromGate : State
+        sealed private class FreeFinding : State
         {
             private Hexagon _targetHexagon;
 
-            [Impl(256)] public ExitFromGate(Actor.AI<DemonsAISettings, DemonId, DemonAIStateId> parent) : base(parent) { }
+            [Impl(256)] public FreeFinding(Actor.AI<DemonsAISettings, DemonId, DemonAIStateId> parent) : base(parent) { }
 
             public override bool TryEnter()
             {
                 _targetHexagon = null;
-
-                if (Status.isMove && IsInCombat && Hexagon.IsGate && !GameContainer.Satan.CanEnterToGate)
+                if (Status.isMove && ((Hexagon == Key.Zero && !GameContainer.Satan.CanEnterToGate) || (Status.isSiege && !IsInCombat && s_settings.chanceFreeFinding.Roll)))
                 {
-                    var hexagons = Hexagon.Neighbors;
-                    foreach (int index in s_hexagonIndexes)
+                    var hexagons = Hexagon.Neighbors; Hexagon hex;
+                    foreach(var index in s_hexagonIndexes)
                     {
-                        if (hexagons[index].IsEmpty)
+                        hex = hexagons[index];
+                        if(hex.CanWarriorEnter && !hex.IsEnemyNear(PlayerId.Satan))
                         {
-                            _targetHexagon = hexagons[index];
+                            _targetHexagon = hex;
                             break;
                         }
                     }
                 }
-
                 return _targetHexagon != null;
             }
 
@@ -35,7 +34,7 @@ namespace Vurbiri.Colonization
             {
                 yield return Actor.Move_Cn(_targetHexagon);
 
-                isContinue.Set(true);
+                isContinue.Set(false);
                 Exit();
                 yield break;
             }

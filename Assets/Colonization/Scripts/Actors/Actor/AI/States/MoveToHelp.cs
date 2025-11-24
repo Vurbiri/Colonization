@@ -9,9 +9,8 @@ namespace Vurbiri.Colonization
     {
         public partial class AI<TSettings, TActorId, TStateId>
         {
-            sealed private class MoveToHelp : State
+            sealed private class MoveToHelp : MoveTo
             {
-                private Hexagon _targetHexagon;
                 private ActorCode _targetEnemy;
 
                 [Impl(256)] public MoveToHelp(AI<TSettings, TActorId, TStateId> parent) : base(parent) { }
@@ -39,9 +38,7 @@ namespace Vurbiri.Colonization
                 sealed public override IEnumerator Execution_Cn(Out<bool> isContinue)
                 {
                     bool isExit = !(Settings.support ? _targetHexagon.IsGreatFriend(OwnerId) : _targetHexagon.IsEnemy(OwnerId));
-                    yield return Move_Cn(isContinue, 1, _targetHexagon, isExit);
-                    if (!isContinue && IsEnemyComing)
-                        yield return Settings.defense.Use_Cn(Actor, true, false);
+                    return Move_Cn(isContinue, 1, isExit, true, false);
                 }
 
                 sealed public override void Dispose()

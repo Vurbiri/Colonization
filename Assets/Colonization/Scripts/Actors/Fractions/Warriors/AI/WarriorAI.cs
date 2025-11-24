@@ -45,7 +45,9 @@ namespace Vurbiri.Colonization
         }
 
         private static State GetEscape(AI<WarriorsAISettings, WarriorId, WarriorAIStateId> parent)        => new Escape(parent);
+        private static State GetEscapeSupport(AI<WarriorsAISettings, WarriorId, WarriorAIStateId> parent) => new EscapeSupport(parent);
         private static State GetBlockInCombat(AI<WarriorsAISettings, WarriorId, WarriorAIStateId> parent) => new BlockInCombat(parent);
+        private static State GetSupport(AI<WarriorsAISettings, WarriorId, WarriorAIStateId> parent)       => new Support(parent);
         private static State GetMoveToUnsiege(AI<WarriorsAISettings, WarriorId, WarriorAIStateId> parent) => new MoveToUnsiege(parent);
         private static State GetMoveToHome(AI<WarriorsAISettings, WarriorId, WarriorAIStateId> parent)    => new MoveToHome(parent);
         private static State GetFindResources(AI<WarriorsAISettings, WarriorId, WarriorAIStateId> parent) => new FindResources(parent);

@@ -84,9 +84,7 @@ namespace Vurbiri.Colonization
                     s_factories[i] = factories[priority[i]];
             }
 
-            protected static State GetEscapeSupport(AI<TSettings, TActorId, TStateId> parent) => new EscapeSupport(parent);
             protected static State GetCombat(AI<TSettings, TActorId, TStateId> parent)        => new Combat(parent);
-            protected static State GetSupport(AI<TSettings, TActorId, TStateId> parent)       => new Support(parent);
             protected static State GetMoveToHelp(AI<TSettings, TActorId, TStateId> parent)    => new MoveToHelp(parent);
             protected static State GetDefense(AI<TSettings, TActorId, TStateId> parent)       => new Defense(parent);
             protected static State GetMoveToRaid(AI<TSettings, TActorId, TStateId> parent)    => new MoveToRaid(parent);

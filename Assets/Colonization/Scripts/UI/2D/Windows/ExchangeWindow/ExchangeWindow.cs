@@ -34,14 +34,14 @@ namespace Vurbiri.Colonization.UI
             _closeButton.AddListener(_switcher.Close);
             switchButton.Init(_switcher.Switch);
 
-            var resources = GameContainer.Players.Person.Resources;
+            var resources = GameContainer.Person.Resources;
             for (int i = 0; i < CurrencyId.MainCount; i++)
             {
                 _bankCurrencies[i].Init(OnBankChangeCount);
                 _playerCurrencies[i].Init(resources, OnPlayerChangeCount);
             }
 
-            GameContainer.Players.Person.ExchangeRate.Subscribe(OnChangeRates);
+            GameContainer.Person.ExchangeRate.Subscribe(OnChangeRates);
 
             _containerVisual.Init();
             _containerVisual = null;
@@ -76,7 +76,7 @@ namespace Vurbiri.Colonization.UI
 
         private void Apply()
         {
-            GameContainer.Players.Person.Resources.Add(_bankTrade - _pay);
+            GameContainer.Person.Resources.Add(_bankTrade - _pay);
             ResetValues();
         }
 

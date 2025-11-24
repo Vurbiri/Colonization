@@ -8,9 +8,8 @@ namespace Vurbiri.Colonization
 {
     public partial class WarriorAI
     {
-        sealed private class MoveToUnsiege : State
+        sealed private class MoveToUnsiege : MoveTo
         {
-            private Hexagon _targetHexagon;
             private ActorCode _targetEnemy;
 
             [Impl(256)] public MoveToUnsiege(AI<WarriorsAISettings, WarriorId, WarriorAIStateId> parent) : base(parent) { }
@@ -21,7 +20,7 @@ namespace Vurbiri.Colonization
 
                 if (Status.isMove && Status.percentHP > s_settings.minHPUnsiege)
                 {
-                    var player = GameContainer.Players.Humans[OwnerId];
+                    var player = GameContainer.Humans[OwnerId];
 
                     int distance = CheckingColonies(player.Colonies, s_settings.maxDistanceUnsiege);
                     CheckingColonies(player.Ports, distance);
@@ -61,9 +60,7 @@ namespace Vurbiri.Colonization
 
             public override IEnumerator Execution_Cn(Out<bool> isContinue)
             {
-                yield return Move_Cn(isContinue, 1, _targetHexagon, !_targetHexagon.IsEnemy(OwnerId));
-                if (!isContinue && IsEnemyComing)
-                    yield return Settings.defense.Use_Cn(Actor, true, true);
+                return Move_Cn(isContinue, 1, !_targetHexagon.IsEnemy(OwnerId), true, true);
             }
 
             public override void Dispose()

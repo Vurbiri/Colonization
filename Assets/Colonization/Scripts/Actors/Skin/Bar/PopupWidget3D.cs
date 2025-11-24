@@ -19,6 +19,7 @@ namespace Vurbiri.Colonization.UI
         [SerializeField, Range(0.05f, 1f)] private float _startHide = 0.7f;
 
         private Transform _thisTransform;
+        private GameObject _parent;
         private CoroutinesQueue _queue;
 
         private float _scaleColorSpeed;
@@ -36,6 +37,7 @@ namespace Vurbiri.Colonization.UI
             _valueTMP.sortingOrder += orderLevel;
 
             _thisTransform = GetComponent<Transform>();
+            _parent = _thisTransform.parent.gameObject;
             _queue = new(() => gameObject.SetActive(false), this);
 
             _colorPlusStart = _colorPlusEnd = colors.TextPositive;
@@ -52,13 +54,10 @@ namespace Vurbiri.Colonization.UI
 
         public void Run(int delta, Sprite sprite)
         {
-            if (delta != 0 && delta > MIN_VALUE)
+            if ((delta != 0 & delta > MIN_VALUE) && _parent.activeSelf)
             {
                 gameObject.SetActive(true);
-                if(gameObject.activeInHierarchy)
-                    _queue.Enqueue(Run_Cn(delta, sprite));
-                else
-                    gameObject.SetActive(false);
+                _queue.Enqueue(Run_Cn(delta, sprite));
             }
         }
 
@@ -103,10 +102,8 @@ namespace Vurbiri.Colonization.UI
 #if UNITY_EDITOR
         private void OnValidate()
         {
-            if (_sprite == null)
-                _sprite = GetComponent<SpriteRenderer>();
-            if (_valueTMP == null)
-                _valueTMP = GetComponentInChildren<TextMeshPro>();
+            this.SetComponent(ref _sprite);
+            this.SetChildren(ref _valueTMP);
         }
 #endif
     }

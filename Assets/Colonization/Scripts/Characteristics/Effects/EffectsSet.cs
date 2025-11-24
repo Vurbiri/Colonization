@@ -60,7 +60,7 @@ namespace Vurbiri.Colonization
                         return delta;
 
                 if (_count == _capacity)
-                    GrowArray();
+                    _values = _values.Grow(_count, _capacity = _capacity << 1 | 3);
 
                 _values[_count] = effect;
                 effect.Adding(RedirectEvents, _count);
@@ -136,16 +136,6 @@ namespace Vurbiri.Colonization
                 RemoveItem(effect);
 
             _eventChanged.Invoke(effect, operation);
-        }
-
-        private void GrowArray()
-        {
-            _capacity = _capacity << 1 | 3;
-
-            ReactiveEffect[] array = new ReactiveEffect[_capacity];
-            for (int i = 0; i < _count; i++)
-                array[i] = _values[i];
-            _values = array;
         }
     }
 }

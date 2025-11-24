@@ -233,12 +233,20 @@ namespace Vurbiri.Colonization
         [Impl(256)] public int GetMaxDefense() => GetMaxDefense(_ownerId);
         public int GetMaxDefense(Id<PlayerId> playerId)
         {
-            int max = 0;
-            if (!(_isGate | IsWater))
+            if (playerId == PlayerId.Satan)
+            {
+                return _isGate ? GameContainer.Satan.DefenseFromGate : 0;
+            }
+            else
+            {
+                if (_isGate | IsWater) return 0;
+
+                int max = 0;
                 for (int i = 0; i < HEX.VERTICES; ++i)
                     max = Math.Max(_crossroads[i].GetDefense(playerId), max);
 
-            return max;
+                return max;
+            }
         }
 
         [Impl(256)] public void AddWallDefenceEffect(Id<PlayerId> playerId)

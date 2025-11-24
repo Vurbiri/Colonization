@@ -1,6 +1,4 @@
-using System;
 using System.Collections;
-using Vurbiri.Collections;
 using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization
@@ -37,53 +35,6 @@ namespace Vurbiri.Colonization
                 {
                     Dispose();
                     _parent._current = _parent._goalSetting;
-                }
-
-                protected bool TryGetEmptyColony(int playerId, ref int distance, out Crossroad colony, out Hexagon target, Func<Crossroad, bool> canAdd)
-                {
-                    var colonies = GameContainer.Players.Humans[playerId].Colonies; ;
-                    bool result = false;
-                    colony = null; target = null;
-                    ReadOnlyArray<Hexagon> hexagons;
-                    Hexagon hexTemp; Crossroad colonyTemp;
-
-                    for (int i = 0; i < colonies.Count; ++i)
-                    {
-                        colonyTemp = colonies[i];
-                        if (canAdd(colonyTemp) && (colonyTemp.ApproximateDistance(Hexagon) <= (distance + 1)) && colonyTemp.IsEmptyNear())
-                        {
-                            hexagons = colonyTemp.Hexagons;
-                            foreach (int index in s_crossroadHex)
-                            {
-                                hexTemp = hexagons[index];
-                                if (TryGetDistance(Actor, hexTemp, distance, out int newDistance))
-                                {
-                                    distance = newDistance;
-                                    colony = colonyTemp;
-                                    target = hexTemp;
-                                    result = true;
-                                }
-                            }
-                        }
-                    }
-
-                    return result;
-                }
-
-                protected IEnumerator Move_Cn(Out<bool> isContinue, int distance, Hexagon target, bool isExit = false)
-                {
-                    isExit |= IsInCombat;
-                    if (!isExit && Status.isMove)
-                    {
-                        isExit = !TryGetNextHexagon(Actor, target, out Hexagon next);
-                        if (!isExit)
-                        {
-                            yield return Actor.Move_Cn(next);
-                            isExit = target.Distance(next) == distance;
-                        }
-                    }
-                    isContinue.Set(isExit);
-                    if (isExit) Exit();
                 }
             }
         }

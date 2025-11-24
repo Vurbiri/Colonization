@@ -65,13 +65,7 @@ namespace Vurbiri
 
             [Impl(256)] private void GrowArrays()
             {
-                _capacity = _capacity << 1 | BASE_CAPACITY;
-
-                var values = new Out<T>[_capacity];
-                for (int i = 0; i < _count; i++)
-                    values[i] = _values[i];
-                
-                _values = values;
+                _values = _values.Grow(_count, _capacity = _capacity << 1 | BASE_CAPACITY);
                 _keys = new bool[_capacity];
             }
         }

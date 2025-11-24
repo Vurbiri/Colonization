@@ -8,5 +8,7 @@ namespace Vurbiri.Colonization
         [Header("MoveToEnemy")]
         [Range(1, 5)] public int maxDistanceToEnemy;
         [Range(0f, 3f)] public float enemyForceRatio;
+        [Header("FreeFinding")]
+        public Chance chanceFreeFinding;
     }
 }

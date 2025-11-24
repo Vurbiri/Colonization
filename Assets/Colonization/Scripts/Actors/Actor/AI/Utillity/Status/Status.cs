@@ -33,6 +33,12 @@ namespace Vurbiri.Colonization
                             playerEnemies.Add(i);
                 }
 
+                public void EnemiesUpdate(Actor actor)
+                {
+                    nearEnemies.Update(actor);
+                    nighEnemies.Update(actor, HEX.NEAR_TWO);
+                }
+
                 public void Clear()
                 {
                     nearEnemies.Clear();

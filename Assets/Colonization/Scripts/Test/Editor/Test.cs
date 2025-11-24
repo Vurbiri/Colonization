@@ -45,7 +45,7 @@ namespace Vurbiri.Colonization
 
         public void RunTest()
         {
-            var person = GameContainer.Players.Person;
+            var person = GameContainer.Person;
             switch (_dropdown.value )
             {
                 case 0: Spawn(); break;
@@ -80,14 +80,14 @@ namespace Vurbiri.Colonization
             gift.PlusToStringBuilder(sb); sb.Append(TAG.ALING_OFF);
 
            
-            GameContainer.Players.Person.OnGift(giver, gift, sb.ToString());
+            GameContainer.Person.OnGift(giver, gift, sb.ToString());
         }
 
         private void Spawn()
         {
             //_artefact.Next(UnityEngine.Random.Range(2, 10));
 
-            var person = GameContainer.Players.Person;
+            var person = GameContainer.Person;
 
             //person.SpawnTest(WarriorId.Militia, HEX.RightUp);
             person.SpawnTest(WarriorId.Solder, HEX.Right);

@@ -25,7 +25,7 @@ namespace Vurbiri.Colonization.UI
 
         public void Init()
         {
-            var currencies = GameContainer.Players.Person.Resources;
+            var currencies = GameContainer.Person.Resources;
 
             _warriors.Init();
 

@@ -17,6 +17,8 @@ namespace VurbiriEditor.Colonization
             var arrayProperty = mainProperty.FindPropertyRelative("_settings");
             for (int i = 0; i < count; ++i)
                 _drawers[i] = new(typeId, i, names[i], arrayProperty.GetArrayElementAtIndex(i));
+
+            mainProperty.serializedObject.ApplyModifiedProperties();
         }
 
         public void Draw()
@@ -36,6 +38,7 @@ namespace VurbiriEditor.Colonization
         private class ActorAISettingsDrawer
         {
             private readonly int _typeId, _id;
+            private readonly bool _isWarrior;
 
             private readonly SerializedProperty _parentProperty;
 
@@ -67,6 +70,12 @@ namespace VurbiriEditor.Colonization
                 _debuffsDrawer   = new(parentProperty.FindPropertyRelative(nameof(ActorAISettings.debuffs)), typeId, id);
                 _attacksDrawer   = new(parentProperty.FindPropertyRelative(nameof(ActorAISettings.attacks)), typeId, id);
                 _buffsDrawer     = new(parentProperty.FindPropertyRelative(nameof(ActorAISettings.buffs)), typeId, id);
+
+                if (!(_isWarrior = typeId == ActorTypeId.Warrior))
+                {
+                    _supportProperty.boolValue = false;
+                    _raiderProperty.boolValue = true;
+                }
             }
 
             public void Draw()
@@ -78,9 +87,12 @@ namespace VurbiriEditor.Colonization
                         Space(4f);
                         BeginVertical(STYLES.borderDark);
                         {
-                            PropertyField(_raiderProperty);
-                            PropertyField(_supportProperty);
-                            Space();
+                            if (_isWarrior)
+                            {
+                                PropertyField(_raiderProperty);
+                                PropertyField(_supportProperty);
+                                Space();
+                            }
                             _defenseDrawer.Draw();
                             Space();
                             if (_raiderProperty.isExpanded = Foldout(_raiderProperty.isExpanded, "Combat"))

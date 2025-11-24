@@ -9,15 +9,10 @@ namespace Vurbiri.Colonization
         {
             public class Goals
             {
-                private readonly HashSet<Key> _home = new(CONST.DEFAULT_MAX_EDIFICES);
-
-                public HashSet<Key> Home { [Impl(256)] get => _home; } 
                 public TargetEnemies Enemies { [Impl(256)] get; } = new();
-                public RaidTargets Raid { [Impl(256)] get; } = new();
+                public TargetColonies Colonies { [Impl(256)] get; } = new();
 
-                public bool CanGoHome(Crossroad target) => !_home.Contains(target.Key);
-
-                #region Nested: TargetEnemies, RaidTargets
+                #region Nested: TargetEnemies, TargetColonies
                 //********************************************
                 public class TargetEnemies
                 {
@@ -50,17 +45,17 @@ namespace Vurbiri.Colonization
 
                 }
                 //********************************************
-                public class RaidTargets
+                public class TargetColonies
                 {
                     private readonly Dictionary<Key, List<ActorCode>> _targets = new();
 
-                    public bool CanAdd(Crossroad target) => !(_targets.TryGetValue(target.Key, out List<ActorCode> raiders) && raiders.Count > 1);
+                    public bool CanAdd(Crossroad target, int max) => !(_targets.TryGetValue(target.Key, out List<ActorCode> actors) && actors.Count >= max);
 
                     public bool Add(Key target, ActorCode actor)
                     {
-                        if (!_targets.TryGetValue(target, out List<ActorCode> raiders))
-                            _targets.Add(target, raiders = new(2));
-                        raiders.Add(actor);
+                        if (!_targets.TryGetValue(target, out List<ActorCode> actors))
+                            _targets.Add(target, actors = new(3));
+                        actors.Add(actor);
 
                         return true;
                     }

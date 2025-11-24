@@ -20,7 +20,8 @@ namespace Vurbiri.Colonization
         public int MaxLevel { [Impl(256)] get => _leveling.MaxLevel; }
         public int Curse { [Impl(256)] get => _curse / s_parameters.maxCursePerLevel; }
         public int MaxCurse { [Impl(256)] get => _maxCurse / s_parameters.maxCursePerLevel; }
-        public float CursePercent { [Impl(256)] get => (float)_curse/_maxCurse; }
+        public float CursePercent { [Impl(256)] get => (float)_curse / _maxCurse; }
+        public int DefenseFromGate { [Impl(256)] get => s_parameters.gateDefense; }
 
         static Satan() => s_parameters = SettingsFile.Load<SatanAbilities>();
 
@@ -48,14 +49,22 @@ namespace Vurbiri.Colonization
 
         public Subscription Subscribe(Action<Satan> action, bool instantGetValue) => _eventChanged.Add(action, instantGetValue, this);
 
-        [Impl(256)] protected void LevelUp()
+        protected void AddCurse(int add)
         {
-            if(_leveling.Next())
-                _maxCurse = s_parameters.maxCurseBase + _leveling.Level * s_parameters.maxCursePerLevel;
+            if(add <= 0) return;
+            
+            _curse += add;
+            if (_curse >= _maxCurse)
+            {
+                if (_leveling.Next())
+                    _maxCurse = s_parameters.maxCurseBase + _leveling.Level * s_parameters.maxCursePerLevel;
 
-            _curse -= _maxCurse;
-            _spawner.AddPotential(Math.Min(s_parameters.maxPotentialPerLvl, 1 + (_leveling.Level >> 1)));
-            GameContainer.Chaos.ForSatanLevelUP();
+                _curse -= _maxCurse;
+                _spawner.AddPotential(1 + (_leveling.Level / s_parameters.potentialFromLvlRatio));
+                GameContainer.Chaos.ForSatanLevelUP();
+            }
+
+            _eventChanged.Invoke(this);
         }
     }
 }

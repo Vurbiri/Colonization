@@ -24,7 +24,7 @@ namespace Vurbiri.Colonization.UI
             _bar.color = _icon.color = GameContainer.UI.PlayerColors[PlayerId.Satan]; _icon = null;
 
             Localization.Instance.Subscribe(SetLocalizationText);
-            GameContainer.Players.Satan.Subscribe(SetValues, false);
+            GameContainer.Satan.Subscribe(SetValues, false);
         }
 
         private void SetLocalizationText(Localization localization)
@@ -35,7 +35,7 @@ namespace Vurbiri.Colonization.UI
             sb.Append(localization.GetText(_hintKey));
             _localizedText = sb.ToString();
             
-            SetValues(GameContainer.Players.Satan);
+            SetValues(GameContainer.Satan);
         }
 
         private void SetValues(Satan satan)

@@ -26,6 +26,8 @@ namespace Vurbiri.Colonization
 
                 private IEnumerator ApplySkill_Cn()
                 {
+                    yield return GameContainer.CameraController.ToPositionControlled(CurrentHex.Position);
+
                     var wait = Skin.SpecAttack();
 
                     yield return wait; 

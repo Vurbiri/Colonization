@@ -11,9 +11,9 @@ namespace Vurbiri.Colonization
         public int penaltyPerDemon; // = -3;
         public int penaltyPerSatanLevelUp; // = -2;
         public int penaltyPerBlood; // = -1;
-        public IdArray<WarriorId, int> penaltyPerKillWarrior;
+        public ReadOnlyIdArray<WarriorId, int> penaltyPerKillWarrior;
         [Header("-=Reward=-")]
         public int rewardPerShrine; // = 15;
-        public IdArray<DemonId, int> rewardPerKillDemon;
+        public ReadOnlyIdArray<DemonId, int> rewardPerKillDemon;
     }
 }

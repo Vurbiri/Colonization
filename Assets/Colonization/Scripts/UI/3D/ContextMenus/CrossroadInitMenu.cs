@@ -25,7 +25,7 @@ namespace Vurbiri.Colonization.UI
         public void Open(Crossroad crossroad)
         {
             _currentCrossroad = crossroad;
-            bool buttonEnable = GameContainer.Players.Person.CanEdificeUpgrade(crossroad) & crossroad.NextGroupId == EdificeGroupId.Port;
+            bool buttonEnable = GameContainer.Person.CanEdificeUpgrade(crossroad) & crossroad.NextGroupId == EdificeGroupId.Port;
             _buttonInit.Setup(buttonEnable, crossroad.NextId.Value);
             base.Open();
         }
@@ -50,7 +50,7 @@ namespace Vurbiri.Colonization.UI
         private void OnUpgrade()
         {
             base.Close();
-            _endInit = GameContainer.Players.Person.BuildPort(_currentCrossroad);
+            _endInit = GameContainer.Person.BuildPort(_currentCrossroad);
         }
 
 #if UNITY_EDITOR

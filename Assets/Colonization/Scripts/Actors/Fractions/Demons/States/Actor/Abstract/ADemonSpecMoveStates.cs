@@ -53,8 +53,9 @@ namespace Vurbiri.Colonization
 
                 protected IEnumerator Move_Cn()
                 {
-                    var currentHex = CurrentHex;
+                    yield return GameContainer.CameraController.ToPositionControlled(CurrentHex.Position);
 
+                    var currentHex = CurrentHex;
                     CurrentHex.ActorExit();
  
                    _effectsHint.Apply(Actor, Actor);
@@ -62,6 +63,7 @@ namespace Vurbiri.Colonization
                     yield return Skin.SpecMove();
 
                     Rotation = HEX.ROTATIONS[_direction];
+                    GameContainer.CameraController.ToPositionControlled(_target.Position);
                     yield return _move.Run(currentHex.Position, _target.Position, _speed / HEX.Distance(currentHex.Key, _target.Key));
 
                     CurrentHex = _target;

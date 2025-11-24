@@ -7,7 +7,7 @@ namespace Vurbiri.Colonization.UI
     {
         public void Init(IdArray<EdificeId, Sprite> sprites)
         {
-            var person = GameContainer.Players.Person;
+            var person = GameContainer.Person;
             var edifices = person.GetEdifices(_id);
             var maxEdifices = person.GetAbility(_id.ToState());
             var portsProfit = person.GetAbility(HumanAbilityId.PortsProfitShift);

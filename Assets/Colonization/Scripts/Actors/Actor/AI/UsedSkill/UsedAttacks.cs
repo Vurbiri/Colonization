@@ -47,12 +47,14 @@ namespace Vurbiri.Colonization
         [Serializable]
         private class UsedAttack : IEquatable<UsedAttack>
         {
+#pragma warning disable 649
             public int skill;
             public Chance chance;
             public SkillApplied applied;
             public MinMaxHP selfHP;
             public MinMaxHP targetHP;
-            
+#pragma warning restore
+
             [Impl(256)] public bool CanUsed(Actor user, Actor target)
             {
                 return user.Action.CanUsedSkill(skill) && applied.IsValid(user, target, skill) && selfHP.IsValid(user) && targetHP.IsValid(target);

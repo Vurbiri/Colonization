@@ -20,7 +20,7 @@ namespace Vurbiri.Colonization
             {
                 do
                 {
-                    yield return _spawner.TryCreate_Wait();
+                    yield return _spawner.TryCreate_Cn();
                     yield return base.Execution_Cn();
                 }
                 while (_spawner.CanSpawn);

@@ -22,7 +22,7 @@ namespace Vurbiri.Colonization.UI
             base.InternalInit(OnClick, true);
             
             _cost = cost;
-            _cash = GameContainer.Players.Person.Resources;
+            _cash = GameContainer.Person.Resources;
             _parent = parent;
             _subscription = Localization.Instance.Subscribe(SetText);
         }

@@ -25,7 +25,7 @@ namespace Vurbiri.Colonization
         public override IEnumerator Run(ActorSFX user, ActorSkin target)
         {
             var actor = target.GetComponentInParent<Actor>();
-            int count = GameContainer.Players.Humans[actor.Owner].Abilities[HumanAbilityId.WarriorProfit].Value;
+            int count = GameContainer.Humans[actor.Owner].Abilities[HumanAbilityId.WarriorProfit].Value;
 
             _mainModule.duration = _lifeTime + _burst.repeatInterval * (count + 1);
 

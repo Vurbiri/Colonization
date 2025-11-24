@@ -111,14 +111,6 @@ namespace Vurbiri.Collections
         }
 
         [Impl(256)] private void GrowArray() => GrowArray(_capacity << 1 | BASE_CAPACITY);
-        private void GrowArray(int capacity)
-        {
-            var array = new TValue[capacity];
-            for (int i = 0; i < _count; ++i)
-                array[i] = _values[i];
-
-            _values = array;
-            _capacity = capacity;
-        }
+        [Impl(256)] private void GrowArray(int capacity) => _values = _values.Grow(_count, _capacity = capacity);
     }
 }

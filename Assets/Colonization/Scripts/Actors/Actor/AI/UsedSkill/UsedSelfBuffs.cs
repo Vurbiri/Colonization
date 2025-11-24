@@ -19,9 +19,11 @@ namespace Vurbiri.Colonization
 
         [Serializable] private struct UsedSelfBuff
         {
+#pragma warning disable 649
             public int skill;
             public MinMaxHP currentHP;
             public Chance chance;
+#pragma warning restore
 
             public IEnumerator TryUse(Actor target)
             {

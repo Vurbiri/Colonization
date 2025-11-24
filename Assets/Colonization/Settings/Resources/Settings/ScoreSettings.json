@@ -14,17 +14,17 @@
     8
   ],
   "perRoad": 2,
-  "perWall": 10,
+  "perWall": 11,
   "buildEdifice": [
     0,
-    50,
+    52,
     5,
     15,
-    27,
+    28,
     6,
-    6,
+    7,
     18,
-    18
+    20
   ],
   "perOrder": 5
 }
