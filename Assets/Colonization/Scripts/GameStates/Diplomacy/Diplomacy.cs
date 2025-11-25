@@ -7,30 +7,16 @@ namespace Vurbiri.Colonization
 {
     public partial class Diplomacy : IReactive<Diplomacy>
     {
+        private const int AI_INDEX = PlayerId.AI_01 + PlayerId.AI_02 - 1;
+
         private readonly int[] _values;
         private readonly DiplomacySettings _settings;
 
         private readonly VAction<Diplomacy> _eventChanged = new();
 
-        public int this[Id<PlayerId> idA, Id<PlayerId> idB]
-        {
-            [Impl(256)] get => _values[GetIndex(idA, idB)];
-            [Impl(256)] set => this[GetIndex(idA, idB)] = value;
-        }
-        public int this[int idA, int idB]
-        {
-            [Impl(256)] get => _values[GetIndex(idA, idB)];
-            [Impl(256)] set => this[GetIndex(idA, idB)] = value;
-        }
-        private int this[int index]
-        {
-            [Impl(256)] set
-            {
-                value = Math.Clamp(value, _settings.min, _settings.max);
-                if (_values[index] != value)
-                    _values[index] = value;
-            }
-        }
+        public int this[Id<PlayerId> idA, Id<PlayerId> idB] { [Impl(256)] get => _values[GetIndex(idA, idB)]; }
+        public int this[int idA, int idB] { [Impl(256)] get => _values[GetIndex(idA, idB)]; }
+        private int this[int index] { [Impl(256)] set => _values[index] = Math.Clamp(value, _settings.min, _settings.max); }
 
         public int Min { [Impl(256)] get => _settings.min - 1; }
         public int Max { [Impl(256)] get => _settings.max; }
@@ -65,6 +51,7 @@ namespace Vurbiri.Colonization
 
         [Impl(256)] public void Gift(int id, int giver) => Set(id, giver, id == PlayerId.Person ? _settings.rewardForGift >> 1 : _settings.rewardForGift);
         [Impl(256)] public void Marauding(int idA, int idB) => Set(idA, idB, _settings.penaltyForMarauding);
+        [Impl(256)] public void Occupation(int idA, int idB, int value) => Set(idA, idB, value);
 
         [Impl(256)] public Subscription Subscribe(Action<Diplomacy> action, bool instantGetValue = true) => _eventChanged.Add(action, instantGetValue, this);
 
@@ -103,11 +90,14 @@ namespace Vurbiri.Colonization
             int currentId = turnQueue.currentId.Value;
             if (currentId != PlayerId.Person & currentId != PlayerId.Satan)
             {
-                int aiIndex = GetIndex(PlayerId.AI_01, PlayerId.AI_02);
-                this[currentId - 1] = _values[currentId - 1] + _settings.personPerRound;
-                this[aiIndex] = _values[aiIndex] + _settings.aiPerRound;
+                int pnIndex = currentId - 1, pnValue = _values[pnIndex];
+                int aiAdd = _settings.aiPerRound, pnAdd = _settings.personPerRound + (pnValue > _settings.great ? 1 : 0);
 
-                _eventChanged.Invoke(this);
+                this[AI_INDEX] = _values[AI_INDEX] + aiAdd;
+                this[pnIndex] = pnValue + pnAdd;
+                
+                if(pnAdd != 0 || aiAdd != 0)
+                    _eventChanged.Invoke(this);
             }
         }
 

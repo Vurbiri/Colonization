@@ -14,6 +14,8 @@ namespace Vurbiri.Colonization
         [SerializeField] private bool _block;
         [SerializeField] private Chance _blockChance;
 
+        public bool IsValid => _buff >= 0 | _block;
+
         public (bool, bool) CanUsed(Actor target, bool notRoll = false)
         {
             var action = target.Action;

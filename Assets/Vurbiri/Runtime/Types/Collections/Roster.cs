@@ -90,6 +90,14 @@ namespace Vurbiri.Collections
             _values[_count] = default;
         }
 
+        public TValue Extract()
+        {
+            int index = UnityEngine.Random.Range(0, _count);
+            TValue value = _values[index];
+            RemoveAt(index);
+            return value;
+        }
+
         public void Clear()
         {
             for (int i = 0; i < _count; ++i)

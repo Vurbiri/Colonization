@@ -2,8 +2,8 @@
   "min": -99,
   "max": 100,
   "great": 75,
-  "defaultValue": 7,
-  "defaultDelta": 13,
+  "defaultValue": 10,
+  "defaultDelta": 15,
   "personPerRound": [
     -2,
     2

@@ -37,8 +37,6 @@ namespace Vurbiri.Colonization
                 return isEscape;
             }
 
-            public override void Dispose() { }
-
             public override IEnumerator Execution_Cn(Out<bool> isContinue)
             {
                 yield return GameContainer.CameraController.ToPositionControlled(Actor.Position);
@@ -83,6 +81,8 @@ namespace Vurbiri.Colonization
                     return force < maxForce;
                 }
             }
+
+            public override void Dispose() { }
         }
     }
 }

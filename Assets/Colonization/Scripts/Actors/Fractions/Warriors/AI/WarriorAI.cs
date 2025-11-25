@@ -25,6 +25,7 @@ namespace Vurbiri.Colonization
             factories[WarriorAIStateId.MoveToAttack]   = GetMoveToAttack;
             factories[WarriorAIStateId.MoveToRaid]     = GetMoveToRaid;
             factories[WarriorAIStateId.MoveToHome]     = GetMoveToHome;
+            factories[WarriorAIStateId.Healing]        = GetHealing;
             factories[WarriorAIStateId.FindResources]  = GetFindResources;
 
             SetFactories(factories);

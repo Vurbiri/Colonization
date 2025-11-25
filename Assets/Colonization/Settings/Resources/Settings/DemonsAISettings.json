@@ -3,11 +3,11 @@
   "enemyForceRatio": 1.666,
   "chanceFreeFinding": 28,
   "maxDistanceHelp": 4,
-  "minHPHelp": 50,
+  "minHPHelp": 20,
   "ratioForDefence": 70,
   "ratioForAttack": 35,
   "maxDistanceRaid": 5,
-  "minHPRaid": 15,
+  "minHPRaid": 0,
   "_priority": [
     0,
     1,
@@ -17,7 +17,8 @@
     5,
     6,
     7,
-    8
+    8,
+    9
   ],
   "_settings": [
     {
@@ -31,7 +32,7 @@
       },
       "heal": {
         "_heal": 3,
-        "_maxHP": 6,
+        "_maxHP": 5,
         "_useSelfHP": true
       },
       "selfBuffs": {
@@ -43,10 +44,28 @@
       "attacks": {
         "_skills": [
           {
-            "skill": 2,
-            "chance": 50,
+            "skill": 1,
+            "chance": 85,
             "applied": {
-              "_maxAP": false,
+              "_maxAP": true,
+              "_onlyAntipode": false,
+              "_self": false,
+              "_target": true
+            },
+            "selfHP": {
+              "_min": 0,
+              "_max": 100
+            },
+            "targetHP": {
+              "_min": 13,
+              "_max": 100
+            }
+          },
+          {
+            "skill": 2,
+            "chance": 77,
+            "applied": {
+              "_maxAP": true,
               "_onlyAntipode": false,
               "_self": false,
               "_target": false
@@ -57,24 +76,6 @@
             },
             "targetHP": {
               "_min": 27,
-              "_max": 100
-            }
-          },
-          {
-            "skill": 1,
-            "chance": 80,
-            "applied": {
-              "_maxAP": false,
-              "_onlyAntipode": false,
-              "_self": false,
-              "_target": false
-            },
-            "selfHP": {
-              "_min": 0,
-              "_max": 100
-            },
-            "targetHP": {
-              "_min": 13,
               "_max": 100
             }
           },
@@ -140,10 +141,10 @@
               "_maxAP": false,
               "_onlyAntipode": false,
               "_self": false,
-              "_target": false
+              "_target": true
             },
             "selfHP": {
-              "_min": 50,
+              "_min": 0,
               "_max": 100
             },
             "targetHP": {

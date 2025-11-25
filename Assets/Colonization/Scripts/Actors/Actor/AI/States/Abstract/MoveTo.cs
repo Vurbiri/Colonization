@@ -7,7 +7,7 @@ namespace Vurbiri.Colonization
     {
         public partial class AI<TSettings, TActorId, TStateId>
         {
-            protected abstract class MoveTo : State
+            protected abstract class MoveTo : Heal
             {
                 protected const int DISTANCE_RATE = 10;
 
@@ -28,8 +28,13 @@ namespace Vurbiri.Colonization
                             if (!isExit)
                             {
                                 Status.EnemiesUpdate(Actor);
-                                if (!(isExit = IsInCombat) && (isBuff | isBlock) && IsEnemyComing)
-                                    yield return Settings.defense.TryUse_Cn(Actor, isBuff, isBlock);
+                                if (!(isExit = IsInCombat))
+                                {
+                                    yield return TryHeal_Cn();
+
+                                    if ((isBuff | isBlock) && IsEnemyComing)
+                                        yield return Settings.defense.TryUse_Cn(Actor, isBuff, isBlock);
+                                }
                             }
                         }
                     }

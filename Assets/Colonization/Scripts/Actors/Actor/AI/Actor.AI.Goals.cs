@@ -49,7 +49,12 @@ namespace Vurbiri.Colonization
                 {
                     private readonly Dictionary<Key, List<ActorCode>> _targets = new();
 
-                    public bool CanAdd(Crossroad target, int max) => !(_targets.TryGetValue(target.Key, out List<ActorCode> actors) && actors.Count >= max);
+                    public int Count(Crossroad target)
+                    {
+                        if(_targets.TryGetValue(target.Key, out List<ActorCode> actors))
+                            return actors.Count;
+                        return 0;
+                    }
 
                     public bool Add(Key target, ActorCode actor)
                     {

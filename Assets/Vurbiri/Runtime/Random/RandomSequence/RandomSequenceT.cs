@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
@@ -77,7 +78,11 @@ namespace Vurbiri
                 Shuffle();
         }
 
-        public void Dispose() { }
+        public void Dispose() 
+        {
+            for (int i = 0; i < _count; ++i)
+                (_values[i] as IDisposable)?.Dispose();
+        }
 
         public IEnumerator<T> GetEnumerator()
         {

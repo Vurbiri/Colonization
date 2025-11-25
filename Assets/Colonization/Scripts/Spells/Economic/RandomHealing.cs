@@ -58,7 +58,7 @@ namespace Vurbiri.Colonization
                 yield return GameContainer.CameraController.ToPositionControlled(target);
 
                 target.ApplyEffect(_heal);
-                GameContainer.SFX.Run(s_settings.healSFX, null, target.Skin);
+                yield return GameContainer.SFX.Run(s_settings.healSFX, null, target.Skin);
 
                 s_isCasting.False();
             }

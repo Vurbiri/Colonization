@@ -1,6 +1,9 @@
 using System.Collections;
 using System.Text;
+using Vurbiri.Collections;
 using Vurbiri.International;
+using Vurbiri.Reactive.Collections;
+using Vurbiri.UI;
 using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization
@@ -13,15 +16,16 @@ namespace Vurbiri.Colonization
 
             private readonly WaitResultSource<bool> _waitGift = new();
             private readonly MainCurrencies _gift = new(), _clone = new();
-            public int _ratio;
-            private string _msg;
-
+            private readonly Subscription _subscription;
+            private string _giftMsg, _colonyMsg, _portMsg;
+            private int _ratio;
+            
             static Diplomat() => s_settings = SettingsFile.Load<DiplomatSettings>();
 
             public Diplomat(AIController parent) : base(parent)
 			{
-				parent._subscription += Localization.Instance.Subscribe(SetMsg);
                 _ratio = s_settings.ratio;
+                _subscription = Localization.Instance.Subscribe(SetText);
             }
 
             [Impl(256)] public void Update() => _ratio = s_settings.ratio;
@@ -48,43 +52,85 @@ namespace Vurbiri.Colonization
             {
                 for (Id<PlayerId> id = PlayerId.None; id.Next(PlayerId.HumansCount);)
                     yield return TryGive_Cn(id);
+  
+#if TEST_AI
+                Log.Info($"[Diplomat] {HumanId}");
+                if (HumanId == PlayerId.Person) yield break;
+#endif
+                int relation = GameContainer.Diplomacy[HumanId.Value, PlayerId.Person];
+                ColoniesCheck(Colonies, s_settings.colonyRelationOffset - relation, s_settings.colonyPenalty, _colonyMsg);
+                ColoniesCheck(Ports, s_settings.portRelationOffset - relation, s_settings.portPenalty, _portMsg);
 
-                // ===== Local =====
-                IEnumerator TryGive_Cn(Id<PlayerId> receiver)
+                #region Local ColoniesCheck(..), IsOccupation(..)
+                // =============================================================================================
+                [Impl(256)] void ColoniesCheck(ReadOnlyReactiveList<Crossroad> colonies, int chance, int penalty, string msg)
                 {
-                    int amount = Resources.Amount;
-                    if (receiver != HumanId & amount > s_settings.minAmount)
+                    if (chance > 0)
+                        for (int i = 0; i < colonies.Count; i++)
+                            if (IsOccupation(colonies[i].Hexagons, new(chance), s_settings.colonyPenalty, _colonyMsg))
+                                break;
+                }
+                // =============================================================================================
+                bool IsOccupation(ReadOnlyArray<Hexagon> hexagons, Chance chance, int penalty, string msg)
+                {
+                    for (int i = 0; i < Crossroad.HEX_COUNT; ++i)
                     {
-                        if (Chance.Rolling((GameContainer.Diplomacy[receiver, HumanId] - s_settings.relationOffset) + (amount - MaxResources << s_settings.shiftMax)))
+                        if (hexagons[i].OwnerId == PlayerId.Person && !hexagons[i].Owner.IsInCombat() && chance.Roll)
                         {
-                            _gift.Clear(); _clone.Import(Resources);
-                            int countGift = 1 + UnityEngine.Random.Range(0, amount - s_settings.minAmount >> s_settings.shiftAmount);
-                            for (int i = 0, max; i < countGift; i++)
-                            {
-                                max = _clone.MaxIndex;
-                                _clone.Decrement(max);
-                                _gift.Increment(max);
-                            }
-
-                            string msg = null;
-                            if (receiver == PlayerId.Person)
-                            {
-                                StringBuilder sb = new(TAG.ALING_CENTER, 256);
-                                sb.Append(GameContainer.UI.PlayerNames[HumanId]); sb.Append(" "); sb.AppendLine(_msg);
-                                _gift.PlusToStringBuilder(sb); sb.Append(TAG.ALING_OFF);
-                                msg = sb.ToString();
-                            }
-                            var wait = GameContainer.Humans[receiver].OnGift(HumanId, _gift, msg);
-                            yield return wait;
-                            if (wait) Resources.Remove(_gift);
+                            Banner.Open(msg, MessageTypeId.Error, 5f, true);
+                            GameContainer.Diplomacy.Occupation(HumanId.Value, PlayerId.Person, penalty);
+                            return true;
                         }
                     }
-
-                    yield break;
+                    return false;
                 }
+                // =============================================================================================
+                #endregion
             }
 
-            private void SetMsg(Localization localization) => _msg = localization.GetText(s_settings.msg);
+            public override void Dispose() => _subscription.Dispose();
+
+            private void SetText(Localization localization)
+            {
+                var name = GameContainer.UI.PlayerNames[HumanId];
+
+                _giftMsg   = string.Format(localization.GetText(s_settings.giftMsg), name);
+                _colonyMsg = string.Format(localization.GetText(s_settings.colonyMsg), name);
+                _portMsg   = string.Format(localization.GetText(s_settings.portMsg), name);
+            }
+
+            private IEnumerator TryGive_Cn(Id<PlayerId> receiver)
+            {
+                int amount = Resources.Amount;
+                if (receiver != HumanId & amount > s_settings.minAmount)
+                {
+                    if (Chance.Rolling((GameContainer.Diplomacy[receiver, HumanId] - s_settings.relationOffset) + (amount - MaxResources << s_settings.shiftMax)))
+                    {
+                        _gift.Clear(); _clone.Import(Resources);
+                        int countGift = 1 + UnityEngine.Random.Range(0, amount - s_settings.minAmount >> s_settings.shiftAmount);
+                        for (int i = 0, max; i < countGift; i++)
+                        {
+                            max = _clone.MaxIndex;
+                            _clone.Decrement(max);
+                            _gift.Increment(max);
+                        }
+
+                        string msg = null;
+                        if (receiver == PlayerId.Person)
+                        {
+                            StringBuilder sb = new(TAG.ALING_CENTER, 256);
+                            sb.AppendLine(_giftMsg);
+                            _gift.PlusToStringBuilder(sb); sb.Append(TAG.ALING_OFF);
+                            msg = sb.ToString();
+                        }
+                        var wait = GameContainer.Humans[receiver].OnGift(HumanId, _gift, msg);
+                        yield return wait;
+                        if (wait) Resources.Remove(_gift);
+                    }
+                }
+
+                yield break;
+            }
         }
 	}
 }

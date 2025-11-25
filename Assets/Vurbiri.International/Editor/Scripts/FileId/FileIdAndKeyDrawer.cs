@@ -16,13 +16,11 @@ namespace Vurbiri.International.Editor
 			SerializedProperty idProperty = mainProperty.FindPropertyRelative(F_ID);
 			SerializedProperty keyProperty = mainProperty.FindPropertyRelative(F_KEY);
 
-			Rect labelRect = GetLabelRect(position);
-			Rect idRect = GetIdRect(position, labelRect);
-            Rect keyRect = GetKeyRect(position, labelRect, idRect);
+            var (labelRect, idRect, keyRect) = CalkPosition(position);
 
-			label = BeginProperty(position, label, mainProperty);
+            label = BeginProperty(position, label, mainProperty);
 			{
-				PrefixLabel(labelRect, label);
+				LabelField(labelRect, label);
 				idProperty.intValue = IntPopup(idRect, idProperty.intValue, LanguageData.fileNames, LanguageData.fileValues);
 				KeyField(keyRect, keyProperty, idProperty.intValue);
 			}
@@ -41,22 +39,23 @@ namespace Vurbiri.International.Editor
             keyProperty.stringValue = keys[Mathf.Max(0, index)];
         }
 
-        public static Rect GetLabelRect(Rect rect)
-		{
-            rect.width = EditorGUIUtility.labelWidth - indentLevel * 15f - 1f;
-            return rect;
-		}
-        public static Rect GetIdRect(Rect rect, Rect labelRect)
+        public static (Rect, Rect, Rect) CalkPosition(Rect position)
         {
-            rect.x += labelRect.width + 1f;
-            rect.width = (rect.width - labelRect.width) * 0.315f - 1f;
-            return rect;
-        }
-        public static Rect GetKeyRect(Rect rect, Rect labelRect, Rect idRect)
-        {
-            rect.x = idRect.x + idRect.width + 1f;
-            rect.width = rect.width - labelRect.width - idRect.width - 1f;
-            return rect;
+            float offset = indentLevel * 15f;
+            float fieldWidth = position.width - EditorGUIUtility.labelWidth;
+            float idSize = fieldWidth * 0.31f;
+            float keySize = fieldWidth - idSize - 2f;
+
+            Rect labelRect = position, idRect = position, keyRect = position;
+
+            labelRect.width = EditorGUIUtility.labelWidth - offset + 2f;
+            idRect.width = idSize + offset;
+            keyRect.width = keySize + offset;
+
+            idRect.x += labelRect.width;
+            keyRect.x = idRect.x + idSize + 2f;
+
+            return (labelRect, idRect, keyRect);
         }
 
     }

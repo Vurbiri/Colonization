@@ -88,6 +88,7 @@ namespace Vurbiri.Colonization
             protected static State GetMoveToHelp(AI<TSettings, TActorId, TStateId> parent)    => new MoveToHelp(parent);
             protected static State GetDefense(AI<TSettings, TActorId, TStateId> parent)       => new Defense(parent);
             protected static State GetMoveToRaid(AI<TSettings, TActorId, TStateId> parent)    => new MoveToRaid(parent);
+            protected static State GetHealing(AI<TSettings, TActorId, TStateId> parent)       => new Healing(parent);
             protected static State GetMoveToAttack(AI<TSettings, TActorId, TStateId> parent)  => new MoveToAttack(parent);
         }
     }

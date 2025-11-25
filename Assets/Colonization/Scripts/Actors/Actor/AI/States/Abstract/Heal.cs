@@ -15,8 +15,10 @@ namespace Vurbiri.Colonization
 
                 [Impl(256)] protected Heal(AI<TSettings, TActorId, TStateId> parent) : base(parent) { }
 
-                protected bool TryHeal()
+                protected bool CanHeal()
                 {
+                    if (!Settings.heal.IsValid) return false;
+
                     _wounded.Clear();
                     if (Status.nearFriends.NotEmpty)
                     {
@@ -40,6 +42,19 @@ namespace Vurbiri.Colonization
                         _wounded.Clear();
                     }
                     yield break;
+                }
+
+                [Impl(256)] protected IEnumerator TryHeal_Cn()
+                {
+                    if (!Settings.heal.IsValid)
+                        yield break;
+                    
+                    Status.nearFriends.Update(Actor);
+                    if (CanHeal())
+                    {
+                        yield return Settings.heal.TryUse_Cn(Actor, _wounded.Roll);
+                        _wounded.Clear();
+                    }
                 }
             }
         }

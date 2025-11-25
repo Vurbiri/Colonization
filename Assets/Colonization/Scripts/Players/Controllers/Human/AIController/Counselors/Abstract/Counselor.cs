@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 using Vurbiri.Reactive.Collections;
@@ -7,7 +8,7 @@ namespace Vurbiri.Colonization
 {
     public partial class AIController
     {
-        private abstract class Counselor
+        private abstract class Counselor : IDisposable
         {
             protected readonly AIController _parent;
 
@@ -32,6 +33,8 @@ namespace Vurbiri.Colonization
 
             [Impl(256)] protected Coroutine StartCoroutine(IEnumerator routine) => GameContainer.Shared.StartCoroutine(routine);
             [Impl(256)] protected void StopCoroutine(Coroutine coroutine) => GameContainer.Shared.StopCoroutine(coroutine);
+
+            public virtual void Dispose() { }
         }
     }
 }

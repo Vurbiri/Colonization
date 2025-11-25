@@ -54,6 +54,7 @@ namespace Vurbiri.Colonization
         public int WaterCount { [Impl(256)] get => _waterCount; }
         public bool IsGate { [Impl(256)] get => _isGate; }
         public bool IsCoast { [Impl(256)] get => _waterCount > 0; }
+        public bool IsBuilding { [Impl(256)] get => _states.groupId != EdificeGroupId.None; }
         public bool IsPort { [Impl(256)] get => _states.groupId == EdificeGroupId.Port; }
         public bool IsColony { [Impl(256)] get => _states.groupId == EdificeGroupId.Colony; }
         public bool IsShrine { [Impl(256)] get => _states.groupId == EdificeGroupId.Shrine; }
@@ -466,6 +467,14 @@ namespace Vurbiri.Colonization
             for (int i = 0; i < HEX_COUNT; ++i)
                 key += _hexagons[i].Key;
             return new Key(key.x / HEX_COUNT, key.y);
+        }
+
+        public bool IsNearBuildings()
+        {
+            for (int i = 0; i < HEX_COUNT; ++i)
+                if (_hexagons[i].IsBuilding())
+                    return true;
+            return false;
         }
 
         [Impl(256)] public int ApproximateDistance(Hexagon hexagon) => hexagon.Distance(CROSS.ToHex(_key, _type.Value));

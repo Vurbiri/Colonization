@@ -134,8 +134,19 @@ namespace Vurbiri.Colonization
         [Impl(256)] public void SetUnselectableForSwap() => _view.SetUnselectableForSwap();
         #endregion
 
+        #region ================== Utilities ============================
         [Impl(256)] public int Distance(Hexagon other) => HEX.Distance(_key, other._key);
         [Impl(256)] public int Distance(Key key) => HEX.Distance(_key, key);
+
+        public bool IsBuilding()
+        {
+            if(_isWater | _isGate) return false;
+            for(int  i = 0; i < HEX.VERTICES; ++i)
+                if (_crossroads[i].IsBuilding)
+                    return true;
+            return false;
+        }
+        #endregion
 
         [Impl(256)] public Subscription Subscribe(Action<int> action, bool instantGetValue = true) => _changeID.Add(action, instantGetValue, _id);
 

@@ -39,6 +39,8 @@ namespace Vurbiri.Colonization
         {
             foreach (var demon in Actors)
                 demon.EffectsUpdate(demon.Hexagon.IsGate ? s_parameters.gateDefense : 0);
+
+            _interactable.True();
         }
 
         public void OnPlay()
@@ -53,6 +55,8 @@ namespace Vurbiri.Colonization
 
                 yield return s_settings.waitPlayStart.Restart();
                 yield return _waitAll.Add(s_settings.waitPlay.Restart(), _commander.Execution_Cn());
+
+                _interactable.False();
 
 #if TEST_AI
                 Log.Info("===================================================");

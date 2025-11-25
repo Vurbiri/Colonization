@@ -12,6 +12,8 @@ namespace Vurbiri.Colonization
         [SerializeField] private int _maxHP;
         [SerializeField] private bool _useSelfHP;
 
+        public bool IsValid => _heal >= 0;
+
         public bool CanUsed(Actor user, Actor target) => user.Action.CanUsedSkill(_heal) && ChanceValue(user, target) > 0;
 
         public IEnumerator TryUse_Cn(Actor user, Actor target)

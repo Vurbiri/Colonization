@@ -19,7 +19,7 @@ namespace Vurbiri.Colonization
                     bool isEnter = false;
                     
                     _enemies.Clear();
-                    if (IsInCombat)
+                    if (IsInCombat && Actor._AP > 0)
                     {
                         var attacks = Settings.attacks;
                         List<Actor> enemies = Status.nearEnemies; Actor enemy;
@@ -38,7 +38,7 @@ namespace Vurbiri.Colonization
                                 _enemies.Add(enemy, enemy.PercentHP);
                         }
 
-                        isEnter = TryHeal() || _enemies.Count > 0;
+                        isEnter = CanHeal() || _enemies.Count > 0;
                     }
 
                     return isEnter;

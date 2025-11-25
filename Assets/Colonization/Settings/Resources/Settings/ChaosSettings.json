@@ -1,7 +1,7 @@
 {
   "max": 666,
-  "penaltyPerDemon": 5,
-  "penaltyPerSatanLevelUp": 10,
+  "penaltyPerDemon": 7,
+  "penaltyPerSatanLevelUp": 15,
   "penaltyPerBlood": 1,
   "penaltyPerKillWarrior": [
     5,

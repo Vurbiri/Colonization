@@ -25,11 +25,9 @@ namespace Vurbiri.Colonization.UI
         [Space]
         [SerializeField] private PopupTextWidgetUI _popup;
 
-        
-
         private Subscription _unsub;
         private int _relation, _min, _max;
-        private bool _run;
+        private bool _indicatorRun;
 
         public void Init(Vector3 offsetPopup, Diplomacy diplomacy)
         {
@@ -85,7 +83,7 @@ namespace Vurbiri.Colonization.UI
 
         private void IndicatorTurn(bool run)
         {
-            _run = run;
+            _indicatorRun = run;
             if (run) StartCoroutine(IndicatorTurn_Cn());
 
             // ===== Local =====
@@ -99,7 +97,7 @@ namespace Vurbiri.Colonization.UI
                 _indicator.canvasRenderer.SetAlpha(1f);
                 _indicatorTurn.canvasRenderer.SetAlpha(1f);
 
-                while (_run | !_indicator.fillClockwise)
+                while (_indicatorRun | !_indicator.fillClockwise)
                 {
                     progress = 0f; sign = end - start;
 

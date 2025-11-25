@@ -18,7 +18,7 @@ namespace Vurbiri.Colonization
                 bool isEnter = false;
 
                 _friends.Clear();
-                if (Settings.support && Status.nearFriends.NotEmpty)
+                if (Settings.support && Status.nearFriends.NotEmpty && Actor.CurrentAP > 0)
                 {
                     var buffs = Settings.buffs;
                     List<Actor> friends = Status.nearFriends; Actor friend;
@@ -28,7 +28,7 @@ namespace Vurbiri.Colonization
                         if (buffs.CanUsed(Actor, friend))
                             _friends.Add(friend);
                     }
-                    isEnter = TryHeal() || _friends.Count > 0;
+                    isEnter = CanHeal() || _friends.Count > 0;
                 }
 
                 return isEnter;

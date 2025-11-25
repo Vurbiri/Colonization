@@ -11,9 +11,9 @@ namespace Vurbiri.Colonization
 
         public override APooledSFX Create(Action<APooledSFX> deactivate) => _type switch
         {
-            SFXType.Impact => _isWait ? new WaitImpactParticle(this, deactivate) : new ImpactParticle(this, deactivate),
+            SFXType.Impact => _isWait ? new WaitImpactParticle(this, deactivate)   : new ImpactParticle(this, deactivate),
             SFXType.Target => _isWait ? new WaitParticleOnTarget(this, deactivate) : new ParticleOnTarget(this, deactivate),
-            SFXType.User   => _isWait ? new WaitParticleOnUser(this, deactivate) : new ParticleOnUser(this, deactivate),
+            SFXType.User   => _isWait ? new WaitParticleOnUser(this, deactivate)   : new ParticleOnUser(this, deactivate),
             _ => null
         };
 

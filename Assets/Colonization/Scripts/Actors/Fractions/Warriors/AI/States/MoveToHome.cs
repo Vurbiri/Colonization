@@ -7,12 +7,12 @@ namespace Vurbiri.Colonization
     {
         sealed private class MoveToHome : MoveToColony
         {
-            [Impl(256)] public MoveToHome(AI<WarriorsAISettings, WarriorId, WarriorAIStateId> parent) : base(parent, 1) => _owners.Add(OwnerId);
+            [Impl(256)] public MoveToHome(AI<WarriorsAISettings, WarriorId, WarriorAIStateId> parent) : base(parent, 1, s_settings.maxDistanceHome) => _owners.Add(OwnerId);
 
             public override bool TryEnter()
             {
                 _targetHexagon = null;
-                return (Status.isMove & !(Status.isSiege | Status.isGuard)) && TrySetColony(s_settings.maxDistanceHome, 2);
+                return (Status.isMove & !(Status.isSiege | Status.isGuard)) && TrySetColony(s_settings.maxDistanceHome);
             }
         }
     }

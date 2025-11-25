@@ -14,8 +14,6 @@
   "minHPRaid": 84,
   "_priority": [
     0,
-    10,
-    11,
     1,
     2,
     3,
@@ -24,7 +22,10 @@
     6,
     7,
     8,
-    9
+    9,
+    10,
+    11,
+    12
   ],
   "_settings": [
     {
@@ -153,23 +154,23 @@
             "skill": 2,
             "chance": 75,
             "applied": {
-              "_maxAP": true,
+              "_maxAP": false,
               "_onlyAntipode": false,
               "_self": false,
-              "_target": false
+              "_target": true
             },
             "selfHP": {
-              "_min": 37,
+              "_min": 0,
               "_max": 100
             },
             "targetHP": {
-              "_min": 41,
+              "_min": 30,
               "_max": 100
             }
           },
           {
             "skill": 1,
-            "chance": 78,
+            "chance": 70,
             "applied": {
               "_maxAP": false,
               "_onlyAntipode": false,
@@ -181,7 +182,7 @@
               "_max": 100
             },
             "targetHP": {
-              "_min": 34,
+              "_min": 15,
               "_max": 100
             }
           },

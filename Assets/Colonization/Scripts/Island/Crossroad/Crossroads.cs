@@ -77,6 +77,22 @@ namespace Vurbiri.Colonization
 
         [Impl(256)] public Crossroad GetRandomPort() => _crossroads[_coast.Roll];
 
+        public bool TryExtractPort(out Crossroad crossroad)
+        {
+            crossroad = null;
+            if (_coast.Count > 0)
+            {
+                crossroad = _crossroads[_coast.Extract()];
+                crossroad.BannedBuild.Remove(_coast.RemoveKey);
+            }
+            return crossroad != null;
+        }
+        public void ReturnPorts(List<Crossroad> ports)
+        {
+            for (int i = ports.Count - 1; i >= 0; --i)
+                _coast.Add(ports[i]);
+        }
+
         [Impl(256)] public bool IsDeadEnd(Key start, Key end, Id<PlayerId> playerId) => _crossroads[start].IsDeadEnd(playerId) || _crossroads[end].IsDeadEnd(playerId);
         [Impl(256)] public int DeadEndCount(Key start, Key end, Id<PlayerId> playerId) => (_crossroads[start].IsDeadEnd(playerId) ? 1:0) + (_crossroads[end].IsDeadEnd(playerId) ? 1:0);
 
@@ -108,7 +124,7 @@ namespace Vurbiri.Colonization
                 return true;
             }
 
-            private void RemoveKey(Key key) => RemoveAtInternal(FindIndex(key));
+            public void RemoveKey(Key key) => RemoveAtInternal(FindIndex(key));
         }
         #endregion
     }

@@ -11,19 +11,26 @@ namespace Vurbiri.Colonization
         {
             protected abstract class MoveToColony : MoveTo
             {
+                protected const int MAX_COUNT = 3, COUNT_RATE = 20;
+
                 private readonly WeightsList<Target> _colonies = new();
+                private readonly int _weightBase;
                 protected readonly List<int> _owners;
                 protected Key _targetColony;
-                
-                [Impl(256)] protected MoveToColony(AI<TSettings, TActorId, TStateId> parent, int capacity) : base(parent) => _owners = new(capacity);
 
-                protected bool TrySetColony(int maxDistance, int maxActors)
+                [Impl(256)]
+                protected MoveToColony(AI<TSettings, TActorId, TStateId> parent, int capacity, int maxDistance) : base(parent)
+                {
+                    _owners = new(capacity);
+                    _weightBase = (maxDistance + 1) * (maxDistance) * DISTANCE_RATE + MAX_COUNT * MAX_COUNT * COUNT_RATE;
+                }
+
+                protected bool TrySetColony(int maxDistance)
                 {
                     _colonies.Clear();
 
-                    int weightBase = (maxDistance + 1) * DISTANCE_RATE;
                     for (int i = _owners.Count - 1; i >= 0; --i)
-                        SetEmptyColony(_owners[i], weightBase, maxDistance, maxActors);
+                        SetEmptyColony(_owners[i], maxDistance);
 
                     while (_colonies.Count > 0)
                     {
@@ -57,23 +64,25 @@ namespace Vurbiri.Colonization
                     }
                 }
 
-                private void SetEmptyColony(int playerId, int weightBase, int maxDistance, int maxActors)
+                private void SetEmptyColony(int playerId, int maxDistance)
                 {
                     var colonies = GameContainer.Humans[playerId].Colonies;
-                    ReadOnlyArray<Hexagon> hexagons;
+                    ReadOnlyArray<Hexagon> hexagons; Hexagon hexagon;
                     Crossroad colony;
 
                     for (int i = 0; i < colonies.Count; ++i)
                     {
                         colony = colonies[i];
-                        if (Goals.Colonies.CanAdd(colony, maxActors) && (colony.ApproximateDistance(Hexagon) <= (maxDistance + 1)) && colony.IsEmptyNear())
+                        int count = Goals.Colonies.Count(colony);
+                        if (count < MAX_COUNT && (colony.ApproximateDistance(Hexagon) <= (maxDistance + 1)) && colony.IsEmptyNear())
                         {
+                            count *= count * COUNT_RATE;
                             hexagons = colony.Hexagons;
                             foreach (int index in s_crossroadHex)
                             {
-                                int distance = GetDistance(Actor, hexagons[index]);
+                                int distance = GetDistance(Actor, hexagon = hexagons[index]);
                                 if (distance > 0 && distance <= maxDistance)
-                                    _colonies.Add(new(colony, hexagons[index]), weightBase - distance * DISTANCE_RATE);
+                                    _colonies.Add(new(colony, hexagon), _weightBase - distance * distance * DISTANCE_RATE - count);
                             }
                         }
                     }

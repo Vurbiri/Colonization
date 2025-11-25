@@ -1,5 +1,23 @@
 {
-  "msg": [
+  "colonyMsg": [
+    "1",
+    "ColonyOccupation"
+  ],
+  "colonyPenalty": [
+    -3,
+    0
+  ],
+  "colonyRelationOffset": 85,
+  "portMsg": [
+    "1",
+    "PortOccupation"
+  ],
+  "portPenalty": [
+    -5,
+    1
+  ],
+  "portRelationOffset": 96,
+  "giftMsg": [
     "1",
     "GiftMsg"
   ],

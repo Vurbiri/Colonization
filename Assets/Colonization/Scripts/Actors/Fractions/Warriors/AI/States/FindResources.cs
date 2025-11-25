@@ -44,8 +44,6 @@ namespace Vurbiri.Colonization
 
                 isContinue.Set(false);
                 Exit();
-
-                yield break;
             }
 
             public override void Dispose() { }

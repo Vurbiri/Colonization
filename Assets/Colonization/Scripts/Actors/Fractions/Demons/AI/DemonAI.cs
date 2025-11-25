@@ -23,10 +23,11 @@ namespace Vurbiri.Colonization
             factories[DemonAIStateId.UseSpecSkill]  = GetUseSpecSkill;
             factories[DemonAIStateId.Combat]        = GetCombat;
             factories[DemonAIStateId.MoveToHelp]    = GetMoveToHelp;
-            factories[DemonAIStateId.MoveToEnemy]   = GetMoveToEnemy;
             factories[DemonAIStateId.MoveToRaid]    = GetMoveToRaid;
-            factories[DemonAIStateId.MoveToAttack]  = GetMoveToAttack;
+            factories[DemonAIStateId.MoveToEnemy]   = GetMoveToEnemy;
+            factories[DemonAIStateId.Healing]       = GetHealing;
             factories[DemonAIStateId.Defense]       = GetDefense;
+            factories[DemonAIStateId.MoveToAttack]  = GetMoveToAttack;
             factories[DemonAIStateId.FreeFinding]   = GetFreeFinding;
             SetFactories(factories);
 

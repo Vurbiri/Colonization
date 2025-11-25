@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
@@ -5,7 +6,7 @@ namespace Vurbiri.Colonization
 {
     public partial class AIController
     {
-        private class Counselors
+        private class Counselors : IDisposable
         {
             private readonly RandomSequence<Counselor> _counselors;
             private readonly Diplomat _diplomat;
@@ -31,6 +32,8 @@ namespace Vurbiri.Colonization
 
                 yield return _commander.Execution_Cn();
             }
+
+            public void Dispose() => _counselors.Dispose();
         }
     }
 }

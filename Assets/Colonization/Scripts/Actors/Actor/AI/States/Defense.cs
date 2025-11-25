@@ -14,15 +14,17 @@ namespace Vurbiri.Colonization
 
                 [Impl(256)] public Defense(AI<TSettings, TActorId, TStateId> parent) : base(parent) { }
 
-                sealed public override bool TryEnter()
+                public override bool TryEnter()
                 {
+                    if(!Settings.defense.IsValid) return false;
+
                     int enemiesForce = Status.nighEnemies.Force;
                     if (enemiesForce > 0 && enemiesForce <= _oldForce)
                         _chance >>= 1;
                     else
                         _chance = enemiesForce * s_settings.ratioForDefence / Actor.CurrentForce;
 
-                   _isBuff = _isBlock = false;
+                    _isBuff = _isBlock = false;
 
                     if (Chance.Rolling(_chance))
                         (_isBuff, _isBlock) = Settings.defense.CanUsed(Actor);
@@ -31,9 +33,7 @@ namespace Vurbiri.Colonization
                     return _isBuff | _isBlock;
                 }
 
-                sealed public override void Dispose() { }
-
-                sealed public override IEnumerator Execution_Cn(Out<bool> isContinue)
+                public override IEnumerator Execution_Cn(Out<bool> isContinue)
                 {
                     yield return GameContainer.CameraController.ToPositionControlled(Actor);
                     yield return Settings.defense.Use_Cn(Actor, _isBuff, _isBlock);
@@ -41,6 +41,8 @@ namespace Vurbiri.Colonization
                     isContinue.Set(false);
                     Exit();
                 }
+
+                sealed public override void Dispose() { }
             }
         }
     }
