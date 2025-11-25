@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Vurbiri.Collections;
+using Vurbiri.Reactive.Collections;
 using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization
@@ -30,7 +31,7 @@ namespace Vurbiri.Colonization
                     _colonies.Clear();
 
                     for (int i = _owners.Count - 1; i >= 0; --i)
-                        SetEmptyColony(_owners[i], maxDistance);
+                        SetEmptyColony(GameContainer.Humans[_owners[i]].Colonies, maxDistance);
 
                     while (_colonies.Count > 0)
                     {
@@ -64,26 +65,29 @@ namespace Vurbiri.Colonization
                     }
                 }
 
-                private void SetEmptyColony(int playerId, int maxDistance)
+                private void SetEmptyColony(ReadOnlyReactiveList<Crossroad> colonies, int maxDistance)
                 {
-                    var colonies = GameContainer.Humans[playerId].Colonies;
-                    ReadOnlyArray<Hexagon> hexagons; Hexagon hexagon;
+                    ReadOnlyArray<Hexagon> hexagons;
                     Crossroad colony;
 
-                    for (int i = 0; i < colonies.Count; ++i)
+                    for (int c = 0, distance, index, count; c < colonies.Count; ++c)
                     {
-                        colony = colonies[i];
-                        int count = Goals.Colonies.Count(colony);
+                        colony = colonies[c];
+                        count = Goals.Colonies.Count(colony);
                         if (count < MAX_COUNT && (colony.ApproximateDistance(Hexagon) <= (maxDistance + 1)) && colony.IsEmptyNear())
                         {
-                            count *= count * COUNT_RATE;
+                            distance = maxDistance; index = -1;
                             hexagons = colony.Hexagons;
-                            foreach (int index in s_crossroadHex)
+                            for (int h = 0, newDistance; h < Crossroad.HEX_COUNT; ++h)
                             {
-                                int distance = GetDistance(Actor, hexagon = hexagons[index]);
-                                if (distance > 0 && distance <= maxDistance)
-                                    _colonies.Add(new(colony, hexagon), _weightBase - distance * distance * DISTANCE_RATE - count);
+                                if (TryGetDistance(Actor, hexagons[h], distance, out newDistance))
+                                {
+                                    distance = newDistance;
+                                    index = h;
+                                }
                             }
+                            if(index >= 0)
+                                _colonies.Add(new(colony, hexagons[index]), _weightBase - distance * distance * DISTANCE_RATE - count * count * COUNT_RATE);
                         }
                     }
                 }

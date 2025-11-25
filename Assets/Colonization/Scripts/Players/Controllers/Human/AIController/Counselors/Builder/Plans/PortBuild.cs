@@ -38,7 +38,7 @@ namespace Vurbiri.Colonization
                             break;
                     }
 #if TEST_AI
-                    Log.Info($"[Builder][PortBuild] count of rejected ports [{ports.Count}]");
+                    Log.Info($"[Builder::PortBuild] count of rejected ports [{ports.Count}]");
 #endif
                     crossroads.ReturnPorts(ports);
 

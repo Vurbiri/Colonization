@@ -12,10 +12,7 @@ namespace Vurbiri.Colonization
 
         public bool CanEnterToGate { [Impl(256)] get => _spawner.Potential == 0; }
 
-
-
         static SatanController() => s_settings = SettingsFile.Load<SatanControllerSettings>();
-
         public SatanController(Settings settings) : base(settings)
         {
             _commander = new(Actors, _spawner);
@@ -33,7 +30,6 @@ namespace Vurbiri.Colonization
             GameContainer.GameLoop.EndTurn();
         }
         public void OnEndLanding() { }
-
 
         public void OnStartTurn()
         {
@@ -70,7 +66,7 @@ namespace Vurbiri.Colonization
         {
             StartCoroutine(OnEndTurn_Cn());
 
-            //Local
+            // ======= Local ==========
             IEnumerator OnEndTurn_Cn()
             {
                 int countBuffs = 0, balance = 0;

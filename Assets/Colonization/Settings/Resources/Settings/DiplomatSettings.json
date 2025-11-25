@@ -7,16 +7,16 @@
     -3,
     0
   ],
-  "colonyRelationOffset": 85,
+  "colonyRelationOffset": 71,
   "portMsg": [
     "1",
     "PortOccupation"
   ],
   "portPenalty": [
     -5,
-    1
+    -1
   ],
-  "portRelationOffset": 96,
+  "portRelationOffset": 93,
   "giftMsg": [
     "1",
     "GiftMsg"
@@ -28,5 +28,6 @@
   "relationOffset": 25,
   "shiftMax": 2,
   "shiftAmount": 3,
-  "minAmount": 7
+  "minAmount": 7,
+  "bannerTime": 7.07
 }

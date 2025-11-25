@@ -28,6 +28,7 @@ namespace Vurbiri.Colonization
         {
             StartCoroutine(OnLanding_Cn());
 
+            // ======= Local ==========
             IEnumerator OnLanding_Cn()
             {
                 yield return s_settings.waitPlayStart.Restart();
@@ -49,6 +50,7 @@ namespace Vurbiri.Colonization
         {
             StartCoroutine(OnPlay_Cn());
 
+            // ======= Local ==========
             IEnumerator OnPlay_Cn()
             {
                 if (_resources.PercentAmount < s_settings.minPercentRes)
@@ -77,6 +79,7 @@ namespace Vurbiri.Colonization
         {
             base.Dispose();
             _waitAll.Dispose();
+            _counselors.Dispose();
         }
 
         private IEnumerator Exchange_Cn(ReadOnlyMainCurrencies needed, Out<bool> output)

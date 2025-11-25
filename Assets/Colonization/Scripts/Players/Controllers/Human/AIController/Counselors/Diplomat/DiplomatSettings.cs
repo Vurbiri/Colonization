@@ -20,5 +20,7 @@ namespace Vurbiri.Colonization
         public int shiftMax; // = 2;
         public int shiftAmount; // = 3;
         public int minAmount; // = 7;
+        [Header("Other")]
+        [Range(0f, 10f)] public float bannerTime;
     }
 }

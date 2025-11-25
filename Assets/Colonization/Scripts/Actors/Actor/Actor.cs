@@ -220,6 +220,14 @@ namespace Vurbiri.Colonization
 
         #region ---------------- Combat ----------------
         public bool IsInCombat() => _currentHex.IsEnemyNear(_owner);
+        public bool IsGuard()
+        {
+            var crossroads = _currentHex.Crossroads;
+            for (int i = 0; i < HEX.VERTICES; ++i)
+                if (crossroads[i].TryGetOwnerColony(out Id<PlayerId> owner) && owner == _owner)
+                    return true;
+            return false;
+        }
         public int GetCurrentForceNearEnemies()
         {
             int force = 0;

@@ -58,26 +58,31 @@ namespace Vurbiri.Colonization
                 if (HumanId == PlayerId.Person) yield break;
 #endif
                 int relation = GameContainer.Diplomacy[HumanId.Value, PlayerId.Person];
-                ColoniesCheck(Colonies, s_settings.colonyRelationOffset - relation, s_settings.colonyPenalty, _colonyMsg);
-                ColoniesCheck(Ports, s_settings.portRelationOffset - relation, s_settings.portPenalty, _portMsg);
+                if (relation > 0)
+                {
+                    ColoniesCheck(Colonies, s_settings.colonyRelationOffset - relation, s_settings.colonyPenalty, _colonyMsg);
+                    ColoniesCheck(Ports, s_settings.portRelationOffset - relation, s_settings.portPenalty, _portMsg);
+                }
 
                 #region Local ColoniesCheck(..), IsOccupation(..)
                 // =============================================================================================
                 [Impl(256)] void ColoniesCheck(ReadOnlyReactiveList<Crossroad> colonies, int chance, int penalty, string msg)
                 {
                     if (chance > 0)
-                        for (int i = 0; i < colonies.Count; i++)
-                            if (IsOccupation(colonies[i].Hexagons, new(chance), s_settings.colonyPenalty, _colonyMsg))
+                        for (int i = 0; i < colonies.Count; ++i)
+                            if (IsOccupation(colonies[i].Hexagons, chance, penalty, msg))
                                 break;
                 }
                 // =============================================================================================
-                bool IsOccupation(ReadOnlyArray<Hexagon> hexagons, Chance chance, int penalty, string msg)
+                bool IsOccupation(ReadOnlyArray<Hexagon> hexagons, int chance, int penalty, string msg)
                 {
+                    Hexagon hexagon;
                     for (int i = 0; i < Crossroad.HEX_COUNT; ++i)
                     {
-                        if (hexagons[i].OwnerId == PlayerId.Person && !hexagons[i].Owner.IsInCombat() && chance.Roll)
+                        hexagon = hexagons[i];
+                        if (hexagon.OwnerId == PlayerId.Person && !hexagon.Owner.IsInCombat() && Chance.Rolling(chance >> (hexagon.Owner.IsGuard() ? 1 : 0)))
                         {
-                            Banner.Open(msg, MessageTypeId.Error, 5f, true);
+                            Banner.Open(msg, MessageTypeId.Error, s_settings.bannerTime, true);
                             GameContainer.Diplomacy.Occupation(HumanId.Value, PlayerId.Person, penalty);
                             return true;
                         }

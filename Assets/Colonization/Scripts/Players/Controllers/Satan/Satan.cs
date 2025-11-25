@@ -7,14 +7,12 @@ namespace Vurbiri.Colonization
     public partial class Satan : Player, IReactive<Satan>
     {
         protected static readonly SatanAbilities s_parameters;
-        protected readonly SatanLeveling _leveling;
-        protected readonly Artefact _artefact;
 
         protected readonly Spawner _spawner;
-
-        protected readonly VAction<Satan> _eventChanged = new();
-
-        protected int _curse, _maxCurse;
+        protected readonly Artefact _artefact;
+        private readonly SatanLeveling _leveling;
+        private readonly VAction<Satan> _eventChanged = new();
+        private int _curse, _maxCurse;
 
         public int Level { [Impl(256)] get => _leveling.Level; }
         public int MaxLevel { [Impl(256)] get => _leveling.MaxLevel; }
@@ -24,7 +22,6 @@ namespace Vurbiri.Colonization
         public int DefenseFromGate { [Impl(256)] get => s_parameters.gateDefense; }
 
         static Satan() => s_parameters = SettingsFile.Load<SatanAbilities>();
-
         protected Satan(Settings settings) : base(PlayerId.Satan, false)
         {
             var storage = GameContainer.Storage.Satan;

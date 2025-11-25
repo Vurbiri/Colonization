@@ -31,7 +31,7 @@ namespace Vurbiri.Colonization
                 {
                     yield return GameContainer.CameraController.ToPositionControlled(Vector3.zero);
 
-                    int minId = MathI.Min(_potential >> 2, DemonId.Fatty);
+                    int minId = MathI.Min(_potential / 3, DemonId.Fatty);
                     int maxId = MathI.Min(_potential, DemonId.Count);
                     int id = Random.Range(minId, maxId);
 
