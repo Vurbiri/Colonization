@@ -3,7 +3,7 @@
   "potentialFromLvlRatio": 3,
   "maxCurseBase": 1100,
   "maxCursePerLevel": 22,
-  "cursePerTurn": 130,
+  "cursePerTurn": 135,
   "cursePerShrine": -5,
   "cursePerKillWarrior": [
     10,
@@ -11,5 +11,6 @@
     15,
     25,
     30
-  ]
+  ],
+  "minPotentialRatio": 4
 }

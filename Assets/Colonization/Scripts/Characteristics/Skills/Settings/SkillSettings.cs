@@ -73,6 +73,18 @@ namespace Vurbiri.Colonization
         {
             return skill._target == TargetOfSkill.Enemy && skill._effectsHitsSettings != null && skill._effectsHitsSettings.Length > 0 && !skill._effectsHitsSettings[0].IsUsedAttack_Ed();
         }
+
+        public bool TryGetHits_Ed(out SkillHits_Ed hits)
+        {
+            hits = new(GetName_Ed());
+            if (IsAttack_Ed(this))
+            {
+                for(int i = 0; i < _effectsHitsSettings.Length; ++i)
+                    if(_effectsHitsSettings[i].IsUsedAttack_Ed())
+                        hits.Add(_effectsHitsSettings[i].SkillHit_Ed);
+            }
+            return hits.IsValid;
+        }
 #endif
     }
 }

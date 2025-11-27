@@ -146,6 +146,8 @@ namespace Vurbiri.Colonization
         public const string parentTargetField = nameof(_parentTarget_ed);
         public const string isWarriorField = nameof(_isWarrior_ed);
 
+        public SkillHit_Ed SkillHit_Ed => new(-_value, _holy, _pierce);
+
         public bool UseAttack_Ed => _useAttack;
         public bool IsHoly_Ed => _holy != 0;
 #endif

@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 8363de6a5bdaa064dbd05b21dc26c67a
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - m_ViewDataDictionary: {instanceID: 0}
+  - _warriorsSettings: {fileID: 11400000, guid: f330b756546af4240a3ae9b5454b8f51,
+      type: 2}
+  - _demonsSettings: {fileID: 11400000, guid: 1c00bc6e33a3c4c45abbd253e0edd33c, type: 2}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

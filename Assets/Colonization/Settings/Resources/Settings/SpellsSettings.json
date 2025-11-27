@@ -1,7 +1,7 @@
 {
   "orderPerMana": 5,
   "healSFX": "Heal",
-  "healPercentValue": 15,
+  "healPercentValue": 16,
   "blessSFX": "ShortBuffWait",
   "blessBasa": 7,
   "blessPerRes": 3,

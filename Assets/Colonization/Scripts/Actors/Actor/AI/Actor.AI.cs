@@ -74,10 +74,11 @@ namespace Vurbiri.Colonization
                 // ========== Local ============
                 static bool Find(Hexagon start, Hexagon end, int depth, bool isEnterToGate)
                 {
-                    Hexagon near, current = s_finds.Dequeue(); ;
+                    Hexagon near, current = s_finds.Dequeue();
+                    var hexagons = current.Neighbors;
                     foreach (int index in s_hexagonIndexes)
                     {
-                        near = current.Neighbors[index];
+                        near = hexagons[index];
                         if (near == start)
                         {
                             s_links.Add(near, current);

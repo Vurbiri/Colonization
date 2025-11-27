@@ -1,5 +1,6 @@
 #if UNITY_EDITOR
 
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
@@ -71,6 +72,8 @@ namespace Vurbiri.Colonization
             for (int i = 0; i < ActorId<TId>.Count; ++i)
                 (names[i], values[i]) = _settings[i].Skills.GetHeals_Ed();
         }
+
+        public List<SkillHits_Ed> GetSkillHits_Ed(int id) => _settings[id].Skills.GetSkillHits_Ed();
     }
 }
 #endif

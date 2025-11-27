@@ -28,7 +28,7 @@ namespace Vurbiri.Colonization
         }
 
         public void ForDemonCurse(int value) => Add(_settings.penaltyPerDemon * value);
-        public void ForSatanLevelUP() => Add(_settings.penaltyPerSatanLevelUp);
+        public void ForSatanLevelUP(int level) => Add(-level);
 
         public void BindShrines(ReadOnlyReactiveList<Crossroad> shrines) => shrines.Subscribe((_, _, _) => Add(_settings.rewardPerShrine), false);
         public void BindBlood(Currency blood) => blood.SubscribeDelta(OnPayInBlood);

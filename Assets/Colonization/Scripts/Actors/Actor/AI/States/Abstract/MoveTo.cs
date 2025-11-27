@@ -18,14 +18,13 @@ namespace Vurbiri.Colonization
                 protected IEnumerator Move_Cn(Out<bool> isContinue, int distance, bool isExit, bool isBuff, bool isBlock)
                 {
                     isExit |= IsInCombat;
-                    if (!isExit && Status.isMove)
+                    if (!isExit & Status.isMove)
                     {
-                        isExit = !TryGetNextHexagon(Actor, _targetHexagon, out Hexagon next);
-                        if (!isExit)
+                        isExit = true;
+                        if (TryGetNextHexagon(Actor, _targetHexagon, out Hexagon next))
                         {
                             yield return Actor.Move_Cn(next);
-                            isExit = _targetHexagon.Distance(next) == distance;
-                            if (!isExit)
+                            if (!(isExit = _targetHexagon.Distance(next) == distance))
                             {
                                 Status.EnemiesUpdate(Actor);
                                 if (!(isExit = IsInCombat))

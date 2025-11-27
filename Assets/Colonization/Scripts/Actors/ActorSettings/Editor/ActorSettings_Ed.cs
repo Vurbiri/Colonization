@@ -39,6 +39,8 @@ namespace Vurbiri.Colonization
             int ap = _abilities[MaxAP] + 1;
             Debug.Log($"[{ActorTypeId.GetName(TypeId, _id)}] Main: {_abilities[ProfitMain] * ap * main / 10000}. Adv: {_abilities[ProfitAdv] * ap * adv / 10000}");
         }
+
+        public (int, int, int) GetAttackPierceDefence_Ed() => (_abilities[Attack], _abilities[Pierce], _abilities[Defense]);
     }
 }
 #endif

@@ -32,8 +32,8 @@
       },
       "heal": {
         "_heal": 3,
-        "_maxHP": 5,
-        "_useSelfHP": true
+        "_cure": true,
+        "_usesSelfHP": true
       },
       "selfBuffs": {
         "_skills": []
@@ -57,7 +57,7 @@
               "_max": 100
             },
             "targetHP": {
-              "_min": 13,
+              "_min": 12,
               "_max": 100
             }
           },
@@ -65,7 +65,7 @@
             "skill": 2,
             "chance": 77,
             "applied": {
-              "_maxAP": true,
+              "_maxAP": false,
               "_onlyAntipode": false,
               "_self": false,
               "_target": false
@@ -75,7 +75,7 @@
               "_max": 100
             },
             "targetHP": {
-              "_min": 27,
+              "_min": 20,
               "_max": 100
             }
           },
@@ -114,8 +114,8 @@
       },
       "heal": {
         "_heal": -1,
-        "_maxHP": 0,
-        "_useSelfHP": false
+        "_cure": false,
+        "_usesSelfHP": false
       },
       "selfBuffs": {
         "_skills": [
@@ -205,8 +205,8 @@
       },
       "heal": {
         "_heal": -1,
-        "_maxHP": 0,
-        "_useSelfHP": false
+        "_cure": false,
+        "_usesSelfHP": false
       },
       "selfBuffs": {
         "_skills": [
@@ -286,8 +286,8 @@
       },
       "heal": {
         "_heal": -1,
-        "_maxHP": 0,
-        "_useSelfHP": false
+        "_cure": false,
+        "_usesSelfHP": false
       },
       "selfBuffs": {
         "_skills": []
@@ -386,8 +386,8 @@
       },
       "heal": {
         "_heal": -1,
-        "_maxHP": 0,
-        "_useSelfHP": false
+        "_cure": false,
+        "_usesSelfHP": false
       },
       "selfBuffs": {
         "_skills": []

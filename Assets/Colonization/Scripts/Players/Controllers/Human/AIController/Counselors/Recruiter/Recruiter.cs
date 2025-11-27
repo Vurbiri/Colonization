@@ -34,14 +34,13 @@ namespace Vurbiri.Colonization
             public override IEnumerator Execution_Cn()
             {
                 int warriorsCount = GameContainer.Actors[HumanId].Count;
-                if (_current == WarriorId.None)
-                {
-                    if(Abilities.IsGreater(HumanAbilityId.MaxWarrior, warriorsCount) && (Colonies.Count << 1) > warriorsCount)
-                        _current = _recruit.Roll;
-                }
+                if (_current == WarriorId.None && (Abilities.IsGreater(HumanAbilityId.MaxWarrior, warriorsCount) && (Colonies.Count << 1) > warriorsCount))
+                    _current = _recruit.Roll;
 
-                if(_current != WarriorId.None)
+                if (_current != WarriorId.None)
                 {
+                    if(warriorsCount == 0) while (_current == WarriorId.Wizard) _current = _recruit.Roll;
+
                     var cost = GameContainer.Prices.Warriors[_current];
                     yield return Human.Exchange_Cn(cost, Out<bool>.Get(out int key));
                     if(Out<bool>.Result(key))

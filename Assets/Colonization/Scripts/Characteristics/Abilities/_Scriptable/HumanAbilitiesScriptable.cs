@@ -8,6 +8,8 @@ namespace Vurbiri.Colonization
     {
         [SerializeField] private IdArray<HumanAbilityId, int> _abilities;
 
+        public int this[int id] => _abilities[id];
+
         public AbilitiesSet<HumanAbilityId> Get(PerkTree perks) => new(_abilities, perks);
     }
 }

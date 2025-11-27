@@ -46,7 +46,7 @@ namespace Vurbiri.Colonization
 
                 sealed public override IEnumerator Execution_Cn(Out<bool> isContinue)
                 {
-                    yield return Heal_Cn();
+                    yield return TryUseHeal_Cn();
 
                     yield return Settings.selfBuffs.TryUse_Cn(Actor);
 

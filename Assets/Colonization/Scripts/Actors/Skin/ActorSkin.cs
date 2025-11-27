@@ -106,24 +106,29 @@ namespace Vurbiri.Colonization
         
         private void OnValidate()
         {
-            this.SetComponent(ref _animator);
-
-            if (_animator != null && _animator.runtimeAnimatorController != null)
+            if (!UnityEditor.EditorApplication.isPlayingOrWillChangePlaymode && UnityEditor.PrefabUtility.IsPartOfAnyPrefab(this))
             {
-                var overrideController = (AnimatorOverrideController)_animator.runtimeAnimatorController;
-                if(_state == null) _state = GetState(overrideController.runtimeAnimatorController);
-                _durationDeath = overrideController["A_Death"].length * _state.speed * 0.975f;
 
-                // Local
-                static UnityEditor.Animations.AnimatorState GetState(RuntimeAnimatorController controller)
+                this.SetComponent(ref _animator);
+
+                if (_animator != null && _animator.runtimeAnimatorController != null)
                 {
-                    foreach(var cState in ((UnityEditor.Animations.AnimatorController)controller).layers[0].stateMachine.states)
-                        if(cState.state.name == "Death")
-                            return cState.state;
+                    var overrideController = (AnimatorOverrideController)_animator.runtimeAnimatorController;
+                    if(_state == null) _state = GetState(overrideController.runtimeAnimatorController);
+                    _durationDeath = overrideController["A_Death"].length * _state.speed * 0.975f;
 
-                    return new();
+                    // ======= Local ===========
+                    static UnityEditor.Animations.AnimatorState GetState(RuntimeAnimatorController controller)
+                    {
+                        foreach(var cState in ((UnityEditor.Animations.AnimatorController)controller).layers[0].stateMachine.states)
+                            if(cState.state.name == "Death")
+                                return cState.state;
+
+                        return new();
+                    }
                 }
             }
+
         }
 
         public void OnDrawGizmosSelected()

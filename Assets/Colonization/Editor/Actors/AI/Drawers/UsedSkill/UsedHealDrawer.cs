@@ -11,11 +11,10 @@ namespace VurbiriEditor.Colonization
         private readonly bool _isDraw;
 
         private readonly SerializedProperty _parentProperty;
-        private readonly SerializedProperty _maxHPProperty;
-        private readonly SerializedProperty _useSelfHPProperty;
+        private readonly SerializedProperty _cureProperty;
+        private readonly SerializedProperty _usesSelfHPProperty;
 
-        private readonly GUIContent _useSelfHPLabel = new("Use Self HP");
-        private readonly GUIContent _maxHPLabelSelf = new("Max Self HP"), _maxHPLabelTarget = new("Max Target HP");
+        private readonly GUIContent _useSelfHPLabel = new("Uses Self HP");
 
         public UsedHealDrawer(SerializedProperty parentProperty, int typeId, int id)
         {
@@ -26,14 +25,14 @@ namespace VurbiriEditor.Colonization
 
             if (_isDraw = value >= 0)
             {
-                _parentProperty    = parentProperty;
-                _maxHPProperty     = parentProperty.FindPropertyRelative(UsedHeal.maxHPField);
-                _useSelfHPProperty = parentProperty.FindPropertyRelative(UsedHeal.useSelfHPField);
+                _parentProperty     = parentProperty;
+                _cureProperty       = parentProperty.FindPropertyRelative(UsedHeal.cureField);
+                _usesSelfHPProperty = parentProperty.FindPropertyRelative(UsedHeal.usesSelfHPField);
             }
             else
             {
-                parentProperty.FindPropertyRelative(UsedHeal.maxHPField).intValue = 0;
-                parentProperty.FindPropertyRelative(UsedHeal.useSelfHPField).boolValue = false;
+                parentProperty.FindPropertyRelative(UsedHeal.cureField).boolValue = false;
+                parentProperty.FindPropertyRelative(UsedHeal.usesSelfHPField).boolValue = false;
             }
         }
 
@@ -45,8 +44,8 @@ namespace VurbiriEditor.Colonization
                 {
                     BeginVertical(STYLES.borderLight);
                     {
-                        PropertyField(_useSelfHPProperty, _useSelfHPLabel);
-                        _maxHPProperty.intValue = IntSlider(_useSelfHPProperty.boolValue ? _maxHPLabelSelf : _maxHPLabelTarget, _maxHPProperty.intValue, 0, 100);
+                        PropertyField(_cureProperty);
+                        PropertyField(_usesSelfHPProperty, _useSelfHPLabel);
                     }
                     EndVertical();
                 }

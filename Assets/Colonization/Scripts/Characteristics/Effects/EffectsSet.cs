@@ -34,8 +34,16 @@ namespace Vurbiri.Colonization
         public bool Contains<T>(T code) where T : IEquatable<EffectCode>
         {
             int i = _count;
-            while (i --> 0 && !code.Equals(_values[i].Code)) ;
+            while (i --> 0 && !code.Equals(_values[i].Code));
             return i >= 0;
+        }
+
+        public bool ContainsNegative()
+        {
+            bool result = false;
+            for (int i = 0; !result & i < _count; ++i)
+                result = _values[i].IsNegative;
+            return result;
         }
 
         public IEnumerator<ReactiveEffect> GetEnumerator() => new ArrayEnumerator<ReactiveEffect>(_values, _count);

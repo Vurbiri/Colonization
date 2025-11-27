@@ -39,8 +39,8 @@
       },
       "heal": {
         "_heal": -1,
-        "_maxHP": 0,
-        "_useSelfHP": false
+        "_cure": false,
+        "_usesSelfHP": false
       },
       "selfBuffs": {
         "_skills": [
@@ -130,8 +130,8 @@
       },
       "heal": {
         "_heal": -1,
-        "_maxHP": 0,
-        "_useSelfHP": false
+        "_cure": false,
+        "_usesSelfHP": false
       },
       "selfBuffs": {
         "_skills": [
@@ -221,8 +221,8 @@
       },
       "heal": {
         "_heal": 1,
-        "_maxHP": 90,
-        "_useSelfHP": false
+        "_cure": true,
+        "_usesSelfHP": false
       },
       "selfBuffs": {
         "_skills": []
@@ -276,8 +276,8 @@
       },
       "heal": {
         "_heal": -1,
-        "_maxHP": 0,
-        "_useSelfHP": false
+        "_cure": false,
+        "_usesSelfHP": false
       },
       "selfBuffs": {
         "_skills": []
@@ -376,8 +376,8 @@
       },
       "heal": {
         "_heal": 2,
-        "_maxHP": 20,
-        "_useSelfHP": true
+        "_cure": false,
+        "_usesSelfHP": true
       },
       "selfBuffs": {
         "_skills": [

@@ -58,7 +58,7 @@ namespace Vurbiri.Colonization
 
                 _curse -= _maxCurse;
                 _spawner.AddPotential(1 + (_leveling.Level / s_parameters.potentialFromLvlRatio));
-                GameContainer.Chaos.ForSatanLevelUP();
+                GameContainer.Chaos.ForSatanLevelUP(_leveling.Level);
             }
 
             _eventChanged.Invoke(this);

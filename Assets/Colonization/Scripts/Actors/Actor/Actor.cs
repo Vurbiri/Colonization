@@ -59,6 +59,7 @@ namespace Vurbiri.Colonization
         public int CurrentAP { [Impl(256)] get => _AP.Value; }
         public bool IsMaxAP { [Impl(256)] get => _AP.IsMax; }
         public bool CanUseSkills { [Impl(256)] get => _states.IsDefault & _isPersonTurn; }
+        public int MaxHP { [Impl(256)] get => _HP.MaxValue; }
         public int CurrentHP { [Impl(256)] get => _HP.Value; }
         public int PercentHP { [Impl(256)] get => _HP.Percent; }
         public bool IsFullHP { [Impl(256)] get => _HP.IsMax; }
@@ -333,5 +334,11 @@ namespace Vurbiri.Colonization
         #endregion
 
         [Impl(256)] public static implicit operator ActorCode(Actor self) => self.Code;
+
+#if UNITY_EDITOR
+        public override string ToString() => (IsWarrior ? WarriorId.Names_Ed : DemonId.Names_Ed)[_id];
+#else
+        public override string ToString() => (IsWarrior ? "Warrior" : "Demon").Concat("_", _id.ToStr());
+#endif
     }
 }

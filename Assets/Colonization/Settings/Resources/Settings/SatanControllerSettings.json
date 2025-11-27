@@ -1,11 +1,4 @@
 {
   "waitPlayStart": 3.0,
-  "waitPlay": 2.0,
-  "cursePerKillWarrior": [
-    0,
-    0,
-    0,
-    0,
-    0
-  ]
+  "waitPlay": 2.0
 }

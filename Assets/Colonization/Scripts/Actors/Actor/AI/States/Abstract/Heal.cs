@@ -27,14 +27,16 @@ namespace Vurbiri.Colonization
                         for (int i = 0; i < friends.Count; i++)
                         {
                             friend = friends[i];
+                            Log.Warning($"[Heal] ChanceValue {Settings.heal.ChanceValue(Actor, friend)}");
                             if (heal.CanUsed(Actor, friend))
                                 _wounded.Add(friend, BASE_HP - friend._HP.Percent);
                         }
                     }
+                    Log.Warning($"[Heal] wounded {_wounded.Count}");
                     return _wounded.Count > 0;
                 }
 
-                [Impl(256)] protected IEnumerator Heal_Cn()
+                [Impl(256)] protected IEnumerator TryUseHeal_Cn()
                 {
                     if (_wounded.Count > 0)
                     {

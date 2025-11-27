@@ -82,6 +82,16 @@ namespace Vurbiri.Colonization
             return output;
         }
 
+        public List<SkillHits_Ed> GetSkillHits_Ed()
+        {
+            int count = _skillsSettings.Length;
+            List<SkillHits_Ed> skills = new(count);
+            for (int i = 0; i < count; ++i)
+                if (_skillsSettings[i].TryGetHits_Ed(out SkillHits_Ed skill))
+                    skills.Add(skill);
+            return skills;
+        }
+
         public bool UpdateSFXName_Ed(string oldName, string newName)
         {
             bool changed = false;

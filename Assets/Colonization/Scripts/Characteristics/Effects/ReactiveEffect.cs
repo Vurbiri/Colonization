@@ -20,6 +20,7 @@ namespace Vurbiri.Colonization
         public EffectCode Code { [Impl(256)] get => _code; }
         public int Duration { [Impl(256)] get => _duration; }
         public bool IsPositive { [Impl(256)] get => _value > 0; }
+        public bool IsNegative { [Impl(256)] get => _value < 0; }
 
         public ReactiveEffect(EffectCode code, int targetAbility, Id<TypeModifierId> typeModifier, int value, int duration, bool isSkip, bool fix = false)
             : this(code, targetAbility, typeModifier, value, duration, isSkip ? 1 : 0, fix) { }

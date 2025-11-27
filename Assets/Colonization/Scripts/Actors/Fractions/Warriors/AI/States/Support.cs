@@ -36,7 +36,7 @@ namespace Vurbiri.Colonization
 
             sealed public override IEnumerator Execution_Cn(Out<bool> isContinue)
             {
-                yield return Heal_Cn();
+                yield return TryUseHeal_Cn();
 
                 if (_friends.Count > 0)
                     yield return Settings.buffs.TryUse_Cn(Actor, _friends.Rand());

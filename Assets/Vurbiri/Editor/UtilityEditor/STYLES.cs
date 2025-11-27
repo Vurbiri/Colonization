@@ -3,6 +3,7 @@ using UnityEngine;
 
 namespace VurbiriEditor
 {
+    [InitializeOnLoad]
     public static class STYLES
 	{
         public static readonly GUIStyle H1;

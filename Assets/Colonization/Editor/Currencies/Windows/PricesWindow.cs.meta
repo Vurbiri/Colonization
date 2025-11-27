@@ -6,6 +6,8 @@ MonoImporter:
   defaultReferences:
   - m_ViewDataDictionary: {instanceID: 0}
   - _prices: {fileID: 11400000, guid: 3f07ff0e71076ba44b16e8277f51d557, type: 2}
+  - _abilities: {fileID: 11400000, guid: 46dfaa974bda8024db388edaa2f1de74, type: 2}
+  - _perks: {fileID: 11400000, guid: 9cfdf34167dd34a46a396383823e349a, type: 2}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

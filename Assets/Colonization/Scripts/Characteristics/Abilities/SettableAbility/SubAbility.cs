@@ -1,5 +1,6 @@
 using System;
 using Vurbiri.Collections;
+using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization
 {
@@ -8,10 +9,11 @@ namespace Vurbiri.Colonization
         private readonly Ability _restore;
         private readonly IdArray<TypeModifierId, Func<int, int>> _modifiers = new();
 
-        public bool IsZero => _value == 0;
-        public bool IsMax => _value == _maxValue;
-        public bool IsNotMax => _value < _maxValue;
-        public int Percent => _value * 100 / _maxValue;
+        public int MaxValue { [Impl(256)] get => _maxValue; }
+        public bool IsZero { [Impl(256)] get => _value == 0; }
+        public bool IsMax { [Impl(256)] get => _value == _maxValue; }
+        public bool IsNotMax { [Impl(256)] get => _value < _maxValue; }
+        public int Percent { [Impl(256)] get => _value * 100 / _maxValue; }
 
         public SubAbility(AAbility<TId> self, Ability max, Ability restore) : base(self)
         {

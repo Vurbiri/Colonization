@@ -122,8 +122,7 @@ namespace Vurbiri.Colonization
         WaitAll _all;
         public void Testing()
         {
-
-            StartCoroutine(TestCoroutine());
+            print(1 << 7);
         }
         public void Testing2()
         {

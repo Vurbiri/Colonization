@@ -9,21 +9,25 @@ namespace Vurbiri.Colonization
         {
             protected class Friends : Actors
             {
-
                 public void Update(Actor actor, ReadOnlyArray<Key> keys)
                 {
                     Key current = actor._currentHex.Key;
                     for (int i = 0; i < keys.Count; ++i)
-                        if (GameContainer.Hexagons.TryGet(current + keys[i], out Hexagon hex) && hex.TryGetFriend(actor._owner, out Actor friend) && friend.IsInCombat())
-                            _list.Add(friend);
+                        if (GameContainer.Hexagons.TryGet(current + keys[i], out Hexagon hexagon))
+                            TryAdd(actor, hexagon);
                 }
 
                 public void Update(Actor actor)
                 {
                     var hexagons = actor._currentHex.Neighbors;
                     for (int i = 0; i < HEX.SIDES; ++i)
-                        if (hexagons[i].TryGetEnemy(actor._owner, out Actor friend) && friend.IsInCombat())
-                            _list.Add(friend);
+                        TryAdd(actor, hexagons[i]);
+                }
+                
+                [Impl(256)] private void TryAdd(Actor actor, Hexagon hexagon)
+                {
+                    if (hexagon.TryGetFriend(actor._owner, out Actor friend) && friend.IsInCombat())
+                        _list.Add(friend);
                 }
 
                 [Impl(256)] public void GetNearSafeHexagon(Actor actor, ref int distance, ref Hexagon target) => GetNearHexagon(actor, ref distance, ref target, false);

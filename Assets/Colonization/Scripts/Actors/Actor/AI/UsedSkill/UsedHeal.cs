@@ -2,6 +2,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections;
 using UnityEngine;
+using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization
 {
@@ -9,12 +10,12 @@ namespace Vurbiri.Colonization
     public class UsedHeal
     {
         [SerializeField] private int _heal;
-        [SerializeField] private int _maxHP;
-        [SerializeField] private bool _useSelfHP;
+        [SerializeField] private bool _cure;
+        [SerializeField] private bool _usesSelfHP;
+        
+        public bool IsValid { [Impl(256)] get => _heal >= 0; }
 
-        public bool IsValid => _heal >= 0;
-
-        public bool CanUsed(Actor user, Actor target) => user.Action.CanUsedSkill(_heal) && ChanceValue(user, target) > 0;
+        [Impl(256)] public bool CanUsed(Actor user, Actor target) => user.Action.CanUsedSkill(_heal) && ChanceValue(user, target) > 0;
 
         public IEnumerator TryUse_Cn(Actor user, Actor target)
         {
@@ -26,12 +27,19 @@ namespace Vurbiri.Colonization
             yield break;
         }
 
-        public int ChanceValue(Actor user, Actor target) => (_useSelfHP ? user.PercentHP - _maxHP : _maxHP) - target.PercentHP;
+        [Impl(256)] public int ChanceValue(Actor user, Actor target)
+        {
+            int targetHP = target.PercentHP;
+            int baseHP = _usesSelfHP ? user.PercentHP : 100;
+            baseHP = _cure && target.Effects.ContainsNegative() ? baseHP * 5 >> 2 : baseHP;
+
+            return (baseHP * baseHP - targetHP * targetHP) / 100;
+        }
 
 #if UNITY_EDITOR
         public const string skillField = nameof(_heal);
-        public const string maxHPField = nameof(_maxHP);
-        public const string useSelfHPField = nameof(_useSelfHP);
+        public const string cureField = nameof(_cure);
+        public const string usesSelfHPField = nameof(_usesSelfHP);
 #endif
     }
 }

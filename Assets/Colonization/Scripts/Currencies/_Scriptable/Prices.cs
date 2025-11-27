@@ -27,6 +27,48 @@ namespace Vurbiri.Colonization
             _edifices ??= new(() => new());
             _warriors ??= new(() => new());
         }
+
+        public void InputAll_Ed()
+        {
+            MainCurrencies all = new() { _roads, _wall };
+            for (int i = EdificeId.Shrine; i < EdificeId.Count; ++i)
+                all.Add(_edifices[i]);
+            for (int i = 0; i < WarriorId.Count; ++i)
+                all.Add(_warriors[i]);
+
+            Draw_Ed(all, " ALL ");
+        }
+        public void InputStart_Ed()
+        {
+            MainCurrencies start = new() { _roads * 3, _edifices[EdificeId.Camp], _warriors[WarriorId.Militia] };
+            Draw_Ed(start, " START ");
+        }
+
+        public void InputRoads_Ed(int count) => Draw_Ed(_roads * count, " ROADS ");
+        public void InputColonies_Ed(int count) => Draw_Ed(GetColoniesCost() * count, " COLONIES ");
+        public void InputPortsOne_Ed(int count) => Draw_Ed(GetPortsOneCost() * count, " PORTS ONE ");
+        public void InputPortsTwo_Ed(int count) => Draw_Ed(GetPortsTwoCost() * count, " PORTS TWO ");
+        public void InputEdifices_Ed(int coloniesCount, int portsCount, int roadsCount)
+        {
+            MainCurrencies edifices = new() { GetColoniesCost() * coloniesCount, GetPortsTwoCost() * portsCount, _roads * roadsCount, };
+            Draw_Ed(edifices, " EDIFICES ");
+        }
+
+        private void Draw_Ed(ReadOnlyMainCurrencies currencies, string caption = "===")
+        {
+            Debug.Log(string.Format("====================={0}=====================", caption));
+            System.Text.StringBuilder sb = new();
+            for (int i = 0; i < CurrencyId.MainCount; ++i)
+            {
+                sb.Append("[<b>"); sb.Append(CurrencyId.Names_Ed[i]); sb.Append("</b>: "); sb.Append(currencies[i].ToString()); sb.Append("] ");
+            }
+            sb.Append(" |<b>Amount: "); sb.Append(currencies.Amount.ToString()); sb.Append("</b>|");
+            Debug.Log(sb.ToString());
+        }
+
+        private MainCurrencies GetColoniesCost() =>  new() { _edifices[EdificeId.Camp], _edifices[EdificeId.Town], _edifices[EdificeId.City], _wall };
+        private MainCurrencies GetPortsOneCost() => new() { _edifices[EdificeId.PortOne], _edifices[EdificeId.LighthouseOne] };
+        private MainCurrencies GetPortsTwoCost() => new() { _edifices[EdificeId.PortTwo], _edifices[EdificeId.LighthouseTwo] };
 #endif
     }
 }
