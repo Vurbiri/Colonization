@@ -62,13 +62,6 @@ namespace VurbiriEditor.Colonization
                 EndVertical();
 
                 _serializedObject.ApplyModifiedProperties();
-                Space(10f);
-                if (GUILayout.Button("Check STYLES"))
-                {
-                    if (STYLES.borderDark.normal.background == null)
-                        UnityEngine.Debug.LogWarning("STYLES.borderDark.normal.background = null");
-                }
-                Space(10f);
             }
             EndWindows();
             

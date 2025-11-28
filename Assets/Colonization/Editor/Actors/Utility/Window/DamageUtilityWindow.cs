@@ -18,20 +18,20 @@ namespace VurbiriEditor.Colonization
         [SerializeField] WarriorsSettingsScriptable _warriorsSettings;
         [SerializeField] DemonsSettingsScriptable _demonsSettings;
 
-        private int _attack = 20, _percent = 100, _pierce, _defense = 15;
-        private SkillHits _opponent1, _opponent2;
+        private int _attack = 20, _percent = 100, _pierce, _defense = 25;
+        private DamageSkills _opponent1, _opponent2;
         private float _height;
         private Vector2 _scrollPos;
 
         [MenuItem(MENU)]
-        private static void ShowWindow()
+        public static void ShowWindow()
         {
-            GetWindow<DamageUtilityWindow>(true, NAME).minSize = new(400f, 500f);
+            GetWindow<DamageUtilityWindow>(true, NAME).minSize = new(475f, 475f);
         }
 
         static DamageUtilityWindow()
         {
-            for (int i = 0; i < s_count; i++) s_values[i] = i;
+            for (int i = 0; i < s_count;  i++) s_values[i] = i;
             for (int i = 0; i < s_offset; i++) s_names[i] = string.Concat("Warrior.", WarriorId.Names_Ed[i]);
             for (int i = s_offset; i < s_count; i++) s_names[i] = string.Concat("Demon.", DemonId.Names_Ed[i - s_offset]);
         }
@@ -65,12 +65,14 @@ namespace VurbiriEditor.Colonization
                             Space();
 
                             BeginVertical(STYLES.borderLight);
-                            IntSlider("Damage", GetDamage(), 0, 100);
+                            IntSlider("Damage", Formulas.Damage(_attack * _percent / 100, _defense * (100 - _pierce) / 100), 0, 100);
                             EndVertical();
                             Space(1f);
                         }
                         EndVertical();
+
                         Space();
+
                         Rect position = BeginVertical(STYLES.borderDark);
                         {
                             float center = position.width * 0.5f, offset = position.x;
@@ -91,7 +93,7 @@ namespace VurbiriEditor.Colonization
 
                             position.x = offset + center - 0.5f; position.width = 1f;
                             position.y += EditorGUIUtility.singleLineHeight + 5f; position.height = _height;
-                            EditorGUI.DrawRect(position, Color.green);
+                            EditorGUI.DrawRect(position, Color.red);
 
                             Space(EditorGUIUtility.singleLineHeight);
 
@@ -105,19 +107,15 @@ namespace VurbiriEditor.Colonization
                                 EndVertical();
                             }
                             EndHorizontal();
+
+                            if (GUILayout.Button("UPDATE"))
+                                OpponentsUpdate();
                         }
                         EndVertical();
                     }
                     EndScrollView();
                 }
                 EndVertical();
-                Space(10f);
-                if (GUILayout.Button("Check STYLES"))
-                {
-                    if (STYLES.borderDark.normal.background == null)
-                        UnityEngine.Debug.LogWarning("STYLES.borderDark.normal.background = null");
-                }
-                Space(10f);
             }
             EndWindows();
         }
@@ -126,29 +124,28 @@ namespace VurbiriEditor.Colonization
         {
             _opponent1.Update();
             _opponent2.Update();
-            _opponent1.isHoly = _opponent2.isHoly = _opponent1.isDemon != _opponent2.isDemon;
-            _opponent1.Update(_opponent2.defense);
-            _opponent2.Update(_opponent1.defense);
 
-            _height = MathF.Max(_opponent1.height, _opponent2.height);
+            bool isHoly = _opponent1.IsDemon ^ _opponent2.IsDemon;
+            _opponent1.Calk(_opponent2.Defense, isHoly);
+            _opponent2.Calk(_opponent1.Defense, isHoly);
+
+            _height = MathF.Max(_opponent1.GetHeight(), _opponent2.GetHeight());
         }
 
-        private int GetDamage() => Formulas.Damage(_attack * _percent / 100, _defense * (100 - _pierce) / 100);
-
-
         // *********************** Nested *************************************
-        private class SkillHits
+        private class DamageSkills
         {
             private readonly WarriorsSettingsScriptable _warriorsSettings;
             private readonly DemonsSettingsScriptable _demonsSettings;
             private List<SkillHits_Ed> _skills;
-            private string _params;
             private int _id;
-            public int attack, pierce, defense;
-            public float height;
-            public bool isHoly, isDemon;
+            private string _params;
+            private int _attack, _pierce, _defense;
 
-            public SkillHits(DamageUtilityWindow parent, int id)
+            public bool IsDemon => _id >= s_offset;
+            public int Defense => _defense;
+
+            public DamageSkills(DamageUtilityWindow parent, int id)
             {
                 _warriorsSettings = parent._warriorsSettings;
                 _demonsSettings = parent._demonsSettings;
@@ -174,29 +171,29 @@ namespace VurbiriEditor.Colonization
 
             public void Update()
             {
-                ActorSettings settings;
+                ActorSettings settings = IsDemon ? _demonsSettings.Settings[_id - s_offset] : _warriorsSettings.Settings[_id];
 
-                if (isDemon = _id >= s_offset)
-                    settings = _demonsSettings.Settings[_id - s_offset];
-                else
-                    settings = _warriorsSettings.Settings[_id];
-
-                (attack, pierce, defense) = settings.GetAttackPierceDefence_Ed();
+                (_attack, _pierce, _defense) = settings.GetAttackPierceDefence_Ed();
                 _skills = settings.Skills.GetSkillHits_Ed();
 
-                height = _skills.Count + 1f;
-                for(int i = 0; i < _skills.Count; ++i)
-                    height += _skills[i].Count;
-                height *= EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing;
-                height += (_skills.Count + 2) * 3f;
-
-                _params = $"[Attack:{attack}] [Pierce:{pierce}] [Defense:{defense}]";
+                _params = $"Attack: {_attack}. Pierce: {_pierce}. Defense: {_defense}.";
             }
 
-            public void Update(int defenseOther)
+            public void Calk(int defense, bool isHoly)
             {
                 for (int i = 0; i < _skills.Count; ++i)
-                    _skills[i].Update(attack, pierce, defenseOther, isHoly);
+                    _skills[i].Update(_attack, _pierce, defense, isHoly);
+            }
+
+            public float GetHeight()
+            {
+                float height = _skills.Count + 1f;
+                for (int i = 0; i < _skills.Count; ++i)
+                    height += _skills[i].Count;
+                height *= EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing;
+                height += (_skills.Count + 3) * 3f;
+                
+                return height;
             }
         }
     }

@@ -11,6 +11,8 @@ namespace VurbiriEditor.Colonization
         where TScriptable : ActorSettingsScriptable<TId, TValue> 
         where TId : ActorId<TId> where TValue : ActorSettings
     {
+        protected static readonly Vector2 s_minSize = new(620f, 800f);
+
         [SerializeField] protected TScriptable _actorsSettings;
 
         private bool _refresh;
@@ -24,6 +26,7 @@ namespace VurbiriEditor.Colonization
             root.Q<Button>("Force").clicked += PrintForce;
             root.Q<Button>("Profit").clicked += PrintProfit;
             root.Q<Button>("Refresh").clicked += Refresh;
+            root.Q<Button>("Damage").clicked += DamageUtilityWindow.ShowWindow;
             root.Q<Button>("ApplyUp").clicked += Apply;
             root.Q<Button>("ApplyDown").clicked += Apply;
 

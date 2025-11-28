@@ -61,6 +61,8 @@ namespace Vurbiri.Colonization
             _abilities[id] = new DependentAbility<TId>(_abilities[id], remove, add);
         }
 
+        [Impl(256)] public void SetMaxValue(Id<TId> id, int value) => _abilities[id].SetMaxValue(value);
+
         [Impl(256)] public int AddPerk(IPerk perk) => _abilities[perk.TargetAbility].AddModifier(perk);
         [Impl(256)] public int RemovePerk(IPerk perk) => _abilities[perk.TargetAbility].RemoveModifier(perk);
 

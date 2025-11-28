@@ -49,10 +49,12 @@ namespace Vurbiri.Colonization
 
         public void Update(int attack, int pierceOther, int defense, bool isHoly)
         {
+            defense = MathI.Max(defense * (100 - _pierce - pierceOther) / 100, 0);
+
             if (isHoly)
-                damage = Formulas.Damage(attack * (_percent + _holy) / 100, defense * (100 - _pierce - pierceOther) / 100).ToString();
+                damage = Formulas.Damage(attack * (_percent + _holy) / 100, defense).ToString();
             else
-                damage = Formulas.Damage(attack * _percent / 100, defense * (100 - _pierce - pierceOther) / 100).ToString();
+                damage = Formulas.Damage(attack * _percent / 100, defense).ToString();
         }
     }
 

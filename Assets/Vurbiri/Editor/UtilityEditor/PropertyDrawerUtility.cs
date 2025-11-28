@@ -8,7 +8,6 @@ namespace VurbiriEditor
 {
     public abstract class PropertyDrawerUtility : PropertyDrawer
     {
- 
         protected Rect _position;
         protected SerializedProperty _mainProperty;
         protected GUIContent _label;
@@ -18,8 +17,6 @@ namespace VurbiriEditor
 
         sealed public override void OnGUI(Rect position, SerializedProperty mainProperty, GUIContent label)
         {
-            STYLES.Start();
-
             position.height = EditorGUIUtility.singleLineHeight;
             
             _position = position;

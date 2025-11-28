@@ -9,7 +9,6 @@ namespace Vurbiri.Colonization
         private readonly Ability _restore;
         private readonly IdArray<TypeModifierId, Func<int, int>> _modifiers = new();
 
-        public int MaxValue { [Impl(256)] get => _maxValue; }
         public bool IsZero { [Impl(256)] get => _value == 0; }
         public bool IsMax { [Impl(256)] get => _value == _maxValue; }
         public bool IsNotMax { [Impl(256)] get => _value < _maxValue; }
@@ -24,7 +23,7 @@ namespace Vurbiri.Colonization
             _maxValue = max.Value;
             _value = _maxValue;
 
-            max.Subscribe(OnMaxChange, false);
+            max.Subscribe(SetMaxValue, false);
             _restore = restore;
         }
 
@@ -39,21 +38,20 @@ namespace Vurbiri.Colonization
             Set(_value + _restore.Value);
         }
 
+        public override void SetMaxValue(int value)
+        {
+            int current = Math.Clamp((int)((float)_value * value / _maxValue + 0.5f), 0, value);
+            _maxValue = value;
+
+            if (current != _value)
+            {
+                _value = current;
+                _changeEvent.Invoke(current);
+            }
+        }
+
         private int OnBasePercent(int value) => _value * (100 + value) / 100;
         private int OnAddition(int value) => _value + value;
         private int OnTotalPercent(int value) => _value + _maxValue * value / 100;
-
-        private void OnMaxChange(int newMaxValue)
-        {
-            int currentValue = Math.Clamp((int)((float)_value * newMaxValue / _maxValue + 0.5f), 0, newMaxValue);
-
-            _maxValue = newMaxValue;
-
-            if (currentValue != _value)
-            {
-                _value = currentValue;
-                _changeEvent.Invoke(currentValue);
-            }
-        }
     }
 }

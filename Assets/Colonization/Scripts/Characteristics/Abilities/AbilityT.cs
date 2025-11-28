@@ -36,7 +36,7 @@ namespace Vurbiri.Colonization
             for (int i = 0; i < TypeModifierId.Count; i++)
                 _value = _modifiers[i].Apply(_value);
 
-            _value = Math.Max(_value, 0);
+            _value = Math.Clamp(_value, 0, _maxValue);
 
             if (old != _value) 
                 _changeEvent.Invoke(_value);

@@ -4,7 +4,6 @@ namespace Vurbiri.Colonization
 {
     sealed public class DependentAbility<TId> : AAbility<TId> where TId : AbilityId<TId>
     {
-        private readonly int _maxValue;
         private readonly ReactiveCombination<int, int> _combination;
 
         public DependentAbility(AAbility<TId> other, ReactiveValue<int> remove, ReactiveValue<int> add) : base(other)

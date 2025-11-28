@@ -73,7 +73,7 @@
               "_max": 100
             },
             "targetHP": {
-              "_min": 26,
+              "_min": 25,
               "_max": 100
             }
           },
@@ -91,7 +91,7 @@
               "_max": 100
             },
             "targetHP": {
-              "_min": 39,
+              "_min": 15,
               "_max": 100
             }
           },
@@ -170,7 +170,7 @@
           },
           {
             "skill": 1,
-            "chance": 70,
+            "chance": 78,
             "applied": {
               "_maxAP": false,
               "_onlyAntipode": false,
@@ -289,7 +289,7 @@
         "_skills": [
           {
             "skill": 3,
-            "chance": 94,
+            "chance": 91,
             "applied": {
               "_maxAP": true,
               "_onlyAntipode": false,
@@ -297,7 +297,7 @@
               "_target": true
             },
             "selfHP": {
-              "_min": 0,
+              "_min": 10,
               "_max": 100
             },
             "targetHP": {
@@ -307,7 +307,7 @@
           },
           {
             "skill": 2,
-            "chance": 88,
+            "chance": 86,
             "applied": {
               "_maxAP": false,
               "_onlyAntipode": false,
@@ -315,7 +315,7 @@
               "_target": true
             },
             "selfHP": {
-              "_min": 0,
+              "_min": 10,
               "_max": 100
             },
             "targetHP": {
@@ -333,11 +333,11 @@
               "_target": false
             },
             "selfHP": {
-              "_min": 23,
+              "_min": 25,
               "_max": 100
             },
             "targetHP": {
-              "_min": 20,
+              "_min": 0,
               "_max": 100
             }
           },
@@ -352,7 +352,7 @@
             },
             "selfHP": {
               "_min": 0,
-              "_max": 100
+              "_max": 80
             },
             "targetHP": {
               "_min": 0,
@@ -410,7 +410,7 @@
               "_max": 100
             },
             "targetHP": {
-              "_min": 15,
+              "_min": 5,
               "_max": 100
             }
           },

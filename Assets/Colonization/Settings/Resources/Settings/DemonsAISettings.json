@@ -45,7 +45,7 @@
         "_skills": [
           {
             "skill": 1,
-            "chance": 85,
+            "chance": 94,
             "applied": {
               "_maxAP": true,
               "_onlyAntipode": false,
@@ -63,7 +63,7 @@
           },
           {
             "skill": 2,
-            "chance": 77,
+            "chance": 87,
             "applied": {
               "_maxAP": false,
               "_onlyAntipode": false,
@@ -247,7 +247,7 @@
               "_max": 100
             },
             "targetHP": {
-              "_min": 20,
+              "_min": 16,
               "_max": 100
             }
           },
@@ -299,9 +299,9 @@
         "_skills": [
           {
             "skill": 3,
-            "chance": 88,
+            "chance": 92,
             "applied": {
-              "_maxAP": false,
+              "_maxAP": true,
               "_onlyAntipode": false,
               "_self": false,
               "_target": true
@@ -317,7 +317,7 @@
           },
           {
             "skill": 2,
-            "chance": 62,
+            "chance": 82,
             "applied": {
               "_maxAP": false,
               "_onlyAntipode": false,
@@ -335,7 +335,7 @@
           },
           {
             "skill": 1,
-            "chance": 52,
+            "chance": 86,
             "applied": {
               "_maxAP": false,
               "_onlyAntipode": false,
@@ -403,6 +403,24 @@
       "attacks": {
         "_skills": [
           {
+            "skill": 0,
+            "chance": 98,
+            "applied": {
+              "_maxAP": false,
+              "_onlyAntipode": false,
+              "_self": false,
+              "_target": true
+            },
+            "selfHP": {
+              "_min": 0,
+              "_max": 100
+            },
+            "targetHP": {
+              "_min": 0,
+              "_max": 100
+            }
+          },
+          {
             "skill": 2,
             "chance": 75,
             "applied": {
@@ -416,30 +434,12 @@
               "_max": 100
             },
             "targetHP": {
-              "_min": 20,
+              "_min": 25,
               "_max": 100
             }
           },
           {
             "skill": 1,
-            "chance": 50,
-            "applied": {
-              "_maxAP": false,
-              "_onlyAntipode": false,
-              "_self": false,
-              "_target": false
-            },
-            "selfHP": {
-              "_min": 0,
-              "_max": 100
-            },
-            "targetHP": {
-              "_min": 0,
-              "_max": 100
-            }
-          },
-          {
-            "skill": 0,
             "chance": 100,
             "applied": {
               "_maxAP": false,

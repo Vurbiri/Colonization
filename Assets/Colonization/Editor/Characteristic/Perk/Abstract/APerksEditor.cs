@@ -148,7 +148,7 @@ namespace VurbiriEditor.Colonization
                     return;
                 }
 
-                int min = -1, max = 10, shift = 0;
+                int min = -1, max = 15, shift = 0;
                 if (mod == PerkModifierId.Percent || (type == EconomicPerksId.Type & ability == HumanAbilityId.ExchangeSaleChance))
                 {
                     name = "Value (%)";

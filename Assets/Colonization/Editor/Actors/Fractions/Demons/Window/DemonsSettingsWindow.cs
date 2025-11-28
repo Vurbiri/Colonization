@@ -16,7 +16,7 @@ namespace VurbiriEditor.Colonization
         [MenuItem(MENU, false, MENU_AC_ORDER)]
         private static void ShowWindow()
         {
-            GetWindow<DemonsSettingsWindow>(true, NAME).minSize = new(650f, 800f);
+            GetWindow<DemonsSettingsWindow>(true, NAME).minSize = s_minSize;
         }
 
         private void OnEnable()

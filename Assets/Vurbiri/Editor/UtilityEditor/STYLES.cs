@@ -6,6 +6,9 @@ namespace VurbiriEditor
     [InitializeOnLoad]
     public static class STYLES
 	{
+        private static readonly Texture2D s_borderTexture, s_borderLightTexture, s_borderDarkTexture, s_H1Texture;
+        private static readonly Texture2D s_normalTexture, s_hoverTexture, s_focusedTexture, s_activeTexture;
+
         public static readonly GUIStyle H1;
         public static readonly GUIStyle H2;
         public static readonly GUIStyle H3;
@@ -14,8 +17,19 @@ namespace VurbiriEditor
         public static readonly GUIStyle borderDark;
         public static readonly GUIStyle flatButton;
 
+        public static Color32 defaultColor = new(56, 56, 56, 255), dimColor = new(51, 51, 51, 255), darkColor = new(33, 33, 33, 255), lightColor = new(80, 80, 80, 255);
+
         static STYLES()
 		{
+            s_H1Texture          = BackgroundColor(new(20, 40, 62, 255));
+            s_borderTexture      = Border(darkColor);
+            s_borderLightTexture = Border(lightColor, defaultColor);
+            s_borderDarkTexture  = Border(darkColor, dimColor);
+            s_normalTexture      = BackgroundColor(defaultColor);
+            s_hoverTexture       = BackgroundColor(lightColor);
+            s_focusedTexture     = BackgroundColor(new(118, 118, 118, 255));
+            s_activeTexture      = BackgroundColor(dimColor);
+
             H1 = new()
             {
                 name = "H1",
@@ -24,7 +38,7 @@ namespace VurbiriEditor
                 fontSize = 15,
             };
             H1.normal.textColor = new(0.75f, 0.75f, 0.8f);
-            H1.normal.background = BackgroundColor(new(20, 40, 62, 255));
+            H1.normal.background = s_H1Texture;
 
             H2 = new()
             {
@@ -42,19 +56,19 @@ namespace VurbiriEditor
                 padding = new(12, 6, 6, 6)
 
             };
-            border.normal.background = Border(new Color32(33, 33, 33, 255));
+            border.normal.background = s_borderTexture;
 
             borderLight = new(border)
             {
                 name = "borderLight"
             };
-            borderLight.normal.background = Border(new Color32(77, 77, 77, 255), new Color32(56, 56, 56, 255));
+            borderLight.normal.background = s_borderLightTexture;
 
             borderDark = new(border)
             {
                 name = "borderDark"
             };
-            borderDark.normal.background = Border(new Color32(33, 33, 33, 255), new Color32(51, 51, 51, 255));
+            borderDark.normal.background = s_borderDarkTexture;
 
             H3 = new(borderDark)
             {
@@ -72,10 +86,10 @@ namespace VurbiriEditor
                 fixedHeight = EditorGUIUtility.singleLineHeight,
                 fixedWidth = EditorGUIUtility.singleLineHeight
             };
-            flatButton.normal.background = BackgroundColor(new(56, 56, 56, 255));
-            flatButton.hover.background = BackgroundColor(new(88, 88, 88, 255));
-            flatButton.focused.background = BackgroundColor(new(118, 118, 118, 255));
-            flatButton.active.background = BackgroundColor(new(38, 38, 38, 255));
+            flatButton.normal.background  = s_normalTexture;
+            flatButton.hover.background   = s_hoverTexture;
+            flatButton.focused.background = s_focusedTexture;
+            flatButton.active.background  = s_activeTexture;
         }
 
         public static Texture2D BackgroundColor(Color32 color)
@@ -149,7 +163,5 @@ namespace VurbiriEditor
 
             return texture;
         }
-
-        public static void Start() { }
     }
 }

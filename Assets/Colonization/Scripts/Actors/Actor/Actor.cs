@@ -156,10 +156,10 @@ namespace Vurbiri.Colonization
             IsDemon   = _typeId == ActorTypeId.Demon;
 
             #region Abilities
-            _abilities = settings.Abilities;
+            _abilities = settings.GetAbilities();
 
-            _HP  = _abilities.ReplaceToSub(ActorAbilityId.CurrentHP, ActorAbilityId.MaxHP, ActorAbilityId.HPPerTurn);
-            _AP  = _abilities.ReplaceToSub(ActorAbilityId.CurrentAP, ActorAbilityId.MaxAP, ActorAbilityId.APPerTurn);
+            _HP         = _abilities.ReplaceToSub(ActorAbilityId.CurrentHP, ActorAbilityId.MaxHP, ActorAbilityId.HPPerTurn);
+            _AP         = _abilities.ReplaceToSub(ActorAbilityId.CurrentAP, ActorAbilityId.MaxAP, ActorAbilityId.APPerTurn);
             _move       = _abilities.ReplaceToBoolean(ActorAbilityId.IsMove);
             _profitMain = _abilities.ReplaceToChance(ActorAbilityId.ProfitMain, _AP);
             _profitAdv  = _abilities.ReplaceToChance(ActorAbilityId.ProfitAdv, _AP);
