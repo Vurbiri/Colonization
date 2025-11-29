@@ -18,12 +18,10 @@ namespace Vurbiri.Colonization
         public FileIdAndKey giftMsg;
         [Button(nameof(Testing))]
         public Color value;
-        [Button(nameof(Testing2), false)]
-        public SkillApplied skillApplied;
+
 
         private TMP_Dropdown _dropdown;
 
- 
 
         private void Start()
         {
@@ -122,12 +120,7 @@ namespace Vurbiri.Colonization
         WaitAll _all;
         public void Testing()
         {
-            print(1 << 7);
-        }
-        public void Testing2()
-        {
 
-            _all.Stop();
         }
 
         IEnumerator TestCoroutine()

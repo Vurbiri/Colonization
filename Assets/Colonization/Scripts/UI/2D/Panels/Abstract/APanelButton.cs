@@ -13,11 +13,12 @@ namespace Vurbiri.Colonization.UI
         [Space]
         [SerializeField] private float _speedOpen = 6f;
         [SerializeField] private float _speedClose = 8f;
+        [SerializeField, HideInInspector] protected RectTransform _thisRectTransform;
 
         protected IInteractable _attach;
         protected float _targetAlpha;
         protected Subscription _subscription;
-        
+
         private Coroutine _activeCn;
 
         public Vector3 Offset => new(0f, _thisRectTransform.sizeDelta.y * 1.08f, 0f);
@@ -125,6 +126,7 @@ namespace Vurbiri.Colonization.UI
 
             this.SetComponent(ref _canvasGroup);
             this.SetChildren(ref _icon, "Icon");
+            this.SetComponent(ref _thisRectTransform);
         }
 #endif
     }

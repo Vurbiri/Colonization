@@ -11,14 +11,13 @@ namespace Vurbiri.UI
         private bool _isShowingHint = false;
         private Vector3 _hintOffset;
 
+        protected RectTransform _thisRectTransform;
         protected string _hintText;
 
         protected void InternalInit(THint hint, float heightRatio)
         {
             _hint = hint;
-            if (_thisRectTransform == null)
-                _thisRectTransform = GetComponent<RectTransform>();
-
+            _thisRectTransform = GetComponent<RectTransform>();
             _hintOffset = AHint.GetOffsetHint(_thisRectTransform, heightRatio);
         }
 

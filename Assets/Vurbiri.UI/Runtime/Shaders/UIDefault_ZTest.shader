@@ -6,8 +6,10 @@ Shader "UI/Default ZTest"
     {
         [PerRendererData] _MainTex ("Sprite Texture", 2D) = "white" {}
         _Color ("Tint", Color) = (1,1,1,1)
-
-        [Enum(ZTest)]_ZTest("ZTest", Float) = 8
+        [Space]
+        [Toggle] _ZWrite("ZWrite", Float) = 0
+        [Enum(ZTest)] _ZTest("ZTest", Float) = 2
+        [Space]
         _StencilComp ("Stencil Comparison", Float) = 8
         _Stencil ("Stencil ID", Float) = 0
         _StencilOp ("Stencil Operation", Float) = 0
@@ -41,14 +43,14 @@ Shader "UI/Default ZTest"
 
         Cull Off
         Lighting Off
-        ZWrite Off
+        ZWrite [_ZWrite]
         ZTest [_ZTest]
         Blend SrcAlpha OneMinusSrcAlpha
         ColorMask [_ColorMask]
 
         Pass
         {
-            Name "Default_ZTest"
+            Name "Default"
         CGPROGRAM
             #pragma vertex vert
             #pragma fragment frag
@@ -88,12 +90,12 @@ Shader "UI/Default ZTest"
                 v2f OUT;
                 UNITY_SETUP_INSTANCE_ID(v);
                 UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(OUT);
+
                 OUT.worldPosition = v.vertex;
                 OUT.vertex = UnityObjectToClipPos(OUT.worldPosition);
-
                 OUT.texcoord = TRANSFORM_TEX(v.texcoord, _MainTex);
-
                 OUT.color = v.color * _Color;
+
                 return OUT;
             }
 

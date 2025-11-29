@@ -8,6 +8,7 @@ namespace Vurbiri.Colonization.UI
     sealed public class HintButton : AHintButton
     {
         [SerializeField] private FileIdAndKey _getText;
+        [SerializeField] private bool _removeKey;
 
         public void Init(Action action)
         {
@@ -19,6 +20,8 @@ namespace Vurbiri.Colonization.UI
         private void SetLocalizationText(Localization localization)
         {
             _hintText = localization.GetText(_getText);
+            if (_removeKey)
+                localization.RemoveKey(_getText);
         }
 
         protected override void OnDestroy()

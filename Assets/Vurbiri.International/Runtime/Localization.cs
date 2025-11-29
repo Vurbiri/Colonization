@@ -4,6 +4,7 @@ using UnityEngine;
 using Vurbiri.Collections;
 using Vurbiri.Reactive;
 using static Vurbiri.Storage;
+using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.International
 {
@@ -24,7 +25,7 @@ namespace Vurbiri.International
         static Localization() => s_instance = new(0);
         private Localization(int fileId) 
         {
-            _languages = new(LoadObjectFromJsonResource<LanguageType[]>(CONST_L.FILE_LANG));
+            _languages = new(LoadObjectFromJsonResource<LanguageType[]>(CONST_L.LANG_FILE));
             Throw.IfLengthZero(_languages, "_languages");
 
             _text = new Dictionary<string, string>[Files.Count];
@@ -43,8 +44,8 @@ namespace Vurbiri.International
             LoadFile(fileId);
         }
 
-        public Subscription Subscribe(Action<Localization> action, bool sendCallback = true) => _changed.Add(action, sendCallback, this);
-        public void Unsubscribe(Action<Localization> action) => _changed.Remove(action);
+        [Impl(256)] public Subscription Subscribe(Action<Localization> action, bool sendCallback = true) => _changed.Add(action, sendCallback, this);
+        [Impl(256)] public void Unsubscribe(Action<Localization> action) => _changed.Remove(action);
 
         public SystemLanguage IdFromCode(string code)
         {
@@ -58,7 +59,7 @@ namespace Vurbiri.International
             return _defaultLanguage.Id;
         }
 
-        public bool IsFileLoaded(int fileId) => _text[fileId] != null;
+        [Impl(256)] public bool IsFileLoaded(int fileId) => _text[fileId] != null;
 
         public void SetFiles(FileIds fileIds)
         {
@@ -71,16 +72,16 @@ namespace Vurbiri.International
             GC.Collect();
         }
 
-        public void LoadFile(int fileId)
+        [Impl(256)] public void LoadFile(int fileId)
         {
             if (_text[fileId] == null && Files.TryLoad(_currentLanguage.Folder, fileId, out Dictionary<string, string> load))
                 _text[fileId] = load;
         }
 
-        public void UnloadFile(int fileId)
+        [Impl(256)] public void UnloadFile(int fileId)
         {
             _text[fileId] = null;
-            GC.Collect();
+            //GC.Collect();
         }
 
         public void SwitchLanguage(SystemLanguage id)
@@ -100,8 +101,7 @@ namespace Vurbiri.International
             }
         }
 
-        public string GetText(FileIdAndKey idAndKey) => GetText(idAndKey.id, idAndKey.key);
-
+        [Impl(256)] public string GetText(FileIdAndKey idAndKey) => GetText(idAndKey.id, idAndKey.key);
         public string GetText(int fileId, string key)
         {
             string output;
@@ -131,10 +131,13 @@ namespace Vurbiri.International
             return output;
         }
 
-        public string GetFormatText(int fileId, string key, params object[] args) => string.Format(GetText(fileId, key), args);
-        public string GetFormatText(int fileId, string key, object arg0, object arg1, object arg2) => string.Format(GetText(fileId, key), arg0, arg1, arg2);
-        public string GetFormatText(int fileId, string key, object arg0, object arg1) => string.Format(GetText(fileId, key), arg0, arg1);
-        public string GetFormatText(int fileId, string key, object arg0) => string.Format(GetText(fileId, key), arg0);
+        [Impl(256)] public string GetFormatText(int fileId, string key, params object[] args) => string.Format(GetText(fileId, key), args);
+        [Impl(256)] public string GetFormatText(int fileId, string key, object arg0, object arg1, object arg2) => string.Format(GetText(fileId, key), arg0, arg1, arg2);
+        [Impl(256)] public string GetFormatText(int fileId, string key, object arg0, object arg1) => string.Format(GetText(fileId, key), arg0, arg1);
+        [Impl(256)] public string GetFormatText(int fileId, string key, object arg0) => string.Format(GetText(fileId, key), arg0);
+
+        [Impl(256)] public bool RemoveKey(FileIdAndKey idAndKey) => _text[idAndKey.id] != null && _text[idAndKey.id].Remove(idAndKey.key);
+        [Impl(256)] public bool RemoveKey(int fileId, string key) => _text[fileId] != null && _text[fileId].Remove(key);
 
         private void SetLanguage(LanguageType type)
         {
@@ -150,7 +153,7 @@ namespace Vurbiri.International
         //[MethodImpl(MethodImplOptions.AggressiveInlining)]
         //private void LoadingFile(int fileId, LanguageType type)
         //{
-        //    if (Files.Load(type.Folder, fileId, out Dictionary<string, string> load))
+        //    if (Files.TryLoad(type.Folder, fileId, out Dictionary<string, string> load))
         //        _text[fileId] = load; //new(load, StringComparer.OrdinalIgnoreCase)
         //}
 

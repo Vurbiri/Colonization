@@ -31,10 +31,12 @@ namespace Vurbiri.Colonization
             // ======= Local ==========
             IEnumerator OnLanding_Cn()
             {
+                _resources.AddBlood(_id.Value);
+                
                 yield return s_settings.waitPlayStart.Restart();
                 yield return _counselors.Landing_Cn();
                 //BuildPort(GameContainer.Crossroads.GetRandomPort());
-
+                
                 GameContainer.GameLoop.EndLanding();
             }
         }

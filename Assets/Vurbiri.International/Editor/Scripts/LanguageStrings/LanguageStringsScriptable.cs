@@ -23,7 +23,7 @@ namespace Vurbiri.International.Editor
 
         public void Init()
         {
-            _languages = LoadObjectFromJsonResource<List<LanguageType>>(CONST_L.FILE_LANG);
+            _languages = LoadObjectFromJsonResource<List<LanguageType>>(CONST_L.LANG_FILE);
 
             for(int i = _languages.Count - 1; i >= 0; i--)
                 if(!CheckFolder(_languages[i].Folder, i))

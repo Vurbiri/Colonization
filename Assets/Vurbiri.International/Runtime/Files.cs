@@ -12,7 +12,7 @@ namespace Vurbiri.International
 
         static Files()
         {
-            s_files = LoadObjectFromJsonResource<string[]>(CONST_L.FILE_FILES);
+            s_files = LoadObjectFromJsonResource<string[]>(CONST_L.FILES_FILE);
             Throw.IfLengthZero(s_files, "s_files");
 
             Count = s_files.Length;

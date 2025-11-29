@@ -2,7 +2,7 @@ namespace Vurbiri.International
 {
     public static class CONST_L
     {
-        public const string FILE_LANG = "Languages";
-        public const string FILE_FILES = "Files";
+        public const string LANG_FILE = "Languages";
+        public const string FILES_FILE = "Files";
     }
 }

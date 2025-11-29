@@ -13,7 +13,7 @@ namespace Vurbiri.Colonization
             protected const int FILE = LangFiles.Abilities;
             protected const string SEPARATOR = "\n" + CONST_UI.SEPARATOR + "\n";
 
-            private Action<string> a_onHint;
+            private Action<string> _onHint;
 
             protected readonly MainCurrencies _cost = new();
             protected readonly string _nameKey, _descKey;
@@ -28,8 +28,8 @@ namespace Vurbiri.Colonization
 
             public event Action<string> OnHint
             {
-                add { a_onHint = value; SetHint(Localization.Instance); }
-                remove { a_onHint = Empty; }
+                add { _onHint = value; SetHint(Localization.Instance); }
+                remove { _onHint = Empty; }
             }
 
             protected ASpell(int type, int id)
@@ -38,7 +38,7 @@ namespace Vurbiri.Colonization
                 string key = s_keys[type][id];
                 _nameKey = string.Concat(key, "Name");
                 _descKey = string.Concat(key, "Desc");
-                a_onHint = Empty;
+                _onHint = Empty;
 
                 Localization.Instance.Subscribe(SetHint, false);
                 s_spells[type][id] = this;
@@ -66,7 +66,10 @@ namespace Vurbiri.Colonization
             private void SetHint(Localization localization)
             {
                 _strName = localization.GetText(FILE, _nameKey);
-                a_onHint(string.Concat(_strName, SEPARATOR, GetDesc(localization)));
+                _onHint(string.Concat(_strName, SEPARATOR, GetDesc(localization)));
+
+                localization.RemoveKey(FILE, _nameKey);
+                localization.RemoveKey(FILE, _descKey);
             }
 
             private void Empty(string hint) { }

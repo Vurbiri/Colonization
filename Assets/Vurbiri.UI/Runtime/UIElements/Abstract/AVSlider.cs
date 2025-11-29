@@ -21,6 +21,7 @@ namespace Vurbiri.UI
         [SerializeField] protected T _maxValue;
         [SerializeField] protected T _step;
         [SerializeField] private UVAction<T> _onValueChanged = new();
+        [SerializeField] private RectTransform _thisRectTransform;
 
         protected float _normalizedValue;
         private int _axis;
@@ -450,6 +451,9 @@ namespace Vurbiri.UI
 
             if (!Application.isPlaying)
             {
+                if (_thisRectTransform == null)
+                    _thisRectTransform = (RectTransform)transform;
+
                 UpdateFillRectReferences();
                 UpdateHandleRectReferences();
 

@@ -14,7 +14,7 @@ namespace Vurbiri.International.Editor
         public static string folder;
         static LanguageData()
 		{
-            folder = Storage.LoadObjectFromJsonResource<LanguageType[]>(CONST_L.FILE_LANG)[0].Folder;
+            folder = Storage.LoadObjectFromJsonResource<LanguageType[]>(CONST_L.LANG_FILE)[0].Folder;
             fileNames = Storage.LoadObjectFromJsonResource<string[]>(CONST.FILE_FILES);
             CreateValues();
         }

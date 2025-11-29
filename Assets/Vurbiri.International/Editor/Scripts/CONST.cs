@@ -13,10 +13,10 @@ namespace Vurbiri.International.Editor
         public const string IN_RESOURCE_FOLDER = ASM_FOLDER + "Editor/Resources/";
         public const string OUT_RESOURCE_FOLDER = "Assets/Localization/Resources/";
 
-        public const string FILE_LANG = CONST_L.FILE_LANG;
+        public const string FILE_LANG = CONST_L.LANG_FILE;
         public const string FILE_LANG_PATH = OUT_RESOURCE_FOLDER + FILE_LANG + JSON_EXP;
 
-        public const string FILE_FILES = CONST_L.FILE_FILES;
+        public const string FILE_FILES = CONST_L.FILES_FILE;
         public const string FILE_FILES_PATH = OUT_RESOURCE_FOLDER + FILE_FILES + JSON_EXP;
 
         public const string LANG_LIST = "LanguageList";

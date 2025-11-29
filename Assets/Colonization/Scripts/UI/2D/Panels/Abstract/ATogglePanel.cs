@@ -62,7 +62,7 @@ namespace Vurbiri.Colonization.UI
             RectTransform thisRectTransform = base.UpdateVisuals_Editor(pixelsPerUnit, padding, colors);
 
             Vector2 size = thisRectTransform.sizeDelta;
-            _buttonPrefab.RectTransform.sizeDelta = new(size.x, size.x);
+            ((RectTransform)_buttonPrefab.transform).sizeDelta = new(size.x, size.x);
             ((RectTransform)_buttonContainer).anchoredPosition = new(0f, (size.x + size.y) * 0.5f + 20f);
 
             return thisRectTransform;

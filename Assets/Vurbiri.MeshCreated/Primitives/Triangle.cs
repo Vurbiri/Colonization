@@ -22,6 +22,7 @@ namespace Vurbiri.CreatingMesh
                 _vertices[index] = new(vertices[index], color);
         }
 
+        public Triangle(params Vector3[] vertices) : this(Color.white, vertices) { }
         public Triangle(Color32 color, params Vector3[] vertices)
         {
             for (int index = 0; index < COUNT_VERTICES; index++)
