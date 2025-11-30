@@ -1,8 +1,8 @@
 using System.Collections;
-using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.UI;
 using Vurbiri.UI;
+using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization.UI
 {
@@ -13,7 +13,6 @@ namespace Vurbiri.Colonization.UI
         [Space]
         [SerializeField] private float _speedOpen = 6f;
         [SerializeField] private float _speedClose = 8f;
-        [SerializeField, HideInInspector] protected RectTransform _thisRectTransform;
 
         protected IInteractable _attach;
         protected float _targetAlpha;
@@ -21,16 +20,15 @@ namespace Vurbiri.Colonization.UI
 
         private Coroutine _activeCn;
 
-        public Vector3 Offset => new(0f, _thisRectTransform.sizeDelta.y * 1.08f, 0f);
+        public Vector3 Offset { [Impl(256)] get => new(0f, _thisRectTransform.sizeDelta.y * 1.08f, 0f); }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        protected void InitInternal()
+        [Impl(256)] protected void InitInternal()
         {
             _onClick.Add(OnSelect);
             GameContainer.InputController.IsWindowMode.Subscribe(OnWindowMode, false);
         }
 
-        protected void Attach(IInteractable attach, Sprite sprite)
+        [Impl(256)] protected void Attach(IInteractable attach, Sprite sprite)
         {
             _icon.sprite = sprite;
             _attach = attach;
@@ -126,7 +124,6 @@ namespace Vurbiri.Colonization.UI
 
             this.SetComponent(ref _canvasGroup);
             this.SetChildren(ref _icon, "Icon");
-            this.SetComponent(ref _thisRectTransform);
         }
 #endif
     }

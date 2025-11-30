@@ -41,7 +41,7 @@ namespace Vurbiri.Colonization.UI
             StringBuilder sb = new(80);
             sb.AppendLine(GameContainer.UI.PlayerNames[PlayerId.Satan]);
             sb.AppendLine(CONST_UI.SEPARATOR);
-            sb.Append(localization.GetText(_hintKey));
+            sb.Append(localization.ExtractText(_hintKey));
             _localizedText = sb.ToString();
             
             SetValues(GameContainer.Satan);

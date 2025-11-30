@@ -9,7 +9,7 @@ namespace Vurbiri.Colonization.UI
     {
         [SerializeField] private FileIdAndKey _hintKey;
         [Space]
-        [SerializeField] private Gradient _color;
+        [SerializeField] private UnityEngine.Gradient _color;
         [Space]
         [SerializeField] private Image _bar;
 
@@ -28,7 +28,7 @@ namespace Vurbiri.Colonization.UI
 
         private void SetLocalizationText(Localization localization)
         {
-            _localizedText = localization.GetText(_hintKey);
+            _localizedText = localization.ExtractText(_hintKey);
 
             SetValue(GameContainer.Chaos.Value);
         }

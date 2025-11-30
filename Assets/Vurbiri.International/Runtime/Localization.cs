@@ -18,9 +18,9 @@ namespace Vurbiri.International
         private readonly LanguageType _defaultLanguage;
         private LanguageType _currentLanguage;
 
-        public static Localization Instance => s_instance;
-        public ReadOnlyArray<LanguageType> Languages => _languages;
-        public SystemLanguage CurrentId => _currentLanguage.Id;
+        public static Localization Instance { [Impl(256)] get => s_instance; }
+        public ReadOnlyArray<LanguageType> Languages { [Impl(256)] get => _languages; }
+        public SystemLanguage CurrentId { [Impl(256)] get => _currentLanguage.Id; }
 
         static Localization() => s_instance = new(0);
         private Localization(int fileId) 
@@ -31,7 +31,7 @@ namespace Vurbiri.International
             _text = new Dictionary<string, string>[Files.Count];
 
             _defaultLanguage = _languages[0];
-            for (int i = _languages.Count - 1; i > 0; i--)
+            for (int i = _languages.Count - 1; i > 0; --i)
             {
                 if (_languages[i] == SystemLanguage.Unknown)
                 {
@@ -51,7 +51,7 @@ namespace Vurbiri.International
         {
             if (!string.IsNullOrEmpty(code))
             {
-                for (int i = 0; i < _languages.Count; i++)
+                for (int i = _languages.Count - 1; i >= 0; --i)
                     if (_languages[i].CodeEquals(code))
                         return _languages[i].Id;
             }
@@ -65,11 +65,13 @@ namespace Vurbiri.International
         {
             for (int i = 0; i < Files.Count; i++)
             {
-                if (fileIds[i])  LoadFile(i);
-                else            _text[i] = null;
+                if (fileIds[i]) 
+                    LoadFile(i);
+                else 
+                    _text[i] = null;
             }
 
-            GC.Collect();
+            //GC.Collect();
         }
 
         [Impl(256)] public void LoadFile(int fileId)
@@ -88,7 +90,7 @@ namespace Vurbiri.International
         {
             if (_currentLanguage != id)
             {
-                for (int i = 0; i < _languages.Count; i++)
+                for (int i = _languages.Count - 1; i >= 0; --i)
                 {
                     if (_languages[i] == id)
                     {
@@ -97,7 +99,8 @@ namespace Vurbiri.International
                     }
                 }
 
-                SetLanguage(_defaultLanguage);
+                if (_currentLanguage != _defaultLanguage)
+                    SetLanguage(_defaultLanguage);
             }
         }
 
@@ -107,34 +110,43 @@ namespace Vurbiri.International
             string output;
             var dictionary = _text[fileId];
             if (dictionary == null)
-            {
-                Log.Info(output = $"File '{Files.GetName(fileId)}' not loaded.");
-            }
+                MsgNotLoaded(fileId, out output);
             else if (!dictionary.TryGetValue(key, out output))
-            {
-                Log.Info(output = $"Key '{key}' not found in file '{Files.GetName(fileId)}'.");
-            }
+                MsgNotFound(fileId, key, out output);
 
             return output;
         }
 
-        public string GetText(string key)
+        [Impl(256)] public bool TryGetText(FileIdAndKey idAndKey, out string text)
         {
-            string output;
-            if (!string.IsNullOrEmpty(key))
-            {
-                for (int i = 0; i < Files.Count; i++)
-                    if (_text[i] != null && _text[i].TryGetValue(key, out output))
-                        return output;
-            }
-            Log.Info(output = $"Key '{key}' not found.");
-            return output;
+            var dictionary = _text[idAndKey.id]; text = null;
+            return dictionary != null && dictionary.TryGetValue(idAndKey.key, out text);
+        }
+        [Impl(256)] public bool TryGetText(int fileId, string key, out string text)
+        {
+            var dictionary = _text[fileId]; text = null;
+            return dictionary != null && dictionary.TryGetValue(key, out text);
         }
 
         [Impl(256)] public string GetFormatText(int fileId, string key, params object[] args) => string.Format(GetText(fileId, key), args);
         [Impl(256)] public string GetFormatText(int fileId, string key, object arg0, object arg1, object arg2) => string.Format(GetText(fileId, key), arg0, arg1, arg2);
         [Impl(256)] public string GetFormatText(int fileId, string key, object arg0, object arg1) => string.Format(GetText(fileId, key), arg0, arg1);
         [Impl(256)] public string GetFormatText(int fileId, string key, object arg0) => string.Format(GetText(fileId, key), arg0);
+
+        [Impl(256)] public string ExtractText(FileIdAndKey idAndKey) => ExtractText(idAndKey.id, idAndKey.key);
+        public string ExtractText(int fileId, string key)
+        {
+            string output;
+            var dictionary = _text[fileId];
+            if (dictionary == null)
+                MsgNotLoaded(fileId, out output);
+            else if (!dictionary.TryGetValue(key, out output))
+                MsgNotFound(fileId, key, out output);
+            else
+                dictionary.Remove(key);
+
+            return output;
+        }
 
         [Impl(256)] public bool RemoveKey(FileIdAndKey idAndKey) => _text[idAndKey.id] != null && _text[idAndKey.id].Remove(idAndKey.key);
         [Impl(256)] public bool RemoveKey(int fileId, string key) => _text[fileId] != null && _text[fileId].Remove(key);
@@ -150,13 +162,8 @@ namespace Vurbiri.International
             _changed.Invoke(this);
         }
 
-        //[MethodImpl(MethodImplOptions.AggressiveInlining)]
-        //private void LoadingFile(int fileId, LanguageType type)
-        //{
-        //    if (Files.TryLoad(type.Folder, fileId, out Dictionary<string, string> load))
-        //        _text[fileId] = load; //new(load, StringComparer.OrdinalIgnoreCase)
-        //}
-
+        [Impl(256)] private void MsgNotLoaded(int fileId, out string output) => Log.Info(output = $"File [{Files.GetName(fileId)}] not loaded.");
+        [Impl(256)] private void MsgNotFound(int fileId, string key, out string output) => Log.Info(output = $"Key [{key}] not found in file [{Files.GetName(fileId)}].");
 
 #if UNITY_EDITOR
         private static WeakReference<Localization> s_weakLocalization;

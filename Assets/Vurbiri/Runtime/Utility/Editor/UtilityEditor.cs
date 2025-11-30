@@ -90,24 +90,30 @@ namespace Vurbiri
                 arr.Resize(length);
         }
 
-        public static void SetComponent<T>(this Component self, ref T component) where T : Component
+        public static bool SetComponent<T>(this Component self, ref T component) where T : Component
         {
-            if (component != null) return;
-            component = self.GetComponent<T>();
+            if (component == null) component = self.GetComponent<T>();
             if (component == null)
+            {
                 LogErrorFind<T>("component", self.gameObject.name);
+                return false;
+            }
+            return true;
         }
-        public static void SetChildren<T>(this Component self, ref T component) where T : Component
+        public static bool SetChildren<T>(this Component self, ref T component) where T : Component
         {
-            if (component != null) return;
-            component = self.GetComponentInChildren<T>(true);
+            if (component == null) component = self.GetComponentInChildren<T>(true);
             if (component == null)
-                LogErrorFind<T>("component", null);
+            {
+                LogErrorFind<T>("component", self.gameObject.name);
+                return false;
+            }
+            return true;
         }
         public static void SetChildren<T>(this Component self, ref T component, string name, bool errorMsg = true) where T : Component
         {
-            if (component != null && component.gameObject.name == name) return;
-            component = self.GetComponentInChildren<T>(name);
+            if (component == null || component.gameObject.name != name) 
+                component = self.GetComponentInChildren<T>(name);
             if (errorMsg & component == null)
                 LogErrorFind<T>("component", name);
         }

@@ -1,7 +1,7 @@
 using System;
-using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.UI
 {
@@ -11,18 +11,18 @@ namespace Vurbiri.UI
         private bool _isShowingHint = false;
         private Vector3 _hintOffset;
 
-        protected RectTransform _thisRectTransform;
         protected string _hintText;
 
+        [Impl(256)]
         protected void InternalInit(AHint hint, bool value, float heightRatio)
         {
             _hint = hint;
             SetValue(value, false);
 
-            _thisRectTransform = GetComponent<RectTransform>();
             _hintOffset = AHint.GetOffsetHint(_thisRectTransform, heightRatio);
         }
 
+        [Impl(256)]
         protected void InternalInit(AHint hint, bool value, Action<bool> action, float heightRatio)
         {
             InternalInit(hint, value, heightRatio);
@@ -47,7 +47,7 @@ namespace Vurbiri.UI
             Hide();
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [Impl(256)]
         private void Hide()
         {
             if (_isShowingHint)

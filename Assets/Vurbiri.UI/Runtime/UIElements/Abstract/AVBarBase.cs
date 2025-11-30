@@ -11,7 +11,7 @@ namespace Vurbiri.UI
         [SerializeField] private RectTransform _fillRect;
         [SerializeField] private Direction _direction = Direction.LeftToRight;
         [SerializeField] private bool _useGradient = true;
-        [SerializeField] private Gradient _gradient = new();
+        [SerializeField] private UnityEngine.Gradient _gradient = new();
 
         protected float _normalizedValue;
         private int _axis;
@@ -65,7 +65,7 @@ namespace Vurbiri.UI
                 }
             }
         }
-        public Gradient Gradient
+        public UnityEngine.Gradient Gradient
         {
             get => _gradient;
             set

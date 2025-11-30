@@ -107,7 +107,7 @@ namespace VurbiriEditor.UI
 
         protected virtual HashSet<string> GetExcludePropertyPaths()
         {
-            return new(13)
+            return new(14)
             {
                 _lockIconProperty.propertyPath,
                 _targetGraphicsProperty.propertyPath,
@@ -122,6 +122,7 @@ namespace VurbiriEditor.UI
                 _interactableProperty.propertyPath,
                 _targetGraphicProperty.propertyPath,
                 serializedObject.FindProperty("m_AnimationTriggers").propertyPath,
+                serializedObject.FindProperty("_thisRectTransform").propertyPath,
             };
         }
 

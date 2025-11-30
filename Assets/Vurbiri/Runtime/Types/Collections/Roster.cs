@@ -40,7 +40,7 @@ namespace Vurbiri.Collections
         [Impl(256), JsonConstructor] public Roster(IReadOnlyList<TValue> values) : base(values) => _capacity = _count;
         #endregion
 
-        public void Add(TValue item)
+        [Impl(256)] public void Add(TValue item)
         {
             if (_count == _capacity)
                 GrowArray();
@@ -48,7 +48,7 @@ namespace Vurbiri.Collections
             _values[_count++] = item;
         }
 
-        public bool TryAdd(TValue item)
+        [Impl(256)] public bool TryAdd(TValue item)
         {
             bool result = !Contains(item);
             if (result) Add(item); 

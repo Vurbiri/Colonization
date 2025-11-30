@@ -2,8 +2,8 @@ namespace Vurbiri.Web
 {
     sealed public class WebLog : Log
     {
-        protected override void InfoRuntime(string msg) => UtilityJS.LogJS(msg);
-        protected override void WarningRuntime(string msg) => UtilityJS.LogJS(msg);
-        protected override void ErrorRuntime(string msg) => UtilityJS.ErrorJS(msg);
+        protected override void InfoInternal(string msg) => UtilityJS.LogJS(msg);
+        protected override void WarningInternal(string msg) => UtilityJS.LogJS(msg);
+        protected override void ErrorInternal(string msg) => UtilityJS.ErrorJS(msg);
     }
 }

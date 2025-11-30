@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
@@ -18,7 +17,7 @@ namespace Vurbiri.Colonization
         public FileIdAndKey giftMsg;
         [Button(nameof(Testing))]
         public Color value;
-
+        public GradientEffect gradientEffect;
 
         private TMP_Dropdown _dropdown;
 
@@ -117,47 +116,12 @@ namespace Vurbiri.Colonization
             foreach (var hex in hexagons.Values)
                 hex.Caption.ShowKey_Ed();
         }
-        WaitAll _all;
+
         public void Testing()
         {
 
-        }
+            gradientEffect.Set(UnityEngine.Random.ColorHSV(), UnityEngine.Random.ColorHSV(), Chance.Rolling());
 
-        IEnumerator TestCoroutine()
-        {
-            _all = new(this);
-            yield return _all.Add(TestCoroutine1(), TestCoroutine2(), TestCoroutine4());
-            print($"RunAll {_all.Count}");
-        }
-
-        IEnumerator TestCoroutine1()
-        {
-            yield return new WaitForSeconds(4f);
-            print("TestCoroutine1");
-        }
-
-        IEnumerator TestCoroutine2()
-        {
-            yield return TestCoroutine3();
-            print("TestCoroutine2");
-        }
-
-        IEnumerator TestCoroutine3()
-        {
-            yield return new WaitRealtime(3f);
-            print("TestCoroutine3");
-        }
-
-        IEnumerator TestCoroutine4()
-        {
-            yield return StartCoroutine(TestCoroutine5());
-            print("TestCoroutine4");
-        }
-
-        IEnumerator TestCoroutine5()
-        {
-            yield return new WaitForSecondsRealtime(5f);
-            print("TestCoroutine5");
         }
 
         public void RosterTest()
@@ -237,6 +201,68 @@ namespace Vurbiri.Colonization
             {
                 for (int i = 200; i >= 0; --i)
                     set.Contains(i);
+            }
+        }
+
+        public void ColorTesting()
+        {
+            double test1, test2;
+            const int count = 100000;
+            Stopwatch stopWatch = new();
+
+            TestValues(count);
+
+            stopWatch.Start();
+            TestUnity(count);
+            stopWatch.Stop();
+            test1 = stopWatch.ElapsedTicks;
+
+            stopWatch.Restart();
+            TestSelf(count);
+            stopWatch.Stop();
+            test2 = stopWatch.ElapsedTicks;
+
+            DrawResultTest(test1, "Unity", test2, "Self");
+
+            Thread.Sleep(100);
+            stopWatch.Restart();
+            TestSelf(count);
+            stopWatch.Stop();
+            test2 = stopWatch.ElapsedTicks;
+
+            stopWatch.Restart();
+            TestUnity(count);
+            stopWatch.Stop();
+            test1 = stopWatch.ElapsedTicks;
+
+            DrawResultTest(test1, "Unity", test2, "Self");
+
+            void TestUnity(int value)
+            {
+                Color32 x;
+                for (int i = 0; i < value; ++i)
+                    x = UnityEngine.Random.ColorHSV();
+            }
+            void TestSelf(int value)
+            {
+                Color32 x;
+                for (int i = 0; i < value; ++i)
+                    x = UnityEngine.Random.ColorHSV().ToColor32();
+            }
+            void TestValues(int value)
+            {
+                Color c;
+                Color32 u, s;
+                for (int i = 0; i < value; ++i)
+                {
+                    c = UnityEngine.Random.ColorHSV();
+                    u = c; s = c.ToColor32();
+                    if (!u.IsEquals(s))
+                    {
+                        Vector4 v = c; v *= 255f;
+                        Log.Error($"Error [{v}] -> {u} != {s}");
+                    }
+                }
             }
         }
 

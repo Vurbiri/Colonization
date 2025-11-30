@@ -2,6 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.UI
 {
@@ -21,7 +22,6 @@ namespace Vurbiri.UI
         [SerializeField] protected T _maxValue;
         [SerializeField] protected T _step;
         [SerializeField] private UVAction<T> _onValueChanged = new();
-        [SerializeField] private RectTransform _thisRectTransform;
 
         protected float _normalizedValue;
         private int _axis;
@@ -45,7 +45,7 @@ namespace Vurbiri.UI
         #region Properties
         public RectTransform FillRect
         {
-            get => _fillRect;
+            [Impl(256)] get => _fillRect;
             set
             {
                 if (_fillRect != value)
@@ -59,7 +59,7 @@ namespace Vurbiri.UI
         }
         public RectTransform HandleRect
         {
-            get => _handleRect;
+            [Impl(256)] get => _handleRect;
             set
             {
                 if (_handleRect != value)
@@ -73,7 +73,7 @@ namespace Vurbiri.UI
         }
         public Direction Direction
         {
-            get => _direction;
+            [Impl(256)] get => _direction;
             set
             {
                 if (_direction != value)
@@ -86,20 +86,20 @@ namespace Vurbiri.UI
         }
         public T Value
         {
-            get => _value;
-            set => Set(value, true);
+            [Impl(256)] get => _value;
+            [Impl(256)] set => Set(value, true);
         }
         public T SilentValue
         {
-            get => _value;
-            set => Set(value, false);
+            [Impl(256)] get => _value;
+            [Impl(256)] set => Set(value, false);
         }
         public T MinValue
         {
-            get => _minValue;
-            set
+            [Impl(256)] get => _minValue;
+            [Impl(256)] set
             {
-                if (!_minValue.Equals(value) & _maxValue.CompareTo(value) > 0)
+                if (!_minValue.Equals(value) && _maxValue.CompareTo(value) > 0)
                 {
                     _minValue = value;
                     UpdateMinMaxDependencies();
@@ -108,10 +108,10 @@ namespace Vurbiri.UI
         }
         public T MaxValue
         {
-            get => _maxValue;
-            set
+            [Impl(256)] get => _maxValue;
+            [Impl(256)] set
             {
-                if (!_maxValue.Equals(value) & _minValue.CompareTo(value) < 0)
+                if (!_maxValue.Equals(value) && _minValue.CompareTo(value) < 0)
                 {
                     _maxValue = value;
                     UpdateMinMaxDependencies();
@@ -120,8 +120,8 @@ namespace Vurbiri.UI
         }
         #endregion
 
-        public Subscription AddListener(Action<T> action, bool instantGetValue = true) => _onValueChanged.Add(action, instantGetValue, _value);
-        public void RemoveListener(Action<T> action) => _onValueChanged.Remove(action);
+        [Impl(256)] public Subscription AddListener(Action<T> action, bool instantGetValue = true) => _onValueChanged.Add(action, instantGetValue, _value);
+        [Impl(256)] public void RemoveListener(Action<T> action) => _onValueChanged.Remove(action);
 
         public bool SetMinMax(T min, T max)
         {
@@ -307,7 +307,7 @@ namespace Vurbiri.UI
                 UpdateVisuals();
         }
 
-        private bool CanDrag(PointerEventData eventData)
+        [Impl(256)] private bool CanDrag(PointerEventData eventData)
         {
             return eventData.button == PointerEventData.InputButton.Left && isActiveAndEnabled && IsInteractable();
         }
@@ -344,7 +344,7 @@ namespace Vurbiri.UI
 
         sealed public override void OnMove(AxisEventData eventData)
         {
-            if (!isActiveAndEnabled || !IsInteractable())
+            if (!(isActiveAndEnabled && IsInteractable()))
             {
                 base.OnMove(eventData);
                 return;
@@ -451,9 +451,6 @@ namespace Vurbiri.UI
 
             if (!Application.isPlaying)
             {
-                if (_thisRectTransform == null)
-                    _thisRectTransform = (RectTransform)transform;
-
                 UpdateFillRectReferences();
                 UpdateHandleRectReferences();
 

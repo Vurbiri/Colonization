@@ -12,7 +12,6 @@ namespace Vurbiri.Colonization.UI
 		[SerializeField, ReadOnly] private SpellPanel _panel;
 		[SerializeField, ReadOnly] private int _points;
 
-        private RectTransform _thisRectTransform;
         private CanvasHint _hint;
 		private string _hintText;
 		private bool _isShowingHint = false;
@@ -22,7 +21,6 @@ namespace Vurbiri.Colonization.UI
 		{
 			_hint = GameContainer.UI.CanvasHint;
 
-            _thisRectTransform = GetComponent<RectTransform>();
             _offsetHint = new(0f, _thisRectTransform.rect.size.y * 0.48f, 0f);
 
 			perkTree.GetProgress(_panel.Type).Subscribe(OnInteractable);
