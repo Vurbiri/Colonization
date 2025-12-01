@@ -34,6 +34,7 @@ namespace Vurbiri.Colonization
             game.Subscribe(GameModeId.StartTurn, (turn, _) => this[turn.currentId.Value].OnStartTurn());
             game.Subscribe(GameModeId.Profit, OnProfit);
             game.Subscribe(GameModeId.Play, (turn, _) => this[turn.currentId.Value].OnPlay());
+            game.Subscribe(GameModeId.GameOver, OnGameOver);
 
             GameContainer.EventBus.EventActorKill.Add((killer, deadType, deadId) => this[killer].ActorKill(deadType, deadId));
 
@@ -47,6 +48,13 @@ namespace Vurbiri.Colonization
             _satan.OnProfit(turnQueue.currentId, hexId);
 
             GameContainer.GameLoop.Play();
+        }
+
+        private void OnGameOver(TurnQueue turnQueue, int hexId)
+        {
+            for (int i = 0; i < PlayerId.HumansCount; i++)
+                _humans[i].OnGameOver();
+            _satan.OnGameOver();
         }
 
         public void Dispose()

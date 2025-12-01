@@ -7,14 +7,14 @@ namespace Vurbiri.International.Editor
 	[CustomPropertyDrawer(typeof(FileIdAndKey))]
 	public class FileIdAndKeyDrawer : PropertyDrawer
 	{
-		private const string F_ID = "id", F_KEY = "key";
+		private const string F_ID = nameof(FileIdAndKey.id), F_KEY = nameof(FileIdAndKey.key);
 
 		public override void OnGUI(Rect position, SerializedProperty mainProperty, GUIContent label)
 		{
 			position.height = EditorGUIUtility.singleLineHeight;
 
-			SerializedProperty idProperty = mainProperty.FindPropertyRelative(F_ID);
-			SerializedProperty keyProperty = mainProperty.FindPropertyRelative(F_KEY);
+            var idProperty = mainProperty.FindPropertyRelative(F_ID);
+            var keyProperty = mainProperty.FindPropertyRelative(F_KEY);
 
             var (labelRect, idRect, keyRect) = CalkPosition(position);
 
@@ -27,16 +27,11 @@ namespace Vurbiri.International.Editor
 			EndProperty();
 		}
 
-		public override float GetPropertyHeight(SerializedProperty mainProperty, GUIContent label)
-		{
-			return EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing;
-		}
-
-        public static void KeyField(Rect position, SerializedProperty keyProperty, int fileId)
+        private static void KeyField(Rect position, SerializedProperty keyProperty, int fileId)
         {
-            string[] keys = LanguageData.keys[fileId];
+            var keys = LanguageData.keys[fileId];
             int index = Popup(position, System.Array.IndexOf(keys, keyProperty.stringValue), keys);
-            keyProperty.stringValue = keys[Mathf.Max(0, index)];
+            keyProperty.stringValue = keys[MathI.Max(0, index)];
         }
 
         public static (Rect, Rect, Rect) CalkPosition(Rect position)

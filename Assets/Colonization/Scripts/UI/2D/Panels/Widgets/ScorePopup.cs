@@ -35,7 +35,7 @@ namespace Vurbiri.Colonization.UI
 
         protected override void SetLocalizationText(Localization localization)
         {
-            _localizedText = localization.GetText(_getText.id, _getText.key);
+            _localizedText = localization.GetText(_getText.id, _getText.key, _extract);
             _hintText = string.Format(_localizedText, _score, GameContainer.GameSettings.MaxScore);
         }
 

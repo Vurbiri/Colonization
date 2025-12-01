@@ -42,5 +42,8 @@
   "SatanHint": "Curse:<b>{0,3}</b>|<b>{1}</b>\nPower:<b>{2,3}</b>|<b>{3}</b>",
   "BalanceHint": "Сhaos: <b>{0}</b>|<b>{1}</b>",
   "HexagonCaption": "Hexagon Labels\nOn/Off",
-  "TrackingCamera": "Tracking AI actions\nOn/Off"
+  "TrackingCamera": "Tracking AI actions\nOn/Off",
+  "Victory": "Victory",
+  "Defeat": "Defeat",
+  "Winner": "Winner:\n{0}"
 }

@@ -28,7 +28,7 @@ namespace Vurbiri.Colonization.UI
 
         private void SetLocalizationText(Localization localization)
         {
-            _localizedText = localization.ExtractText(_hintKey);
+            _localizedText = localization.GetText(_hintKey, true);
 
             SetValue(GameContainer.Chaos.Value);
         }

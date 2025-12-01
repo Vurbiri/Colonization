@@ -1,22 +1,13 @@
+using System;
 using Vurbiri.Collections;
 
 namespace Vurbiri.Colonization
 {
-    public delegate void ChangingGameMode(TurnQueue turnQueue, int dice);
-
     public abstract class GameEvents
     {
-        protected readonly IdArray<GameModeId, ChangingGameMode> _changingGameModes = new();
+        protected readonly IdArray<GameModeId, VAction<TurnQueue, int>> _changingGameModes = new(() => new());
 
-        protected GameEvents() 
-        {
-            for (int i = 0; i < GameModeId.Count; i++)
-                _changingGameModes[i] = Dummy;
-        }
-
-        public void Subscribe(Id<GameModeId> gameMode, ChangingGameMode onChanging) => _changingGameModes[gameMode] += onChanging;
-        public void Unsubscribe(Id<GameModeId> gameMode, ChangingGameMode onChanging) => _changingGameModes[gameMode] -= onChanging;
-
-        private static void Dummy(TurnQueue turnQueue, int dice) { }
+        public Subscription Subscribe(Id<GameModeId> gameMode, Action<TurnQueue, int> onChanging) => _changingGameModes[gameMode].Add(onChanging);
+        public void Unsubscribe(Id<GameModeId> gameMode, Action<TurnQueue, int> onChanging) => _changingGameModes[gameMode].Remove(onChanging);
     }
 }

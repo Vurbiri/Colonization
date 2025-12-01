@@ -19,6 +19,9 @@ namespace Vurbiri.Colonization
         protected readonly RBool _interactable = new(false);
         protected Subscription _subscription;
 
+        protected readonly WaitAll _waitAll;
+        protected Coroutine _coroutine;
+
         public Id<PlayerId> Id { [Impl(256)] get => _id; }
         public bool IsPerson { [Impl(256)] get => _isPerson; }
         public ReadOnlyReactiveSet<Actor> Actors { [Impl(256)] get => GameContainer.Actors[_id]; }
@@ -28,6 +31,7 @@ namespace Vurbiri.Colonization
         {
             _id = playerId;
             _isPerson = isPerson;
+            _waitAll = new(GameContainer.Shared);
         }
 
         #region ---------------- Diplomacy ----------------
@@ -40,8 +44,18 @@ namespace Vurbiri.Colonization
         [Impl(256)] protected Coroutine StartCoroutine(IEnumerator routine) => GameContainer.Shared.StartCoroutine(routine);
         [Impl(256)] protected void StopCoroutine(Coroutine coroutine) => GameContainer.Shared.StopCoroutine(coroutine);
 
+        public void OnGameOver()
+        {
+            _interactable.False();
+
+            _waitAll?.Stop();
+            if(_coroutine != null)
+                StopCoroutine(_coroutine);
+        }
+
         public virtual void Dispose()
         {
+            OnGameOver();
             _subscription?.Dispose();
         }
 

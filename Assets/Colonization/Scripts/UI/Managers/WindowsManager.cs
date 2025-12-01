@@ -18,6 +18,8 @@ namespace Vurbiri.Colonization.UI
         [SerializeField] private GiftButton[] _giftButtons;
         [Space]
         [SerializeField] private DiceWindow _diceWindow;
+        [Space]
+        [SerializeField] private GameOverWindow _gameOverWindow;
 
         private readonly Switcher[] _switchers = new Switcher[SWITCHERS_COUNT];
         private AVButtonBase[] _buttons;
@@ -33,11 +35,12 @@ namespace Vurbiri.Colonization.UI
             _switchers[id] = _giftWindow.Init(_giftButtons).Setup(id++, OnOpenWindow, OnCloseWindow);
 
             _diceWindow.Init();
+            _gameOverWindow.Init();
 
             GameContainer.Person.Interactable.Subscribe(OnInteractable);
 
-            _perksWindow = null; _exchangeWindow = null; _giftWindow = null; _diceWindow = null;
-            _perksButton = null; _exchangeButton = null;
+            _perksWindow = null; _exchangeWindow = null; _giftWindow = null; _diceWindow = null; _gameOverWindow = null;
+            _perksButton = null; _exchangeButton = null; 
         }
 
         private void OnInteractable(bool interactable)
@@ -87,6 +90,8 @@ namespace Vurbiri.Colonization.UI
             EUtility.SetObjects(ref _giftButtons);
 
             EUtility.SetObject(ref _diceWindow);
+
+            EUtility.SetObject(ref _gameOverWindow);
         }
 #endif
     }

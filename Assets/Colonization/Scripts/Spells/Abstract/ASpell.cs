@@ -65,7 +65,7 @@ namespace Vurbiri.Colonization
 
             private void SetHint(Localization localization)
             {
-                _strName = localization.ExtractText(FILE, _nameKey);
+                _strName = localization.GetText(FILE, _nameKey, true);
 
                 _onHint(string.Concat(_strName, SEPARATOR, GetDesc(localization)));
                 localization.RemoveKey(FILE, _descKey);

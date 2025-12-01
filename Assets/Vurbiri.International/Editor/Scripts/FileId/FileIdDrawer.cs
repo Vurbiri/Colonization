@@ -20,11 +20,5 @@ namespace Vurbiri.International.Editor
             }
             EndProperty();
         }
-
-		public override float GetPropertyHeight(SerializedProperty mainProperty, GUIContent label)
-		{
-			return EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing;
-		}
-
     }
 }

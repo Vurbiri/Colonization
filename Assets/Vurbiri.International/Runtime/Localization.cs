@@ -104,17 +104,19 @@ namespace Vurbiri.International
             }
         }
 
-        [Impl(256)] public string GetText(FileIdAndKey idAndKey) => GetText(idAndKey.id, idAndKey.key);
-        public string GetText(int fileId, string key)
+        [Impl(256)] public string GetText(FileIdAndKey idAndKey, bool remove = false) => GetText(idAndKey.id, idAndKey.key, remove);
+        public string GetText(int fileId, string key, bool remove = false)
         {
-            string output;
+            string text;
             var dictionary = _text[fileId];
             if (dictionary == null)
-                MsgNotLoaded(fileId, out output);
-            else if (!dictionary.TryGetValue(key, out output))
-                MsgNotFound(fileId, key, out output);
+                Log.Info(text = $"File [{Files.GetName(fileId)}] not loaded.");
+            else if (!dictionary.TryGetValue(key, out text))
+                Log.Info(text = $"Key [{key}] not found in file [{Files.GetName(fileId)}].");
+            else if (remove)
+                dictionary.Remove(key);
 
-            return output;
+            return text;
         }
 
         [Impl(256)] public bool TryGetText(FileIdAndKey idAndKey, out string text)
@@ -133,21 +135,6 @@ namespace Vurbiri.International
         [Impl(256)] public string GetFormatText(int fileId, string key, object arg0, object arg1) => string.Format(GetText(fileId, key), arg0, arg1);
         [Impl(256)] public string GetFormatText(int fileId, string key, object arg0) => string.Format(GetText(fileId, key), arg0);
 
-        [Impl(256)] public string ExtractText(FileIdAndKey idAndKey) => ExtractText(idAndKey.id, idAndKey.key);
-        public string ExtractText(int fileId, string key)
-        {
-            string output;
-            var dictionary = _text[fileId];
-            if (dictionary == null)
-                MsgNotLoaded(fileId, out output);
-            else if (!dictionary.TryGetValue(key, out output))
-                MsgNotFound(fileId, key, out output);
-            else
-                dictionary.Remove(key);
-
-            return output;
-        }
-
         [Impl(256)] public bool RemoveKey(FileIdAndKey idAndKey) => _text[idAndKey.id] != null && _text[idAndKey.id].Remove(idAndKey.key);
         [Impl(256)] public bool RemoveKey(int fileId, string key) => _text[fileId] != null && _text[fileId].Remove(key);
 
@@ -161,9 +148,6 @@ namespace Vurbiri.International
             _currentLanguage = type;
             _changed.Invoke(this);
         }
-
-        [Impl(256)] private void MsgNotLoaded(int fileId, out string output) => Log.Info(output = $"File [{Files.GetName(fileId)}] not loaded.");
-        [Impl(256)] private void MsgNotFound(int fileId, string key, out string output) => Log.Info(output = $"Key [{key}] not found in file [{Files.GetName(fileId)}].");
 
 #if UNITY_EDITOR
         private static WeakReference<Localization> s_weakLocalization;

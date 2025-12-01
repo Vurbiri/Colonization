@@ -93,6 +93,7 @@ namespace Vurbiri.Colonization
             _artefact.Next(countBuffs);
 
             GameContainer.GameLoop.StartTurn();
+            _coroutine = null;
         }
     }
 }

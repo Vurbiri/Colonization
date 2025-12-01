@@ -15,7 +15,7 @@ namespace Vurbiri.Colonization
         public Id<GameModeId> GameMode { [Impl(256)] get => _gameMode; }
         
         private GameLoop() : this(GameModeId.Landing, new(PlayerId.Person), -1) { }
-        private GameLoop(Id<GameModeId> gameMode, TurnQueue turnQueue, int hexId) : base()
+        private GameLoop(Id<GameModeId> gameMode, TurnQueue turnQueue, int hexId)
         {
             _gameMode = gameMode;
             _turnQueue = turnQueue;
@@ -62,11 +62,23 @@ namespace Vurbiri.Colonization
 
         [Impl(256)] public void Play() => SetGameMode(GameModeId.Play);
 
-        public void End_Cn(Winner winner)
+        public void GameOver(Winner winner)
         {
-            _gameMode = GameModeId.End;
-            _changingGameModes[GameModeId.End].Invoke(_turnQueue, _hexId);
-            _storage.SaveGame(this);
+            for (int i = 0; i < GameModeId.GameOver; ++i)
+                _changingGameModes[i].Clear();
+
+            GameContainer.Shared.StartCoroutine(GameOver_Cn());
+
+            // ====== Local ==========
+            IEnumerator GameOver_Cn()
+            {
+                yield return null;
+
+                _gameMode = GameModeId.GameOver;
+                _changingGameModes[GameModeId.GameOver].InvokeOneShot(_turnQueue, _hexId);
+
+                GameContainer.GameSettings.Reset(GameContainer.Score[PlayerId.Person]);
+            }
         }
 
         [Impl(256)] public bool IsPersonTurn(Id<PlayerId> id) => _gameMode == GameModeId.Play & _turnQueue.currentId == id;

@@ -13,16 +13,13 @@ namespace Vurbiri.Colonization
         [SerializeField] private VButton _endTurn;
         [SerializeField] private ScreenLabel _label;
 
-        private MonoBehaviour _mono;
-
-        public void Init(MonoBehaviour mono)
+        public void Init()
 		{
-            _mono = mono;
-
             var game = GameContainer.GameLoop;
             game.Subscribe(GameModeId.Landing, OnLanding);
             game.Subscribe(GameModeId.EndLanding, OnEndLanding);
             game.Subscribe(GameModeId.StartTurn, OnStartTurn);
+            game.Subscribe(GameModeId.GameOver, OnGameOver);
 
             _endTurn.AddListener(game.EndTurn);
             GameContainer.Person.Interactable.Subscribe(_endTurn.GetSetor<bool>(nameof(_endTurn.Unlock)));
@@ -36,7 +33,7 @@ namespace Vurbiri.Colonization
 
         private void OnEndLanding(TurnQueue turnQueue, int hexId)
         {
-            _mono.StartCoroutine(OnEndLanding_Cn(turnQueue.isPerson));
+            _label.StartCoroutine(OnEndLanding_Cn(turnQueue.isPerson));
 
             //======== Local========
             IEnumerator OnEndLanding_Cn(bool isPlayer)
@@ -58,7 +55,7 @@ namespace Vurbiri.Colonization
             GameContainer.InputController.WindowMode(true);
             GameContainer.CameraController.ToDefaultPosition();
 
-            _mono.StartCoroutine(OnStartTurn_Cn(turnQueue.turn, turnQueue.currentId.Value));
+            _label.StartCoroutine(OnStartTurn_Cn(turnQueue.turn, turnQueue.currentId.Value));
 
             // ======== Local========
             IEnumerator OnStartTurn_Cn(int turn, int id)
@@ -66,6 +63,12 @@ namespace Vurbiri.Colonization
                 yield return _label.StartTurn_Cn(turn, id);
                 GameContainer.GameLoop.WaitRoll();
             }
+        }
+
+        private void OnGameOver(TurnQueue turnQueue, int hexId)
+        {
+            _label.StopAllCoroutines();
+            _label.Off();
         }
 
 #if UNITY_EDITOR

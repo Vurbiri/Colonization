@@ -10,7 +10,7 @@ namespace Vurbiri.Colonization.UI
 
         public void Init()
         {
-            _game.Init(this);
+            _game.Init();
             _contextMenus.Init();
             _windows.Init();
         }

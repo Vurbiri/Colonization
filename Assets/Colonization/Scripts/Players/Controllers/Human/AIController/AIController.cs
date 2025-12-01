@@ -8,7 +8,6 @@ namespace Vurbiri.Colonization
         private static readonly AIControllerSettings s_settings;
         
         private readonly Counselors _counselors;
-        private readonly WaitAll _waitAll;
         private readonly int _specialization = AbilityTypeId.Economic;
 
         static AIController() => s_settings = SettingsFile.Load<AIControllerSettings>();
@@ -19,14 +18,13 @@ namespace Vurbiri.Colonization
                 _specialization = AbilityTypeId.Military;
 
             _counselors = new(this);
-            _waitAll = new(GameContainer.Shared);
         }
 
         public override WaitResult<bool> OnGift(int giver, MainCurrencies gift, string msg) => _counselors.GiftReceive(giver, gift);
 
         public override void OnLanding()
         {
-            StartCoroutine(OnLanding_Cn());
+            _coroutine = StartCoroutine(OnLanding_Cn());
 
             // ======= Local ==========
             IEnumerator OnLanding_Cn()
@@ -36,8 +34,9 @@ namespace Vurbiri.Colonization
                 yield return s_settings.waitPlayStart.Restart();
                 yield return _counselors.Landing_Cn();
                 //BuildPort(GameContainer.Crossroads.GetRandomPort());
-                
+
                 GameContainer.GameLoop.EndLanding();
+                _coroutine = null;
             }
         }
 
@@ -50,7 +49,7 @@ namespace Vurbiri.Colonization
 
         public override void OnPlay()
         {
-            StartCoroutine(OnPlay_Cn());
+            _coroutine = StartCoroutine(OnPlay_Cn());
 
             // ======= Local ==========
             IEnumerator OnPlay_Cn()
@@ -65,8 +64,8 @@ namespace Vurbiri.Colonization
 #if TEST_AI
                 Log.Info("===================================================");
 #endif
-
                 GameContainer.GameLoop.EndTurn();
+                _coroutine = null;
             }
         }
 
@@ -74,7 +73,7 @@ namespace Vurbiri.Colonization
         {
             _counselors.Update();
 
-            StartCoroutine(OnEndTurn_Cn());
+            _coroutine = StartCoroutine(OnEndTurn_Cn());
         }
 
         public override void Dispose()

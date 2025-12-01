@@ -8,7 +8,6 @@ namespace Vurbiri.Colonization
         private static readonly SatanControllerSettings s_settings;
 
         private readonly Commander _commander;
-        private readonly WaitAll _waitAll;
 
         public bool CanEnterToGate { [Impl(256)] get => _spawner.Potential == 0; }
 
@@ -16,7 +15,6 @@ namespace Vurbiri.Colonization
         public SatanController(Settings settings) : base(settings)
         {
             _commander = new(Actors, _spawner);
-            _waitAll = new(GameContainer.Shared);
         }
 
         public void ActorKill(Id<ActorTypeId> type, int id)
@@ -41,7 +39,7 @@ namespace Vurbiri.Colonization
 
         public void OnPlay()
         {
-            StartCoroutine(OnPlay_Cn());
+            _coroutine = StartCoroutine(OnPlay_Cn());
 
             IEnumerator OnPlay_Cn()
             {
@@ -59,12 +57,13 @@ namespace Vurbiri.Colonization
 #endif
 
                 GameContainer.GameLoop.EndTurn();
+                _coroutine = null;
             }
         }
 
         public void OnEndTurn()
         {
-            StartCoroutine(OnEndTurn_Cn());
+            _coroutine = StartCoroutine(OnEndTurn_Cn());
 
             // ======= Local ==========
             IEnumerator OnEndTurn_Cn()
@@ -97,6 +96,7 @@ namespace Vurbiri.Colonization
                 _artefact.Next(countBuffs);
 
                 GameContainer.GameLoop.StartTurn();
+                _coroutine = null;
             }
         }
 

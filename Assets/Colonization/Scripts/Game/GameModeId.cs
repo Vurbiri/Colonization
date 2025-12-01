@@ -10,6 +10,6 @@ namespace Vurbiri.Colonization
         public const int Roll       = 5;
         public const int Profit     = 6;
         public const int Play       = 7;
-        public const int End        = 8;
+        public const int GameOver   = 8;
     }
 }

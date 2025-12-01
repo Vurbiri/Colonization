@@ -67,6 +67,8 @@ namespace Vurbiri.Colonization.UI
             _renderer.SetAlpha(0f);
         }
 
+        public void Off() => _renderer.SetAlpha(0f);
+
         private void ReInit(TurnQueue turnQueue, int hexId)
         {
             GameContainer.GameEvents.Unsubscribe(GameModeId.StartTurn, ReInit);

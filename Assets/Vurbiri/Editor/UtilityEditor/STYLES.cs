@@ -89,9 +89,6 @@ namespace VurbiriEditor
             flatButton.hover.background   = s_hoverTexture;
             flatButton.focused.background = s_focusedTexture;
             flatButton.active.background  = s_activeTexture;
-
-            if(!EditorApplication.isPlayingOrWillChangePlaymode)
-                EditorApplication.update += Test;
         }
 
         public static Texture2D BackgroundColor(Color32 color)
@@ -164,15 +161,6 @@ namespace VurbiriEditor
             texture.Apply();
 
             return texture;
-        }
-
-        private static void Test()
-        {
-            if (border.normal.background == null)
-                Debug.LogWarning("border.normal.background == null");
-
-            if (s_borderTexture == null)
-                Debug.LogWarning("s_borderTexture == null");
         }
     }
 }

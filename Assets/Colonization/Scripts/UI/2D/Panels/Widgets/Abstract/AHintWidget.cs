@@ -1,7 +1,6 @@
 using TMPro;
 using UnityEngine;
 using Vurbiri.International;
-using Vurbiri.Reactive;
 using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.UI
@@ -12,6 +11,7 @@ namespace Vurbiri.Colonization.UI
         [SerializeField] protected TextMeshProUGUI _valueTMP;
         [Space]
         [SerializeField] protected FileIdAndKey _getText;
+        [SerializeField] protected bool _extract;
 
         protected Subscription _subscription;
 

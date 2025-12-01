@@ -22,6 +22,12 @@ namespace Vurbiri.Collections
         public IdArray(IReadOnlyList<TValue> list) : base(list) { }
         #endregion
 
+        public void Reset()
+        {
+            for (int i = 0; i < IdType<TId>.Count; ++i)
+                _values[i] = default;
+        }
+
         public static implicit operator IdArray<TId, TValue>(TValue[] value) => new(value);
         public static implicit operator IdArray<TId, TValue>(Roster<TValue> value) => new(value);
 

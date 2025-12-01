@@ -11,7 +11,7 @@ namespace Vurbiri.Colonization.UI
         private const float RATIO = 0.5f;
         
         [SerializeField] private FileIdAndKey _getText;
-        [SerializeField] private bool _removeKey;
+        [SerializeField] private bool _extract;
 
         public void Init(bool value, Action<bool> action)
         {
@@ -26,9 +26,7 @@ namespace Vurbiri.Colonization.UI
 
         private void SetLocalizationText(Localization localization)
         {
-            _hintText = localization.GetText(_getText);
-            if (_removeKey)
-                localization.RemoveKey(_getText);
+            _hintText = localization.GetText(_getText, _extract);
         }
 
         protected override void OnDestroy()

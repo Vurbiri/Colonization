@@ -1,6 +1,5 @@
 using TMPro;
 using UnityEngine;
-using Vurbiri.Reactive;
 
 namespace Vurbiri.International.UI
 {
@@ -8,16 +7,19 @@ namespace Vurbiri.International.UI
     public class TextMeshProL : TextMeshPro
     {
         [SerializeField] private FileIdAndKey _getText;
+        [SerializeField] private bool _extract;
 
         private Subscription _subscribe;
 
-        public void SetKey(FileId file, string key)
+        public void SetKey(FileId file, string key, bool extract = false)
         {
             _getText = new(file, key);
+            _extract = extract;
+
             if (_subscribe == null)
                 _subscribe = Localization.Instance.Subscribe(SetText);
             else
-                text = Localization.Instance.GetText(_getText);
+                text = Localization.Instance.GetText(_getText, _extract);
         }
 
         protected override void Start()
@@ -29,12 +31,20 @@ namespace Vurbiri.International.UI
                 _subscribe ??= Localization.Instance.Subscribe(SetText);
         }
 
-        private void SetText(Localization localization) => text = localization.GetText(_getText);
+        private void SetText(Localization localization)
+        {
+            text = localization.GetText(_getText, _extract);
+        }
 
         protected override void OnDestroy()
         {
             base.OnDestroy();
             _subscribe?.Dispose();
         }
+
+#if UNITY_EDITOR
+        public const string getTextField = nameof(_getText);
+        public const string extractField = nameof(_extract);
+#endif
     }
 }

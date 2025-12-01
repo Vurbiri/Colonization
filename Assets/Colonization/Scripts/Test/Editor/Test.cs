@@ -17,7 +17,6 @@ namespace Vurbiri.Colonization
         public FileIdAndKey giftMsg;
         [Button(nameof(Testing))]
         public Color value;
-        public GradientEffect gradientEffect;
 
         private TMP_Dropdown _dropdown;
 
@@ -120,7 +119,6 @@ namespace Vurbiri.Colonization
         public void Testing()
         {
 
-            gradientEffect.Set(UnityEngine.Random.ColorHSV(), UnityEngine.Random.ColorHSV(), Chance.Rolling());
 
         }
 

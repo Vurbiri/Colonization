@@ -20,7 +20,7 @@ namespace Vurbiri.Colonization
             _value = storage.GetChaosValue(_settings.max >> 1);
             storage.BindChaos(this);
 
-            _eventGameOver.Add(gameLoop.End_Cn);
+            _eventGameOver.Add(gameLoop.GameOver);
 
             actorsFactory[PlayerId.Satan].Subscribe(OnDemonDeath, false);
             for (int i = 0; i < PlayerId.HumansCount; i++)
@@ -42,12 +42,12 @@ namespace Vurbiri.Colonization
                 if (_value <= 0)
                 {
                     _value = 0;
-                    _eventGameOver.Invoke(Winner.Human);
+                    _eventGameOver.InvokeOneShot(Winner.Human);
                 }
                 else if (_value >= _settings.max)
                 {
                     _value = _settings.max;
-                    _eventGameOver.Invoke(Winner.Satan);
+                    _eventGameOver.InvokeOneShot(Winner.Satan);
                 }
 
                 _changeEvent.Invoke(_value);
