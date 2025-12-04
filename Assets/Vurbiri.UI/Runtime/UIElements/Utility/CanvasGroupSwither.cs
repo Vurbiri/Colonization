@@ -1,6 +1,6 @@
 using System.Collections;
-using System.Runtime.CompilerServices;
 using UnityEngine;
+using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.UI
 {
@@ -17,23 +17,14 @@ namespace Vurbiri.UI
 
         public object Current => null;
 
-        public bool Valid => _canvasGroup != null;
-        public float Alpha => _canvasGroup.alpha;
-        public bool BlocksRaycasts => _canvasGroup.blocksRaycasts;
-        public bool IsRunning
-        {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get => _progress < 1f;
-        }
-        public bool IsShow
-        {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get => _end > 0.95f;
-        }
+        public bool Valid { [Impl(256)] get => _canvasGroup != null; }
+        public float Alpha { [Impl(256)] get => _canvasGroup.alpha; }
+        public bool BlocksRaycasts { [Impl(256)] get => _canvasGroup.blocksRaycasts; }
+        public bool IsRunning{ [Impl(256)] get => _progress < 1f; }
+        public bool IsShow{ [Impl(256)] get => _end > 0.95f; }
         public float Speed
         {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get => _speed;
+            [Impl(256)] get => _speed;
             set
             {
                 if (value < MIN_SPEED) value = MIN_SPEED;
@@ -88,12 +79,13 @@ namespace Vurbiri.UI
         public IEnumerator Hide() => Set(1f, 0f);
         public IEnumerator Switch() => Set(_end, _start);
 
+        [Impl(256)]
         public void Reset()
         {
             _progress = 0f;
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [Impl(256)]
         private IEnumerator Set(float start, float end)
         {
             _start = start; _end = end; _sign = end - start;

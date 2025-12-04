@@ -7,7 +7,7 @@ using static UnityEditor.EditorGUILayout;
 namespace VurbiriEditor.UI
 {
     [CustomEditor(typeof(VToggleBase<>), true), CanEditMultipleObjects]
-    public class VToggleBaseTEditor : VSelectableEditor
+    public class VToggleBaseEditor : VSelectableEditor
 	{
         protected SerializedProperty _isOnProperty;
         protected SerializedProperty _groupProperty;
@@ -15,7 +15,7 @@ namespace VurbiriEditor.UI
 
         protected int _selectedCount;
 
-        protected override bool IsDerivedEditor => GetType() != typeof(VToggleBaseTEditor);
+        protected override bool IsDerivedEditor => GetType() != typeof(VToggleBaseEditor);
 
         protected override void OnEnable()
 		{

@@ -26,7 +26,6 @@ namespace Vurbiri
         
         public static void Message(string message) => throw new(message);
 
-
         public static Exception NotSupportedRead(Type type) => new NotSupportedException($"Deserialization of type {type} is not supported.");
         public static Exception NotSupportedWrite(Type type) => new NotSupportedException($"Serialization of type {type} is not supported.");
         public static Exception JsonSerialization(Type type)

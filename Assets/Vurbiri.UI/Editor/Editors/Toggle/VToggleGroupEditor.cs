@@ -9,8 +9,6 @@ namespace VurbiriEditor.UI
     [CustomEditor(typeof(VToggleGroup<>), true)]
 	public class VToggleGroupEditor : Editor
 	{
-        private const int EXECUTION_ORDER = VUI_CONST_ED.TOGGLE_GROUP_EXECUTION_ORDER;
-
         private SerializedProperty _allowSwitchOffProperty;
         private SerializedProperty _onValueChangedProperty;
 
@@ -22,9 +20,9 @@ namespace VurbiriEditor.UI
             _allowSwitchOffProperty = serializedObject.FindProperty("_allowSwitchOff");
             _onValueChangedProperty = serializedObject.FindProperty("_onValueChanged");
 
-            MonoScript monoScript = MonoScript.FromMonoBehaviour((MonoBehaviour)target);
-            if (monoScript != null && MonoImporter.GetExecutionOrder(monoScript) != EXECUTION_ORDER)
-                MonoImporter.SetExecutionOrder(monoScript, EXECUTION_ORDER);
+            var monoScript = MonoScript.FromMonoBehaviour((MonoBehaviour)target);
+            if (monoScript != null && MonoImporter.GetExecutionOrder(monoScript) != VUI_CONST_ED.TOGGLE_GROUP_EXECUTION_ORDER)
+                MonoImporter.SetExecutionOrder(monoScript, VUI_CONST_ED.TOGGLE_GROUP_EXECUTION_ORDER);
 
             FindChildrenProperties();
         }

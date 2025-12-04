@@ -3,36 +3,55 @@ using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.UI
 {
-    [RequireComponent(typeof(VToggleGroup))]
-    public class LanguageSwitch : MonoBehaviour
+    public class LanguageSwitch : VToggleGroup<LanguageItem>
     {
-        [SerializeField] private LanguageItem _langPrefab;
-        [SerializeField] private VToggleGroup _toggleGroup;
-        [Space]
-        [SerializeField] private bool _isSave = false;
+        [SerializeField] private bool _isSave;
 
-        public void Init(Colonization.Settings settings)
+        protected override void Start()
         {
-            _toggleGroup.AllowSwitchOff = false;
+            _allowSwitchOff = false;
 
-            var profile = settings.Profile;
+            var profile = ProjectContainer.Settings.Profile;
+            var currentId = profile.Language;
             var languages = profile.Localization.Languages;
 
-            foreach (var item in languages)
-                if (item != SystemLanguage.Unknown)
-                    Instantiate(_langPrefab, transform).Setup(profile, item, _toggleGroup, _isSave);
+            if(languages.Count != _toggles.Count)
+                Errors.Message($"[LanguageSwitch] Number of LanguageItem is not equal to the number of Languages ({_toggles.Count} != {languages.Count})");
 
-            Destroy(this);
+            for (int index = 0; index < languages.Count; ++index)
+                if (_toggles[index].Init(currentId, languages[index]))
+                    _activeToggle = _toggles[index];
+
+            _onValueChanged.Init(_activeToggle);
+            _onValueChanged.Add(OnValueChanged);
         }
 
-#if UNITY_EDITOR
-        private void OnValidate()
+        public void ItemsUpdate()
         {
-            //EUtility.SetPrefab(ref _langPrefab);
-
-            if (_toggleGroup == null)
-                _toggleGroup = GetComponent<VToggleGroup>();
+            var currentId = ProjectContainer.Settings.Profile.Language;
+            if (_activeToggle != null && _activeToggle.Id != currentId)
+            {
+                for (int i = _toggles.Count - 1; i >= 0; --i)
+                {
+                    if (_toggles[i].Id == currentId)
+                    {
+                        _toggles[i].SilentIsOn = true;
+                        break;
+                    }
+                }
+            }
         }
-#endif
+
+        private void OnValueChanged(LanguageItem item)
+        {
+            if (item != null)
+            {
+                var profile = ProjectContainer.Settings.Profile;
+
+                profile.Language = item.Id;
+                if (_isSave) 
+                    profile.Apply();
+            }
+        }
     }
 }

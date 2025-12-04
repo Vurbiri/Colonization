@@ -1,9 +1,9 @@
 using System;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Audio;
 using Vurbiri.Collections;
 using Vurbiri.Reactive;
+using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri
 {
@@ -26,16 +26,16 @@ namespace Vurbiri
 
         public float this[int index] 
         {
-            get => _volumes[index];
-            set => _audioMixer.SetFloat(_nameParams[index], ConvertToDB(value));
+            [Impl(256)] get => _volumes[index];
+            [Impl(256)] set => _audioMixer.SetFloat(_nameParams[index], ConvertToDB(value));
         }
         public float this[Id<T> index]
         {
-            get => _volumes[index];
-            set => _audioMixer.SetFloat(_nameParams[index], ConvertToDB(value));
+            [Impl(256)] get => _volumes[index];
+            [Impl(256)] set => _audioMixer.SetFloat(_nameParams[index], ConvertToDB(value));
         }
 
-        public IReadOnlyList<string> Names => _nameParams;
+        public ReadOnlyIdArray<T, string> Names { [Impl(256)] get => _nameParams; }
 
         public void Apply()
         {
@@ -59,7 +59,7 @@ namespace Vurbiri
                 this[i] = _volumes[i];
         }
 
-        public Subscription Subscribe(Action<AudioMixer<T>> action, bool instantGetValue = true) => _changeEvent.Add(action, instantGetValue, this);
+        [Impl(256)] public Subscription Subscribe(Action<AudioMixer<T>> action, bool instantGetValue = true) => _changeEvent.Add(action, instantGetValue, this);
 
         private float ConvertToDB(float volume)
         {

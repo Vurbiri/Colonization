@@ -48,7 +48,7 @@ namespace Vurbiri.Colonization
                 case 1: Gift(); break;
                 case 2: person.Artefact.Next(UnityEngine.Random.Range(5, 10)); ; break;
                 case 3: Vurbiri.EntryPoint.Transition.Exit(); break;
-                case 4: Localization.Instance.SwitchLanguage(SystemLanguage.English); break;
+                case 4: Localization.Instance.CurrentId = SystemLanguage.English; break;
                 case 5: GameContainer.Humans[PlayerId.AI_01].BuyEdificeUpgrade(GameContainer.Crossroads[CROSS.NEAR[0]]); break;
                 case 6: AddBlood(13); break;
                 default: return;

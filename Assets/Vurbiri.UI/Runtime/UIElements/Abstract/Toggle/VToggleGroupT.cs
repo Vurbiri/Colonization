@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using UnityEngine;
+using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.UI
 {
@@ -10,36 +10,34 @@ namespace Vurbiri.UI
         [SerializeField] protected bool _allowSwitchOff = false;
         [SerializeField] protected UVAction<TToggle> _onValueChanged = new();
 
-        protected readonly HashSet<TToggle> _toggles = new();
+        protected readonly List<TToggle> _toggles = new();
         protected TToggle _activeToggle;
 
         public bool AllowSwitchOff
         {
+            [Impl(256)]
             get => _allowSwitchOff;
             set
             {
                 if (value == _allowSwitchOff) return;
 
                 if (!value & _toggles.Count > 0 && _activeToggle == null)
-                {
-                    ActivateToggle(_toggles.Any());
-                }
+                    SetDefaultToggle();
 
                 _allowSwitchOff = value;
             }
         }
 
-        public bool IsActiveToggle => _activeToggle != null;
-        public TToggle ActiveToggle => _activeToggle;
+        public bool IsActiveToggle { [Impl(256)] get => _activeToggle != null; }
+        public TToggle ActiveToggle { [Impl(256)] get => _activeToggle; }
 
         protected VToggleGroup() { }
 
-        public Subscription AddListener(Action<TToggle> action, bool instantGetValue = true) => _onValueChanged.Add(action, instantGetValue, _activeToggle);
-        public void RemoveListener(Action<TToggle> action) => _onValueChanged.Remove(action);
+        [Impl(256)] public Subscription AddListener(Action<TToggle> action, bool instantGetValue = true) => _onValueChanged.Add(action, instantGetValue, _activeToggle);
+        [Impl(256)] public void RemoveListener(Action<TToggle> action) => _onValueChanged.Remove(action);
 
-        
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void SetAllTogglesOff()
+        [Impl(256)]
+        public void ForceOff()
         {
             if (_activeToggle != null)
             {
@@ -49,23 +47,34 @@ namespace Vurbiri.UI
             }
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [Impl(256)]
         private void SetToggle(TToggle toggle)
         {
             _activeToggle = toggle;
             _onValueChanged.Invoke(toggle);
         }
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private void ActivateToggle(TToggle toggle)
+        [Impl(256)]
+        private void SetToggle(TToggle toggle, bool sendCallback)
         {
             _activeToggle = toggle;
+            if (sendCallback)
+                _onValueChanged.Invoke(toggle);
+        }
+        [Impl(256)]
+        private void SetDefaultToggle()
+        {
+            _activeToggle = _toggles[0];
             _activeToggle.SetFromGroup(true);
-            _onValueChanged.Invoke(toggle);
+            _onValueChanged.Invoke(_activeToggle);
         }
 
         internal void RegisterToggle(TToggle toggle)
         {
-            if (_toggles.Add(toggle) && isActiveAndEnabled)
+            if(_toggles.Contains(toggle)) return;
+               
+            _toggles.Add(toggle);
+
+            if (isActiveAndEnabled)
             {
                 bool isNotActiveToggle = _activeToggle == null;
 
@@ -84,20 +93,16 @@ namespace Vurbiri.UI
 
         internal void UnregisterToggle(TToggle toggle)
         {
-            if (!_toggles.Remove(toggle) || !isActiveAndEnabled | _activeToggle != toggle)
+            if (!_toggles.Remove(toggle) || !isActiveAndEnabled || _activeToggle != toggle)
                 return;
 
-            if (!_allowSwitchOff & _toggles.Count > 0)
-            {
-                ActivateToggle(_toggles.Any());
-            }
+            if (!_allowSwitchOff && _toggles.Count > 0)
+                SetDefaultToggle();
             else
-            {
                 SetToggle(null);
-            }
         }
 
-        internal bool CanSetValue(TToggle toggle, bool isOn)
+        internal bool CanSetValue(TToggle toggle, bool isOn, bool sendCallback)
         {
             if (!(isActiveAndEnabled & toggle.isActiveAndEnabled))
                 return true;
@@ -108,8 +113,7 @@ namespace Vurbiri.UI
                 {
                     if (_activeToggle != null)
                         _activeToggle.SetFromGroup(false);
-
-                    SetToggle(toggle);
+                    SetToggle(toggle, sendCallback);
                 }
                 return true;
             }
@@ -119,7 +123,7 @@ namespace Vurbiri.UI
                 if (!_allowSwitchOff)
                     return false;
 
-                SetToggle(null);
+                SetToggle(null, sendCallback);
             }
             return true;
         }
@@ -139,14 +143,15 @@ namespace Vurbiri.UI
         {
             _activeToggle = null;
 
-            if (_toggles.Count == 0) return;
+            int count = _toggles.Count;
+            if (count == 0) return;
 
-            using IEnumerator<TToggle> enumerator = _toggles.GetEnumerator();
-            while (enumerator.MoveNext())
+            int index = 0;
+            for(; index < count; ++index)
             {
-                if (enumerator.Current.IsOn)
+                if (_toggles[index].IsOn)
                 {
-                    SetToggle(enumerator.Current);
+                    SetToggle(_toggles[index]);
                     break;
                 }
             }
@@ -154,15 +159,12 @@ namespace Vurbiri.UI
             if (_activeToggle == null)
             {
                 if (!_allowSwitchOff)
-                {
-                    enumerator.Reset(); enumerator.MoveNext();
-                    ActivateToggle(enumerator.Current);
-                }
+                    SetDefaultToggle();
                 return;
             }
 
-            while (enumerator.MoveNext())
-                enumerator.Current.SetFromGroup(false);
+            for (; index < count; ++index)
+                _toggles[index].SetFromGroup(false);
         }
 
 #if UNITY_EDITOR

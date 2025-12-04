@@ -31,8 +31,8 @@ namespace Vurbiri.Colonization.UI
             _switcher.Init(this);
             _switcher.onClose.Add(ResetValues);
 
-            _applyButton.Init(Apply);
-            _resetButton.Init(ResetValues);
+            _applyButton.AddListener(Apply);
+            _resetButton.AddListener(ResetValues);
             _closeButton.AddListener(_switcher.Close);
 
             for(int i = giftButtons.Length - 1; i >= 0; i--)

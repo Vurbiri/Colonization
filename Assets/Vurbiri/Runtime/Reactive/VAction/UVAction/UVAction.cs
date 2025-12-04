@@ -11,17 +11,14 @@ namespace Vurbiri
         public void Init()
         {
 #if UNITY_EDITOR
-            if (!Application.isPlaying) return;
+            if (!UnityEditor.EditorApplication.isPlayingOrWillChangePlaymode) return;
 #endif
             if (_listeners == null) return;
 
             for (int i = _listeners.Length - 1; i >= 0; i--)
             {
                 if (_listeners[i].TryCreateDelegate(out Action action))
-                {
-                    _action -= action;
                     _action += action;
-                }
             }
 
             _listeners = null;
@@ -36,7 +33,7 @@ namespace Vurbiri
         public void Init(T value)
         {
 #if UNITY_EDITOR
-            if (!Application.isPlaying) return;
+            if (!UnityEditor.EditorApplication.isPlayingOrWillChangePlaymode) return;
 #endif
             if (_listeners == null) return;
 
@@ -45,7 +42,6 @@ namespace Vurbiri
                 if (_listeners[i].TryCreateDelegate(out Action<T> action))
                 {
                     action(value);
-                    _action -= action;
                     _action += action;
                 }
             }
@@ -62,7 +58,7 @@ namespace Vurbiri
         public void Init(TA valueA, TB valueB)
         {
 #if UNITY_EDITOR
-            if (!Application.isPlaying) return;
+            if (!UnityEditor.EditorApplication.isPlayingOrWillChangePlaymode) return;
 #endif
             if (_listeners == null) return;
 
@@ -87,7 +83,7 @@ namespace Vurbiri
         public void Init(TA valueA, TB valueB, TC valueC)
         {
 #if UNITY_EDITOR
-            if (!Application.isPlaying) return;
+            if (!UnityEditor.EditorApplication.isPlayingOrWillChangePlaymode) return;
 #endif
             if (_listeners == null) return;
 
@@ -112,7 +108,7 @@ namespace Vurbiri
         public void Init(TA valueA, TB valueB, TC valueC, TD valueD)
         {
 #if UNITY_EDITOR
-            if (!Application.isPlaying) return;
+            if (!UnityEditor.EditorApplication.isPlayingOrWillChangePlaymode) return;
 #endif
             if (_listeners == null) return;
 

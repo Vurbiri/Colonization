@@ -20,28 +20,51 @@ namespace Vurbiri.International
 
         public static Localization Instance { [Impl(256)] get => s_instance; }
         public ReadOnlyArray<LanguageType> Languages { [Impl(256)] get => _languages; }
-        public SystemLanguage CurrentId { [Impl(256)] get => _currentLanguage.Id; }
+        public SystemLanguage CurrentId
+        {
+            [Impl(256)] 
+            get => _currentLanguage.Id;
+            set
+            {
+                if (_currentLanguage != value)
+                {
+                    for (int i = _languages.Count - 1; i >= 0; --i)
+                    {
+                        if (_languages[i] == value)
+                        {
+                            SetLanguage(_languages[i]);
+                            return;
+                        }
+                    }
+
+                    if (_currentLanguage != _defaultLanguage)
+                        SetLanguage(_defaultLanguage);
+                }
+            }
+        }
 
         static Localization() => s_instance = new(0);
         private Localization(int fileId) 
         {
-            _languages = new(LoadObjectFromJsonResource<LanguageType[]>(CONST_L.LANG_FILE));
-            Throw.IfLengthZero(_languages, "_languages");
+            var languages = LoadObjectFromJsonResource<List<LanguageType>>(CONST_L.LANG_FILE);
+            Throw.IfLengthZero(languages, "_languages");
 
             _text = new Dictionary<string, string>[Files.Count];
 
-            _defaultLanguage = _languages[0];
-            for (int i = _languages.Count - 1; i > 0; --i)
+            for (int i = languages.Count - 1; i >= 0; --i)
             {
-                if (_languages[i] == SystemLanguage.Unknown)
+                if (languages[i] == SystemLanguage.Unknown)
                 {
-                    _defaultLanguage = _languages[i];
+                    _defaultLanguage = languages.Extract(i);
                     break;
                 }
             }
 
+            _defaultLanguage ??= languages[0];
+            _languages = new(languages.ToArray());
+
             SetLanguage(_defaultLanguage);
-            LoadFile(fileId);
+            LoadFile(fileId, false);
         }
 
         [Impl(256)] public Subscription Subscribe(Action<Localization> action, bool sendCallback = true) => _changed.Add(action, sendCallback, this);
@@ -61,12 +84,12 @@ namespace Vurbiri.International
 
         [Impl(256)] public bool IsFileLoaded(int fileId) => _text[fileId] != null;
 
-        public void SetFiles(FileIds fileIds)
+        public void SetFiles(FileIds fileIds, bool reload)
         {
             for (int i = 0; i < Files.Count; i++)
             {
                 if (fileIds[i]) 
-                    LoadFile(i);
+                    LoadFile(i, reload);
                 else 
                     _text[i] = null;
             }
@@ -74,9 +97,9 @@ namespace Vurbiri.International
             //GC.Collect();
         }
 
-        [Impl(256)] public void LoadFile(int fileId)
+        [Impl(256)] public void LoadFile(int fileId, bool reload)
         {
-            if (_text[fileId] == null && Files.TryLoad(_currentLanguage.Folder, fileId, out Dictionary<string, string> load))
+            if ((reload || _text[fileId] == null) && Files.TryLoad(_currentLanguage.Folder, fileId, out Dictionary<string, string> load))
                 _text[fileId] = load;
         }
 
@@ -84,24 +107,6 @@ namespace Vurbiri.International
         {
             _text[fileId] = null;
             //GC.Collect();
-        }
-
-        public void SwitchLanguage(SystemLanguage id)
-        {
-            if (_currentLanguage != id)
-            {
-                for (int i = _languages.Count - 1; i >= 0; --i)
-                {
-                    if (_languages[i] == id)
-                    {
-                        SetLanguage(_languages[i]);
-                        return;
-                    }
-                }
-
-                if (_currentLanguage != _defaultLanguage)
-                    SetLanguage(_defaultLanguage);
-            }
         }
 
         [Impl(256)] public string GetText(FileIdAndKey idAndKey, bool remove = false) => GetText(idAndKey.id, idAndKey.key, remove);
@@ -166,7 +171,7 @@ namespace Vurbiri.International
             }
             else
             {
-                localization.LoadFile(fileId);
+                localization.LoadFile(fileId, true);
             }
             return localization;
         }

@@ -1,7 +1,6 @@
 using System;
 using System.Runtime.CompilerServices;
 using UnityEngine;
-using Vurbiri.Reactive;
 using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.UI

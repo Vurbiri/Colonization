@@ -19,7 +19,7 @@ namespace Vurbiri.Colonization.EntryPoint
 
         private IEnumerator Exit_Cn()
         {
-            Localization.Instance.SetFiles(_localizationFiles);
+            Localization.Instance.SetFiles(_localizationFiles, true);
             yield return new WaitRealtime(.5f);
             Transition.Exit();
             print("MainMenu Exit");

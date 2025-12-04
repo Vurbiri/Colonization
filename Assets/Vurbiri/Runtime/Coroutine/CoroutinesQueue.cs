@@ -10,31 +10,27 @@ namespace Vurbiri
     {
         private readonly Queue<IEnumerator> _coroutines = new();
         private readonly Action _finalAction;
-        private MonoBehaviour _mono;
+        private readonly MonoBehaviour _mono;
         private Coroutine _runningCoroutine = null;
 
         public int Count { [Impl(256)] get => _coroutines.Count; }
         public bool IsRunning { [Impl(256)] get => _runningCoroutine != null; }
 
         [Impl(256)] public CoroutinesQueue() => _mono = CoroutineInternal.Instance;
-        [Impl(256)] public CoroutinesQueue(MonoBehaviour mono) => _mono = mono;
+        [Impl(256)] public CoroutinesQueue(MonoBehaviour monoBehaviour) => _mono = monoBehaviour;
         [Impl(256)] public CoroutinesQueue(Action finalAction) : this(finalAction, CoroutineInternal.Instance) { }
-        [Impl(256)] public CoroutinesQueue(Action finalAction, MonoBehaviour mono)
+        [Impl(256)] public CoroutinesQueue(Action finalAction, MonoBehaviour monoBehaviour)
         {
-            _mono = mono;
             _finalAction = finalAction;
+            _mono = monoBehaviour;
         }
-        [Impl(256)] public CoroutinesQueue(IEnumerator coroutine) : this(coroutine, CoroutineInternal.Instance) { }
-        [Impl(256)] public CoroutinesQueue(IEnumerator coroutine, MonoBehaviour mono)
-        {
-            _mono = mono;
-            Enqueue(coroutine);
-        }
+        [Impl(256)] public CoroutinesQueue(IEnumerator coroutine) : this(null, coroutine, CoroutineInternal.Instance) { }
+        [Impl(256)] public CoroutinesQueue(IEnumerator coroutine, MonoBehaviour monoBehaviour) : this(null, coroutine, monoBehaviour) { }
         [Impl(256)] public CoroutinesQueue(Action finalAction, IEnumerator coroutine) : this(finalAction, coroutine, CoroutineInternal.Instance) { }
         [Impl(256)] public CoroutinesQueue(Action finalAction, IEnumerator coroutine, MonoBehaviour monoBehaviour)
         {
-            _mono = monoBehaviour;
             _finalAction = finalAction;
+            _mono = monoBehaviour;
             Enqueue(coroutine);
         }
 

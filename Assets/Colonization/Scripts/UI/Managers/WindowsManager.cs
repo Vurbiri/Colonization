@@ -1,12 +1,11 @@
 using UnityEngine;
-using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.UI
 {
     [System.Serializable]
     public class WindowsManager
     {
-        private const int SWITCHERS_COUNT = 3, BUTTONS_COUNT = 2;
+        private const int GAME_WINDOWS_COUNT = 4, BUTTONS_COUNT = 2;
         
         [SerializeField] private PerksWindow _perksWindow;
         [SerializeField] private HintButton _perksButton;
@@ -17,25 +16,29 @@ namespace Vurbiri.Colonization.UI
         [SerializeField] private GiftWindow _giftWindow;
         [SerializeField] private GiftButton[] _giftButtons;
         [Space]
+        [SerializeField] private SettingsWindow _settingsWindow;
+        [Space]
         [SerializeField] private DiceWindow _diceWindow;
         [Space]
         [SerializeField] private GameOverWindow _gameOverWindow;
 
-        private readonly Switcher[] _switchers = new Switcher[SWITCHERS_COUNT];
-        private AVButtonBase[] _buttons;
+        private readonly Switcher[] _gameWindows = new Switcher[GAME_WINDOWS_COUNT];
+        private readonly HintButton[] _buttons = new HintButton[BUTTONS_COUNT];
         private int _openWindowsCount;
 
         public void Init()
         {
-            _buttons = new AVButtonBase[BUTTONS_COUNT] { _perksButton, _exchangeButton };
+            _buttons[0] = _perksButton; _buttons[1] = _exchangeButton;
 
             int id = 0;
-            _switchers[id] = _perksWindow.Init(_perksButton).Setup(id++, OnOpenWindow, OnCloseWindow);
-            _switchers[id] = _exchangeWindow.Init(_exchangeButton).Setup(id++, OnOpenWindow, OnCloseWindow);
-            _switchers[id] = _giftWindow.Init(_giftButtons).Setup(id++, OnOpenWindow, OnCloseWindow);
+            _gameWindows[id] = _perksWindow.Init(_perksButton).Setup(id++, OnOpenWindow, OnCloseWindow);
+            _gameWindows[id] = _exchangeWindow.Init(_exchangeButton).Setup(id++, OnOpenWindow, OnCloseWindow);
+            _gameWindows[id] = _giftWindow.Init(_giftButtons).Setup(id++, OnOpenWindow, OnCloseWindow);
+            _gameWindows[id] = _settingsWindow.Switcher.Setup(id++, OnOpenWindow, OnCloseWindow);
 
-            _diceWindow.Init();
-            _gameOverWindow.Init();
+            id = 0;
+            _diceWindow.Init(--id, OnOpenWindow, OnCloseWindow);
+            _gameOverWindow.Init(--id, OnOpenWindow);
 
             GameContainer.Person.Interactable.Subscribe(OnInteractable);
 
@@ -53,8 +56,8 @@ namespace Vurbiri.Colonization.UI
 
             if (!interactable)
             {
-                for (int i = 0; i < SWITCHERS_COUNT; i++)
-                    _switchers[i].Close();
+                for (int i = 0; i < GAME_WINDOWS_COUNT; i++)
+                    _gameWindows[i].Close();
             }
         }
 
@@ -66,13 +69,15 @@ namespace Vurbiri.Colonization.UI
                 GameContainer.InputController.WindowMode(true);
             }
 
-            for (int i = 0; i < SWITCHERS_COUNT; i++)
-                _switchers[i].TryClose(id);
+            for (int i = 0; i < GAME_WINDOWS_COUNT; i++)
+                _gameWindows[i].TryClose(id);
         }
         private void OnCloseWindow()
         {
             if (--_openWindowsCount == 0)
+            {
                 GameContainer.InputController.WindowMode(false);
+            }
         }
 
 #if UNITY_EDITOR
@@ -88,6 +93,8 @@ namespace Vurbiri.Colonization.UI
 
             EUtility.SetObject(ref _giftWindow);
             EUtility.SetObjects(ref _giftButtons);
+
+            EUtility.SetObject(ref _settingsWindow);
 
             EUtility.SetObject(ref _diceWindow);
 

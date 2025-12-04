@@ -22,12 +22,12 @@ namespace Vurbiri.Colonization.UI
             _allowSwitchOff = true;
 
             _switcher.Init(this);
-            _switcher.onClose.Add(SetAllTogglesOff);
-            _switcher.onClose.Add(_spellBook.SetAllTogglesOff);
+            _switcher.onClose.Add(ForceOff);
+            _switcher.onClose.Add(_spellBook.ForceOff);
 
-            _learnButton.Init(OnLearn);
+            _learnButton.AddListener(OnLearn);
             _closeButton.AddListener(_switcher.Close);
-            switchButton.Init(_switcher.Switch);
+            switchButton.AddListener(_switcher.Switch);
 
             var person = GameContainer.Person;
             var perkTree = person.Perks;
@@ -53,7 +53,7 @@ namespace Vurbiri.Colonization.UI
             if (toggle != null)
             {
                 _learnButton.Lock = false;
-                _spellBook.SetAllTogglesOff();
+                _spellBook.ForceOff();
             }
             else
             {
@@ -63,7 +63,7 @@ namespace Vurbiri.Colonization.UI
         private void OnSpellBookChanged(SpellToggle toggle)
         {
             if (toggle != null)
-                SetAllTogglesOff();
+                ForceOff();
         }
         private void OnLearn()
         {

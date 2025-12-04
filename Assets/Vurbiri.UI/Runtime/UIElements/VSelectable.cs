@@ -14,7 +14,7 @@ namespace Vurbiri.UI
 		[SerializeField] protected Graphic _lockIcon;
 		[SerializeField] protected List<TargetGraphic> _targetGraphics = new();
 		[SerializeField] private bool _scaling;
-		[SerializeField] private RectTransform _scalingTarget;
+		[SerializeField] protected RectTransform _scalingTarget;
 		[SerializeField] private ScaleBlock _scales = ScaleBlock.defaultScaleBlock;
         [SerializeField] protected RectTransform _thisRectTransform;
 
@@ -245,9 +245,9 @@ namespace Vurbiri.UI
 		{
 			if (!Application.isPlaying)
 			{
-				this.SetComponent(ref _thisRectTransform);
-				
-				if (transition == Transition.ColorTint && _scales.fadeDuration != colors.fadeDuration)
+				_thisRectTransform = (RectTransform)transform;
+
+                if (transition == Transition.ColorTint && _scales.fadeDuration != colors.fadeDuration)
 					_scales.fadeDuration = colors.fadeDuration;
 
 				_scaleTween ??= new();
@@ -268,7 +268,8 @@ namespace Vurbiri.UI
 			{
 				GetComponent<Graphic>()
 			};
-		}
+            _thisRectTransform = (RectTransform)transform;
+        }
 #endif
 	}
 }

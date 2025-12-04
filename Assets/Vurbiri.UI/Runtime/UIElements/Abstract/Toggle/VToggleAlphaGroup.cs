@@ -1,22 +1,20 @@
-using System.Runtime.CompilerServices;
 using UnityEngine;
+using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.UI
 {
-	public abstract class VToggleAlpha<TToggle> : VToggleBase<TToggle> where TToggle : VToggleAlpha<TToggle>
+	public abstract class VToggleAlphaGroup<TToggle> : VToggleBase<TToggle> where TToggle : VToggleAlphaGroup<TToggle>
     {
         [SerializeField] private CanvasGroupSwitcher _switcher;
 
         public float SwitchingSpeed
         {
-            get => _switcher.Speed;
-            set => _switcher.Speed = value;
+            [Impl(256)] get => _switcher.Speed;
+            [Impl(256)] set => _switcher.Speed = value;
         }
 
-        protected VToggleAlpha() : base() { }
+        protected VToggleAlphaGroup() : base() { }
 
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         sealed protected override void UpdateVisual()
         {
             if (_switcher.IsRunning)
@@ -24,7 +22,7 @@ namespace Vurbiri.UI
             if (_switcher.Valid)
                 StartCoroutine(_isOn ? _switcher.Show() : _switcher.Hide());
         }
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+
         sealed protected override void UpdateVisualInstant()
         {
             if (_switcher.Valid)

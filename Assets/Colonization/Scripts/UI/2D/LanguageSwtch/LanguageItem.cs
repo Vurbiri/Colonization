@@ -3,53 +3,32 @@ using UnityEngine;
 using UnityEngine.UI;
 using Vurbiri.International;
 using Vurbiri.UI;
+using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization.UI
 {
-    [RequireComponent(typeof(Toggle))]
-    public class LanguageItem : MonoBehaviour
+    public class LanguageItem : VToggleGraphic<LanguageItem>
     {
         [SerializeField] private Image _icon;
         [SerializeField] private TextMeshProUGUI _name;
-        [SerializeField] private VToggle _toggle;
 
-        private bool _isSave;
-        private SystemLanguage _id;
-        private Profile _profile;
+        public SystemLanguage Id { [Impl(256)] get; [Impl(256)] private set; }
 
-        public void Setup(Profile profile, LanguageType languageType, VToggleGroup toggleGroup, bool isSave)
+        public bool Init(SystemLanguage currentId, LanguageType languageType)
         {
-            _profile = profile;
             _icon.sprite = languageType.GetSprite();
             _name.text = languageType.Name;
-            _id = languageType.Id;
-            _isSave = isSave;
+            _icon = null; _name = null;
 
-            _toggle.SilentIsOn = _profile.Language == _id;
-            _toggle.Group = toggleGroup;
-            _toggle.AddListener(OnSelect);
-        }
+            Id = languageType.Id;
 
-        private void OnSelect(bool isOn)
-        {
-            if (!isOn) return;
-
-            _profile.Language = _id;
-            if (_isSave) _profile.Apply();
-        }
-
-        private void OnDestroy()
-        {
-            if(_icon.sprite != null)
-                Resources.UnloadAsset(_icon.sprite);
-        }
+            _isOn = currentId == Id;
+            UpdateVisualInstant();
 
 #if UNITY_EDITOR
-        private void OnValidate()
-        {
-            if (_toggle == null)
-                _toggle = GetComponent<VToggle>();
-        }
+            gameObject.name = languageType.Folder;
 #endif
+            return _isOn;
+        }
     }
 }

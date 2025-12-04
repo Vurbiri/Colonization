@@ -3,6 +3,7 @@ using UnityEngine;
 using Vurbiri.International;
 using Vurbiri.Reactive;
 using Vurbiri.Yandex;
+using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization
 {
@@ -13,40 +14,40 @@ namespace Vurbiri.Colonization
         [SerializeField] private int _quality = 2;
 
         private readonly VAction<Profile> _eventChanged = new();
-        private Localization _localization;
 
-        public SystemLanguage Language { get => _idLang; set => _localization.SwitchLanguage(value); }
-        public int Quality { get => _quality; set => QualitySettings.SetQualityLevel(value); }
+        public SystemLanguage Language { [Impl(256)] get => _idLang; [Impl(256)] set => Localization.Instance.CurrentId = value; }
+        public int Quality { [Impl(256)] get => _quality; [Impl(256)] set => QualitySettings.SetQualityLevel(value); }
 
-        public Localization Localization => _localization;
-        public int QualityCount => QualitySettings.count;
+        public Localization Localization { [Impl(256)] get => Localization.Instance; }
+        public int MaxQuality { [Impl(256)] get => QualitySettings.count - 1; }
 
-        public void Init(YandexSDK ysdk)
+        [Impl(256)] public void Init(YandexSDK ysdk)
         {
-            _localization = Localization.Instance;
             if (ysdk.IsInitialize)
-                _idLang = _localization.IdFromCode(ysdk.Lang);
+                _idLang = Localization.Instance.IdFromCode(ysdk.Lang);
 
             //_idLang = ysdk.IsInitialize ? _localization.IdFromCode(ysdk.Lang) : Application.systemLanguage;
         }
 
-        public Subscription Subscribe(Action<Profile> action, bool instantGetValue = true) => _eventChanged.Add(action, instantGetValue, this);
+        [Impl(256)] public Subscription Subscribe(Action<Profile> action, bool instantGetValue = true) => _eventChanged.Add(action, instantGetValue, this);
 
         public void Apply()
         {
-            bool changed = _idLang != _localization.CurrentId;
-            _idLang = _localization.CurrentId;
+            var localization = Localization.Instance;
+            bool changed = _idLang != localization.CurrentId;
+            _idLang = localization.CurrentId;
 
             int level = QualitySettings.GetQualityLevel();
             changed |= _quality != level;
             _quality = level;
 
-            if (changed) _eventChanged.Invoke(this);
+            if (changed) 
+                _eventChanged.Invoke(this);
         }
 
-        public void Cancel()
+        [Impl(256)] public void Cancel()
         {
-            _localization.SwitchLanguage(_idLang);
+            Localization.Instance.CurrentId = _idLang;
             QualitySettings.SetQualityLevel(_quality);
         }
     }

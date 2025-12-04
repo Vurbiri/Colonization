@@ -29,6 +29,16 @@ namespace Vurbiri
 
         // ********************************************
 
+        public static void SetGameObject(ref GameObject obj, string name)
+        {
+            if (obj != null && obj.name == name) 
+                return;
+
+            obj = GameObject.Find(name);
+            if (obj == null)
+                LogErrorFind<GameObject>("GameObject", name);
+        }
+
         public static void SetObject<T>(ref T obj, string name = null) where T : Component
         {
             bool notName = string.IsNullOrEmpty(name);
@@ -38,7 +48,7 @@ namespace Vurbiri
             if (obj == null)
                 LogErrorFind<T>("object", notName ? typeof(T).Name : name);
         }
-        public static void SetObjects<T>(ref T[] arr, int count = -1) where T : Component
+        public static void SetObjects<T>(ref T[] arr, int count = -1) where T : Object
         {
             if (arr != null && (arr.Length == count))
                 return;

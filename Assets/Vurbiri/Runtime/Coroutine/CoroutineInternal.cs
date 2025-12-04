@@ -19,14 +19,15 @@ namespace Vurbiri
         private void Awake()
 		{
             if (s_instance == null)
-            {
-                DontDestroyOnLoad(gameObject);
                 s_instance = this;
-            }
             else
-            {
                 Destroy(gameObject);
-            }
+        }
+
+        private void OnDestroy()
+        {
+            if (s_instance == this)
+                s_instance = null;
         }
     }
 }

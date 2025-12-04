@@ -36,7 +36,7 @@ namespace Vurbiri.Colonization.EntryPoint
 
             Log.Info("[EntryPoint] Start Init Project");
 
-            Localization.Instance.SetFiles(_localizationFiles);
+            Localization.Instance.SetFiles(_localizationFiles, false);
 
             content.settings = _settings;
             content.prices = _prices;

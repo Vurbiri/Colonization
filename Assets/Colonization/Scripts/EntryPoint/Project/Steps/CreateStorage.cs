@@ -31,7 +31,7 @@ namespace Vurbiri.Colonization.EntryPoint
             if (!_content.ysdk.IsLogOn)
             {
                 yield return _mono.StartCoroutine(_loadingScreen.SmoothOff());
-                yield return _mono.StartCoroutine(_logOnPanel.TryLogOn_Cn(_content.ysdk, _content.settings, _content.projectStorage));
+                yield return _mono.StartCoroutine(_logOnPanel.TryLogOn_Cn(_content.ysdk, _content.projectStorage));
                 yield return _mono.StartCoroutine(_loadingScreen.SmoothOn());
                 if (_content.ysdk.IsLogOn)
                     yield return _mono.StartCoroutine(CreateStorage_Cn());

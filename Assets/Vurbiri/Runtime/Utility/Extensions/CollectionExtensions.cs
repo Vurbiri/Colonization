@@ -58,14 +58,20 @@ namespace Vurbiri
             return false;
         }
 
-        [Impl(256)]
-        public static T RandomExtract<T>(this List<T> self)
+        [Impl(256)] public static bool TryAdd<T>(this List<T> self, T item)
         {
-            int index = UnityEngine.Random.Range(0, self.Count);
+            if(self.Contains(item))
+                return false;
+            self.Add(item);
+            return true;
+        }
+        [Impl(256)] public static T Extract<T>(this List<T> self, int index)
+        {
             T value = self[index];
             self.RemoveAt(index);
             return value;
         }
+        [Impl(256)] public static T RandomExtract<T>(this List<T> self) => Extract<T>(self, UnityEngine.Random.Range(0, self.Count));
 
         public static T[] Grow<T>(this T[] self, int count, int capacity) 
         {

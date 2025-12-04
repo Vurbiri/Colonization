@@ -11,7 +11,7 @@ using static UnityEditor.EditorGUILayout;
 namespace VurbiriEditor.UI
 {
     [CustomEditor(typeof(VToggleGraphic<>), true), CanEditMultipleObjects]
-    sealed public class VToggleGraphicTEditor : VToggleBaseTEditor
+    sealed public class VToggleGraphicEditor : VToggleBaseEditor
     {
         private const float MIN_DURATION = 0f, MAX_DURATION = 1f;
 
@@ -31,7 +31,7 @@ namespace VurbiriEditor.UI
 
         private SwitchingType _switchingType;
 
-        protected override bool IsDerivedEditor => GetType() != typeof(VToggleGraphicTEditor);
+        protected override bool IsDerivedEditor => GetType() != typeof(VToggleGraphicEditor);
 
         protected override void OnEnable()
         {

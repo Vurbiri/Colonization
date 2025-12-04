@@ -3,7 +3,7 @@ using Vurbiri.EntryPoint;
 using Vurbiri.Yandex;
 using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
-namespace Vurbiri.Colonization.EntryPoint
+namespace Vurbiri.Colonization
 {
 	public class ProjectContainer : IContainer
 	{

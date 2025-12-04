@@ -5,14 +5,14 @@ using static UnityEditor.EditorGUILayout;
 
 namespace VurbiriEditor.UI
 {
-    [CustomEditor(typeof(VToggleAlpha<>), true), CanEditMultipleObjects]
-    sealed public class VToggleAlphaTEditor : VToggleBaseTEditor
+    [CustomEditor(typeof(VToggleAlphaGroup<>), true), CanEditMultipleObjects]
+    sealed public class VToggleAlphaGroupEditor : VToggleBaseEditor
     {
         private SerializedProperty _switcherProperty;
         private SerializedProperty _canvasGroupProperty;
         private SerializedProperty _speedProperty;
 
-        protected override bool IsDerivedEditor => GetType() != typeof(VToggleAlphaTEditor);
+        protected override bool IsDerivedEditor => GetType() != typeof(VToggleAlphaGroupEditor);
 
         protected override void OnEnable()
         {

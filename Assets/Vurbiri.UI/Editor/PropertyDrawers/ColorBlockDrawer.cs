@@ -42,11 +42,11 @@ namespace VurbiriEditor.UI
             drawRect.height = EditorGUIUtility.singleLineHeight;
             drawRect.y += EditorGUIUtility.standardVerticalSpacing;
 
+            FadeDurationField(drawRect, _fadeDurationProperty);
+            drawRect.y += EditorGUIUtility.singleLineHeight;
+
             BeginProperty(drawRect, label, _colorBlockProperty);
             {
-                FadeDurationField(drawRect, _fadeDurationProperty);
-                drawRect.y += EditorGUIUtility.singleLineHeight;
-
                 if (_colorBlockProperty.isExpanded = Foldout(drawRect, _colorBlockProperty.isExpanded, label, EditorStyles.foldoutHeader))
                 {
                     indentLevel++;

@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using Vurbiri.International;
 using Vurbiri.UI;
@@ -10,10 +9,13 @@ namespace Vurbiri.Colonization.UI
         [SerializeField] private FileIdAndKey _getText;
         [SerializeField] private bool _extract;
 
-        public void Init(Action action)
+        protected override void Start()
         {
-            base.InternalInit(GameContainer.UI.CanvasHint, action, 0.5f);
-
+            base.Start();
+#if UNITY_EDITOR
+            if (!Application.isPlaying) return;
+#endif
+            base.InternalInit(GameContainer.UI.CanvasHint, 0.505f);
             Localization.Instance.Subscribe(SetLocalizationText);
         }
 

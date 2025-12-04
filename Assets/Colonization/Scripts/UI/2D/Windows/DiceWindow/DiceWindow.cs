@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using TMPro;
 using UnityEngine;
@@ -23,8 +24,16 @@ namespace Vurbiri.Colonization.UI
         private readonly WaitRealtime _waitAI = new();
         private readonly WaitSignal _waitPerson = new();
 
-        public void Init()
+        private readonly VAction<int> _onOpen = new();
+        private readonly VAction _onClose = new();
+        private int _id;
+
+        public void Init(int id, Action<int> onOpenWindow, Action onCloseWindow)
 		{
+            _id = id;
+            _onOpen.Add(onOpenWindow);
+            _onClose.Add(onCloseWindow);
+
             for (int i = 0; i < CONST.DICES_COUNT; i++)
                 _dices[i] = new(_labelsDice[i]);
             _labelsDice = null;
@@ -41,6 +50,8 @@ namespace Vurbiri.Colonization.UI
 
         private IEnumerator Roll_Cn(bool isPerson)
         {
+            _onOpen.Invoke(_id);
+
             _result.text = string.Empty;
 
             for (int i = 0; i < CONST.DICES_COUNT; i++)
@@ -66,7 +77,7 @@ namespace Vurbiri.Colonization.UI
 
             yield return GameContainer.CameraController.FromDefaultPosition(true);
 
-            GameContainer.InputController.WindowMode(false);
+            _onClose.Invoke();
             GameContainer.GameLoop.Profit();
         }
 
@@ -74,7 +85,7 @@ namespace Vurbiri.Colonization.UI
 
         [StartEditor]
         [SerializeField, Range(0.5f, 1f)] private float _panelsBrightness = 0.8f;
-        [SerializeField, HideInInspector] private UnityEngine.UI.Image _mainImage, _resultImage, _stopImage, _buttonCenterImage;
+        [SerializeField, HideInInspector] private UnityEngine.UI.Image _mainImage, _resultImage;
 
         private void OnValidate()
         {
@@ -85,8 +96,6 @@ namespace Vurbiri.Colonization.UI
 
             this.SetComponent(ref _mainImage);
             this.SetChildren(ref _resultImage, "Result");
-            this.SetChildren(ref _stopImage, "StopButton");
-            this.SetChildren(ref _buttonCenterImage, "Center");
 
             _labelsDice ??= new TextMeshProUGUI[CONST.DICES_COUNT];
             if (_labelsDice.Length != CONST.DICES_COUNT)
@@ -94,7 +103,7 @@ namespace Vurbiri.Colonization.UI
             if (_delayDice.Min == 0f && _delayDice.Max == 0f)
                 _delayDice = new(0.175f, 0.25f);
 
-            _resultImage.color = _stopImage.color = _mainImage.color.Brightness(_panelsBrightness);
+            _resultImage.color = _mainImage.color.Brightness(_panelsBrightness);
         }
 
         public void UpdateVisuals_Ed(float pixelsPerUnit, ProjectColors colors)
@@ -104,9 +113,7 @@ namespace Vurbiri.Colonization.UI
             _mainImage.color = color;
             _mainImage.pixelsPerUnitMultiplier = pixelsPerUnit;
 
-            _buttonCenterImage.color = color;
-
-            _resultImage.color = _stopImage.color = color.Brightness(_panelsBrightness);
+            _resultImage.color = color.Brightness(_panelsBrightness);
         }
 #endif
     }

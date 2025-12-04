@@ -29,7 +29,7 @@ namespace Vurbiri.Colonization.EntryPoint
             transition.Setup(new GameContainer(content), _nextScene);
 #endif
 
-            Localization.Instance.SetFiles(_localizationFiles);
+            Localization.Instance.SetFiles(_localizationFiles, true);
 
             _contentInit.CreateObjectsAndFillingContainer(content);
                         

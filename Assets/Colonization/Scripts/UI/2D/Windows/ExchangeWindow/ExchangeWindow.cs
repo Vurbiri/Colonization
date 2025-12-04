@@ -29,10 +29,10 @@ namespace Vurbiri.Colonization.UI
             _switcher.Init(this);
             _switcher.onClose.Add(ResetValues);
 
-            _applyButton.Init(Apply);
-            _resetButton.Init(ResetValues);
+            _applyButton.AddListener(Apply);
+            _resetButton.AddListener(ResetValues);
             _closeButton.AddListener(_switcher.Close);
-            switchButton.Init(_switcher.Switch);
+            switchButton.AddListener(_switcher.Switch);
 
             var resources = GameContainer.Person.Resources;
             for (int i = 0; i < CurrencyId.MainCount; i++)

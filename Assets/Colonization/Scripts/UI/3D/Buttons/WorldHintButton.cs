@@ -7,14 +7,12 @@ namespace Vurbiri.Colonization.UI
     sealed public class WorldHintButton : AHintButton3D
     {
         [SerializeField] private FileIdAndKey _getText;
-
-        private Subscription _subscription;
+        [SerializeField] private bool _extract;
 
         public void Init(Action action)
         {
             base.InternalInit(action, true);
-
-            _subscription = Localization.Instance.Subscribe(SetLocalizationText);
+            Localization.Instance.Subscribe(SetLocalizationText);
         }
 
         public void Setup(bool isEnable, bool interactable = true)
@@ -23,12 +21,15 @@ namespace Vurbiri.Colonization.UI
             _thisGameObject.SetActive(isEnable);
         }
 
-        private void SetLocalizationText(Localization localization) => _hintText = localization.GetText(_getText.id, _getText.key);
+        private void SetLocalizationText(Localization localization)
+        {
+            _hintText = localization.GetText(_getText, _extract);
+        }
 
         protected override void OnDestroy()
         {
             base.OnDestroy();
-            _subscription?.Dispose();
+            Localization.Instance.Unsubscribe(SetLocalizationText);
         }
     }
 }

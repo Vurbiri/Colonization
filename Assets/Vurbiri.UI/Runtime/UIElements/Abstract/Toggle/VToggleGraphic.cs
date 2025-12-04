@@ -1,6 +1,6 @@
-using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.UI;
+using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.UI
 {
@@ -26,7 +26,7 @@ namespace Vurbiri.UI
         #region Properties
         public float CheckmarkFadeDuration
         {
-            get => _fadeDuration;
+            [Impl(256)] get => _fadeDuration;
             set
             {
                 if (_fadeDuration != value)
@@ -38,7 +38,7 @@ namespace Vurbiri.UI
         }
         public SwitchingType Switching
         {
-            get => _switchingType;
+            [Impl(256)] get => _switchingType;
             set
             {
                 if (_switchingType != value)
@@ -50,7 +50,7 @@ namespace Vurbiri.UI
         }
         public Graphic CheckmarkOn
         {
-            get => _checkmarkOn;
+            [Impl(256)] get => _checkmarkOn;
             set
             {
                 if (_checkmarkOn == value) return;
@@ -64,7 +64,7 @@ namespace Vurbiri.UI
         }
         public Graphic CheckmarkOff
         {
-            get => _checkmarkOff;
+            [Impl(256)] get => _checkmarkOff;
             set
             {
                 if (_checkmarkOff == value) return;
@@ -78,13 +78,13 @@ namespace Vurbiri.UI
         }
         public Color ColorOn
         {
-            get => _colorOn;
-            set => SetColors(value, _colorOff);
+            [Impl(256)] get => _colorOn;
+            [Impl(256)] set => SetColors(value, _colorOff);
         }
         public Color ColorOff
         {
-            get => _colorOff;
-            set => SetColors(_colorOn, value);
+            [Impl(256)] get => _colorOff;
+            [Impl(256)] set => SetColors(_colorOn, value);
         }
         #endregion
 
@@ -102,12 +102,12 @@ namespace Vurbiri.UI
                 for (int i = _targetGraphics.Count - 1; i >= 0; i--)
                 {
                     current = _targetGraphics[i];
-                    if (current.IsNotNull & current == _checkmarkOn)
+                    if (current.IsNotNull && current == _checkmarkOn)
                     {
                         _stateFilterOn = current.Filter;
                         _targetGraphics.RemoveAt(i);
                     }
-                    else if (current.IsNotNull & current == _checkmarkOff)
+                    else if (current.IsNotNull && current == _checkmarkOff)
                     {
                         _stateFilterOff = current.Filter;
                         _targetGraphics.RemoveAt(i);
@@ -130,10 +130,8 @@ namespace Vurbiri.UI
             UpdateVisualInstant();
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        sealed protected override void UpdateVisual() => _transitionEffect.Play(_isOn);
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        sealed protected override void UpdateVisualInstant() => _transitionEffect.PlayInstant(_isOn);
+        [Impl(256)] sealed protected override void UpdateVisual() => _transitionEffect.Play(_isOn);
+        [Impl(256)] sealed protected override void UpdateVisualInstant() => _transitionEffect.PlayInstant(_isOn);
 
         sealed protected override void StartScaleTween(Vector3 targetScale, float duration)
         {
@@ -164,7 +162,6 @@ namespace Vurbiri.UI
 
         sealed protected override void OnDidApplyAnimationProperties()
         {
-            // Check if isOn has been changed by the animation. Unfortunately there is no way to check if we don't have a graphic.
             if (_transitionEffect.IsValid)
             {
                 bool oldValue = _transitionEffect.Value;

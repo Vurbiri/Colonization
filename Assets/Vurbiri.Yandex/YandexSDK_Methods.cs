@@ -26,7 +26,7 @@ namespace Vurbiri.Yandex
                 Log.Info("Leaderboards - initialization error!");
         }
 
-        public IEnumerator Authorization_Cn(Action<bool> callback)
+        public IEnumerator Authorization_Cn(Out<bool> callback)
         {
             WaitResult<bool> waitResult;
 
@@ -35,7 +35,7 @@ namespace Vurbiri.Yandex
                 yield return (waitResult = InitPlayer());
                 if (!waitResult.Value)
                 {
-                    callback?.Invoke(false);
+                    callback?.Set(false);
                     yield break;
                 }
             }
@@ -45,7 +45,7 @@ namespace Vurbiri.Yandex
                 yield return (waitResult = LogOn());
                 if (!waitResult.Value)
                 {
-                    callback?.Invoke(false);
+                    callback?.Set(false);
                     yield break;
                 }
             }
@@ -53,7 +53,7 @@ namespace Vurbiri.Yandex
             if (!IsLeaderboard)
                 yield return InitLeaderboards();
 
-            callback?.Invoke(true);
+            callback?.Set(true);
         }
 
         private WaitResult<T> WaitResult<T>(ref WaitResultSource<T> completion, Action action)

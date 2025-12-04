@@ -1,7 +1,7 @@
 using System;
-using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.UI
 {
@@ -13,11 +13,11 @@ namespace Vurbiri.UI
 
         protected readonly TToggle _this;
 
-        public bool IsOn { get => _isOn; set => SetValue(value, true); }
-        public bool SilentIsOn { get => _isOn; set => SetValue(value, false); }
+        public bool IsOn { [Impl(256)] get => _isOn; [Impl(256)] set => SetValue(value, true); }
+        public bool SilentIsOn { [Impl(256)] get => _isOn; [Impl(256)] set => SetValue(value, false); }
         public VToggleGroup<TToggle> Group
         {
-            get => _group;
+            [Impl(256)] get => _group;
             set
             {
                 if (_group == value) return;
@@ -46,10 +46,8 @@ namespace Vurbiri.UI
             _onValueChanged.Init(_isOn);
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public Subscription AddListener(Action<bool> action, bool instantGetValue = true) => _onValueChanged.Add(action, instantGetValue, _isOn);
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void RemoveListener(Action<bool> action) => _onValueChanged.Remove(action);
+        [Impl(256)] public Subscription AddListener(Action<bool> action, bool instantGetValue = true) => _onValueChanged.Add(action, instantGetValue, _isOn);
+        [Impl(256)] public void RemoveListener(Action<bool> action) => _onValueChanged.Remove(action);
 
         protected abstract void UpdateVisual();
         protected abstract void UpdateVisualInstant();
@@ -79,7 +77,7 @@ namespace Vurbiri.UI
 
         protected void SetValue(bool value, bool sendCallback)
         {
-            if (_isOn == value || (_group != null && !_group.CanSetValue(_this, value)))
+            if (_isOn == value || (_group != null && !_group.CanSetValue(_this, value, sendCallback)))
                 return;
 
             _isOn = value;
@@ -116,6 +114,11 @@ namespace Vurbiri.UI
             base.OnDisable();
         }
 
+        protected virtual void OnApplicationQuit()
+        {
+            _group = null;
+        }
+
         public void OnPointerClick(PointerEventData eventData)
         {
             if (eventData.button == PointerEventData.InputButton.Left)
@@ -127,7 +130,7 @@ namespace Vurbiri.UI
             InternalToggle();
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [Impl(256)]
         private void InternalToggle()
         {
             if (isActiveAndEnabled && IsInteractable())

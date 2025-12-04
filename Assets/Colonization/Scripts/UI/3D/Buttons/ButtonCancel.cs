@@ -5,14 +5,14 @@ namespace Vurbiri.Colonization.UI
     sealed public class ButtonCancel : AHintButton3D, IMenu
     {
         private ICancel _cancelledObj;
-        private Subscription _unLanguage, _unAction;
+        private Subscription _unAction;
 
         private readonly VAction<IMenu, bool> _changeEvent = new();
 
         public Event<IMenu, bool> Init()
         {
             base.InternalInit(OnClick, false);
-            _unLanguage = Localization.Instance.Subscribe(SetText);
+            Localization.Instance.Subscribe(SetText);
             
             return _changeEvent;
         }
@@ -55,7 +55,7 @@ namespace Vurbiri.Colonization.UI
         protected override void OnDestroy()
         {
             base.OnDestroy();
-            _unLanguage?.Dispose();
+            Localization.Instance.Unsubscribe(SetText);
             _unAction?.Dispose();
         }
     }

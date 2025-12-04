@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using Vurbiri.Colonization.UI;
 using Vurbiri.EntryPoint;
 using Vurbiri.International;
 using Vurbiri.UI;
@@ -20,15 +21,21 @@ namespace Vurbiri.Colonization
         [Space]
         [SerializeField] private Place[] _places;
 
-        public void Init()
+        private readonly VAction<int> _onOpen = new();
+        private int _id;
+
+        public void Init(int id, Action<int> onOpenWindow)
         {
+            _id = id;
+            _onOpen.Add(onOpenWindow);
+
             GameContainer.Chaos.OnGameOver.Add(GameOver);
             gameObject.SetActive(false);
         }
 
         private void GameOver(Winner winner)
         {
-            GameContainer.InputController.WindowMode(true);
+            _onOpen.Invoke(_id);
             GameContainer.CameraController.ToDefaultPosition();
 
             GetComponentInChildren<VButton>().AddListener(Transition.Exit);
@@ -127,6 +134,7 @@ namespace Vurbiri.Colonization
 
         [StartEditor]
         [SerializeField, Range(20f, 40f)] private float _scoreFontSize = 30;
+        [SerializeField, HideInInspector] private UnityEngine.UI.Image _mainImage;
 
         private void OnValidate()
         {
@@ -139,6 +147,16 @@ namespace Vurbiri.Colonization
                 _places[i] ??= new();
                 _places[i].OnValidate(this, $"{i+1}stPlace", _scoreFontSize - i);
             }
+
+            this.SetComponent(ref _mainImage);
+        }
+
+        public void UpdateVisuals_Ed(float pixelsPerUnit, ProjectColors colors)
+        {
+            Color color = colors.PanelBack.SetAlpha(1f);
+
+            _mainImage.color = color;
+            _mainImage.pixelsPerUnitMultiplier = pixelsPerUnit;
         }
 #endif
     }

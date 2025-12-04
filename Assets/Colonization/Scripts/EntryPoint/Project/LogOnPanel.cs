@@ -1,43 +1,38 @@
 using System.Collections;
 using UnityEngine;
 using Vurbiri.Colonization.Storage;
-using Vurbiri.Colonization.UI;
+using Vurbiri.International;
+using Vurbiri.UI;
 using Vurbiri.Yandex;
 
 namespace Vurbiri.Colonization
 {
     public class LogOnPanel : MonoBehaviour
     {
-        [SerializeField] private LanguageSwitch _languageSwitch;
+        [SerializeField] private FileIdAndKey _errorLogon;
 
+        private readonly WaitResultSource<bool> _waitLogOn = new();
         private ProjectStorage _storage;
-        private WaitResultSource<bool> _waitLogOn;
         private YandexSDK _ysdk;
 
-        public IEnumerator TryLogOn_Cn(YandexSDK ysdk, Settings settings, ProjectStorage storage)
+        public IEnumerator TryLogOn_Cn(YandexSDK ysdk, ProjectStorage storage)
         {
-            _languageSwitch.Init(settings);
+            _storage = storage;
+            _ysdk = ysdk;
 
             gameObject.SetActive(true);
 
-            _storage = storage;
-            _ysdk = ysdk;
-            _waitLogOn = new();
-            
-            bool resultAuthorization = false;
             while (true)
             {
-                yield return _waitLogOn;
-
+                yield return _waitLogOn.Restart();
                 if (!_waitLogOn.Value)
                     break;
 
-                yield return StartCoroutine(ysdk.Authorization_Cn((b) => resultAuthorization = b));
-                if (resultAuthorization)
+                yield return StartCoroutine(ysdk.Authorization_Cn(Out<bool>.Get(out int key)));
+                if (Out<bool>.Result(key))
                     break;
 
-                _waitLogOn = new();
-                //Message.BannerKey("ErrorLogon", MessageType.Error);
+                Banner.Open(Localization.Instance.GetText(_errorLogon), MessageTypeId.Error, 3f);
             }
 
             gameObject.SetActive(false);
@@ -58,15 +53,5 @@ namespace Vurbiri.Colonization
         {
             if (_ysdk != null && _ysdk.IsLogOn) OnLogOn();
         }
-
-#if UNITY_EDITOR
-        private void OnValidate()
-        {
-            //EUtility.SetPrefab(ref _langPrefab);
-
-            if (_languageSwitch == null)
-                _languageSwitch = GetComponentInChildren<LanguageSwitch>();
-        }
-#endif
     }
 }

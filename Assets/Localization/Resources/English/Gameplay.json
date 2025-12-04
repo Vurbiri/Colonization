@@ -45,5 +45,7 @@
   "TrackingCamera": "Tracking AI actions\nOn/Off",
   "Victory": "Victory",
   "Defeat": "Defeat",
-  "Winner": "Winner:\n{0}"
+  "Winner": "Winner:\n{0}",
+  "Exit": "Exit to main menu",
+  "Save": "Save"
 }

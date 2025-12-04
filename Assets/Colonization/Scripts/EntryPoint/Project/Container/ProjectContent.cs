@@ -3,7 +3,7 @@ using Vurbiri.Colonization.UI;
 using Vurbiri.EntryPoint;
 using Vurbiri.Yandex;
 
-namespace Vurbiri.Colonization.EntryPoint
+namespace Vurbiri.Colonization
 {
     public class ProjectContent : IContainerContent
     {

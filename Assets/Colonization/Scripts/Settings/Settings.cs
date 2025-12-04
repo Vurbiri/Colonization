@@ -1,6 +1,7 @@
 using UnityEngine;
 using Vurbiri.Colonization.Storage;
 using Vurbiri.Yandex;
+using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization
 {
@@ -12,8 +13,8 @@ namespace Vurbiri.Colonization
 
         private ProjectStorage _storage;
 
-        public AudioMixer<MixerId> Volumes => _mixer;
-        public Profile Profile => _profile;
+        public AudioMixer<MixerId> Volumes { [Impl(256)] get => _mixer; }
+        public Profile Profile { [Impl(256)] get => _profile; }
 
         public void Init(YandexSDK ysdk, ProjectStorage storage)
         {
@@ -26,20 +27,19 @@ namespace Vurbiri.Colonization
             Cancel();
         }
 
-        public void Apply()
+        [Impl(256)] public void Apply()
         {
             _profile.Apply();
             _mixer.Apply();
         }
 
-        public void ApplyAndSave(Out<bool> output = null)
+        [Impl(256)] public void ApplyAndSave(Out<bool> output = null)
         {
             Apply();
-
             _storage.Save(output);
         }
 
-        public void Cancel()
+        [Impl(256)] public void Cancel()
         {
             _profile.Cancel();
             _mixer.Cancel();
