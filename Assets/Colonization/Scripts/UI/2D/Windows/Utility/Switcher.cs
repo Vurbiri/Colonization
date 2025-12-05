@@ -1,6 +1,7 @@
 using System;
 using System.Runtime.CompilerServices;
 using UnityEngine;
+using Vurbiri.EntryPoint;
 using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.UI
@@ -14,7 +15,7 @@ namespace Vurbiri.Colonization.UI
         private bool _isOpen;
         private int _id;
 
-        public readonly VAction<int> onOpen = new();
+        public readonly VAction onOpen = new();
         public readonly VAction onClose = new();
 
         public bool IsOpen => _isOpen;
@@ -23,11 +24,13 @@ namespace Vurbiri.Colonization.UI
         {
             _parent = parent;
             _canvasSwitcher.Set(_isOpen = false);
+
+            Transition.OnExit.Add(OnSceneExit);
         }
         public Switcher Setup(int id, Action<int> onOpenWindow, Action onCloseWindow)
         {
             _id = id;
-            onOpen.Add(onOpenWindow);
+            onOpen.Add(() => onOpenWindow(id));
             onClose.Add(onCloseWindow);
             return this;
         }
@@ -79,7 +82,7 @@ namespace Vurbiri.Colonization.UI
         private void InternalOpen()
         {
             _parent.StartCoroutine(_canvasSwitcher.Show());
-            onOpen.Invoke(_id);
+            onOpen.Invoke();
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -94,6 +97,12 @@ namespace Vurbiri.Colonization.UI
         {
             if (_canvasSwitcher.IsRunning)
                 _parent.StopCoroutine(_canvasSwitcher);
+        }
+
+        private void OnSceneExit()
+        {
+            onOpen.Clear();
+            onClose.Clear();
         }
 
 #if UNITY_EDITOR

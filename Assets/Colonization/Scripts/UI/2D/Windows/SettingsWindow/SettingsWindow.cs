@@ -1,70 +1,112 @@
+using System;
 using UnityEngine;
 using Vurbiri.Collections;
 using Vurbiri.Colonization.UI;
 using Vurbiri.EntryPoint;
+using Vurbiri.International;
 using Vurbiri.UI;
 
 namespace Vurbiri.Colonization
 {
 	public class SettingsWindow : MonoBehaviour
 	{
-        [SerializeField] private HintButton _settingsButton;
         [SerializeField] private Switcher _switcher;
         [SerializeField] private IdArray<MixerId, VSliderFloat> _sounds;
         [SerializeField] private VSliderInt _quality;
         [SerializeField] private LanguageSwitch _language;
+        [Space]
+        [SerializeField] private FileIdAndKey _goodSave;
+        [SerializeField] private FileIdAndKey _errorSave;
 
-        public Switcher Switcher => _switcher;
+        private Action[] _actions;
+        private int _state;
 
-        private void Start()
+        public Switcher Init()
 		{
             _switcher.Init(this);
-            _settingsButton.AddListener(_switcher.Switch);
 
             for (int i = 0; i < MixerId.Count; ++i)
-                SetSound(i, _sounds[i]);
-            _sounds = null;
+            {
+                int index = i;
+                _sounds[i].AddListener((value) => ProjectContainer.Settings.Volumes[index] = value, false);
+            }
+            _quality.AddListener(QualitySettings.SetQualityLevel, false);
 
-            var profile = ProjectContainer.Settings.Profile;
-            _quality.MaxValue = profile.MaxQuality;
-            _quality.Value = profile.Quality;
-            _quality.AddListener(QualitySettings.SetQualityLevel);
-            _quality = null;
+            _actions = new Action[] { ProjectContainer.Settings.Cancel, ProjectContainer.Settings.Apply, SaveInternal, ExitInternal };
 
-            _switcher.onClose.Add(_language.ItemsUpdate);
-            _language = null;
-        }
+            _switcher.onClose.Add(OnClose);
+            _switcher.onOpen.Add(OnOpen);
 
-        public void Apply()
-        {
-            _switcher.Close();
-            ProjectContainer.Settings.Apply();
+            return _switcher;
         }
 
         public void Cancel()
         {
+            _state = State.Cancel;
             _switcher.Close();
-            ProjectContainer.Settings.Cancel();
         }
 
+        public void Apply()
+        {
+            _state = State.Apply;
+            _switcher.Close();
+        }
+        
         public void Save()
         {
+            _state = State.Save;
             _switcher.Close();
-            ProjectContainer.StorageService.Save();
         }
         
 		public void Exit()
 		{
+            _state = State.Exit;
             _switcher.Close();
-            ProjectContainer.StorageService.Save();
-			Transition.Exit();
         }
-        
-        private static void SetSound(int index, VSliderFloat slider)
+
+        private void OnClose()
         {
-            slider.Value = ProjectContainer.Settings.Volumes[index];
-            slider.AddListener((value) => ProjectContainer.Settings.Volumes[index] = value);
+            _actions[_state].Invoke();
         }
+        private void OnOpen()
+        {
+            _state = State.Cancel;
+
+            _language.ItemsUpdate();
+
+            _quality.SilentValue = ProjectContainer.Settings.Profile.Quality;
+
+            var volumes = ProjectContainer.Settings.Volumes;
+            for (int i = 0; i < MixerId.Count; ++i)
+                _sounds[i].SilentValue = volumes[i];
+        }
+
+        private void SaveInternal()
+        {
+            ProjectContainer.StorageService.Save(Out<bool>.Get(out int key));
+            if (Out<bool>.Result(key))
+                Banner.Open(Localization.Instance.GetText(_goodSave), MessageTypeId.Info, 3f);
+            else
+                Banner.Open(Localization.Instance.GetText(_errorSave), MessageTypeId.Error, 3f);
+        }
+
+        private static void ExitInternal()
+        {
+            ProjectContainer.StorageService.Save();
+            Transition.Exit();
+        }
+
+        #region Constants
+        // ------------------------------------------
+        private readonly struct State
+        {
+            public const int Cancel = 0;
+            public const int Apply  = 1;
+            public const int Save   = 2;
+            public const int Exit   = 3;
+        }
+        // ------------------------------------------
+        #endregion
 
 #if UNITY_EDITOR
         private void OnValidate()
@@ -72,13 +114,15 @@ namespace Vurbiri.Colonization
             if (UnityEditor.EditorApplication.isPlayingOrWillChangePlaymode)
                 return;
 
-            EUtility.SetObject(ref _settingsButton, "SettingsButton");
+            
 
             _switcher ??= new();
             _switcher.OnValidate(this);
 
             this.SetChildren(ref _language);
             this.SetChildren(ref _quality);
+
+            _quality.MaxValue = Profile.MaxQuality;
 
             for (int i = 0; i < MixerId.Count; ++i)
             {

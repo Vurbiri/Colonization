@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
@@ -18,13 +17,6 @@ namespace Vurbiri.UI
         {
             _hint = hint;
             _hintOffset = AHint.GetOffsetHint(_thisRectTransform, heightRatio);
-        }
-
-        [Impl(256)]
-        protected void InternalInit(THint hint, Action<TValue> action, float heightRatio)
-        {
-            InternalInit(hint, heightRatio);
-            _onClick.Add(action);
         }
 
         sealed public override void OnPointerEnter(PointerEventData eventData)

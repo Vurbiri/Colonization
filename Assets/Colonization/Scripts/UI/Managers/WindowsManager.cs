@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 namespace Vurbiri.Colonization.UI
@@ -5,8 +6,6 @@ namespace Vurbiri.Colonization.UI
     [System.Serializable]
     public class WindowsManager
     {
-        private const int GAME_WINDOWS_COUNT = 4, BUTTONS_COUNT = 2;
-        
         [SerializeField] private PerksWindow _perksWindow;
         [SerializeField] private HintButton _perksButton;
         [Space]
@@ -17,47 +16,59 @@ namespace Vurbiri.Colonization.UI
         [SerializeField] private GiftButton[] _giftButtons;
         [Space]
         [SerializeField] private SettingsWindow _settingsWindow;
+        [SerializeField] private HintButton _settingsButton;
         [Space]
         [SerializeField] private DiceWindow _diceWindow;
         [Space]
         [SerializeField] private GameOverWindow _gameOverWindow;
 
-        private readonly Switcher[] _gameWindows = new Switcher[GAME_WINDOWS_COUNT];
-        private readonly HintButton[] _buttons = new HintButton[BUTTONS_COUNT];
+        private readonly Switcher[] _windows = new Switcher[Window.Count];
+        private readonly HintButton[] _gameButtons = new HintButton[GameButton.Count];
+        private readonly HintButton[] _utilityButtons = new HintButton[UtilityButton.Count];
         private int _openWindowsCount;
 
         public void Init()
         {
-            _buttons[0] = _perksButton; _buttons[1] = _exchangeButton;
+            _windows[Window.Perks]    = _perksWindow.Init().Setup(Window.Perks, OnOpenWindow, OnCloseWindow);
+            _windows[Window.Exchange] = _exchangeWindow.Init().Setup(Window.Exchange, OnOpenWindow, OnCloseWindow);
+            _windows[Window.Gift]     = _giftWindow.Init(_giftButtons).Setup(Window.Gift, OnOpenWindow, OnCloseWindow);
+            _windows[Window.Settings] = _settingsWindow.Init().Setup(Window.Settings, OnOpenWindow, OnCloseWindow);
 
-            int id = 0;
-            _gameWindows[id] = _perksWindow.Init(_perksButton).Setup(id++, OnOpenWindow, OnCloseWindow);
-            _gameWindows[id] = _exchangeWindow.Init(_exchangeButton).Setup(id++, OnOpenWindow, OnCloseWindow);
-            _gameWindows[id] = _giftWindow.Init(_giftButtons).Setup(id++, OnOpenWindow, OnCloseWindow);
-            _gameWindows[id] = _settingsWindow.Switcher.Setup(id++, OnOpenWindow, OnCloseWindow);
+            _diceWindow.Init(Window.Dice, OnOpenWindow, OnCloseWindow);
+            _gameOverWindow.Init(Window.GameOver, OnOpenWindow);
 
-            id = 0;
-            _diceWindow.Init(--id, OnOpenWindow, OnCloseWindow);
-            _gameOverWindow.Init(--id, OnOpenWindow);
+            _gameButtons[GameButton.Perks]    = _perksButton; 
+            _gameButtons[GameButton.Exchange] = _exchangeButton;
+
+            _utilityButtons[UtilityButton.Settings] = _settingsButton;
+
+            _perksButton.AddListener(_windows[Window.Perks].Switch);
+            _exchangeButton.AddListener(_windows[Window.Exchange].Switch);
+            _settingsButton.AddListener(_windows[Window.Settings].Switch);
+
+            var game = GameContainer.GameEvents;
+            game.Subscribe(GameModeId.WaitRoll, (_, _) => SetUtilityButtons(false));
+            game.Subscribe(GameModeId.Profit, (_, _) => SetUtilityButtons(true));
+            game.Subscribe(GameModeId.GameOver, (_, _) => SetUtilityButtons(false));
 
             GameContainer.Person.Interactable.Subscribe(OnInteractable);
 
-            _perksWindow = null; _exchangeWindow = null; _giftWindow = null; _diceWindow = null; _gameOverWindow = null;
-            _perksButton = null; _exchangeButton = null; 
+            _perksButton = null; _exchangeButton = null; _settingsButton = null;
+            _perksWindow = null; _exchangeWindow = null; _settingsWindow = null; _giftWindow = null; _diceWindow = null; _gameOverWindow = null;
         }
 
         private void OnInteractable(bool interactable)
         {
-            for (int i = 0; i < BUTTONS_COUNT; i++)
-                _buttons[i].Unlock = interactable;
+            for (int i = 0; i < GameButton.Count; i++)
+                _gameButtons[i].Unlock = interactable;
 
             for (int i = _giftButtons.Length - 1; i >= 0; i--)
                 _giftButtons[i].interactable = interactable;
 
             if (!interactable)
             {
-                for (int i = 0; i < GAME_WINDOWS_COUNT; i++)
-                    _gameWindows[i].Close();
+                for (int i = 0; i < Window.Count; i++)
+                    _windows[i].Close();
             }
         }
 
@@ -69,8 +80,8 @@ namespace Vurbiri.Colonization.UI
                 GameContainer.InputController.WindowMode(true);
             }
 
-            for (int i = 0; i < GAME_WINDOWS_COUNT; i++)
-                _gameWindows[i].TryClose(id);
+            for (int i = 0; i < Window.Count; i++)
+                _windows[i].TryClose(id);
         }
         private void OnCloseWindow()
         {
@@ -79,6 +90,44 @@ namespace Vurbiri.Colonization.UI
                 GameContainer.InputController.WindowMode(false);
             }
         }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private void SetUtilityButtons(bool unlock)
+        {
+            for (int i = 0; i < UtilityButton.Count; i++)
+                _utilityButtons[i].Unlock = unlock;
+        }
+
+        #region Constants
+        // ------------------------------------------
+        private readonly struct Window
+        {
+            public const int GameOver = -2;
+            public const int Dice     = -1;
+            public const int Perks    =  0;
+            public const int Exchange =  1;
+            public const int Gift     =  2;
+            public const int Settings =  3;
+
+            public const int Count = 4;
+        }
+        // ------------------------------------------
+        private readonly struct GameButton
+        {
+            public const int Perks    = 0;
+            public const int Exchange = 1;
+
+            public const int Count = 2;
+        }
+        // ------------------------------------------
+        private readonly struct UtilityButton
+        {
+            public const int Settings = 0;
+            public const int Help     = 1;
+
+            public const int Count = 1;
+        }
+        #endregion
 
 #if UNITY_EDITOR
         public void OnValidate()
@@ -95,6 +144,7 @@ namespace Vurbiri.Colonization.UI
             EUtility.SetObjects(ref _giftButtons);
 
             EUtility.SetObject(ref _settingsWindow);
+            EUtility.SetObject(ref _settingsButton, "SettingsButton");
 
             EUtility.SetObject(ref _diceWindow);
 

@@ -24,7 +24,7 @@ namespace Vurbiri.Colonization.UI
         private readonly MainCurrencies _bankTrade = new();
         private readonly MainCurrencies _price = new(), _pay = new();
 
-        public Switcher Init(HintButton switchButton)
+        public Switcher Init()
         {
             _switcher.Init(this);
             _switcher.onClose.Add(ResetValues);
@@ -32,7 +32,6 @@ namespace Vurbiri.Colonization.UI
             _applyButton.AddListener(Apply);
             _resetButton.AddListener(ResetValues);
             _closeButton.AddListener(_switcher.Close);
-            switchButton.AddListener(_switcher.Switch);
 
             var resources = GameContainer.Person.Resources;
             for (int i = 0; i < CurrencyId.MainCount; i++)

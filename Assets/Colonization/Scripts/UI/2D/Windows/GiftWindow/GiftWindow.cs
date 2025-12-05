@@ -36,7 +36,7 @@ namespace Vurbiri.Colonization.UI
             _closeButton.AddListener(_switcher.Close);
 
             for(int i = giftButtons.Length - 1; i >= 0; i--)
-                giftButtons[i].Init(Switch);
+                giftButtons[i].AddListener(Switch);
 
             var resources = GameContainer.Person.Resources;
             for (int i = 0; i < CurrencyId.MainCount; i++)

@@ -19,7 +19,7 @@ namespace Vurbiri.Colonization
         public int Quality { [Impl(256)] get => _quality; [Impl(256)] set => QualitySettings.SetQualityLevel(value); }
 
         public Localization Localization { [Impl(256)] get => Localization.Instance; }
-        public int MaxQuality { [Impl(256)] get => QualitySettings.count - 1; }
+        public static int MaxQuality { [Impl(256)] get => QualitySettings.count - 1; }
 
         [Impl(256)] public void Init(YandexSDK ysdk)
         {

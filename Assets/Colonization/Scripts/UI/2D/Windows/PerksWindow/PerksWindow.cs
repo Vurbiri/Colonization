@@ -17,7 +17,7 @@ namespace Vurbiri.Colonization.UI
         [Space]
         [SerializeField] private Color _colorLearn;
 
-        public Switcher Init(HintButton switchButton)
+        public Switcher Init()
         {
             _allowSwitchOff = true;
 
@@ -27,7 +27,6 @@ namespace Vurbiri.Colonization.UI
 
             _learnButton.AddListener(OnLearn);
             _closeButton.AddListener(_switcher.Close);
-            switchButton.AddListener(_switcher.Switch);
 
             var person = GameContainer.Person;
             var perkTree = person.Perks;
