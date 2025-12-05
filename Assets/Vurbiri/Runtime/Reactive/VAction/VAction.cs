@@ -5,7 +5,7 @@ namespace Vurbiri
 {
     public abstract class Event : IUnsubscribed<Action>
     {
-        protected Action _action;
+        protected internal Action _action;
 
         public event Action Action { [Impl(256)] add { _action += value; } [Impl(256)] remove { _action -= value; } }
 
@@ -20,19 +20,17 @@ namespace Vurbiri
     //----------------------------------------------
     public class VAction : Event
     {
-        [Impl(256)] public VAction() => _action = Dummy;
+        [Impl(256)] public VAction() => _action = Dummy.Action;
 
         [Impl(256)] public void Invoke() => _action();
-        [Impl(256)] public void InvokeOneShot() { _action(); _action = Dummy; }
+        [Impl(256)] public void InvokeOneShot() { _action(); _action = Dummy.Action; }
 
-        [Impl(256)] public void Clear() => _action = Dummy;
-
-        private static void Dummy() { }
+        [Impl(256)] public void Clear() => _action = Dummy.Action;
     }
     //=======================================================================================
     public abstract class Event<T> : IUnsubscribed<Action<T>>
     {
-        protected Action<T> _action;
+        protected internal Action<T> _action;
 
         public event Action<T> Action { [Impl(256)] add { _action += value; } [Impl(256)] remove { _action -= value; } }
 
@@ -42,6 +40,16 @@ namespace Vurbiri
             return Subscription.Create(this, action);
         }
 
+        [Impl(256)] public void Remove(Action<T> action) => _action -= action;
+    }
+    //----------------------------------------------
+    public class VAction<T> : Event<T>
+    {
+        [Impl(256)] public VAction() => _action = Dummy.Action;
+
+        [Impl(256)] public void Invoke(T value) => _action.Invoke(value);
+        [Impl(256)] public void InvokeOneShot(T value) { _action(value); _action = Dummy.Action; }
+
         [Impl(256)] public Subscription Add(Action<T> action, T value)
         {
             action(value);
@@ -49,8 +57,7 @@ namespace Vurbiri
             _action += action;
             return Subscription.Create(this, action);
         }
-
-        [Impl(256)] public Subscription Add(Action<T> action, bool instantGetValue, T value)
+        [Impl(256)] public Subscription Add(Action<T> action, T value, bool instantGetValue)
         {
             if (instantGetValue) action(value);
 
@@ -58,19 +65,10 @@ namespace Vurbiri
             return Subscription.Create(this, action);
         }
 
-        [Impl(256)] public void Remove(Action<T> action) => _action -= action;
-    }
-    //----------------------------------------------
-    public class VAction<T> : Event<T>
-    {
-        [Impl(256)] public VAction() => _action = Dummy;
+        [Impl(256)] public void Clear() => _action = Dummy.Action;
 
-        [Impl(256)] public void Invoke(T value) => _action.Invoke(value);
-        [Impl(256)] public void InvokeOneShot(T value) { _action(value); _action = Dummy; }
-
-        [Impl(256)] public void Clear() => _action = Dummy;
-
-        private static void Dummy(T t) { }
+        [Impl(256)] public static ComboAction<T> operator +(VAction action, VAction<T> actionT) => new(action, actionT);
+        [Impl(256)] public static ComboAction<T> operator +(VAction<T> actionT, VAction action) => new(action, actionT);
     }
     //=======================================================================================
     public abstract class Event<TA, TB> : IUnsubscribed<Action<TA, TB>>
@@ -85,6 +83,16 @@ namespace Vurbiri
             return Subscription.Create(this, action);
         }
 
+        [Impl(256)] public void Remove(Action<TA, TB> action) => _action -= action;
+    }
+    //----------------------------------------------
+    public class VAction<TA, TB> : Event<TA, TB>
+    {
+        [Impl(256)] public VAction() => _action = Dummy.Action;
+
+        [Impl(256)] public void Invoke(TA valueA, TB valueB) => _action.Invoke(valueA, valueB);
+        [Impl(256)] public void InvokeOneShot(TA valueA, TB valueB) { _action(valueA, valueB); _action = Dummy.Action; }
+                
         [Impl(256)] public Subscription Add(Action<TA, TB> action, TA valueA, TB valueB)
         {
             action(valueA, valueB);
@@ -92,8 +100,7 @@ namespace Vurbiri
             _action += action;
             return Subscription.Create(this, action);
         }
-
-        [Impl(256)] public Subscription Add(Action<TA, TB> action, bool instantGetValue, TA valueA, TB valueB)
+        [Impl(256)] public Subscription Add(Action<TA, TB> action, TA valueA, TB valueB, bool instantGetValue)
         {
             if (instantGetValue) action(valueA, valueB);
 
@@ -101,19 +108,7 @@ namespace Vurbiri
             return Subscription.Create(this, action);
         }
 
-        [Impl(256)] public void Remove(Action<TA, TB> action) => _action -= action;
-    }
-    //----------------------------------------------
-    public class VAction<TA, TB> : Event<TA, TB>
-    {
-        [Impl(256)] public VAction() => _action = Dummy;
-
-        [Impl(256)] public void Invoke(TA valueA, TB valueB) => _action.Invoke(valueA, valueB);
-        [Impl(256)] public void InvokeOneShot(TA valueA, TB valueB) { _action(valueA, valueB); _action = Dummy; }
-
-        [Impl(256)] public void Clear() => _action = Dummy;
-
-        [Impl(256)] private static void Dummy(TA ta, TB tb) { }
+        [Impl(256)] public void Clear() => _action = Dummy.Action;
     }
     //=======================================================================================
     public abstract class Event<TA, TB, TC> : IUnsubscribed<Action<TA, TB, TC>>
@@ -128,6 +123,16 @@ namespace Vurbiri
             return Subscription.Create(this, action);
         }
 
+        [Impl(256)] public void Remove(Action<TA, TB, TC> action) => _action -= action;
+    }
+    //----------------------------------------------
+    public class VAction<TA, TB, TC> : Event<TA, TB, TC>
+    {
+        [Impl(256)] public VAction() => _action = Dummy.Action;
+
+        [Impl(256)] public void Invoke(TA valueA, TB valueB, TC valueC) => _action.Invoke(valueA, valueB, valueC);
+        [Impl(256)] public void InvokeOneShot(TA valueA, TB valueB, TC valueC) { _action(valueA, valueB, valueC); _action = Dummy.Action; }
+                
         [Impl(256)] public Subscription Add(Action<TA, TB, TC> action, TA valueA, TB valueB, TC valueC)
         {
             action(valueA, valueB, valueC);
@@ -135,8 +140,7 @@ namespace Vurbiri
             _action += action;
             return Subscription.Create(this, action);
         }
-
-        [Impl(256)] public Subscription Add(Action<TA, TB, TC> action, bool instantGetValue, TA valueA, TB valueB, TC valueC)
+        [Impl(256)] public Subscription Add(Action<TA, TB, TC> action, TA valueA, TB valueB, TC valueC, bool instantGetValue)
         {
             if (instantGetValue) action(valueA, valueB, valueC);
 
@@ -144,19 +148,7 @@ namespace Vurbiri
             return Subscription.Create(this, action);
         }
 
-        [Impl(256)] public void Remove(Action<TA, TB, TC> action) => _action -= action;
-    }
-    //----------------------------------------------
-    public class VAction<TA, TB, TC> : Event<TA, TB, TC>
-    {
-        [Impl(256)] public VAction() => _action = Dummy;
-
-        [Impl(256)] public void Invoke(TA valueA, TB valueB, TC valueC) => _action.Invoke(valueA, valueB, valueC);
-        [Impl(256)] public void InvokeOneShot(TA valueA, TB valueB, TC valueC) { _action(valueA, valueB, valueC); _action = Dummy; }
-
-        [Impl(256)] public void Clear() => _action = Dummy;
-
-        private static void Dummy(TA ta, TB tb, TC tc) { }
+        [Impl(256)] public void Clear() => _action = Dummy.Action;
     }
     //=======================================================================================
     public abstract class Event<TA, TB, TC, TD> : IUnsubscribed<Action<TA, TB, TC, TD>>
@@ -171,6 +163,16 @@ namespace Vurbiri
             return Subscription.Create(this, action);
         }
 
+        [Impl(256)] public void Remove(Action<TA, TB, TC, TD> action) => _action -= action;
+    }
+    //----------------------------------------------
+    public class VAction<TA, TB, TC, TD> : Event<TA, TB, TC, TD>
+    {
+        [Impl(256)] public VAction() => _action = Dummy.Action;
+
+        [Impl(256)] public void Invoke(TA valueA, TB valueB, TC valueC, TD valueD) => _action.Invoke(valueA, valueB, valueC, valueD);
+        [Impl(256)] public void InvokeOneShot(TA valueA, TB valueB, TC valueC, TD valueD) { _action(valueA, valueB, valueC, valueD); _action = Dummy.Action; }
+                
         [Impl(256)] public Subscription Add(Action<TA, TB, TC, TD> action, TA valueA, TB valueB, TC valueC, TD valueD)
         {
             action(valueA, valueB, valueC, valueD);
@@ -178,8 +180,7 @@ namespace Vurbiri
             _action += action;
             return Subscription.Create(this, action);
         }
-
-        [Impl(256)] public Subscription Add(Action<TA, TB, TC, TD> action, bool instantGetValue, TA valueA, TB valueB, TC valueC, TD valueD)
+        [Impl(256)] public Subscription Add(Action<TA, TB, TC, TD> action, TA valueA, TB valueB, TC valueC, TD valueD, bool instantGetValue)
         {
             if (instantGetValue) action(valueA, valueB, valueC, valueD);
 
@@ -187,18 +188,6 @@ namespace Vurbiri
             return Subscription.Create(this, action);
         }
 
-        [Impl(256)] public void Remove(Action<TA, TB, TC, TD> action) => _action -= action;
-    }
-    //----------------------------------------------
-    public class VAction<TA, TB, TC, TD> : Event<TA, TB, TC, TD>
-    {
-        [Impl(256)] public VAction() => _action = Dummy;
-
-        [Impl(256)] public void Invoke(TA valueA, TB valueB, TC valueC, TD valueD) => _action.Invoke(valueA, valueB, valueC, valueD);
-        [Impl(256)] public void InvokeOneShot(TA valueA, TB valueB, TC valueC, TD valueD) { _action(valueA, valueB, valueC, valueD); _action = Dummy; }
-
-        [Impl(256)] public void Clear() => _action = Dummy;
-
-        private static void Dummy(TA ta, TB tb, TC tc, TD td) { }
+        [Impl(256)] public void Clear() => _action = Dummy.Action;
     }
 }

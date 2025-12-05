@@ -80,7 +80,7 @@ namespace Vurbiri.Colonization
         }
         [Impl(256)] public Subscription Subscribe(Action<HashSet<int>[]> action, bool instantGetValue = true)
         {
-            return _eventHashSet.Add(action, instantGetValue, _learnedPerks);
+            return _eventHashSet.Add(action, _learnedPerks, instantGetValue);
         }
         #endregion
 

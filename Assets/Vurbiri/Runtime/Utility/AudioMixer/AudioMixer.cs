@@ -59,7 +59,7 @@ namespace Vurbiri
                 this[i] = _volumes[i];
         }
 
-        [Impl(256)] public Subscription Subscribe(Action<AudioMixer<T>> action, bool instantGetValue = true) => _changeEvent.Add(action, instantGetValue, this);
+        [Impl(256)] public Subscription Subscribe(Action<AudioMixer<T>> action, bool instantGetValue = true) => _changeEvent.Add(action, this, instantGetValue);
 
         private float ConvertToDB(float volume)
         {

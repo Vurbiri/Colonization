@@ -1,5 +1,4 @@
 using System;
-using Vurbiri.Colonization.EntryPoint;
 using Vurbiri.Colonization.Storage;
 using Vurbiri.Reactive;
 
@@ -38,7 +37,7 @@ namespace Vurbiri.Colonization
             _trackingCamera.Subscribe(OnChangedReactiveValue, false);
         }
 
-        public Subscription Subscribe(Action<GameSettings, bool> action, bool instantGetValue = true) => _eventChanged.Add(action, instantGetValue, this, instantGetValue);
+        public Subscription Subscribe(Action<GameSettings, bool> action, bool instantGetValue = true) => _eventChanged.Add(action, this, instantGetValue, instantGetValue);
 
         public void Start()
         {

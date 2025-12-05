@@ -68,7 +68,7 @@ namespace Vurbiri.Colonization
         }
         #endregion
 
-        [Impl(256)] public Subscription Subscribe(Action<ACurrencies> action, bool instantGetValue = true) => _changeEvent.Add(action, instantGetValue, this);
+        [Impl(256)] public Subscription Subscribe(Action<ACurrencies> action, bool instantGetValue = true) => _changeEvent.Add(action, this, instantGetValue);
 
         [Impl(256)] public Currency Get(int index) => _values[index];
         [Impl(256)] public Currency Get(Id<CurrencyId> id) => _values[id.Value];

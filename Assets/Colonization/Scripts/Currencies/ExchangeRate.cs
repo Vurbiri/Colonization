@@ -39,7 +39,7 @@ namespace Vurbiri.Colonization
             return new(abilities, perks);
         }
 
-        public Subscription Subscribe(Action<ExchangeRate> action, bool instantGetValue = true) => _changeValue.Add(action, instantGetValue, this);
+        public Subscription Subscribe(Action<ExchangeRate> action, bool instantGetValue = true) => _changeValue.Add(action, this, instantGetValue);
 
         public void Update()
         {

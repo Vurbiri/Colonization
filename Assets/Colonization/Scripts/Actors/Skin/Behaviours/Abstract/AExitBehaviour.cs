@@ -7,10 +7,8 @@ namespace Vurbiri.Colonization
     {
         public event Action EventExit;
 
-        public AExitBehaviour() : base() => EventExit = Empty;
+        public AExitBehaviour() : base() => EventExit = Dummy.Action;
 
         public override void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex) => EventExit.Invoke();
-
-        private void Empty() { }
     }
 }

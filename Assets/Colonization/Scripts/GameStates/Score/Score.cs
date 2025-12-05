@@ -30,7 +30,7 @@ namespace Vurbiri.Colonization
             return instance;
         }
 
-        public Subscription Subscribe(Action<Score> action, bool instantGetValue = true) => _eventChanged.Add(action, instantGetValue, this);
+        public Subscription Subscribe(Action<Score> action, bool instantGetValue = true) => _eventChanged.Add(action, this, instantGetValue);
 
         public void ForKillingDemon(int playerId, int demonId) => Add(playerId, _settings.killDemon[demonId]);
         public void ForKillingWarrior(int playerId, int warriorId) => Add(playerId, _settings.killWarrior[warriorId]);

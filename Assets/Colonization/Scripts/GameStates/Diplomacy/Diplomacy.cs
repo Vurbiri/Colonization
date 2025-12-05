@@ -53,7 +53,7 @@ namespace Vurbiri.Colonization
         [Impl(256)] public void Marauding(int idA, int idB) => Set(idA, idB, _settings.penaltyForMarauding);
         [Impl(256)] public void Occupation(int idA, int idB, int value) => Set(idA, idB, value);
 
-        [Impl(256)] public Subscription Subscribe(Action<Diplomacy> action, bool instantGetValue = true) => _eventChanged.Add(action, instantGetValue, this);
+        [Impl(256)] public Subscription Subscribe(Action<Diplomacy> action, bool instantGetValue = true) => _eventChanged.Add(action, this, instantGetValue);
 
         #region ================== ActorsInteraction ============================
         public bool IsCanActorsInteraction(Id<PlayerId> idA, Id<PlayerId> idB, Relation typeAction, out bool isFriendly)

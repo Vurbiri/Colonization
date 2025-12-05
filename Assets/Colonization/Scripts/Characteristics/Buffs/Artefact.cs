@@ -79,7 +79,7 @@ namespace Vurbiri.Colonization
 
         public Subscription Subscribe(System.Action<Artefact> action, bool instantGetValue = true)
         {
-            return _changeLevels.Add(action, instantGetValue, this);
+            return _changeLevels.Add(action, this, instantGetValue);
         }
 
         //=========== Nested ========================

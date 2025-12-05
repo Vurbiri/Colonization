@@ -148,7 +148,7 @@ namespace Vurbiri.Colonization
         }
         #endregion
 
-        [Impl(256)] public Subscription Subscribe(Action<int> action, bool instantGetValue = true) => _changeID.Add(action, instantGetValue, _id);
+        [Impl(256)] public Subscription Subscribe(Action<int> action, bool instantGetValue = true) => _changeID.Add(action, _id, instantGetValue);
 
         #region ================== Caption ============================
         [Impl(256)] public void CaptionEnable(bool isWater, bool isGate) => _view.SetCaptionActive(!(isWater ^ _isWater | isGate));

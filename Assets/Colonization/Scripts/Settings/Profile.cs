@@ -29,7 +29,7 @@ namespace Vurbiri.Colonization
             //_idLang = ysdk.IsInitialize ? _localization.IdFromCode(ysdk.Lang) : Application.systemLanguage;
         }
 
-        [Impl(256)] public Subscription Subscribe(Action<Profile> action, bool instantGetValue = true) => _eventChanged.Add(action, instantGetValue, this);
+        [Impl(256)] public Subscription Subscribe(Action<Profile> action, bool instantGetValue = true) => _eventChanged.Add(action, this, instantGetValue);
 
         public void Apply()
         {

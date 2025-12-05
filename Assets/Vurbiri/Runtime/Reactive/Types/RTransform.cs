@@ -37,15 +37,15 @@ namespace Vurbiri.Reactive
 
         public Subscription Subscribe(Action<Vector3> action, bool instantGetValue = true)
         {
-            return _changedPosition.Add(action, instantGetValue, _transform.position);
+            return _changedPosition.Add(action, _transform.position, instantGetValue);
         }
         public Subscription Subscribe(Action<Quaternion> action, bool instantGetValue = true)
         {
-            return _changedRotation.Add(action, instantGetValue, _transform.rotation);
+            return _changedRotation.Add(action, _transform.rotation, instantGetValue);
         }
         public Subscription Subscribe(Action<Transform> action, bool instantGetValue = true)
         {
-            return _changedTransform.Add(action, instantGetValue, _transform);
+            return _changedTransform.Add(action, _transform, instantGetValue);
         }
     }
 }

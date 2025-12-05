@@ -67,7 +67,7 @@ namespace Vurbiri.International
             LoadFile(fileId, false);
         }
 
-        [Impl(256)] public Subscription Subscribe(Action<Localization> action, bool sendCallback = true) => _changed.Add(action, sendCallback, this);
+        [Impl(256)] public Subscription Subscribe(Action<Localization> action, bool sendCallback = true) => _changed.Add(action, this, sendCallback);
         [Impl(256)] public void Unsubscribe(Action<Localization> action) => _changed.Remove(action);
 
         public SystemLanguage IdFromCode(string code)

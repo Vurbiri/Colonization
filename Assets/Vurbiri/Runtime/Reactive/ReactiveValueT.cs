@@ -14,7 +14,7 @@ namespace Vurbiri.Reactive
 
         public T Value { [Impl(256)] get => _value; }
 
-        [Impl(256)] public Subscription Subscribe(Action<T> action, bool instantGetValue = true) => _changeEvent.Add(action, instantGetValue, _value);
+        [Impl(256)] public Subscription Subscribe(Action<T> action, bool instantGetValue = true) => _changeEvent.Add(action, _value, instantGetValue);
         [Impl(256)] public void Unsubscribe(Action<T> action) => _changeEvent.Remove(action);
 
         public bool Equals(T other) => _value.Equals(other);

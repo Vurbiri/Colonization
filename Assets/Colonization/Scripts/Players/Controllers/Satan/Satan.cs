@@ -44,7 +44,7 @@ namespace Vurbiri.Colonization
             storage.LoadData = null;
         }
 
-        public Subscription Subscribe(Action<Satan> action, bool instantGetValue) => _eventChanged.Add(action, instantGetValue, this);
+        public Subscription Subscribe(Action<Satan> action, bool instantGetValue) => _eventChanged.Add(action, this, instantGetValue);
 
         protected void AddCurse(int add)
         {

@@ -33,7 +33,7 @@ namespace Vurbiri.UI
 
         protected VToggleGroup() { }
 
-        [Impl(256)] public Subscription AddListener(Action<TToggle> action, bool instantGetValue = true) => _onValueChanged.Add(action, instantGetValue, _activeToggle);
+        [Impl(256)] public Subscription AddListener(Action<TToggle> action, bool instantGetValue = true) => _onValueChanged.Add(action, _activeToggle, instantGetValue);
         [Impl(256)] public void RemoveListener(Action<TToggle> action) => _onValueChanged.Remove(action);
 
         [Impl(256)]

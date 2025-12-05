@@ -113,7 +113,7 @@ namespace Vurbiri.Colonization.Controllers
             target.rotation = Quaternion.LookRotation(_cameraTransform.forward);
         }
 
-        public Subscription Subscribe(Action<Transform> action, bool instantGetValue = true) => _changedTransform.Add(action, instantGetValue, _cameraTransform);
+        public Subscription Subscribe(Action<Transform> action, bool instantGetValue = true) => _changedTransform.Add(action, _cameraTransform, instantGetValue);
         public void Unsubscribe(Action<Transform> action) => _changedTransform.Remove(action);
 
         public static implicit operator Transform(CameraTransform self) => self._cameraTransform;

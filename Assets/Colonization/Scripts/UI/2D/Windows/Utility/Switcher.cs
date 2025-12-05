@@ -15,7 +15,7 @@ namespace Vurbiri.Colonization.UI
         private bool _isOpen;
         private int _id;
 
-        public readonly VAction onOpen = new();
+        public readonly ComboAction<int> onOpen = new();
         public readonly VAction onClose = new();
 
         public bool IsOpen => _isOpen;
@@ -30,7 +30,7 @@ namespace Vurbiri.Colonization.UI
         public Switcher Setup(int id, Action<int> onOpenWindow, Action onCloseWindow)
         {
             _id = id;
-            onOpen.Add(() => onOpenWindow(id));
+            onOpen.Add(onOpenWindow);
             onClose.Add(onCloseWindow);
             return this;
         }
@@ -82,7 +82,7 @@ namespace Vurbiri.Colonization.UI
         private void InternalOpen()
         {
             _parent.StartCoroutine(_canvasSwitcher.Show());
-            onOpen.Invoke();
+            onOpen.Invoke(_id);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

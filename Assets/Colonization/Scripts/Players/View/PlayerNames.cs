@@ -1,6 +1,5 @@
 using System;
 using UnityEngine;
-using Vurbiri.Colonization.EntryPoint;
 using Vurbiri.Colonization.Storage;
 using Vurbiri.International;
 using Vurbiri.Reactive;
@@ -46,7 +45,7 @@ namespace Vurbiri.Colonization
 
         public string GetDefaultName(int index) => Localization.Instance.GetText(LangFiles.Main, _nameKeys[index]);
 
-        public Subscription Subscribe(Action<PlayerNames> action, bool instantGetValue = true) => _eventThisChanged.Add(action, instantGetValue, this);
+        public Subscription Subscribe(Action<PlayerNames> action, bool instantGetValue = true) => _eventThisChanged.Add(action, this, instantGetValue);
 
         public bool Equals(string[] customNames)
         {

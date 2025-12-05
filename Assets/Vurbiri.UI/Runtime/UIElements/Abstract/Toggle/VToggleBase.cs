@@ -46,7 +46,7 @@ namespace Vurbiri.UI
             _onValueChanged.Init(_isOn);
         }
 
-        [Impl(256)] public Subscription AddListener(Action<bool> action, bool instantGetValue = true) => _onValueChanged.Add(action, instantGetValue, _isOn);
+        [Impl(256)] public Subscription AddListener(Action<bool> action, bool instantGetValue = true) => _onValueChanged.Add(action, _isOn, instantGetValue);
         [Impl(256)] public void RemoveListener(Action<bool> action) => _onValueChanged.Remove(action);
 
         protected abstract void UpdateVisual();

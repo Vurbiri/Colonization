@@ -27,7 +27,7 @@ namespace Vurbiri.Colonization
             }
         }
 
-        public Subscription Subscribe(Action<PlayerColors> action, bool instantGetValue = true) => _eventThisChanged.Add(action, instantGetValue, this);
+        public Subscription Subscribe(Action<PlayerColors> action, bool instantGetValue = true) => _eventThisChanged.Add(action, this, instantGetValue);
 
         public bool Equals(Color[] colors)
         {

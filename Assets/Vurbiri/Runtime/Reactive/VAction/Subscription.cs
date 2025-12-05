@@ -22,17 +22,15 @@ namespace Vurbiri
         public void Dispose()
         {
             _action(); 
-            _action = Dummy;
+            _action = Dummy.Action;
         }
 
-        public static Subscription operator +(Subscription a, Subscription b) => new((a?._action + b?._action) ?? Dummy);
+        public static Subscription operator +(Subscription a, Subscription b) => new((a?._action + b?._action) ?? Dummy.Action);
         public static Subscription operator ^(Subscription a, Subscription b)
         {
             a?._action();
             return b;
         }
-
-        private static void Dummy() { }
 
         // ******************** Nested ********************************
         private class Unsubscribe<TDelegate> where TDelegate : Delegate

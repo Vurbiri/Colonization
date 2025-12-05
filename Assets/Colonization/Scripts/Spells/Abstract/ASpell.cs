@@ -29,7 +29,7 @@ namespace Vurbiri.Colonization
             public event Action<string> OnHint
             {
                 add { _onHint = value; SetHint(Localization.Instance); }
-                remove { _onHint = Empty; }
+                remove { _onHint = Dummy.Action; }
             }
 
             protected ASpell(int type, int id)
@@ -38,7 +38,7 @@ namespace Vurbiri.Colonization
                 string key = s_keys[type][id];
                 _nameKey = string.Concat(key, "Name");
                 _descKey = string.Concat(key, "Desc");
-                _onHint = Empty;
+                _onHint = Dummy.Action;
 
                 Localization.Instance.Subscribe(SetHint, false);
                 s_spells[type][id] = this;
@@ -70,8 +70,6 @@ namespace Vurbiri.Colonization
                 _onHint(string.Concat(_strName, SEPARATOR, GetDesc(localization)));
                 localization.RemoveKey(FILE, _descKey);
             }
-
-            private void Empty(string hint) { }
         }
     }
 }
