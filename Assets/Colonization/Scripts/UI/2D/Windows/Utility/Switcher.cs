@@ -1,8 +1,8 @@
 using System;
-using System.Runtime.CompilerServices;
 using UnityEngine;
 using Vurbiri.EntryPoint;
 using Vurbiri.UI;
+using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization.UI
 {
@@ -20,80 +20,69 @@ namespace Vurbiri.Colonization.UI
 
         public bool IsOpen => _isOpen;
 
-        public void Init(MonoBehaviour parent)
+        [Impl(256)] public void Init(MonoBehaviour parent)
         {
             _parent = parent;
             _canvasSwitcher.Set(_isOpen = false);
 
             Transition.OnExit.Add(OnSceneExit);
         }
-        public Switcher Setup(int id, Action<int> onOpenWindow, Action onCloseWindow)
+        [Impl(256)] public Switcher Setup(int id, Action<int> onOpenWindow, Action onCloseWindow)
         {
             _id = id;
             onOpen.Add(onOpenWindow);
             onClose.Add(onCloseWindow);
             return this;
         }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                
         public void Switch()
         {
             StopCoroutine();
 
             if (_isOpen = !_isOpen)
-                InternalOpen();
+                OpenInternal();
             else
-                InternalClose();
+                CloseInternal();
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Open()
         {
             if (!_isOpen)
             {
                 _isOpen = true;
                 StopCoroutine();
-                InternalOpen();
+                OpenInternal();
             }
         }
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+
         public void Close()
         {
             if (_isOpen)
             {
                 _isOpen = false;
                 StopCoroutine();
-                InternalClose();
+                CloseInternal();
             }
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void TryClose(int id)
+        [Impl(256)] public void TryClose(int id)
         {
-            if (_isOpen & id != _id)
-            {
-                _isOpen = false;
-                StopCoroutine();
-                InternalClose();
-            }
+            if (id != _id) Close();
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private void InternalOpen()
+        [Impl(256)] private void OpenInternal()
         {
             _parent.StartCoroutine(_canvasSwitcher.Show());
             onOpen.Invoke(_id);
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private void InternalClose()
+        [Impl(256)] private void CloseInternal()
         {
             _parent.StartCoroutine(_canvasSwitcher.Hide());
             onClose.Invoke();
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private void StopCoroutine()
+        [Impl(256)] private void StopCoroutine()
         {
             if (_canvasSwitcher.IsRunning)
                 _parent.StopCoroutine(_canvasSwitcher);

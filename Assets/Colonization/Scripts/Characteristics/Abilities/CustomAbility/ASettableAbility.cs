@@ -12,7 +12,7 @@ namespace Vurbiri.Colonization
             int delta = value - _value;
             _value = value;
 
-            if (delta != 0)  _changeEvent.Invoke(_value);
+            if (delta != 0)  _onChange.Invoke(_value);
 
             return delta;
         }

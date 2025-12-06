@@ -8,7 +8,7 @@ namespace Vurbiri.Reactive
         public new T Value
         {
             [Impl(256)] get => _value;
-            [Impl(256)] set { if (!_value.Equals(value)) _changeEvent.Invoke(_value = value); }
+            [Impl(256)] set { if (!_value.Equals(value)) _onChange.Invoke(_value = value); }
         }
 
         public T SilentValue
@@ -19,7 +19,7 @@ namespace Vurbiri.Reactive
 
         [Impl(256)] protected AReactiveType(T value) => _value = value;
 
-        [Impl(256)] public void UnsubscribeAll() => _changeEvent.Clear();
-        [Impl(256)] public void Signal() => _changeEvent.Invoke(_value);
+        [Impl(256)] public void UnsubscribeAll() => _onChange.Clear();
+        [Impl(256)] public void Signal() => _onChange.Invoke(_value);
     }
 }

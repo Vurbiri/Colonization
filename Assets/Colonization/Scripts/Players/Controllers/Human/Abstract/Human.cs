@@ -128,7 +128,7 @@ namespace Vurbiri.Colonization
             ReturnSignal returnSignal = crossroad.BuyUpgrade(_id);
             if (returnSignal)
             {
-                _edifices.edifices[crossroad.GroupId].AddOrChange(crossroad);
+                _edifices.edifices[crossroad.GroupId].AddOrReplace(crossroad);
                 _resources.Remove(cost);
                 GameContainer.Score.ForBuilding(_id, crossroad.Id);
 

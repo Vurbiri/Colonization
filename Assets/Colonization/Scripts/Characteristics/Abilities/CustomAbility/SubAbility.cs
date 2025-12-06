@@ -46,7 +46,7 @@ namespace Vurbiri.Colonization
             if (current != _value)
             {
                 _value = current;
-                _changeEvent.Invoke(current);
+                _onChange.Invoke(current);
             }
         }
 

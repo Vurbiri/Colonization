@@ -49,11 +49,10 @@ namespace Vurbiri.Colonization.UI
 
             LeaveGroup();
 
-            Color white = Color.white;
             for (int i = _targetGraphics.Count - 1; i >= 0; i--)
-                _targetGraphics[i].SetColor(white);
+                _targetGraphics[i].SetColor(Color.white);
 
-            _checkmarkOn.canvasRenderer.SetColor(white);
+            _checkmarkOn.canvasRenderer.SetColor(Color.white);
             _checkmarkOn.color = colorLearn;
 
             _hint.Learn();

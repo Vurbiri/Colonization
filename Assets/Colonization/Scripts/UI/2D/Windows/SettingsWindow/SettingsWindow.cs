@@ -11,12 +11,15 @@ namespace Vurbiri.Colonization
 	public class SettingsWindow : MonoBehaviour
 	{
         [SerializeField] private Switcher _switcher;
+        [Space]
         [SerializeField] private IdArray<MixerId, VSliderFloat> _sounds;
         [SerializeField] private VSliderInt _quality;
         [SerializeField] private LanguageSwitch _language;
         [Space]
         [SerializeField] private FileIdAndKey _goodSave;
         [SerializeField] private FileIdAndKey _errorSave;
+        [Space]
+        [SerializeField] private SimpleButton _closeButton;
 
         private Action[] _actions;
         private int _state;
@@ -36,6 +39,9 @@ namespace Vurbiri.Colonization
 
             _switcher.onClose.Add(OnClose);
             _switcher.onOpen.Add(OnOpen);
+
+            _closeButton.AddListener(Cancel);
+            _closeButton = null;
 
             return _switcher;
         }
@@ -114,8 +120,6 @@ namespace Vurbiri.Colonization
             if (UnityEditor.EditorApplication.isPlayingOrWillChangePlaymode)
                 return;
 
-            
-
             _switcher ??= new();
             _switcher.OnValidate(this);
 
@@ -131,7 +135,18 @@ namespace Vurbiri.Colonization
                 _sounds[i].MinValue = AudioMixer<MixerId>.MIN_VALUE;
                 _sounds[i].MaxValue = AudioMixer<MixerId>.MAX_VALUE;
             }
+
+            this.SetChildren(ref _closeButton);
+        }
+
+        public void UpdateVisuals_Ed(float pixelsPerUnit, ProjectColors colors)
+        {
+            var color = colors.PanelBack.SetAlpha(1f);
+            var mainImage = GetComponent<UnityEngine.UI.Image>();
+
+            mainImage.color = color;
+            mainImage.pixelsPerUnitMultiplier = pixelsPerUnit;
         }
 #endif
-	}
+    }
 }

@@ -7,10 +7,10 @@ namespace Vurbiri.UI
     [System.Serializable]
     public class CanvasGroupSwitcher : IEnumerator
     {
-        public const float MIN_SPEED = 0.05f;
+        public const float MIN_SPEED = 0.1f;
 
         [SerializeField] private CanvasGroup _canvasGroup;
-        [SerializeField] private float _speed;
+        [SerializeField, Range(MIN_SPEED, 10f)] private float _speed;
 
         private float _start, _end, _sign;
         private float _progress = 1f;
@@ -25,11 +25,7 @@ namespace Vurbiri.UI
         public float Speed
         {
             [Impl(256)] get => _speed;
-            set
-            {
-                if (value < MIN_SPEED) value = MIN_SPEED;
-                _speed = value;
-            }
+            [Impl(256)] set => _speed = System.MathF.Max(MIN_SPEED, value);
         }
 
         public CanvasGroupSwitcher(CanvasGroup canvasGroup, float speed)
@@ -39,12 +35,10 @@ namespace Vurbiri.UI
             Disable();
         }
 
+        [Impl(256)]
         public void Set(bool show)
         {
-            _canvasGroup.blocksRaycasts = show;
-            _canvasGroup.alpha = _end = show ? 1f : 0f;
-            _start = 1f - _end;
-            _progress = 1f;
+            if (show) Enable(); else Disable();
         }
         public void Enable()
         {
@@ -99,22 +93,22 @@ namespace Vurbiri.UI
         public void OnValidate(MonoBehaviour parent)
         {
             parent.SetChildren(ref _canvasGroup);
-            if (_speed < MIN_SPEED) _speed = MIN_SPEED;
+            _speed = System.MathF.Max(MIN_SPEED, _speed);
         }
         public void OnValidate(MonoBehaviour parent, float minSpeed)
         {
             parent.SetChildren(ref _canvasGroup);
-            if (_speed < minSpeed) _speed = minSpeed;
+            _speed = System.MathF.Max(minSpeed, _speed);
         }
         public void OnValidate(MonoBehaviour parent, string name)
         {
             parent.SetChildren(ref _canvasGroup, name);
-            if (_speed < MIN_SPEED) _speed = MIN_SPEED;
+            _speed = System.MathF.Max(MIN_SPEED, _speed);
         }
         public void OnValidate(MonoBehaviour parent, string name, float minSpeed)
         {
             parent.SetChildren(ref _canvasGroup, name);
-            if (_speed < minSpeed) _speed = minSpeed;
+            _speed = System.MathF.Max(minSpeed, _speed);
         }
 #endif
     }

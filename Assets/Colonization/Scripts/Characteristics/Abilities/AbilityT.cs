@@ -39,7 +39,7 @@ namespace Vurbiri.Colonization
             _value = Math.Clamp(_value, 0, _maxValue);
 
             if (old != _value) 
-                _changeEvent.Invoke(_value);
+                _onChange.Invoke(_value);
 
             return _value - old;
         }

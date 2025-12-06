@@ -111,14 +111,19 @@ namespace Vurbiri.Reactive.Collections
                 _changeEvent.Invoke(index, _values[index], TypeEvent.Change);
         }
 
-        public void AddOrChange(T item)
+        public void AddOrReplace(T item)
         {
             int index = IndexOf(item);
 
             if (index >= 0)
+            {
+                _values[index] = item;
                 _changeEvent.Invoke(index, item, TypeEvent.Change);
+            }
             else
+            {
                 Add(item);
+            }
         }
 
         #region IList
@@ -162,7 +167,7 @@ namespace Vurbiri.Reactive.Collections
 
             T temp = _values[index];
             
-            --_count.SilentValue;
+            _count.SilentRemove();
             for (int i = index; i < _count; ++i)
                 _values[i] = _values[i + 1];
 

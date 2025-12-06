@@ -1,74 +1,82 @@
 using Newtonsoft.Json;
 using System;
+using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Reactive
 {
     [Serializable, JsonConverter(typeof(Converter))]
     sealed public class RInt : AReactiveType<int>
     {
-        public RInt() : base(0) { }
-        public RInt(int value) : base(value) { }
+        [Impl(256)] public RInt() : base(0) { }
+        [Impl(256)] public RInt(int value) : base(value) { }
 
         #region Arithmetic
-        public void Increment() => _changeEvent.Invoke(++_value);
-        public void Decrement() => _changeEvent.Invoke(--_value);
-        public void Add(int value)
+        [Impl(256)] public void Increment() => _onChange.Invoke(++_value);
+        [Impl(256)] public void Decrement() => _onChange.Invoke(--_value);
+        [Impl(256)] public void Add(int value)
         {
             if (value != 0)
-                _changeEvent.Invoke(_value += value);
+                _onChange.Invoke(_value += value);
         }
-        public void Remove(int value)
+        [Impl(256)] public void Remove(int value)
         {
             if (value != 0)
-                _changeEvent.Invoke(_value -= value);
+                _onChange.Invoke(_value -= value);
         }
-        public void Multiply(int value)
+        [Impl(256)] public void Multiply(int value)
         {
             if (value != 1)
-                _changeEvent.Invoke(_value *= value);
+                _onChange.Invoke(_value *= value);
         }
-        public void Divide(int value)
+        [Impl(256)] public void Divide(int value)
         {
             if (value != 1)
-                _changeEvent.Invoke(_value /= value);
+                _onChange.Invoke(_value /= value);
         }
         #endregion
 
-        public static implicit operator int(RInt value) => value._value;
-        public static implicit operator float(RInt value) => value._value;
+        #region Silent Arithmetic
+        [Impl(256)] public void SilentAdd(int value = 1) => _value += value;
+        [Impl(256)] public void SilentRemove(int value = 1) => _value -= value;
+        [Impl(256)] public void SilentMultiply(int value) => _value *= value;
+        [Impl(256)] public void SilentDivide(int value) => _value /= value;
+        #endregion
+
+        [Impl(256)] public static implicit operator int(RInt value) => value._value;
+        [Impl(256)] public static implicit operator float(RInt value) => value._value;
 
         #region Arithmetic operator
-        public static int operator +(RInt a, RInt b) => a._value + b._value;
-        public static int operator +(RInt r, IReactiveValue<int> i) => r._value + i.Value;
-        public static int operator +(IReactiveValue<int> i, RInt r) => i.Value + r._value;
-        public static int operator +(RInt r, int i) => r._value + i;
-        public static int operator +(int i, RInt r) => i + r._value;
-        public static float operator +(RInt r, float f) => r._value + f;
-        public static float operator +(float f, RInt r) => f + r._value;
+        [Impl(256)] public static int operator +(RInt a, RInt b) => a._value + b._value;
+        [Impl(256)] public static int operator +(RInt r, ReactiveValue<int> i) => r._value + i.Value;
+        [Impl(256)] public static int operator +(ReactiveValue<int> i, RInt r) => i.Value + r._value;
+        [Impl(256)] public static int operator +(RInt r, int i) => r._value + i;
+        [Impl(256)] public static int operator +(int i, RInt r) => i + r._value;
+        [Impl(256)] public static float operator +(RInt r, float f) => r._value + f;
+        [Impl(256)] public static float operator +(float f, RInt r) => f + r._value;
 
-        public static int operator -(RInt a, RInt b) => a._value - b._value;
-        public static int operator -(RInt r, IReactiveValue<int> i) => r._value - i.Value;
-        public static int operator -(IReactiveValue<int> i, RInt r) => i.Value - r._value;
-        public static int operator -(RInt r, int i) => r._value - i;
-        public static int operator -(int i, RInt r) => i - r._value;
-        public static float operator -(RInt r, float f) => r._value - f;
-        public static float operator -(float f, RInt r) => f - r._value;
+        [Impl(256)] public static int operator -(RInt a, RInt b) => a._value - b._value;
+        [Impl(256)] public static int operator -(RInt r, ReactiveValue<int> i) => r._value - i.Value;
+        [Impl(256)] public static int operator -(ReactiveValue<int> i, RInt r) => i.Value - r._value;
+        [Impl(256)] public static int operator -(RInt r, int i) => r._value - i;
+        [Impl(256)] public static int operator -(int i, RInt r) => i - r._value;
+        [Impl(256)] public static float operator -(RInt r, float f) => r._value - f;
+        [Impl(256)] public static float operator -(float f, RInt r) => f - r._value;
 
-        public static int operator *(RInt a, RInt b) => a._value * b._value;
-        public static int operator *(RInt r, IReactiveValue<int> i) => r._value * i.Value;
-        public static int operator *(IReactiveValue<int> i, RInt r) => i.Value * r._value;
-        public static int operator *(RInt r, int i) => r._value * i;
-        public static int operator *(int i, RInt r) => i * r._value;
-        public static float operator *(RInt r, float f) => r._value * f;
-        public static float operator *(float f, RInt r) => f * r._value;
-       
-        public static int operator /(RInt a, RInt b) => a._value / b._value;
-        public static int operator /(RInt r, IReactiveValue<int> i) => r._value / i.Value;
-        public static int operator /(IReactiveValue<int> i, RInt r) => i.Value / r._value;
-        public static int operator /(RInt r, int i) => r._value / i;
-        public static int operator /(int i, RInt r) => i / r._value;
-        public static float operator /(RInt r, float f) => r._value / f;
-        public static float operator /(float f, RInt r) => f / r._value;
+        [Impl(256)] public static int operator *(RInt a, RInt b) => a._value * b._value;
+        [Impl(256)] public static int operator *(RInt r, ReactiveValue<int> i) => r._value * i.Value;
+        [Impl(256)] public static int operator *(ReactiveValue<int> i, RInt r) => i.Value * r._value;
+        [Impl(256)] public static int operator *(RInt r, int i) => r._value * i;
+        [Impl(256)] public static int operator *(int i, RInt r) => i * r._value;
+        [Impl(256)] public static float operator *(RInt r, float f) => r._value * f;
+        [Impl(256)] public static float operator *(float f, RInt r) => f * r._value;
+
+        [Impl(256)] public static int operator /(RInt a, RInt b) => a._value / b._value;
+        [Impl(256)] public static int operator /(RInt r, ReactiveValue<int> i) => r._value / i.Value;
+        [Impl(256)] public static int operator /(ReactiveValue<int> i, RInt r) => i.Value / r._value;
+        [Impl(256)] public static int operator /(RInt r, int i) => r._value / i;
+        [Impl(256)] public static int operator /(int i, RInt r) => i / r._value;
+        [Impl(256)] public static float operator /(RInt r, float f) => r._value / f;
+        [Impl(256)] public static float operator /(float f, RInt r) => f / r._value;
 
         #endregion
 

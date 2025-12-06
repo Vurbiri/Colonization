@@ -29,7 +29,7 @@ namespace Vurbiri.Colonization
             _value = Math.Clamp(_value, 0, value);
 
             if (old != _value)
-                _changeEvent.Invoke(_value);
+                _onChange.Invoke(_value);
         }
 
         public abstract int AddModifier(IAbilityValue mod);

@@ -121,7 +121,7 @@ namespace Vurbiri.Colonization
                 if (delta != 0)
                 {
                     _value += delta;
-                    _changeEvent.Invoke(_value);
+                    _onChange.Invoke(_value);
                     _deltaValue.Invoke(delta);
                 }
                 return delta;
@@ -150,7 +150,7 @@ namespace Vurbiri.Colonization
                     int delta = value - _value;
                     _value = value;
 
-                    _changeEvent.Invoke(value);
+                    _onChange.Invoke(value);
                     _deltaValue.Invoke(delta);
                 }
                 return 0;

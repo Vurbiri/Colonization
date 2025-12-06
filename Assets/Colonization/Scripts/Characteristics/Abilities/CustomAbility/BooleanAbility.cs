@@ -19,7 +19,7 @@ namespace Vurbiri.Colonization
             _value = value;
 
             if (delta != 0)
-                _changeEvent.Invoke(_value);
+                _onChange.Invoke(_value);
 
             return delta;
         }

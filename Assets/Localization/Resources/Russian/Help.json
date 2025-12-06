@@ -1,0 +1,8 @@
+{
+  "Control": "Управление",
+  "ControlText": "Управление игрой мышью",
+  "GameGoal": "Цель игры",
+  "GameGoalText": "The object of the game Text",
+  "GameStart": "Начало игры",
+  "GameStartText": "GameBeginningText"
+}

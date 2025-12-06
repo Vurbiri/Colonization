@@ -28,6 +28,8 @@ namespace VurbiriEditor.Colonization
         [SerializeField, HideInInspector] private OpponentPanels _opponentPanels;
         [SerializeField, HideInInspector] private GiftWindow _giftWindow;
         [SerializeField, HideInInspector] private DiceWindow _diceWindow;
+        [SerializeField, HideInInspector] private SettingsWindow _settingsWindow;
+        [SerializeField, HideInInspector] private HelpWindow _helpWindow;
         [SerializeField, HideInInspector] private GameOverWindow _gameOverWindow;
         [SerializeField, HideInInspector] private ChaosPanel _chaosPanel;
         [SerializeField, HideInInspector] private SatanPanel _satanPanel;
@@ -51,6 +53,8 @@ namespace VurbiriEditor.Colonization
             _giftWindow.UpdateVisuals_Ed(_windowsPixelsPerUnit, _panelsPixelsPerUnit, _projectColors, transform);
 
             _diceWindow.UpdateVisuals_Ed(_windowsPixelsPerUnit, _projectColors);
+            _settingsWindow.UpdateVisuals_Ed(_windowsPixelsPerUnit, _projectColors);
+            _helpWindow.UpdateVisuals_Ed(_windowsPixelsPerUnit, _projectColors);
             _gameOverWindow.UpdateVisuals_Ed(_windowsPixelsPerUnit, _projectColors);
 
             _chaosPanel.UpdateVisuals_Ed(_screenPadding);
@@ -81,6 +85,8 @@ namespace VurbiriEditor.Colonization
                 EUtility.SetObject(ref _opponentPanels);
                 EUtility.SetObject(ref _giftWindow);
                 EUtility.SetObject(ref _diceWindow);
+                EUtility.SetObject(ref _settingsWindow);
+                EUtility.SetObject(ref _helpWindow);
                 EUtility.SetObject(ref _gameOverWindow);
                 EUtility.SetObject(ref _chaosPanel);
                 EUtility.SetObject(ref _satanPanel);

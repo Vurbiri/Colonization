@@ -17,7 +17,7 @@ namespace Vurbiri.Colonization
 
         private void Change(int remove, int add)
         {
-            _changeEvent.Invoke(_value = _maxValue - remove + add);
+            _onChange.Invoke(_value = _maxValue - remove + add);
         }
     }
 }

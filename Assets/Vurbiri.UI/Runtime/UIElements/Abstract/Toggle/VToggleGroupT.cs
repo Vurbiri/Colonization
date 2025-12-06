@@ -163,7 +163,7 @@ namespace Vurbiri.UI
                 return;
             }
 
-            for (; index < count; ++index)
+            for (++index; index < count; ++index)
                 _toggles[index].SetFromGroup(false);
         }
 

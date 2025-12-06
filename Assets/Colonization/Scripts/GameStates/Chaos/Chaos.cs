@@ -50,7 +50,7 @@ namespace Vurbiri.Colonization
                     _eventGameOver.InvokeOneShot(Winner.Satan);
                 }
 
-                _changeEvent.Invoke(_value);
+                _onChange.Invoke(_value);
             }
         }
 

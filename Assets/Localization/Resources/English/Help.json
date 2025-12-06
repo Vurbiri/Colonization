@@ -1,0 +1,8 @@
+{
+  "Control": "Control",
+  "ControlText": "ControlText",
+  "GameGoal": "Game goal",
+  "GameGoalText": "The object of the game Text",
+  "GameStart": "Game start",
+  "GameStartText": "GameBeginningText"
+}

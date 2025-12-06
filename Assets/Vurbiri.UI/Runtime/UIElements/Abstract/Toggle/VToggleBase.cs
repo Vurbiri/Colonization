@@ -152,8 +152,10 @@ namespace Vurbiri.UI
         {
             await System.Threading.Tasks.Task.Delay(2);
 
-            if (UnityEditor.EditorApplication.isPlayingOrWillChangePlaymode || this == null || !isActiveAndEnabled)
+            if (UnityEditor.EditorApplication.isPlayingOrWillChangePlaymode || this == null || !isActiveAndEnabled || UnityEditor.PrefabUtility.IsPartOfPrefabAsset(gameObject))
                 return;
+
+            var so = new UnityEditor.SerializedObject(this);
 
             if (_groupEditor != _group)
             {
@@ -163,6 +165,7 @@ namespace Vurbiri.UI
                 if (_group != null && isActiveAndEnabled)
                     _group.RegisterToggle(_this);
 
+                so.FindProperty(nameof(_group)).objectReferenceValue = _group;
                 _groupEditor = _group;
 
                 UpdateVisualInstant();
@@ -173,9 +176,11 @@ namespace Vurbiri.UI
                 _isOn = _isOnEditor;
                 SetValue(!_isOn, false);
 
+                so.FindProperty(nameof(_isOn)).boolValue = _isOn;
                 _isOnEditor = _isOn;
                 UpdateVisualInstant();
             }
+            so.ApplyModifiedProperties();
         }
 #endif
     }
