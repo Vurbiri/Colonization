@@ -15,7 +15,7 @@ namespace Vurbiri.Colonization.UI
         public Event<IMenu, bool> Init()
         {
             _buttonClose.Init(Close);
-            _buttonInit.Init(OnUpgrade);
+            _buttonInit.Init(OnBuildPort);
 
             base.CloseInstant();
 
@@ -47,7 +47,7 @@ namespace Vurbiri.Colonization.UI
             }
         }
 
-        private void OnUpgrade()
+        private void OnBuildPort()
         {
             base.Close();
             _endInit = GameContainer.Person.BuildPort(_currentCrossroad);
@@ -57,7 +57,6 @@ namespace Vurbiri.Colonization.UI
 
         public override void SetButtonPosition(float buttonDistance)
         {
-
             _buttonClose.transform.localPosition = Vector3.zero;
             _buttonInit.transform.localPosition = new(0f, buttonDistance, 0f);
         }

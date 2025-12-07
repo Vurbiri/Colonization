@@ -8,6 +8,7 @@ namespace Vurbiri.Colonization.UI
     {
         [Space]
         [SerializeField, Key(LangFiles.Gameplay)] private string _key;
+        [SerializeField] private bool _extract;
 
         private ReadOnlyMainCurrencies _cost;
         private ReadOnlyCurrencies _cash;
@@ -50,7 +51,7 @@ namespace Vurbiri.Colonization.UI
             _thisGameObject.SetActive(true);
         }
 
-        private void SetText(Localization localization) => _caption = localization.GetText(LangFiles.Gameplay, _key);
+        private void SetText(Localization localization) => _caption = localization.GetText(LangFiles.Gameplay, _key, _extract);
 
         protected override void OnDestroy()
         {
