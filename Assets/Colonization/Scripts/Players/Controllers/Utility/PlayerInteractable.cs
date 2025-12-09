@@ -8,7 +8,7 @@ namespace Vurbiri.Colonization
         private const int SPELL_INDEX = 26, TURN_INDEX = 28;
 
         protected readonly Id<PlayerId> _id;
-        private int _code;
+        private int _flags;
 
         public PlayerInteractable(Id<PlayerId> playerId, Subscription subscriptions)
         {
@@ -42,9 +42,9 @@ namespace Vurbiri.Colonization
 
         private void SetValue(int index, bool value)
         {
-            _code = value ? _code & ~(1 << index) : _code | (1 << index);
+            _flags = value ? _flags & ~(1 << index) : _flags | (1 << index);
 
-            value = _code == 0;
+            value = _flags == 0;
             if (_value ^ value)
                 _onChange.Invoke(_value = value);
         }

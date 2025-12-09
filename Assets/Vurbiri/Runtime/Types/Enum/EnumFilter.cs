@@ -22,7 +22,7 @@ namespace Vurbiri
 
             Count = values.Length;
 
-            Throw.IfGreater(Count, 32);
+            Throw.IfGreater(Count, 31);
 
             s_maskValue = ~(-1 << Count);
             s_ids = new(Count);

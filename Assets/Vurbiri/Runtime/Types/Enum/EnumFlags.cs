@@ -21,7 +21,7 @@ namespace Vurbiri
             s_count = values.Length;
             s_maskValue = ~(-1 << s_count);
 
-            Throw.IfGreater(s_count, 32);
+            Throw.IfGreater(s_count, 31);
             int value, oldValue = -1;
             for (int i = 0; i < s_count; i++)
             {

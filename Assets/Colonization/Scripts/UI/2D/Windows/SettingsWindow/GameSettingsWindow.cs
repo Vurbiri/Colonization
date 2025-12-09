@@ -3,6 +3,7 @@ using UnityEngine;
 using Vurbiri.Colonization.UI;
 using Vurbiri.EntryPoint;
 using Vurbiri.International;
+using Vurbiri.Reactive;
 using Vurbiri.UI;
 
 namespace Vurbiri.Colonization
@@ -16,12 +17,21 @@ namespace Vurbiri.Colonization
         [Space]
         [SerializeField] private HintButton _saveButton;
 
+        private readonly ReactiveFlags _flags = new();
         private readonly WaitSignal _waitSaving = new();
         private Coroutine _coroutine;
 
-        public void Save()
+        public override Switcher Init()
         {
-            _coroutine ??= StartCoroutine(Save_Cn());
+            var players = GameContainer.Players;
+            for (int i = 0; i < PlayerId.Count; ++i)
+                _flags.Add(players[i].Interactable);
+
+            _flags.Subscribe(_saveButton.GetSetor<bool>(nameof(HintButton.interactable)));
+            _saveButton.AddListener(Save);
+            _saveButton = null;
+
+            return base.Init();
         }
         
 		public void ExitToMenu()
@@ -29,15 +39,16 @@ namespace Vurbiri.Colonization
             Transition.Exit();
         }
 
+        private void Save()
+        {
+            _coroutine ??= StartCoroutine(Save_Cn());
+        }
+
         private IEnumerator Save_Cn()
         {
+            _switcher.Close();
+            
             Banner.Open(Localization.Instance.GetText(_saving), MessageTypeId.Info, _waitSaving.Restart());
-
-            var game = GameContainer.GameEvents;
-            var players = GameContainer.Players;
-
-            while (!players[game.CurrentPlayer].Interactable)
-                yield return null;
 
             var save = ProjectContainer.StorageService.Save();
             yield return save;
@@ -56,8 +67,10 @@ namespace Vurbiri.Colonization
 #if UNITY_EDITOR
         protected override void OnValidate()
         {
-            base.OnValidate();
+            if (UnityEditor.EditorApplication.isPlayingOrWillChangePlaymode)
+                return;
 
+            base.OnValidate();
             this.SetChildren(ref _saveButton, "SaveButton");
         }
 #endif

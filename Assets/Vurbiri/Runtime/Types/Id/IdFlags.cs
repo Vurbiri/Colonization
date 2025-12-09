@@ -13,13 +13,9 @@ namespace Vurbiri
         public static readonly IdFlags<T> None = new(false);
         public static readonly IdFlags<T> All = new(true);
 
-        static IdFlags()
-        {
 #if UNITY_EDITOR
-            string name = typeof(T).Name;
-            Throw.IfGreater(IdType<T>.Count, 32, $"{name}.Count");
-#endif  
-        }
+        static IdFlags() => Throw.IfGreater(IdType<T>.Count, 31, $"{typeof(T).Name}.Count");
+#endif
 
         [SerializeField] private int _id;
 
@@ -66,17 +62,16 @@ namespace Vurbiri
 
         public readonly Id<T> First()
         {
-            for (int i = 0; i < IdType<T>.Count; i++)
+            for (int i = 0; i < IdType<T>.Count; ++i)
                 if (this[i]) return i;
-            return -1;
+            return IdType<T>.None;
         }
 
         public readonly List<Id<T>> GetValues()
         {
             List<Id<T>> values = new(IdType<T>.Count);
-            for(int i = 0; i < IdType<T>.Count; i++)
+            for(int i = 0; i < IdType<T>.Count; ++i)
                 if(this[i]) values.Add(i);
-
             return values;
         }
 
