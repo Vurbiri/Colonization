@@ -17,31 +17,32 @@ namespace Vurbiri
         public override bool IsValid => Application.platform == RuntimePlatform.WindowsPlayer;
 #endif
 
-        protected override IEnumerator SaveToFile_Cn()
+        protected override WaitResult<string> LoadFromFile_Wait()
         {
+            string result = null;
+            if (File.Exists(_path))
+            {
+                using StreamReader sr = new(_path);
+                result = sr.ReadToEnd();
+            }
+            return WaitResult.Instant(result);
+        }
+
+        protected override IEnumerator SaveToFile_Cn(WaitResultSource<bool> waitResult)
+        {
+            bool result = false;
             try
             {
                 using StreamWriter sw = new(_path);
                 sw.Write(Serialize(_saved));
-                _outputResult = true;
+                result = true;
             }
             catch (Exception ex)
             {
-                _outputResult = false;
                 Log.Info(ex.Message);
             }
 
-            return null;
-        }
-
-        protected override IEnumerator LoadFromFile_Cn()
-        {
-            _outputJson = string.Empty;
-            if (File.Exists(_path))
-            {
-                using StreamReader sr = new(_path);
-                _outputJson = sr.ReadToEnd();
-            }
+            waitResult.Set(result);
             return null;
         }
     }

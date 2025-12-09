@@ -27,32 +27,23 @@ namespace Vurbiri
     {
         private readonly T _default;
 
-        public WaitResultSource()
-        {
-            _isWait = true;
-            _default = default;
-        }
-        public WaitResultSource(T defaultValue)
-        {
-            _isWait = true;
-            _default = defaultValue;
-        }
-        public WaitResultSource(bool isWait)
-        {
-            _isWait = isWait;
-            _default = _value = default;
-        }
-        public WaitResultSource(bool isWait, T value)
+        [Impl(256)] public WaitResultSource() : this(true, default) { }
+        [Impl(256)] public WaitResultSource(bool isWait) : this(isWait, default) { }
+        [Impl(256)] public WaitResultSource(bool isWait, T value)
         {
             _isWait = isWait;
             _default = _value = value;
         }
 
-        [Impl(256)] public WaitResult<T> SetResult(T result)
+        [Impl(256)] public void Set(T result)
         {
             _isWait = false;
             _value = result;
-
+        }
+        [Impl(256)] public WaitResult<T> Return(T result)
+        {
+            _isWait = false;
+            _value = result;
             return this;
         }
 
@@ -61,10 +52,10 @@ namespace Vurbiri
             _isWait = false;
             _value = _default;
 
-            return new(_default);
+            return new(true, _default);
         }
 
-        [Impl(256)] public WaitResult<T> Restart()
+        [Impl(256)] public WaitResultSource<T> Restart()
         {
             _isWait = true;
             _value = _default;
@@ -72,7 +63,7 @@ namespace Vurbiri
             return this;
         }
 
-        [Impl(256)] public WaitResult<T> Cancel()
+        [Impl(256)] public WaitResultSource<T> Cancel()
         {
             _isWait = false;
             _value = _default;

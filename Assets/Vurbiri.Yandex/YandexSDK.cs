@@ -33,13 +33,13 @@ namespace Vurbiri.Yandex
         public string GetPlayerAvatarURL(AvatarSize size) => GetPlayerAvatarURLJS(size.ToString().ToLower());
         public string Lang => GetLangJS();
 
-        private WaitResult<bool> InitYsdk() => WaitResult(ref _waitEndInitYsdk, InitYsdkJS);
+        private WaitResult<bool> InitYsdk() => GetResult(ref _waitEndInitYsdk, InitYsdkJS);
         public void LoadingAPI_Ready() => ReadyJS();
-        public WaitResult<bool> InitPlayer() => WaitResult(ref _waitEndInitPlayer, InitPlayerJS);
+        public WaitResult<bool> InitPlayer() => GetResult(ref _waitEndInitPlayer, InitPlayerJS);
 
-        public WaitResult<bool> LogOn() => WaitResult(ref _waitEndLogOn, LogOnJS);
+        public WaitResult<bool> LogOn() => GetResult(ref _waitEndLogOn, LogOnJS);
 
-        public WaitResult<bool> InitLeaderboards() => WaitResult(ref _waitEndInitLeaderboards, InitLeaderboardsJS);
+        public WaitResult<bool> InitLeaderboards() => GetResult(ref _waitEndInitLeaderboards, InitLeaderboardsJS);
         public WaitResult<Return<PlayerRecord>> GetPlayerResult() 
         {
             WaitResultSource<Return<PlayerRecord>> wait = new();
@@ -50,17 +50,17 @@ namespace Vurbiri.Yandex
             //============================================
             IEnumerator GetPlayerResult_Cn(WaitResultSource<Return<PlayerRecord>> wait)
             {
-                yield return WaitResult(ref _waitEndGetPlayerResult, GetPlayerResultJS, _lbName);
+                yield return GetResult(ref _waitEndGetPlayerResult, GetPlayerResultJS, _lbName);
                 string json = _waitEndGetPlayerResult.Value;
 
                 if (string.IsNullOrEmpty(json))
-                    wait.SetResult(Return<PlayerRecord>.Empty);
+                    wait.Set(Return<PlayerRecord>.Empty);
                 else
-                    wait.SetResult(Deserialize<PlayerRecord>(json));
+                    wait.Set(Deserialize<PlayerRecord>(json));
             }
             #endregion
         }
-        public WaitResult<bool> SetScore(long score) => WaitResult(ref _waitEndSetScore, SetScoreJS, _lbName, score);
+        public WaitResult<bool> SetScore(long score) => GetResult(ref _waitEndSetScore, SetScoreJS, _lbName, score);
         public WaitResult<Return<Leaderboard>> GetLeaderboard(int quantityTop, bool includeUser = false, int quantityAround = 1, AvatarSize size = AvatarSize.Medium)
         {
             WaitResultSource<Return<Leaderboard>> wait = new();
@@ -76,21 +76,26 @@ namespace Vurbiri.Yandex
                 string json = _waitEndGetLeaderboard.Value;
 
                 if (string.IsNullOrEmpty(json))
-                    wait.SetResult(Return<Leaderboard>.Empty);
+                    wait.Set(Return<Leaderboard>.Empty);
                 else
-                    wait.SetResult(Deserialize<Leaderboard>(json));
+                    wait.Set(Deserialize<Leaderboard>(json));
             }
             #endregion
         }
 
-        public WaitResult<bool> Save(string key, string data) => WaitResult(ref _waitEndSave, SaveJS, key, data);
-        public WaitResult<string> Load(string key) => WaitResult(ref _waitEndLoad, LoadJS, key);
+        public IEnumerator Save(string key, string data, WaitResultSource<bool> waitResult)
+        {
+            _waitEndSave = waitResult;
+            SaveJS(key, data);
+            return waitResult;
+        }
+        public WaitResult<string> Load(string key) => GetResult(ref _waitEndLoad, LoadJS, key);
 
-        public WaitResult<bool> CanReview() => WaitResult(ref _waitEndCanReview, CanReviewJS);
-        public WaitResult<bool> RequestReview() => WaitResult(ref _waitEndRequestReview, RequestReviewJS);
+        public WaitResult<bool> CanReview() => GetResult(ref _waitEndCanReview, CanReviewJS);
+        public WaitResult<bool> RequestReview() => GetResult(ref _waitEndRequestReview, RequestReviewJS);
 
-        public WaitResult<bool> CanShortcut() => WaitResult(ref _waitEndCanShortcut, CanShortcutJS);
-        public WaitResult<bool> CreateShortcut() => WaitResult(ref _waitEndCreateShortcut, CreateShortcutJS);
+        public WaitResult<bool> CanShortcut() => GetResult(ref _waitEndCanShortcut, CanShortcutJS);
+        public WaitResult<bool> CreateShortcut() => GetResult(ref _waitEndCreateShortcut, CreateShortcutJS);
     }
 #endif
 }

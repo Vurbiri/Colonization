@@ -33,10 +33,10 @@ namespace Vurbiri.Colonization
             _mixer.Apply();
         }
 
-        [Impl(256)] public void ApplyAndSave(Out<bool> output = null)
+        [Impl(256)] public WaitResult<bool> ApplyAndSave()
         {
             Apply();
-            _storage.Save(output);
+            return _storage.Save();
         }
 
         [Impl(256)] public void Cancel()

@@ -40,13 +40,13 @@ namespace Vurbiri.Colonization
 
         public void OnGuest()
         {
-            _waitLogOn.SetResult(false);
+            _waitLogOn.Set(false);
         }
 
         public void OnLogOn()
         {
             _storage.Save();
-            _waitLogOn.SetResult(true);
+            _waitLogOn.Set(true);
         }
 
         private void FixedUpdate()

@@ -56,11 +56,11 @@ namespace Vurbiri.Colonization
         [Impl(256)] public Subscription Subscribe(Action<Diplomacy> action, bool instantGetValue = true) => _eventChanged.Add(action, this, instantGetValue);
 
         #region ================== ActorsInteraction ============================
-        public bool IsCanActorsInteraction(Id<PlayerId> idA, Id<PlayerId> idB, Relation typeAction, out bool isFriendly)
+        public bool IsCanActorsInteraction(Id<PlayerId> idA, Id<PlayerId> idB, Relation typeAction)
         {
-            bool valid = Validate(idA, idB) & typeAction != Relation.None;
-            isFriendly = typeAction == Relation.Friend;
-            return valid && (idA == idB ? isFriendly : IsSatan(idA, idB) ? !isFriendly : this[idA, idB] <= 0 ? !isFriendly : isFriendly = true); ;
+            bool valid = typeAction != Relation.None && Validate(idA, idB);
+            bool isFriendly = typeAction == Relation.Friend;
+            return valid && (idA == idB ? isFriendly : IsSatan(idA, idB) ? !isFriendly : this[idA, idB] > 0 || !isFriendly);
         }
 
         public void ActorsInteraction(Id<PlayerId> idA, Id<PlayerId> idB, Relation targetAttack, bool isCombat)

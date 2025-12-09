@@ -15,7 +15,7 @@ namespace Vurbiri.Colonization.UI
         [SerializeField] private GiftWindow _giftWindow;
         [SerializeField] private GiftButton[] _giftButtons;
         [Space]
-        [SerializeField] private SettingsWindow _settingsWindow;
+        [SerializeField] private GameSettingsWindow _settingsWindow;
         [SerializeField] private HintButton _settingsButton;
         [Space]
         [SerializeField] private HelpWindow _helpWindow;

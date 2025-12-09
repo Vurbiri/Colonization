@@ -10,7 +10,7 @@ namespace Vurbiri.Web
         {
         }
 
-        protected override string GetStorage() => UtilityJS.GetCookies(_key);
-        protected override bool SetStorage() => UtilityJS.SetCookies(_key, Serialize(_saved));
+        protected override string FromStorage() => UtilityJS.GetCookies(_key);
+        protected override bool ToStorage() => UtilityJS.SetCookies(_key, Serialize(_saved));
     }
 }

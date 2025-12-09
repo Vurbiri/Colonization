@@ -7,12 +7,7 @@ namespace Vurbiri.Colonization
     sealed public partial class GameLoop : GameEvents
     {
         private GameStorage _storage;
-
-        private Id<GameModeId> _gameMode;
-        private TurnQueue _turnQueue;
         private int _hexId;
-         
-        public Id<GameModeId> GameMode { [Impl(256)] get => _gameMode; }
         
         private GameLoop() : this(GameModeId.Landing, new(PlayerId.Person), -1) { }
         private GameLoop(Id<GameModeId> gameMode, TurnQueue turnQueue, int hexId)
@@ -65,7 +60,7 @@ namespace Vurbiri.Colonization
         public void GameOver(Winner winner)
         {
             for (int i = 0; i < GameModeId.GameOver; ++i)
-                _changingGameModes[i].Clear();
+                _changeGameModes[i].Clear();
 
             GameContainer.Shared.StartCoroutine(GameOver_Cn());
 
@@ -75,13 +70,14 @@ namespace Vurbiri.Colonization
                 yield return null;
 
                 _gameMode = GameModeId.GameOver;
-                _changingGameModes[GameModeId.GameOver].InvokeOneShot(_turnQueue, _hexId);
+                _changeGameMode.InvokeOneShot(GameModeId.GameOver, _turnQueue);
+                _changeGameModes[GameModeId.GameOver].InvokeOneShot(_turnQueue, _hexId);
 
                 GameContainer.GameSettings.Reset(GameContainer.Score[PlayerId.Person]);
             }
         }
 
-        [Impl(256)] public bool IsPersonTurn(Id<PlayerId> id) => _gameMode == GameModeId.Play & _turnQueue.currentId == id;
+        [Impl(256)] public bool IsPlayerTurn(Id<PlayerId> id) => _gameMode == GameModeId.Play & _turnQueue.currentId == id;
 
         [Impl(256)] private void SetGameMode(Id<GameModeId> gameMode, bool save = true) => GameContainer.Shared.StartCoroutine(SetGameMode_Cn(gameMode, save));
         private IEnumerator SetGameMode_Cn(Id<GameModeId> gameMode, bool save)
@@ -89,8 +85,11 @@ namespace Vurbiri.Colonization
             yield return null;
 
             _gameMode = gameMode;
-            _changingGameModes[gameMode].Invoke(_turnQueue, _hexId);
-            if (save) _storage.SaveGame(this);
+            _changeGameMode.Invoke(gameMode, _turnQueue);
+            _changeGameModes[gameMode].Invoke(_turnQueue, _hexId);
+
+            if (save) 
+                _storage.SaveGame(this);
         }
     }
 }

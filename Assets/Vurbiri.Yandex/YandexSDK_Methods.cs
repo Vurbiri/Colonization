@@ -56,19 +56,19 @@ namespace Vurbiri.Yandex
             callback?.Set(true);
         }
 
-        private WaitResult<T> WaitResult<T>(ref WaitResultSource<T> completion, Action action)
+        private WaitResult<T> GetResult<T>(ref WaitResultSource<T> completion, Action action)
         {
             completion = completion.Recreate();
             action();
             return completion;
         }
-        private WaitResult<T> WaitResult<T, U>(ref WaitResultSource<T> completion, Action<U> action, U value)
+        private WaitResult<T> GetResult<T, U>(ref WaitResultSource<T> completion, Action<U> action, U value)
         {
             completion = completion.Recreate();
             action(value);
             return completion;
         }
-        private WaitResult<T> WaitResult<T, U, V>(ref WaitResultSource<T> completion, Action<U, V> action, U value1, V value2)
+        private WaitResult<T> GetResult<T, U, V>(ref WaitResultSource<T> completion, Action<U, V> action, U value1, V value2)
         {
             completion = completion.Recreate();
             action(value1, value2);

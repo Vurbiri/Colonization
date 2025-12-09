@@ -81,8 +81,7 @@ namespace Vurbiri.Colonization
         public Vector3 Position { [Impl(256)] get => _thisTransform.position; }
         public ReactiveValue<bool> CanCancel => _canCancel;
         public ReactiveValue<bool> InteractableReactive => _interactable;
-        public bool Interactable { [Impl(256)] get => _interactable.Value; [Impl(256)] set => _thisCollider.enabled = _interactable.Value = _isPersonTurn & value; }
-        public bool IsPersonTurn { [Impl(256)] set => _isPersonTurn = value; }
+        public bool Interactable { [Impl(256)] get => _interactable.Value; [Impl(256)] set => _thisCollider.enabled = (_interactable.Value = value) & _isPersonTurn; }
        
         public void Select(MouseButton button) => _states.Select(button);
         public void Unselect(ISelectable newSelectable) => _states.Unselect(newSelectable);
@@ -149,8 +148,6 @@ namespace Vurbiri.Colonization
             _force = settings.Force;
             _owner = initData.owner;
             _currentHex = startHex;
-            IsPersonTurn = false;
-            Interactable = false;
 
             IsWarrior = _typeId == ActorTypeId.Warrior;
             IsDemon   = _typeId == ActorTypeId.Demon;
@@ -181,6 +178,9 @@ namespace Vurbiri.Colonization
 
             _thisTransform.SetLocalPositionAndRotation(_currentHex.Position, HEX.ROTATIONS[GetNearGroundHexOffset(_currentHex)]);
             _currentHex.ActorEnter(this);
+
+            _subscription += GameContainer.GameEvents.Subscribe(OnGameMode);
+
             gameObject.SetActive(true);
 
             #region Local GetNearGroundHexOffset(..)
@@ -214,9 +214,9 @@ namespace Vurbiri.Colonization
 
         #region ================== Utilities ============================
         [Impl(256)] public bool IsSkillApplied(SkillCode skillCode) => _effects.Contains(skillCode);
-        [Impl(256)] public bool IsCanApplySkill(Id<PlayerId> id, Relation typeAction, out bool isFriendly)
+        [Impl(256)] public bool IsCanApplySkill(Id<PlayerId> id, Relation typeAction)
         {
-            return _states.IsAvailable & GameContainer.Diplomacy.IsCanActorsInteraction(id, _owner, typeAction, out isFriendly);
+            return _states.IsAvailable && GameContainer.Diplomacy.IsCanActorsInteraction(id, _owner, typeAction);
         }
 
         #region ---------------- Combat ----------------
@@ -301,7 +301,7 @@ namespace Vurbiri.Colonization
         #region ================== Target ============================
         public bool ToTargetState(Id<PlayerId> initiator, Relation relation)
         {
-            bool isSet = GameContainer.Diplomacy.IsCanActorsInteraction(initiator, _owner, relation, out _) && _states.ToTarget();
+            bool isSet = GameContainer.Diplomacy.IsCanActorsInteraction(initiator, _owner, relation) && _states.ToTarget();
             if(isSet)
                 GameContainer.Diplomacy.ActorsInteraction(_owner, initiator, relation, IsInCombat());
             return isSet;
@@ -318,6 +318,13 @@ namespace Vurbiri.Colonization
         {
             if (_abilities.AddPerk(perk) != 0)
                 _eventChanged.Invoke(this, TypeEvent.Change);
+        }
+        private void OnGameMode(Id<GameModeId> gameMode, TurnQueue turn)
+        {
+            bool isPlay = gameMode == GameModeId.Play && turn.currentId == _owner;
+
+            _isPersonTurn = isPlay & turn.isPerson;
+            Interactable = isPlay;
         }
 
         private void OnDeath(int hp) { if (hp <= 0) _states.Death(); }

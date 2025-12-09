@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-using Vurbiri.Reactive;
+using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization.UI
 {
@@ -15,14 +15,15 @@ namespace Vurbiri.Colonization.UI
         private readonly Color _colorNormal = Color.white;
         private readonly VAction _onClick = new();
 
-        public Color Color { set => _target.color = value; }
+        public Color Color { [Impl(256)] set => _target.color = value; }
+        public bool Interactable { [Impl(256)] get; [Impl(256)] set; } = true;
 
         public Subscription AddListener(Action action) => _onClick.Add(action);
         public void RemoveListener(Action action) => _onClick.Remove(action);
 
         public void OnPointerClick(PointerEventData eventData)
         {
-            if (eventData.button == PointerEventData.InputButton.Left)
+            if (Interactable && eventData.button == PointerEventData.InputButton.Left)
                 _onClick.Invoke();
         }
 

@@ -123,6 +123,8 @@ namespace Vurbiri.International.Editor
             EditorUtility.SetDirty(this);
             AssetDatabase.SaveAssets();
 
+            LanguageData.CreateKeys(_loadFile);
+
             return _loadFile;
         }
 

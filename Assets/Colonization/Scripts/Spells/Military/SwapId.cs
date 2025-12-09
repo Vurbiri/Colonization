@@ -93,7 +93,7 @@ namespace Vurbiri.Colonization
                 s_isCasting.False();
             }
 
-            private void SetHexagon(Hexagon hexagon) => _waitHexagon.SetResult(hexagon);
+            private void SetHexagon(Hexagon hexagon) => _waitHexagon.Set(hexagon);
 
             protected override string GetDesc(Localization localization)
             {

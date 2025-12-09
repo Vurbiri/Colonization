@@ -18,18 +18,18 @@ namespace Vurbiri.Yandex
         private WaitResultSource<bool> _waitEndCanShortcut = new();
         private WaitResultSource<bool> _waitEndCreateShortcut = new();
 
-        public void OnEndInitYsdk(int result) => _waitEndInitYsdk.SetResult(Convert.ToBoolean(result));
-        public void OnEndInitPlayer(int result) => _waitEndInitPlayer.SetResult(Convert.ToBoolean(result));
-        public void OnEndLogOn(int result) => _waitEndLogOn.SetResult(Convert.ToBoolean(result));
-        public void OnEndInitLeaderboards(int result) => _waitEndInitLeaderboards.SetResult(Convert.ToBoolean(result));
-        public void OnEndSetScore(int result) => _waitEndSetScore.SetResult(Convert.ToBoolean(result));
-        public void OnEndGetPlayerResult(string value) => _waitEndGetPlayerResult.SetResult(value);
-        public void OnEndGetLeaderboard(string value) => _waitEndGetLeaderboard.SetResult(value);
-        public void OnEndSave(int result) => _waitEndSave.SetResult(Convert.ToBoolean(result));
-        public void OnEndLoad(string value) => _waitEndLoad.SetResult(value);
-        public void OnEndCanReview(int result) => _waitEndCanReview.SetResult(Convert.ToBoolean(result));
-        public void OnEndRequestReview(int result) => _waitEndRequestReview.SetResult(Convert.ToBoolean(result));
-        public void OnEndCanShortcut(int result) => _waitEndCanShortcut.SetResult(Convert.ToBoolean(result));
-        public void OnEndCreateShortcut(int result) => _waitEndCreateShortcut.SetResult(Convert.ToBoolean(result));
+        public void OnEndInitYsdk(int result) => _waitEndInitYsdk.Set(Convert.ToBoolean(result));
+        public void OnEndInitPlayer(int result) => _waitEndInitPlayer.Set(Convert.ToBoolean(result));
+        public void OnEndLogOn(int result) => _waitEndLogOn.Set(Convert.ToBoolean(result));
+        public void OnEndInitLeaderboards(int result) => _waitEndInitLeaderboards.Set(Convert.ToBoolean(result));
+        public void OnEndSetScore(int result) => _waitEndSetScore.Set(Convert.ToBoolean(result));
+        public void OnEndGetPlayerResult(string value) => _waitEndGetPlayerResult.Set(value);
+        public void OnEndGetLeaderboard(string value) => _waitEndGetLeaderboard.Set(value);
+        public void OnEndSave(int result) => _waitEndSave.Set(Convert.ToBoolean(result));
+        public void OnEndLoad(string value) => _waitEndLoad.Set(value);
+        public void OnEndCanReview(int result) => _waitEndCanReview.Set(Convert.ToBoolean(result));
+        public void OnEndRequestReview(int result) => _waitEndRequestReview.Set(Convert.ToBoolean(result));
+        public void OnEndCanShortcut(int result) => _waitEndCanShortcut.Set(Convert.ToBoolean(result));
+        public void OnEndCreateShortcut(int result) => _waitEndCreateShortcut.Set(Convert.ToBoolean(result));
     }
 }

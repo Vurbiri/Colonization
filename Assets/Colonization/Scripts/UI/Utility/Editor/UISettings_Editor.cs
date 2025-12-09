@@ -28,7 +28,7 @@ namespace VurbiriEditor.Colonization
         [SerializeField, HideInInspector] private OpponentPanels _opponentPanels;
         [SerializeField, HideInInspector] private GiftWindow _giftWindow;
         [SerializeField, HideInInspector] private DiceWindow _diceWindow;
-        [SerializeField, HideInInspector] private SettingsWindow _settingsWindow;
+        [SerializeField, HideInInspector] private GameSettingsWindow _settingsWindow;
         [SerializeField, HideInInspector] private HelpWindow _helpWindow;
         [SerializeField, HideInInspector] private GameOverWindow _gameOverWindow;
         [SerializeField, HideInInspector] private ChaosPanel _chaosPanel;

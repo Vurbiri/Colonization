@@ -112,17 +112,17 @@ namespace Vurbiri.Colonization
 
         [Impl(256)] public bool TrySetOwnerSelectable(Id<PlayerId> id, Relation typeAction)
         {
-            bool isFriendly = false, result = (!_isWater & _ownerId != PlayerId.None) && _owner.IsCanApplySkill(id, typeAction, out isFriendly);
+            bool result = IsOwned && _owner.IsCanApplySkill(id, typeAction);
             if (result)
             {
-                ShowMark(isFriendly);
+                ShowMark(typeAction == Relation.Friend);
                 _owner.SetLeftSelectable();
             }
             return result;
         }
         [Impl(256)] public void SetOwnerUnselectable()
         {
-            if (!_isWater & _ownerId != PlayerId.None)
+            if (IsOwned)
             {
                 HideMark();
                 _owner.ResetLeftSelectable();

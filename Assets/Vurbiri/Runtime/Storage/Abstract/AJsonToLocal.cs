@@ -8,36 +8,37 @@ namespace Vurbiri
     {
         protected AJsonToLocal(string key, MonoBehaviour monoBehaviour) : base(key, monoBehaviour) { }
 
-        protected abstract string GetStorage();
-        protected abstract bool SetStorage();
+        protected abstract string FromStorage();
+        protected abstract bool ToStorage();
 
-        sealed protected override IEnumerator LoadFromFile_Cn()
+        sealed protected override WaitResult<string> LoadFromFile_Wait()
         {
+            string result = null;
             try
             {
-                _outputJson = GetStorage();
+                result = FromStorage();
             }
             catch (Exception ex)
             {
-                _outputJson = null;
                 Log.Info(ex.Message);
             }
 
-            return null;
+            return WaitResult.Instant(result);
         }
 
-        sealed protected override IEnumerator SaveToFile_Cn()
+        sealed protected override IEnumerator SaveToFile_Cn(WaitResultSource<bool> waitResult)
         {
+            bool result = false;
             try
             {
-                _outputResult = SetStorage();
+                result = ToStorage();
             }
             catch (Exception ex)
             {
-                _outputResult = false;
                 Log.Info(ex.Message);
             }
 
+            waitResult.Set(result);
             return null;
         }
     }

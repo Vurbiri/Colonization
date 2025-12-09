@@ -46,6 +46,9 @@
   "Victory": "Victory",
   "Defeat": "Defeat",
   "Winner": "Winner:\n{0}",
-  "Exit": "Exit to main menu",
-  "Save": "Save"
+  "ExitToMenu": "Exit to main menu",
+  "Save": "Save",
+  "Saving": "Saving...",
+  "GoodSave": "Game is saved",
+  "ErrorSave": "Save error!"
 }

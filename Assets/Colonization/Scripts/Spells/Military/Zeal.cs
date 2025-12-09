@@ -117,7 +117,7 @@ namespace Vurbiri.Colonization
                 s_isCasting.False();
             }
 
-            private void SetActor(Actor actor) => _waitActor.SetResult(actor);
+            private void SetActor(Actor actor) => _waitActor.Set(actor);
 
             protected override string GetDesc(Localization localization)
             {

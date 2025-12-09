@@ -12,7 +12,7 @@ namespace Vurbiri.Colonization
 
         static AIController() => s_settings = SettingsFile.Load<AIControllerSettings>();
 
-        public AIController(int playerId, Settings settings) : base(playerId, settings, false) 
+        public AIController(Id<PlayerId> playerId, Settings settings) : base(playerId, settings, false) 
         {
             if (s_settings.militarist == playerId)
                 _specialization = AbilityTypeId.Military;
@@ -40,13 +40,6 @@ namespace Vurbiri.Colonization
             }
         }
 
-        public override void OnStartTurn()
-        {
-            base.OnStartTurn();
-
-            _interactable.True();
-        }
-
         public override void OnPlay()
         {
             _coroutine = StartCoroutine(OnPlay_Cn());
@@ -59,8 +52,6 @@ namespace Vurbiri.Colonization
 
                 yield return s_settings.waitPlayStart.Restart();
                 yield return _waitAll.Add(s_settings.waitPlay.Restart(), _counselors.Execution_Cn());
-
-                _interactable.False();
 #if TEST_AI
                 Log.Info("===================================================");
 #endif

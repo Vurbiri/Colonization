@@ -6,7 +6,7 @@ namespace Vurbiri.Colonization
 	{
         protected readonly WaitResultSource<bool> _waitGift = new();
 
-        protected HumanController(int playerId, Settings settings, bool isPerson) : base(playerId, settings, isPerson) { }
+        protected HumanController(Id<PlayerId> playerId, Settings settings, bool isPerson) : base(playerId, settings, isPerson) { }
 
         public void ActorKill(Id<ActorTypeId> type, int id)
         {
@@ -85,8 +85,6 @@ namespace Vurbiri.Colonization
                 yield return s_delayHalfSecond.Restart();
 
                 warrior.StatesUpdate();
-                warrior.IsPersonTurn = false;
-                warrior.Interactable = false;
             }
 
             _resources.Add(profit);

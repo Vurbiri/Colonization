@@ -16,7 +16,7 @@ namespace Vurbiri.Colonization
             isPerson = false;
         }
 
-        [Impl(256)] public void SetPerson() => isPerson = currentId != PlayerId.Satan && GameContainer.Players[currentId].IsPerson;
+        [Impl(256)] public void SetPerson() => isPerson = GameContainer.Players[currentId].IsPerson;
 
         [Impl(256)] public void Next()
         {

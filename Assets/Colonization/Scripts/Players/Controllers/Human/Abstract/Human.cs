@@ -196,7 +196,6 @@ namespace Vurbiri.Colonization
             _resources.Remove(cost);
 
             var actor = _spawner.Create(id, hexagon);
-            actor.IsPersonTurn = _isPerson;
             actor.Skin.EventStart.Add(signal.Send);
 
             return signal;
@@ -220,9 +219,8 @@ namespace Vurbiri.Colonization
             Hexagon hexagon;
             for (int i = 0; i < count; i++)
             {
-                while (!(hexagon = GameContainer.Hexagons[HEX.NEARS.Random]).CanWarriorEnter) ;
-                Actor actor = _spawner.Create(id, hexagon);
-                actor.IsPersonTurn = _isPerson;
+                while (!(hexagon = GameContainer.Hexagons[HEX.NEARS.Random]).CanWarriorEnter);
+                _spawner.Create(id, hexagon);
             }
         }
         public void SpawnTest(Id<WarriorId> id, Key key)
@@ -230,20 +228,14 @@ namespace Vurbiri.Colonization
             UnityEngine.Debug.Log("SpawnTest");
             Hexagon hexagon;
             if ((hexagon = GameContainer.Hexagons[key]).CanWarriorEnter)
-            {
-                Actor actor = _spawner.Create(id, hexagon);
-                actor.IsPersonTurn = _isPerson;
-            }
+                _spawner.Create(id, hexagon);
         }
         public void SpawnDemonTest(Id<DemonId> id, Key key)
         {
             UnityEngine.Debug.Log("SpawnDemonTest");
             Hexagon hexagon;
             if ((hexagon = GameContainer.Hexagons[key]).CanDemonEnter)
-            {
-                Actor actor = _spawner.CreateDemon(id, hexagon);
-                actor.IsPersonTurn = _isPerson;
-            }
+                _spawner.CreateDemon(id, hexagon);
         }
         public void SpawnDemonTest(int id, int count)
         {
@@ -252,8 +244,7 @@ namespace Vurbiri.Colonization
             for (int i = 0; i < count; i++)
             {
                 while (!(hexagon = GameContainer.Hexagons[HEX.NEARS.Random]).CanDemonEnter) ;
-                Actor actor = _spawner.CreateDemon(id, hexagon);
-                actor.IsPersonTurn = _isPerson;
+                _spawner.CreateDemon(id, hexagon);
             }
         }
         #endregion

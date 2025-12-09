@@ -3,92 +3,75 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri
 {
     public abstract class AStorageOneFile : IStorageService
     {
+        private readonly CoroutinesQueue _saveQueue;
+        private readonly Stack<WaitResultSource<bool>> _saveWaits = new();
+        private bool _modified = false;
+
+        protected readonly string _key;
         protected Dictionary<string, string> _saved = null;
-        protected CoroutinesQueue _cnQueue;
-        protected string _key;
-        protected bool _modified = false;
-        protected string _outputJson;
-        protected bool _outputResult;
+
+        private WaitResultSource<bool> Wait { [Impl(256)] get => _saveWaits.Count > 0 ? _saveWaits.Pop().Restart() : new(); }
 
         public abstract bool IsValid { get; }
 
-        public AStorageOneFile(string key, MonoBehaviour monoBehaviour)
+        [Impl(256)] public AStorageOneFile(string key, MonoBehaviour monoBehaviour)
         {
             _key = key;
-            _cnQueue = new(monoBehaviour);
+            _saveQueue = new(monoBehaviour);
+            _saveWaits.Push(new());
         }
         
         public IEnumerator Load_Cn(Out<bool> output)
         {
-            yield return LoadFromFile_Cn();
+            var outputJson = LoadFromFile_Wait();
+            yield return outputJson;
 
-            if (!string.IsNullOrEmpty(_outputJson))
-            {
-                if (TryDeserialize(_outputJson, out _saved))
-                {
-                    output?.Set(true);
-                    yield break;
-                }
-            }
+            if (!TryDeserialize(outputJson, out _saved))
+                _saved = new();
 
-            _saved = new();
-            output?.Set(false);
+            output?.Set(_saved.Count > 0);
         }
 
         #region Get(..) / TryGet(..)
-        public T Get<T>(string key)
+        [Impl(256)] public T Get<T>(string key)
         {
-            if (_saved.TryGetValue(key, out string json))
-                if (TryDeserialize<T>(json, out T value))
-                    return value;
-
+            if (_saved.TryGetValue(key, out string json) && TryDeserialize<T>(json, out T value))
+                return value;
             return default;
         }
-        public T Get<T>(string key, JsonConverter converter)
+        [Impl(256)] public T Get<T>(string key, JsonConverter converter)
         {
-            if (_saved.TryGetValue(key, out string json))
-                if (TryDeserialize<T>(json, converter, out T value))
-                    return value;
-
+            if (_saved.TryGetValue(key, out string json) && TryDeserialize<T>(json, converter, out T value))
+                return value;
             return default;
         }
 
-        public bool TryGet<T>(string key, out T value)
+        [Impl(256)] public bool TryGet<T>(string key, out T value)
         {
             value = default;
-            if (_saved.TryGetValue(key, out string json))
-                return TryDeserialize<T>(json, out value);
-            return false;
+            return _saved.TryGetValue(key, out string json) && TryDeserialize<T>(json, out value);
         }
-        public bool TryGet<T>(string key, JsonConverter converter, out T value)
+        [Impl(256)] public bool TryGet<T>(string key, JsonConverter converter, out T value)
         {
             value = default;
-            if (_saved.TryGetValue(key, out string json))
-                return TryDeserialize<T>(json, converter, out value);
-            
-            return false;
+            return _saved.TryGetValue(key, out string json) && TryDeserialize<T>(json, converter, out value);
         }
         #endregion
 
         #region TryPopulate(..)
-        public bool TryPopulate(string key, object obj, JsonConverter converter)
+        [Impl(256)] public bool TryPopulate(string key, object obj, JsonConverter converter)
         {
-            if (_saved.TryGetValue(key, out string json))
-                return Populate(json, obj, converter);
-            
-            return false;
+            return _saved.TryGetValue(key, out string json) && Populate(json, obj, converter);
         }
-        public bool TryPopulate<T>(string key, JsonConverter converter)
+        [Impl(256)] public bool TryPopulate<T>(string key, JsonConverter converter)
         {
-            if (_saved.TryGetValue(key, out string json))
-                return Populate<T>(json, converter);
-
-            return false;
+            return _saved.TryGetValue(key, out string json) && Populate<T>(json, converter);
         }
         #endregion
 
@@ -117,32 +100,34 @@ namespace Vurbiri
         #endregion
 
         #region Save(..)
-        public void Save(Out<bool> output)
+        public WaitResult<bool> Save()
         {
-            _cnQueue.Enqueue(Save_Cn(output));
+            var waitResult = Wait;
+            _saveQueue.Enqueue(Save_Cn(waitResult));
+            return waitResult;
         }
         public void Save<T>(string key, T data, JsonSerializerSettings settings)
         {
             Set(key, data, settings);
-            if (_cnQueue.Count == 0)
-                _cnQueue.Enqueue(Save_Cn());
+            if (_saveQueue.Count == 0)
+                _saveQueue.Enqueue(Save_Cn(Wait));
         }
         public void Save<T>(string key, T data, JsonConverter converter)
         {
             Set(key, data, converter);
-            if (_cnQueue.Count == 0)
-                _cnQueue.Enqueue(Save_Cn());
+            if (_saveQueue.Count == 0)
+                _saveQueue.Enqueue(Save_Cn(Wait));
         }
         #endregion
 
-        public bool ContainsKey(string key) => _saved.ContainsKey(key);
+        [Impl(256)] public bool ContainsKey(string key) => _saved.ContainsKey(key);
 
         public void Remove(string key, bool fromFile)
         {
             _modified |= _saved.Remove(key);
 
-            if (fromFile & _cnQueue.Count == 0)
-                _cnQueue.Enqueue(Save_Cn());
+            if (fromFile & _saveQueue.Count == 0)
+                _saveQueue.Enqueue(Save_Cn(Wait));
         }
 
         #region Clear
@@ -151,8 +136,8 @@ namespace Vurbiri
             _modified |= _saved.Count > 0;
             _saved.Clear();
 
-            if (_cnQueue.Count == 0)
-                _cnQueue.Enqueue(Save_Cn());
+            if (_saveQueue.Count == 0)
+                _saveQueue.Enqueue(Save_Cn(Wait));
         }
         public void Clear(string excludeKey)
         {
@@ -167,8 +152,8 @@ namespace Vurbiri
                 _modified = true;
             }
 
-            if (_cnQueue.Count == 0)
-                _cnQueue.Enqueue(Save_Cn());
+            if (_saveQueue.Count == 0)
+                _saveQueue.Enqueue(Save_Cn(Wait));
         }
         public void Clear(params string[] excludeKeys)
         {
@@ -188,64 +173,56 @@ namespace Vurbiri
                 _modified = true;
             }
 
-            if (_cnQueue.Count == 0)
-                _cnQueue.Enqueue(Save_Cn());
+            if (_saveQueue.Count == 0)
+                _saveQueue.Enqueue(Save_Cn(Wait));
         }
         #endregion
 
         #region SaveToFile_Cn
-        protected IEnumerator Save_Cn(Out<bool> output)
+        protected IEnumerator Save_Cn(WaitResultSource<bool> result)
         {
             if (_modified)
             {
                 _modified = false;
-                yield return SaveToFile_Cn();
-
-                _modified |= !_outputResult;
-                output?.Set(_outputResult);
-
-                yield break;
+                yield return SaveToFile_Cn(result);
+                _modified |= !result;
             }
-
-            output?.Set(true);
-        }
-        protected IEnumerator Save_Cn()
-        {
-            if (_modified)
+            else
             {
-                yield return SaveToFile_Cn();
-
-                _modified |= !_outputResult;
+                result.Set(true);
             }
+
+            yield return null;
+
+            _saveWaits.Push(result);
         }
         #endregion
 
-        protected abstract IEnumerator LoadFromFile_Cn();
-        protected abstract IEnumerator SaveToFile_Cn();
+        protected abstract WaitResult<string> LoadFromFile_Wait();
+        protected abstract IEnumerator SaveToFile_Cn(WaitResultSource<bool> waitResult);
 
         #region Serialize / Deserialize / Populate
-        protected string Serialize<T>(T obj, JsonSerializerSettings settings = null) => JsonConvert.SerializeObject(obj, typeof(T), settings);
+        [Impl(256)] protected string Serialize<T>(T obj, JsonSerializerSettings settings = null) => JsonConvert.SerializeObject(obj, typeof(T), settings);
 
-        protected bool TryDeserialize<T>(string json, out T result)
+        protected bool TryDeserialize<T>(string json, out T output)
         {
-            result = default;
+            output = default;
             if (!string.IsNullOrEmpty(json))
             {
-                try { result = JsonConvert.DeserializeObject<T>(json); }
+                try { output = JsonConvert.DeserializeObject<T>(json); return true; }
                 catch (Exception ex) { Log.Info(ex.Message); }
             }
-            return result != null;
+            return false;
         }
-        protected bool TryDeserialize<T>(string json, JsonConverter converter, out T result)
+        protected bool TryDeserialize<T>(string json, JsonConverter converter, out T output)
         {
-            result = default;
+            output = default;
             if (!string.IsNullOrEmpty(json))
             {
-                try { result = JsonConvert.DeserializeObject<T>(json, converter); }
+                try { output = JsonConvert.DeserializeObject<T>(json, converter); return true; }
                 catch (Exception ex) { Log.Info(ex.Message); }
             }
-
-            return result != null;
+            return false;
         }
 
         protected bool Populate<T>(string json, JsonConverter converter)

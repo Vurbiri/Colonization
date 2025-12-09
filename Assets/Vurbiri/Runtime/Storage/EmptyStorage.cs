@@ -13,7 +13,7 @@ namespace Vurbiri
             return null;
         }
 
-        public void Save(Out<bool> output) => output?.Set(false);
+        public WaitResult<bool> Save() => null;
         public void Save<T>(string key, T data, JsonSerializerSettings settings = null) { }
         public void Save<T>(string key, T data, JsonConverter converter) { }
 

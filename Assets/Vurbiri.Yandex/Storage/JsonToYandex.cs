@@ -14,18 +14,7 @@ namespace Vurbiri.Yandex
             _ysdk = ysdk;
         }
 
-        protected override IEnumerator LoadFromFile_Cn()
-        {
-            var wait = _ysdk.Load(_key);
-            yield return wait;
-            _outputJson = wait.Value;
-        }
-        protected override IEnumerator SaveToFile_Cn()
-        {
-            var wait = _ysdk.Save(_key, Serialize(_saved));
-            yield return wait;
-            _outputResult = wait.Value;
-        }
-
+        protected override WaitResult<string> LoadFromFile_Wait() => _ysdk.Load(_key);
+        protected override IEnumerator SaveToFile_Cn(WaitResultSource<bool> waitResult) => _ysdk.Save(_key, Serialize(_saved), waitResult);
     }
 }

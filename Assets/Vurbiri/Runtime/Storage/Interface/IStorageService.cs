@@ -34,7 +34,7 @@ namespace Vurbiri
         public bool Set<T>(string key, T data, JsonSerializerSettings settings = null);
         public bool Set<T>(string key, T data, JsonConverter converter);
 
-        public void Save(Out<bool> output = null);
+        public WaitResult<bool> Save();
         public void Save<T>(string key, T data, JsonSerializerSettings settings = null);
         public void Save<T>(string key, T data, JsonConverter converter);
 

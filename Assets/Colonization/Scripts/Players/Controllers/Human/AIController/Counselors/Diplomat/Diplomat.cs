@@ -45,7 +45,7 @@ namespace Vurbiri.Colonization
                     GameContainer.Diplomacy.Gift(HumanId, giver);
                 }
 
-                return _waitGift.SetResult(result);
+                return _waitGift.Return(result);
             }
 
             public override IEnumerator Execution_Cn()

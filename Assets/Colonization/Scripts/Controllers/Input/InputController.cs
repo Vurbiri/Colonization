@@ -39,9 +39,7 @@ namespace Vurbiri.Colonization.Controllers
             _inputActions.Gameplay.RightClick.performed += OnRightClick;
             _inputActions.Gameplay.LeftClick.performed += OnLeftClick;
 
-            events.Subscribe(GameModeId.Play, SpectatorMode);
-            events.Subscribe(GameModeId.Landing, SpectatorMode);
-            events.Subscribe(GameModeId.EndTurn, SpectatorModeOn);
+            events.Subscribe(SpectatorMode);
         }
 
         [Impl(256)] public void Enable() => _inputActions.Enable();
@@ -79,8 +77,7 @@ namespace Vurbiri.Colonization.Controllers
 
         public void Dispose() => _inputActions.Dispose();
 
-        private void SpectatorModeOn(TurnQueue turnQueue, int hexId) => SpectatorMode(true);
-        private void SpectatorMode(TurnQueue turnQueue, int hexId) => SpectatorMode(!turnQueue.isPerson);
+        private void SpectatorMode(Id<GameModeId> gameMode, TurnQueue turn) => SpectatorMode(!(turn.isPerson && (gameMode == GameModeId.Play || gameMode == GameModeId.Landing)));
         private void SpectatorMode(bool enable)
         {
             if (_spectatorMode != enable)

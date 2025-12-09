@@ -1,9 +1,9 @@
 #if UNITY_EDITOR
 
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
-using Result = Vurbiri.WaitResult;
 
 namespace Vurbiri.Yandex
 {
@@ -21,19 +21,19 @@ namespace Vurbiri.Yandex
         public bool IsPlayer => IsInitialize && _isPlayer;
         public bool IsLeaderboard => IsLogOn && _isLeaderboard;
 
-        public WaitResult<bool> InitYsdk() => Result.Instant(_isInitialize);
+        public WaitResult<bool> InitYsdk() => WaitResult.Instant(_isInitialize);
         public void LoadingAPI_Ready() { }
-        public WaitResult<bool> InitPlayer() => Result.Instant(_isPlayer);
+        public WaitResult<bool> InitPlayer() => WaitResult.Instant(_isPlayer);
         public WaitResult<bool> LogOn()
         {
             IsLogOn = true;
-            return Result.Instant(IsLogOn); ;
+            return WaitResult.Instant(IsLogOn); ;
         }
-        public WaitResult<bool> InitLeaderboards() => Result.Instant(IsLeaderboard);
+        public WaitResult<bool> InitLeaderboards() => WaitResult.Instant(IsLeaderboard);
         public string GetPlayerAvatarURL(AvatarSize size) => string.Empty;
 
-        public WaitResult<Return<PlayerRecord>> GetPlayerResult() => Result.Instant(new Return<PlayerRecord>(new PlayerRecord(6, 1)));
-        public WaitResult<bool> SetScore(long score) => Result.Instant(true);
+        public WaitResult<Return<PlayerRecord>> GetPlayerResult() => WaitResult.Instant(new Return<PlayerRecord>(new PlayerRecord(6, 1)));
+        public WaitResult<bool> SetScore(long score) => WaitResult.Instant(true);
         public WaitResult<Return<Leaderboard>> GetLeaderboard(int quantityTop, bool includeUser = false, int quantityAround = 0, AvatarSize size = AvatarSize.Small)
         {
             Debug.Log(_lbName);
@@ -55,7 +55,7 @@ namespace Vurbiri.Yandex
 
             Leaderboard l = new(2, list.ToArray());
 
-            return Result.Instant(new Return<Leaderboard>(l));
+            return WaitResult.Instant(new Return<Leaderboard>(l));
         }
 
         public WaitResult<Return<Leaderboard>> GetLeaderboardTest()
@@ -75,15 +75,14 @@ namespace Vurbiri.Yandex
 
             Leaderboard l = new(2, list.ToArray());
 
-            return Result.Instant(new Return<Leaderboard>(l));
+            return WaitResult.Instant(new Return<Leaderboard>(l));
         }
 
-        public WaitResult<bool> Save(string key, string data)
+        public IEnumerator Save(string key, string data, WaitResultSource<bool> waitResult)
         {
             using StreamWriter sw = new(Path.Combine(Application.persistentDataPath, key));
             sw.Write(data);
-
-            return Result.Instant(true);
+            return waitResult.Return(true);
         }
         public WaitResult<string> Load(string key)
         {
@@ -93,14 +92,14 @@ namespace Vurbiri.Yandex
                 using StreamReader sr = new(path);
                 result = sr.ReadToEnd();
             }
-            return Result.Instant(result);
+            return WaitResult.Instant(result);
         }
 
-        public WaitResult<bool> CanReview() => Result.Instant(IsLogOn);
-        public WaitResult<bool> RequestReview() => Result.Instant(true);
+        public WaitResult<bool> CanReview() => WaitResult.Instant(IsLogOn);
+        public WaitResult<bool> RequestReview() => WaitResult.Instant(true);
 
-        public WaitResult<bool> CanShortcut() => Result.Instant(IsLogOn);
-        public WaitResult<bool> CreateShortcut() => Result.Instant(IsLogOn);
+        public WaitResult<bool> CanShortcut() => WaitResult.Instant(IsLogOn);
+        public WaitResult<bool> CreateShortcut() => WaitResult.Instant(IsLogOn);
 
     }
 }

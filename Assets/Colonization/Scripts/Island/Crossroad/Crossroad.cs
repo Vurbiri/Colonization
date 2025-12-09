@@ -96,7 +96,7 @@ namespace Vurbiri.Colonization
             {
                 _canCancel.False();
 
-                _waitHexagon.SetResult(newSelectable as Hexagon);
+                _waitHexagon.Set(newSelectable as Hexagon);
                 for (int i = 0; i < HEX_COUNT; ++i)
                     _hexagons[i].SetUnselectable();
             }
