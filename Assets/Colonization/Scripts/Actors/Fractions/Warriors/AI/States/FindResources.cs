@@ -10,29 +10,27 @@ namespace Vurbiri.Colonization
     {
         sealed private class FindResources : State
         {
-            private readonly ReadOnlyCurrencies _resources;
             private readonly List<Hexagon> _hexagons = new();
             private readonly List<Id<CurrencyId>> _minResources = new();
             private int _minResCount;
 
-            [Impl(256)] public FindResources(AI<WarriorsAISettings, WarriorId, WarriorAIStateId> parent) : base(parent)
-            {
-                _resources = GameContainer.Humans[OwnerId].Resources;
-            }
+            [Impl(256)] public FindResources(AI<WarriorsAISettings, WarriorId, WarriorAIStateId> parent) : base(parent) { }
 
             public override bool TryEnter() => Status.isMove && !(IsInCombat || IsEnemyComing);
 
             public override IEnumerator Execution_Cn(Out<bool> isContinue)
             {
+                ReadOnlyCurrencies resources = GameContainer.Humans[OwnerId].Resources;
+
                 _hexagons.Add(Hexagon);
-                _minResCount = _resources[Hexagon.GetProfit()];
+                _minResCount = resources[Hexagon.GetProfit()];
 
                 if (Status.isSiege || (Status.isGuard && !s_settings.chanceFreeFinding.Roll))
-                    SetColoniesHexagon();
+                    SetColoniesHexagon(resources);
                 else
-                    AddHexagons(Hexagon.Key, Hexagon.Neighbors);
+                    AddHexagons(Hexagon.Key, Hexagon.Neighbors, resources);
 
-                SetMinResources();
+                SetMinResources(resources);
                 RemoveHexagons();
 
                 var target = _hexagons.Rand();
@@ -48,16 +46,16 @@ namespace Vurbiri.Colonization
 
             public override void Dispose() { }
 
-            private void SetColoniesHexagon()
+            private void SetColoniesHexagon(ReadOnlyCurrencies resources)
             {
                 Key current = Hexagon.Key;
                 var crossroads = Hexagon.Crossroads;
                 for (int i = 0; i < HEX.VERTICES; ++i)
                     if (crossroads[i].TryGetOwnerColony(out Id<PlayerId> playerId) && (playerId == OwnerId || GameContainer.Diplomacy.IsEnemy(playerId, OwnerId)))
-                        AddHexagons(current, crossroads[i].Hexagons);
+                        AddHexagons(current, crossroads[i].Hexagons, resources);
             }
 
-            private void AddHexagons(Key current, ReadOnlyArray<Hexagon> hexagons)
+            private void AddHexagons(Key current, ReadOnlyArray<Hexagon> hexagons, ReadOnlyCurrencies resources)
             {
                 Hexagon hexagon;
                 for (int i = 0; i < hexagons.Count; ++i)
@@ -66,15 +64,15 @@ namespace Vurbiri.Colonization
                     if (hexagon.CanWarriorEnter && hexagon.Distance(current) == 1 && !hexagon.IsEnemyNear(OwnerId))
                     {
                         _hexagons.Add(hexagon);
-                        _minResCount = System.Math.Min(_minResCount, _resources[hexagon.GetProfit()]);
+                        _minResCount = System.Math.Min(_minResCount, resources[hexagon.GetProfit()]);
                     }
                 }
             }
 
-            [Impl(256)] private void SetMinResources()
+            [Impl(256)] private void SetMinResources(ReadOnlyCurrencies resources)
             {
                 for(int i = 0; i < CurrencyId.MainCount; ++i)
-                    if (_resources[i] == _minResCount)
+                    if (resources[i] == _minResCount)
                         _minResources.Add(i);
             }
 

@@ -20,7 +20,8 @@ namespace Vurbiri.Colonization.Storage
         public bool Set<T>(string key, T data) => _storage.Set<T>(key, data);
         public void Save<T>(string key, T data) => _storage.Save<T>(key, data);
 
-        public WaitResult<bool> Save() => _storage.Save();
+        public void Save() => _storage.Save();
+        public System.Collections.IEnumerator Save(out WaitResult<bool> wait) => _storage.Save(out wait);
 
         public void Clear() => _storage.Clear(PROFILE, VOLUMES, COLORS, GAME_SETTINGS);
 

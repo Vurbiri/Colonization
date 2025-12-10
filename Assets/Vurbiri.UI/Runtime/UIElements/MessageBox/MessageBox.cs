@@ -57,8 +57,8 @@ namespace Vurbiri.UI
 
         public static void SetColors(Color windowColor, Color textColor)
         {
-            s_instance._windowImage.color = windowColor.SetAlpha(1f);
-            s_instance._textTMP.color = textColor.SetAlpha(1f);
+            s_instance._windowImage.color = windowColor;
+            s_instance._textTMP.color = textColor;
         }
 
         public static WaitButton Open(string text, params Id<MBButtonId>[] buttonIds)
@@ -152,7 +152,7 @@ namespace Vurbiri.UI
 
         private void OnClick(Id<MBButtonId> id)
         {
-            _currentWait.SetResult(id);
+            _currentWait.Set(id);
 
             Hide();
         }

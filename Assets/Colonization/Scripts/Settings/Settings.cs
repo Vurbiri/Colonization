@@ -11,14 +11,11 @@ namespace Vurbiri.Colonization
         [SerializeField] private Profile _profile = new();
         [SerializeField] private AudioMixer<MixerId> _mixer = new();
 
-        private ProjectStorage _storage;
-
         public AudioMixer<MixerId> Volumes { [Impl(256)] get => _mixer; }
         public Profile Profile { [Impl(256)] get => _profile; }
 
         public void Init(YandexSDK ysdk, ProjectStorage storage)
         {
-            _storage = storage;
             _profile.Init(ysdk);
 
             storage.SetAndBindAudioMixer(_mixer);
@@ -31,12 +28,6 @@ namespace Vurbiri.Colonization
         {
             _profile.Apply();
             _mixer.Apply();
-        }
-
-        [Impl(256)] public WaitResult<bool> ApplyAndSave()
-        {
-            Apply();
-            return _storage.Save();
         }
 
         [Impl(256)] public void Cancel()

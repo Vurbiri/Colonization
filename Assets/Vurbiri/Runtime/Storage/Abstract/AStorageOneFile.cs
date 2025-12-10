@@ -18,6 +18,7 @@ namespace Vurbiri
 
         private WaitResultSource<bool> Wait { [Impl(256)] get => _saveWaits.Count > 0 ? _saveWaits.Pop().Restart() : new(); }
 
+        public bool IsSaved { [Impl(256)] get => !_modified; }
         public abstract bool IsValid { get; }
 
         [Impl(256)] public AStorageOneFile(string key, MonoBehaviour monoBehaviour)
@@ -100,11 +101,12 @@ namespace Vurbiri
         #endregion
 
         #region Save(..)
-        public WaitResult<bool> Save()
+        [Impl(256)] public void Save() => _saveQueue.Enqueue(Save_Cn(Wait));
+        public IEnumerator Save(out WaitResult<bool> wait)
         {
             var waitResult = Wait;
             _saveQueue.Enqueue(Save_Cn(waitResult));
-            return waitResult;
+            return wait = waitResult;
         }
         public void Save<T>(string key, T data, JsonSerializerSettings settings)
         {

@@ -27,15 +27,16 @@ namespace Vurbiri.Colonization
                     {
                         Pay();
                         ActorEffects.Add(new(_effectCode, ActorAbilityId.Defense, TypeModifierId.Addition, _value, CONST.BLOCK_DURATION, CONST.BLOCK_SKIP, true));
-
-                        StartCoroutine(Apply_Cn());
                     }
+
+                    StartCoroutine(Apply_Cn());
 
                     // ======== Local ==========
                     IEnumerator Apply_Cn()
                     {
                         yield return Skin.Block(true);
                         signal.Send();
+                        Actor.Interactable = true;
                     }
                 }
 
@@ -43,6 +44,8 @@ namespace Vurbiri.Colonization
                 {
                     if (!IsApplied)
                         Skin.Block(false);
+
+                    Actor.Interactable = false;
                 }
 
                 public override void Select(MouseButton button)

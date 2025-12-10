@@ -56,7 +56,7 @@ namespace Vurbiri.Colonization.Storage
         public bool PopulateRoads(Roads roads, Crossroads crossroads) => _storage.TryPopulate<Roads>(_keyRoads, new Roads.Converter(roads, crossroads));
         public void BindRoads(IReactive<Roads> reactive, bool instantGetValue)
         {
-            _subscription += reactive.Subscribe(value => _storage.Save(_keyRoads, value, _roadsConverter), instantGetValue);
+            _subscription += reactive.Subscribe(value => _storage.Set(_keyRoads, value, _roadsConverter), instantGetValue);
         }
 
         public void BindCurrencies(ReadOnlyCurrencies reactive, bool instantGetValue)
@@ -84,7 +84,7 @@ namespace Vurbiri.Colonization.Storage
             void OnEdifice(int index, Crossroad crossroad, TypeEvent operation)
             {
                 string key = _keysEdifices[crossroad.GroupId.Value][index];
-                _storage.Save(key, crossroad);
+                _storage.Set(key, crossroad);
             }
             #endregion
         }

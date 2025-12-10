@@ -29,13 +29,13 @@ namespace Vurbiri.Reactive
 
         private void Or(int index, bool value)
         {
-            _flags = value ? _flags | (1 << index) : _flags & ~(1 << index);
+            _flags = _flags.SetRow(index, value);
             SetValue(_flags > 0);
         }
 
         private void And(int index, bool value)
         {
-            _flags = value ? _flags & ~(1 << index) : _flags | (1 << index);
+            _flags = _flags.SetRow(index, !value);
             SetValue(_flags == 0);
         }
 

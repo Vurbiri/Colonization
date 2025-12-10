@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using Vurbiri.Collections;
 using static Vurbiri.Colonization.CONST;
@@ -25,7 +24,7 @@ namespace Vurbiri.Colonization
 
         public static int Distance(Key a, Key b)
         {
-            int x = Math.Abs(a.x - b.x), y = Math.Abs(a.y - b.y);
+            int x = MathI.Abs(a.x - b.x), y = MathI.Abs(a.y - b.y);
             return (x < y) ? (x + y) >> 1 : x;
         }
         public static Key ToHex(Key c, Id<CrossroadType> type)

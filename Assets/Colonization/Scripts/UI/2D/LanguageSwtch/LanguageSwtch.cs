@@ -1,4 +1,5 @@
 using UnityEngine;
+using Vurbiri.EntryPoint;
 using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.UI
@@ -24,6 +25,8 @@ namespace Vurbiri.Colonization.UI
 
             _onValueChanged.Init(_activeToggle);
             _onValueChanged.Add(OnValueChanged);
+
+            Transition.OnExit.Add(_onValueChanged.Clear);
         }
 
         public void ItemsUpdate()
@@ -52,6 +55,11 @@ namespace Vurbiri.Colonization.UI
                 if (_isSave) 
                     profile.Apply();
             }
+        }
+
+        private void OnDestroy()
+        {
+            _onValueChanged.Clear();
         }
     }
 }

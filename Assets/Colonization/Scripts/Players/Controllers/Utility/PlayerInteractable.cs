@@ -5,7 +5,7 @@ namespace Vurbiri.Colonization
 {
 	public class PlayerInteractable : ReactiveValue<bool>
     {
-        private const int SPELL_INDEX = 26, TURN_INDEX = 28;
+        private const int SPELL_INDEX = CONST.DEFAULT_MAX_DEMONS + 1, TURN_INDEX = SPELL_INDEX + 1;
 
         protected readonly Id<PlayerId> _id;
         private int _flags;
@@ -21,11 +21,7 @@ namespace Vurbiri.Colonization
 
         private void BindTurn(Id<GameModeId> gameMode, TurnQueue turn)
         {
-            SetValue(TURN_INDEX, gameMode == GameModeId.Play && turn.currentId == _id);
-        }
-        private void BindTurn(bool value)
-        {
-            SetValue(TURN_INDEX, value);
+            SetValue(TURN_INDEX, gameMode == GameModeId.Play & turn.currentId == _id);
         }
         private void BindSpells(bool cast)
         {
@@ -40,9 +36,9 @@ namespace Vurbiri.Colonization
                 SetValue(actor.Index, true);
         }
 
-        private void SetValue(int index, bool value)
+        private void SetValue(int row, bool value)
         {
-            _flags = value ? _flags & ~(1 << index) : _flags | (1 << index);
+            _flags = _flags.SetRow(row, !value);
 
             value = _flags == 0;
             if (_value ^ value)

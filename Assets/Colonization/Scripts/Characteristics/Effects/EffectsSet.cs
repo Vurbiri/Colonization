@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Vurbiri.Reactive.Collections;
+using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization
 {
@@ -12,7 +13,7 @@ namespace Vurbiri.Colonization
         protected int _count, _capacity = 3;
         protected readonly VAction<ReactiveEffect, TypeEvent> _eventChanged = new();
         
-        public int Count => _count;
+        public int Count { [Impl(256)] get => _count; }
 
         protected ReactiveEffects(AbilitiesSet<ActorAbilityId> abilities)
         {
@@ -54,16 +55,15 @@ namespace Vurbiri.Colonization
 
     sealed public class EffectsSet : ReactiveEffects, IReadOnlyList<ReactiveEffect>, IDisposable
     {
-       
-        public ReactiveEffect this[int index] => _values[index];
+        public ReactiveEffect this[int index] { [Impl(256)] get => _values[index]; }
 
-        public EffectsSet(AbilitiesSet<ActorAbilityId> abilities) : base(abilities) { }
+        [Impl(256)] public EffectsSet(AbilitiesSet<ActorAbilityId> abilities) : base(abilities) { }
 
         public int Add(ReactiveEffect effect)
         {
             if (_values != null && effect != null)
             {
-                for (int i = 0; i < _count; i++)
+                for (int i = 0; i < _count; ++i)
                     if (_values[i].TryUpdate(effect, _abilities.AddPerk, out int delta))
                         return delta;
 
@@ -71,8 +71,7 @@ namespace Vurbiri.Colonization
                     _values = _values.Grow(_count, _capacity = _capacity << 1 | 3);
 
                 _values[_count] = effect;
-                effect.Adding(RedirectEvents, _count);
-                _count++;
+                effect.Adding(RedirectEvents, _count++);
 
                 return _abilities.AddPerk(effect);
             }

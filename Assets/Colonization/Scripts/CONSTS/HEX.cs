@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -46,7 +45,7 @@ namespace Vurbiri.Colonization
 
         public static int Distance(Key a, Key b)
         {
-            int x = Math.Abs(a.x - b.x), y = Math.Abs(a.y - b.y);
+            int x = MathI.Abs(a.x - b.x), y = MathI.Abs(a.y - b.y);
             return (y < x) ? (x + y) >> 1 : y;
         }
 

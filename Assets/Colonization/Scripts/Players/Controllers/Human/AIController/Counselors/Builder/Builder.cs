@@ -90,7 +90,7 @@ namespace Vurbiri.Colonization
             private int GetColonyWeight(Crossroad crossroad, int roadCount) => GetProfitWeight(crossroad.Hexagons) + GetRoadWeight(roadCount);
             private int GetFirstColonyWeight(Crossroad crossroad, int roadCount) => s_settings.penaltyPerHex * crossroad.MaxRepeatProfit + GetRoadWeight(roadCount);
 
-            [Impl(256)] private static int GetRoadWeight(int roadCount) => -MathI.Pow(s_settings.penaltyPerRoad, roadCount);
+            [Impl(256)] private static int GetRoadWeight(int roadCount) => -s_settings.penaltyPerRoad.Pow(roadCount);
 
             // Nested Class
             private class Plans : WeightsList<Plan>

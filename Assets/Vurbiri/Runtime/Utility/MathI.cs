@@ -5,39 +5,41 @@ namespace Vurbiri
 {
 	public static class MathI
 	{
-        [Impl(256)] public static int Round(float num) => (int)MathF.Round(num);
-        [Impl(256)] public static int Ceil(float num)  => (int)MathF.Ceiling(num);
-        [Impl(256)] public static int Floor(float num) => (int)MathF.Floor(num);
+        [Impl(256)] public static int Round(this float num) => (int)MathF.Round(num);
+        [Impl(256)] public static int Ceil(this float num)  => (int)MathF.Ceiling(num);
+        [Impl(256)] public static int Floor(this float num) => (int)MathF.Floor(num);
 
-        [Impl(256)] public static int Sqrt(int num) => (int)MathF.Sqrt(num);
-        [Impl(256)] public static int SqrtRound(int num) => (int)(MathF.Sqrt(num) + 0.5f);
+        [Impl(256)] public static int Sqrt(this int num) => (int)MathF.Sqrt(num);
+        [Impl(256)] public static int SqrtRound(this int num) => (int)(MathF.Sqrt(num) + 0.5f);
 
-        [Impl(256)] public static int Clamp(int value, int min, int max)
+        [Impl(256)] public static int Clamp(this int num, int min, int max)
         {
-            int temp = (min - value) >> 31;
-            value = (value & temp) | (min & ~temp);
-            temp = (value - max) >> 31;
-            return (value & temp) | (max & ~temp);
+            int mask = (min - num) >> 31;
+            num = (num & mask) | (min & ~mask);
+            mask = (num - max) >> 31;
+            return (num & mask) | (max & ~mask);
         }
 
         [Impl(256)] public static int Min(int x, int y)
         {
-            int t = (x - y) >> 31;
-            return (x & t) | (y & ~t);
+            int m = (x - y) >> 31;
+            return (x & m) | (y & ~m);
         }
         [Impl(256)] public static int Max(int x, int y)
         {
-            int t = (y - x) >> 31;
-            return (x & t) | (y & ~t);
+            int m = (y - x) >> 31;
+            return (x & m) | (y & ~m);
         }
 
-        [Impl(256)] public static int Abs(int x)
+        [Impl(256)] public static int Abs(this int x)
         {
-            int t = x >> 31;
-            return (x ^ t) - t;
+            int m = x >> 31;
+            return (x ^ m) - m;
         }
 
-        public static int Pow(int num, int exp)
+        [Impl(256)] public static int SetRow(this int num, int row, bool isOne) => isOne ? num | (1 << row) : num & ~(1 << row);
+
+        public static int Pow(this int num, int exp)
         {
             int result = 1;
             while (exp --> 0)
@@ -45,7 +47,7 @@ namespace Vurbiri
             return result;
         }
 
-        public static int BinaryPow(int num, int exp)
+        public static int BinaryPow(this int num, int exp)
         {
             int result = 1;
             while (exp > 0)
@@ -65,5 +67,11 @@ namespace Vurbiri
 
         [Impl(256)] public static int Greater(int x, int y) => (y - x) >> 31; // x > y ? -1 : 0
         [Impl(256)] public static int LessOrEqual(int x, int y) => ~(y - x) >> 31; // x <= y ? -1 : 0
+
+        [Impl(256)] public static int Select(bool isX, int x, int y)
+        {
+            int mask = Convert.ToInt32(isX) - 1;
+            return (x & ~mask) | (y & mask);
+        }
     }
 }

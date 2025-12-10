@@ -20,6 +20,7 @@ namespace Vurbiri
         }
 
         public bool IsValid { get; }
+        public bool IsSaved { get; }
 
         public IEnumerator Load_Cn(Out<bool> output);
 
@@ -34,7 +35,8 @@ namespace Vurbiri
         public bool Set<T>(string key, T data, JsonSerializerSettings settings = null);
         public bool Set<T>(string key, T data, JsonConverter converter);
 
-        public WaitResult<bool> Save();
+        public void Save();
+        public IEnumerator Save(out WaitResult<bool> wait);
         public void Save<T>(string key, T data, JsonSerializerSettings settings = null);
         public void Save<T>(string key, T data, JsonConverter converter);
 

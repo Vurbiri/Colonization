@@ -6,6 +6,7 @@ namespace Vurbiri
     public class EmptyStorage : IStorageService
     {
         public bool IsValid => false;
+        public bool IsSaved => true;
 
         public IEnumerator Load_Cn(Out<bool> output)
         {
@@ -13,7 +14,8 @@ namespace Vurbiri
             return null;
         }
 
-        public WaitResult<bool> Save() => null;
+        public void Save() { }
+        public IEnumerator Save(out WaitResult<bool> wait) => wait = WaitResult.Instant(false);
         public void Save<T>(string key, T data, JsonSerializerSettings settings = null) { }
         public void Save<T>(string key, T data, JsonConverter converter) { }
 

@@ -9,7 +9,7 @@ namespace Vurbiri.Colonization.UI
         [SerializeField] private PopupTextWidgetUI _popup;
 
         private string _localizedText;
-        private int _score;
+        private int _score = int.MaxValue;
 
         public void Init(Vector3 offsetPopup)
         {
@@ -25,11 +25,14 @@ namespace Vurbiri.Colonization.UI
             int score = values[PlayerId.Person];
             if (score != _score)
             {
-                var strValue = _score.ToStr();
-                _popup.ForceRun(score - _score);
+                int delta = score - _score;
+                var strValue = score.ToStr();
+
                 _score = score;
                 _valueTMP.text = strValue;
                 _hintText = string.Format(_localizedText, strValue, GameContainer.GameSettings.MaxScore);
+
+                if (delta > 0) _popup.ForceRun(delta);
             }
         }
 

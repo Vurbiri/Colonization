@@ -32,8 +32,8 @@ namespace Vurbiri.Colonization.UI
             var perkTree = person.Perks;
             var blood = person.Resources.Get(CurrencyId.Blood);
 
-            foreach (var perk in _toggles)
-                perk.Init(perkTree, blood, _colorLearn);
+            for(int i = _toggles.Count - 1; i >= 0; --i)
+               _toggles[i].Init(perkTree, blood, _colorLearn);
 
             _spellBook.Init(perkTree, person.SpellBook, _switcher.Close, OnSpellBookChanged);
 

@@ -1,42 +1,39 @@
 using System;
+using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.UI
 {
 	public abstract class WaitButton : IWait
-    {
-        protected Action<Id<MBButtonId>> _onResult;
-        protected bool _isWait;
-        protected Id<MBButtonId> _id;
+	{
+		protected bool _isWait = true;
+		protected Id<MBButtonId> _id = MBButtonId.None;
+        protected Action<Id<MBButtonId>> _onResult = Dummy.Action;
 
         public object Current => null;
-        public Id<MBButtonId> Id => _id;
-        public bool IsWait => _isWait;
+		public Id<MBButtonId> Id { [Impl(256)] get => _id; }
+		public bool IsWait { [Impl(256)] get => _isWait; }
 
-        public void AddListener(Action<Id<MBButtonId>> action) => _onResult += action;
+		[Impl(256)] public void AddListener(Action<Id<MBButtonId>> action) => _onResult += action;
 
-        public bool MoveNext() => _isWait;
-        public void Reset() 
-        {
-            if (_isWait)
-            {
-                _isWait = false;
-                MessageBox.Abort(this);
-            }
-        }
-    }
+		[Impl(256)] public void Reset() 
+		{
+			if (_isWait)
+			{
+				_isWait = false;
+				MessageBox.Abort(this);
+			}
+		}
 
-    public class WaitButtonSource : WaitButton
-    {
-        public WaitButtonSource()
-        {
-            _isWait = true;
-        }
+		public bool MoveNext() => _isWait;
+	}
 
-        public void SetResult(Id<MBButtonId> result)
-        {
-            _id = result;
+	public class WaitButtonSource : WaitButton
+	{
+        public void Set(Id<MBButtonId> result)
+		{
             _isWait = false;
-            _onResult?.Invoke(result);
+            _id = result;
+			_onResult(result);
         }
     }
 }

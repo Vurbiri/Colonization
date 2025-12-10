@@ -31,7 +31,7 @@ namespace Vurbiri.Colonization
                 writer.WriteStartArray();
                 Key.Converter.WriteToArray(writer, actor._currentHex.Key);
                 StateWriteJson(writer, actor);
-                for (int i = actor._effects.Count - 1; i >= 0; --i)
+                for (int i = 0; i < actor._effects.Count; ++i)
                     ReactiveEffect.Converter.WriteJsonArray(writer, actor._effects[i]);
                 writer.WriteEndArray();
             }

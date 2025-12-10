@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.EntryPoint
 {
@@ -13,30 +14,30 @@ namespace Vurbiri.EntryPoint
         private ExitParam _exitParam;
         private IDisposable _sceneContainer;
 
-        public static Event OnExit => s_instance._eventExit;
+        public static Event OnExit { [Impl(256)] get => s_instance._eventExit; }
 
-        internal static Transition Instance => s_instance;
+        internal static Transition Instance { [Impl(256)] get => s_instance; }
 
-        private Transition(IEnterParam enterParam) => _enterParam = enterParam;
+        [Impl(256)] private Transition(IEnterParam enterParam) => _enterParam = enterParam;
 
-        internal static void Create(Action<int> onExit, IEnterParam enterParam)
+        [Impl(256)] internal static void Create(Action<int> onExit, IEnterParam enterParam)
         {
             s_onExit = onExit;
             s_instance = new(enterParam);
         }
 
-        public void Setup(IDisposable sceneContainer, int nextScene) => Setup(sceneContainer, new ExitParam(nextScene));
-        public void Setup(IDisposable sceneContainer, ExitParam exitParam)
+        [Impl(256)] public void Setup(IDisposable sceneContainer, int nextScene) => Setup(sceneContainer, new ExitParam(nextScene));
+        [Impl(256)] public void Setup(IDisposable sceneContainer, ExitParam exitParam)
         {
             _exitParam = exitParam;
             _sceneContainer = sceneContainer;
         }
 
-        public T GetEnterParam<T>() where T : IEnterParam => (T)_enterParam;
+        [Impl(256)] public T GetEnterParam<T>() where T : IEnterParam => (T)_enterParam;
 
-        public static void Exit() => s_instance.ExitInternal();
-        public static void Exit(int nextScene) => Exit(new ExitParam(nextScene));
-        public static void Exit(ExitParam exitParam)
+        [Impl(256)] public static void Exit() => s_instance.ExitInternal();
+        [Impl(256)] public static void Exit(int nextScene) => Exit(new ExitParam(nextScene));
+        [Impl(256)] public static void Exit(ExitParam exitParam)
         {
             s_instance._exitParam = exitParam;
             s_instance.ExitInternal();
@@ -51,5 +52,11 @@ namespace Vurbiri.EntryPoint
             s_instance = new(_exitParam.EnterParam);
             s_onExit.Invoke(_exitParam.NextScene);
         }
+
+        //private void OnSceneUnloaded(Scene scene)
+        //{
+        //    _sceneContainer.Dispose();
+        //    SceneManager.sceneUnloaded -= OnSceneUnloaded;
+        //}
     }
 }

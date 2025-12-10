@@ -46,9 +46,10 @@
   "Victory": "Victory",
   "Defeat": "Defeat",
   "Winner": "Winner:\n{0}",
-  "ExitToMenu": "Exit to main menu",
   "Save": "Save",
   "Saving": "Saving...",
   "GoodSave": "Game is saved",
-  "ErrorSave": "Save error!"
+  "ErrorSave": "Save error!",
+  "ExitToMenu": "Exit to main menu",
+  "ExitToMenuMsg": "<align=\"center\">The game is not saved.\nAre you sure you want to exit?</align>"
 }

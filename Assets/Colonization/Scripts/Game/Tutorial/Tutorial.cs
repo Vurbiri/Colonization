@@ -8,6 +8,12 @@ namespace Vurbiri.Colonization
 		{
 			
 		}
+
+		public enum State
+		{
+			None = -1,
+			Start = 0,
+		}
 		
 #if UNITY_EDITOR
         private void OnValidate()

@@ -24,7 +24,10 @@ namespace Vurbiri.Colonization
 
         public override void OnLanding()
         {
-            _coroutine = StartCoroutine(OnLanding_Cn());
+            if (_edifices.ports.Count > 0)
+                GameContainer.GameLoop.EndLanding();
+            else
+                _coroutine = StartCoroutine(OnLanding_Cn());
 
             // ======= Local ==========
             IEnumerator OnLanding_Cn()
@@ -100,12 +103,11 @@ namespace Vurbiri.Colonization
                         diff.Set(exchangeIndex, 0);
 
                         int index;
-                        while (exchangeValue > 0)
+                        while (exchangeValue --> 0)
                         {
                             index = diff.MaxIndex;
                             diff.Decrement(index);
                             pay.Increment(index);
-                            exchangeValue--;
 
                             yield return null;
                         }

@@ -23,7 +23,7 @@ namespace Vurbiri.Colonization
 
         public abstract WaitResult<bool> OnGift(int giver, MainCurrencies gift, string msg);
 
-        public virtual void OnLanding() { }
+        public abstract void OnLanding();
         public virtual void OnEndLanding() { }
 
         public abstract void OnEndTurn();

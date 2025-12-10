@@ -50,7 +50,7 @@ namespace VurbiriEditor
             }
             else if(minProperty.propertyType == SerializedPropertyType.Integer)
             {
-                VEditorGUI.MinMaxSlider(position, label, minProperty, maxProperty, MathI.Round(range.min), MathI.Round(range.max));
+                VEditorGUI.MinMaxSlider(position, label, minProperty, maxProperty, range.min.Round(), range.max.Round());
             }
             else
             {

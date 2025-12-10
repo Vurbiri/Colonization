@@ -83,7 +83,7 @@ namespace Vurbiri.Colonization
 
             var person = GameContainer.Person;
 
-            //person.SpawnTest(WarriorId.Militia, HEX.RightUp);
+            person.SpawnTest(WarriorId.Militia, HEX.RightUp);
             person.SpawnTest(WarriorId.Solder, HEX.Right);
             //person.SpawnTest(WarriorId.Wizard, HEX.LeftDown);
             //person.SpawnTest(WarriorId.Warlock, HEX.Left);
@@ -92,7 +92,7 @@ namespace Vurbiri.Colonization
             person.SpawnTest(WarriorId.Militia, HEX.RightDown);
             //person.SpawnDemonTest(DemonId.Bomb, Key.Zero);
 
-            person.SpawnDemonTest(DemonId.Imp, HEX.RightUp);
+            //person.SpawnDemonTest(DemonId.Imp, HEX.RightUp);
             //person.SpawnDemonTest(DemonId.Bomb, HEX.Right);
             //person.SpawnDemonTest(DemonId.Grunt, HEX.LeftDown);
             //person.SpawnDemonTest(DemonId.Fatty, HEX.Left);
@@ -102,9 +102,6 @@ namespace Vurbiri.Colonization
             //person.SpawnDemonTest(DemonId.Boss, 5);
 
             //person.SpawnDemonTest(DemonId.Imp, 5);
-
-            //GameContainer.Players.GetAI(PlayerId.AI_01).SpawnTest(WarriorId.Militia, 2);
-            //GameContainer.Players.GetAI(PlayerId.AI_02).SpawnTest(WarriorId.Wizard, 2);
         }
 
         public void ShowKey()
@@ -116,8 +113,7 @@ namespace Vurbiri.Colonization
 
         public void Testing()
         {
-            RosterTest();
-
+            
         }
 
         public void RosterTest()
@@ -200,68 +196,6 @@ namespace Vurbiri.Colonization
             }
         }
 
-        public void ColorTesting()
-        {
-            double test1, test2;
-            const int count = 100000;
-            Stopwatch stopWatch = new();
-
-            TestValues(count);
-
-            stopWatch.Start();
-            TestUnity(count);
-            stopWatch.Stop();
-            test1 = stopWatch.ElapsedTicks;
-
-            stopWatch.Restart();
-            TestSelf(count);
-            stopWatch.Stop();
-            test2 = stopWatch.ElapsedTicks;
-
-            DrawResultTest(test1, "Unity", test2, "Self");
-
-            Thread.Sleep(100);
-            stopWatch.Restart();
-            TestSelf(count);
-            stopWatch.Stop();
-            test2 = stopWatch.ElapsedTicks;
-
-            stopWatch.Restart();
-            TestUnity(count);
-            stopWatch.Stop();
-            test1 = stopWatch.ElapsedTicks;
-
-            DrawResultTest(test1, "Unity", test2, "Self");
-
-            void TestUnity(int value)
-            {
-                Color32 x;
-                for (int i = 0; i < value; ++i)
-                    x = UnityEngine.Random.ColorHSV();
-            }
-            void TestSelf(int value)
-            {
-                Color32 x;
-                for (int i = 0; i < value; ++i)
-                    x = UnityEngine.Random.ColorHSV().ToColor32();
-            }
-            void TestValues(int value)
-            {
-                Color c;
-                Color32 u, s;
-                for (int i = 0; i < value; ++i)
-                {
-                    c = UnityEngine.Random.ColorHSV();
-                    u = c; s = c.ToColor32();
-                    if (!u.IsEquals(s))
-                    {
-                        Vector4 v = c; v *= 255f;
-                        Log.Error($"Error [{v}] -> {u} != {s}");
-                    }
-                }
-            }
-        }
-
         public void MathITesting()
         {
             double test1, test2;
@@ -305,12 +239,12 @@ namespace Vurbiri.Colonization
             {
                 int x;
                 for (int i = -value; i < value; ++i)
-                    x = MathI.Abs(i);
+                    x = i.Abs();
             }
             void TestValues(int value)
             {
                 for (int i = -value; i < value; ++i)
-                    if (Math.Abs(i) != MathI.Abs(i))
+                    if (Math.Abs(i) != i.Abs())
                         Log.Error($"ABS Error [{i}] -> Math{Math.Abs(i)} != MathI{MathI.Abs(i)}");
             }
         }

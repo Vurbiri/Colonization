@@ -25,7 +25,7 @@ namespace Vurbiri.Colonization.Storage
 
             _keysActors = new(countActors);
             for (int i = 0; i < countActors; ++i)
-                _keysActors.Add(P_ACTORS.Concat(_strId, i.ToString()));
+                _keysActors.Add(P_ACTORS.Concat(_strId, i.ToStr()));
         }
 
         public void BindActors(ReadOnlyReactiveSet<Actor> actors)
@@ -76,7 +76,7 @@ namespace Vurbiri.Colonization.Storage
             List<ActorLoadData> actors = new(max);
             for (int i = 0; i < max; ++i)
             {
-                _keysActors.Add(P_ACTORS.Concat(_strId, i.ToString()));
+                _keysActors.Add(P_ACTORS.Concat(_strId, i.ToStr()));
                 if (isLoad && _storage.TryGet(_keysActors[i], out ActorLoadData actor))
                     actors.Add(actor);
             }

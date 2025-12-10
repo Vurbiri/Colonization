@@ -13,9 +13,10 @@ namespace Vurbiri.Colonization
         [SerializeField] private VSliderInt _quality;
         [SerializeField] private LanguageSwitch _language;
         [Space]
-        [SerializeField] protected SimpleButton _closeButton;
+        [SerializeField] private SimpleButton _closeButton;
 
         private bool _isApply;
+        protected bool _isSaveSettings = true;
 
         public virtual Switcher Init()
         {
@@ -52,10 +53,15 @@ namespace Vurbiri.Colonization
         private void OnClose()
         {
             if (_isApply)
+            {
                 ProjectContainer.Settings.Apply();
-            else 
+                if (_isSaveSettings)
+                    ProjectContainer.StorageService.Save();
+            }
+            else
+            {
                 ProjectContainer.Settings.Cancel();
-
+            }
         }
         private void OnOpen()
         {

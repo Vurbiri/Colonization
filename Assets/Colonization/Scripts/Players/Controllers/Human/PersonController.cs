@@ -31,6 +31,12 @@ namespace Vurbiri.Colonization
             }
         }
 
+        public override void OnLanding()
+        {
+            if(_edifices.ports.Count > 0)
+                GameContainer.GameLoop.EndLanding();
+        }
+
         public override void OnEndLanding()
         {
             _edifices.Interactable = false;

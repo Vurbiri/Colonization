@@ -281,6 +281,8 @@ namespace Vurbiri.Colonization
             _HP.Next();
             _AP.Next();
             _move.On();
+
+            ChangeSignal();
         }
         public void EffectsUpdate(int defense)
         {
@@ -302,7 +304,7 @@ namespace Vurbiri.Colonization
         public bool ToTargetState(Id<PlayerId> initiator, Relation relation)
         {
             bool isSet = GameContainer.Diplomacy.IsCanActorsInteraction(initiator, _owner, relation) && _states.ToTarget();
-            if(isSet)
+            if (isSet)
                 GameContainer.Diplomacy.ActorsInteraction(_owner, initiator, relation, IsInCombat());
             return isSet;
         }

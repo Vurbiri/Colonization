@@ -23,8 +23,8 @@ namespace Vurbiri.Colonization
         }
         [Impl(256)] public Key(float x, float y)
         {
-            this.x = MathI.Round(x);
-            this.y = MathI.Round(y);
+            this.x = x.Round();
+            this.y = y.Round();
         }
         [Impl(256)] public Key(int[] arr)
         {
@@ -32,9 +32,9 @@ namespace Vurbiri.Colonization
             y = arr[1];
         }
 
-        [Impl(256)] public Key Abs() => new(Math.Abs(x), Math.Abs(y));
+        [Impl(256)] public Key Abs() => new(MathI.Abs(x), MathI.Abs(y));
 
-        [Impl(256)] public readonly string ToSaveKey() => $"{x}{y}";
+        [Impl(256)] public readonly string ToSaveKey() => string.Concat(x.ToStr(), y.ToStr());
 
         [Impl(256)] public readonly bool Equals(Key other) => x == other.x & y == other.y;
         [Impl(256)] public override readonly bool Equals(object obj) => obj is Key key && x == key.x & y == key.y;

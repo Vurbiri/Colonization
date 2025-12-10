@@ -11,7 +11,7 @@ namespace Vurbiri.Colonization
             protected abstract class ATargetSkillState : ASkillState
             {
                 protected Actor _target;
-                private WaitSignal _waitActor;
+                private readonly WaitSignal _waitActor = new();
                 private readonly WaitRealtime _waitRealtime = new(0.3f);
                 private readonly Relation _relationTarget;
 #if TEST_ACTOR
@@ -42,7 +42,7 @@ namespace Vurbiri.Colonization
 
                 sealed public override void Enter()
                 {
-                    _waitActor = null;
+                    _waitActor.Cancel();
                     _target = null;
 
                     base.Enter();
@@ -58,7 +58,7 @@ namespace Vurbiri.Colonization
 
                 sealed public override void Unselect(ISelectable newSelectable)
                 {
-                    if (_waitActor != null)
+                    if (_waitActor.IsWait)
                     {
                         _target = newSelectable as Actor;
                         if (_target != null && (HEX.Distance(KeyTarget, KeyActor) != 1 || !_target.ToTargetState(Owner, _relationTarget)))
@@ -112,7 +112,7 @@ namespace Vurbiri.Colonization
                         yield break;
 
                     IsCancel.True();
-                    yield return _waitActor = new();
+                    yield return _waitActor.Restart();
                     IsCancel.False();
 
                     for (int i = targets.Count - 1; i >= 0; --i)
@@ -127,7 +127,7 @@ namespace Vurbiri.Colonization
 
                 private IEnumerator AISelectActor_Cn()
                 {
-                    yield return _waitActor = new();
+                    yield return _waitActor.Restart();
 
                     if (_target == null)
                         yield break;

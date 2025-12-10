@@ -1,6 +1,7 @@
 namespace Vurbiri
 {
-	public static class Dummy
+#pragma warning disable
+    public static class Dummy
 	{
         public static void Action() { }
         public static void Action<T>(T t) { }
@@ -8,4 +9,5 @@ namespace Vurbiri
         public static void Action<TA, TB, TC>(TA ta, TB tb, TC tc) { }
         public static void Action<TA, TB, TC, TD>(TA ta, TB tb, TC tc, TD td) { }
     }
+#pragma warning restore
 }

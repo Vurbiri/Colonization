@@ -54,7 +54,7 @@ namespace Vurbiri.Colonization.EntryPoint
 
         private static void SetColors(ProjectColors colors)
         {
-            MessageBox.SetColors(colors.PanelBack, colors.TextDefault);
+            MessageBox.SetColors(colors.PanelBack.SetAlpha(1f), colors.TextDefault);
 
             Banner.Colors[MessageTypeId.Info]    = colors.TextDefault;
             Banner.Colors[MessageTypeId.Warning] = colors.TextWarning;

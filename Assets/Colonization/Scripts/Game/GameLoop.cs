@@ -35,9 +35,9 @@ namespace Vurbiri.Colonization
         [Impl(256)] public void Landing()
         {
             _turnQueue.Next();
-            SetGameMode(GameModeId.Landing, false);
+            SetGameMode(GameModeId.Landing);
         }
-        [Impl(256)] public void EndLanding() => SetGameMode(GameModeId.EndLanding, false);
+        [Impl(256)] public void EndLanding() => SetGameMode(GameModeId.EndLanding);
 
         [Impl(256)] public void EndTurn() => SetGameMode(GameModeId.EndTurn);
         [Impl(256)] public void StartTurn()
@@ -79,8 +79,8 @@ namespace Vurbiri.Colonization
 
         [Impl(256)] public bool IsPlayerTurn(Id<PlayerId> id) => _gameMode == GameModeId.Play & _turnQueue.currentId == id;
 
-        [Impl(256)] private void SetGameMode(Id<GameModeId> gameMode, bool save = true) => GameContainer.Shared.StartCoroutine(SetGameMode_Cn(gameMode, save));
-        private IEnumerator SetGameMode_Cn(Id<GameModeId> gameMode, bool save)
+        [Impl(256)] private void SetGameMode(Id<GameModeId> gameMode) => GameContainer.Shared.StartCoroutine(SetGameMode_Cn(gameMode));
+        private IEnumerator SetGameMode_Cn(Id<GameModeId> gameMode)
         {
             yield return null;
 
@@ -88,8 +88,7 @@ namespace Vurbiri.Colonization
             _changeGameMode.Invoke(gameMode, _turnQueue);
             _changeGameModes[gameMode].Invoke(_turnQueue, _hexId);
 
-            if (save) 
-                _storage.SaveGame(this);
+            _storage.SaveGame(this);
         }
     }
 }
