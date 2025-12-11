@@ -14,19 +14,27 @@ namespace Vurbiri.UI
         [SerializeField] private FPSGraph _graph;
 
         private TextMeshProUGUI _thisTextFPS;
+        private GameObject _graphObject;
         private float _time = 0f;
         private int _frames = 0;
-        private int _fps = 0, _fpsMax = int.MinValue, _fpsMin = int.MaxValue;
-        private float _fpsAvg = 0f;
         private Queue<int> _cache;
 
         private void Start()
         {
             _thisTextFPS = GetComponent<TextMeshProUGUI>();
-            if (_graph != null && _graph.gameObject.activeSelf)
-                _cacheMaxSize = _graph.Size;
+            if (_graph != null)
+            {
+                _graphObject = _graph.gameObject;
+                _cacheMaxSize = _graph.Width;
+            }
 
             _cache = new(_cacheMaxSize);
+        }
+
+        public void SwitchGraphEnable()
+        {
+            if (_graphObject != null)
+                _graphObject.SetActive(!_graphObject.activeSelf);
         }
 
         private void Update()
@@ -37,29 +45,29 @@ namespace Vurbiri.UI
             if (_time < _updateInterval)
                 return;
 
-            _fps = MathI.Round(_frames / _time);
+            int current = MathI.Round(_frames / _time);
             _time = 0f; _frames = 0;
 
             if (_cache.Count == _cacheMaxSize)
                 _cache.Dequeue();
-            _cache.Enqueue(_fps);
+            _cache.Enqueue(current);
 
-            _fpsMax = int.MinValue;
-            _fpsMin = int.MaxValue;
-            _fpsAvg = 0f;
+            int max = int.MinValue;
+            int min = int.MaxValue;
+            float avg = 0f;
 
             foreach (int fps in _cache)
             {
-                _fpsAvg += fps;
-                _fpsMax = Mathf.Max(_fpsMax, fps);
-                _fpsMin = Mathf.Min(_fpsMin, fps);
+                avg += fps;
+                max = MathI.Max(max, fps);
+                min = MathI.Min(min, fps);
             }
 
-            _fpsAvg /= _cache.Count;
-            _thisTextFPS.text = string.Format(TEXT, _fps, _fpsAvg, _fpsMax, _fpsMin);
+            avg /= _cache.Count;
+            _thisTextFPS.text = string.Format(TEXT, current, avg, max, min);
 
-            if (_graph != null && _graph.gameObject.activeSelf)
-                _graph.UpdateTexture(_cache, _fpsAvg, _fpsMax, _fpsMin);
+            if (_graphObject != null && _graphObject.activeSelf)
+                _graph.UpdateTexture(_cache, avg, max, min);
 
         }
     }

@@ -765,6 +765,67 @@ namespace Vurbiri.Colonization.Controllers
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""Debug"",
+            ""id"": ""f8fd0cae-d067-47b7-821e-8cac75e40eb4"",
+            ""actions"": [
+                {
+                    ""name"": ""Show"",
+                    ""type"": ""Button"",
+                    ""id"": ""8b3287f5-149d-4e8b-83de-80f6434e5141"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": ""Two Modifiers"",
+                    ""id"": ""17fe6918-eac0-4a1a-b08f-b95293fddd2e"",
+                    ""path"": ""TwoModifiers"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Show"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""modifier1"",
+                    ""id"": ""9e896772-ed15-4942-b761-7e7b1a38c67e"",
+                    ""path"": ""<Keyboard>/rightCtrl"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";KeyboardAndMouse"",
+                    ""action"": ""Show"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""modifier2"",
+                    ""id"": ""3af453b1-e149-4e71-9efc-2b4e9778f99e"",
+                    ""path"": ""<Keyboard>/leftShift"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";KeyboardAndMouse"",
+                    ""action"": ""Show"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""binding"",
+                    ""id"": ""dc0cc8f8-e9cf-444d-84a0-5e23e165b24d"",
+                    ""path"": ""<Keyboard>/delete"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";KeyboardAndMouse"",
+                    ""action"": ""Show"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                }
+            ]
         }
     ],
     ""controlSchemes"": [
@@ -807,6 +868,9 @@ namespace Vurbiri.Colonization.Controllers
             m_Camera_Rotate = m_Camera.FindAction("Rotate", throwIfNotFound: true);
             m_Camera_Zoom = m_Camera.FindAction("Zoom", throwIfNotFound: true);
             m_Camera_Position = m_Camera.FindAction("Position", throwIfNotFound: true);
+            // Debug
+            m_Debug = asset.FindActionMap("Debug", throwIfNotFound: true);
+            m_Debug_Show = m_Debug.FindAction("Show", throwIfNotFound: true);
         }
 
         ~@InputControlAction()
@@ -814,6 +878,7 @@ namespace Vurbiri.Colonization.Controllers
             UnityEngine.Debug.Assert(!m_UI.enabled, "This will cause a leak and performance issues, InputControlAction.UI.Disable() has not been called.");
             UnityEngine.Debug.Assert(!m_Gameplay.enabled, "This will cause a leak and performance issues, InputControlAction.Gameplay.Disable() has not been called.");
             UnityEngine.Debug.Assert(!m_Camera.enabled, "This will cause a leak and performance issues, InputControlAction.Camera.Disable() has not been called.");
+            UnityEngine.Debug.Assert(!m_Debug.enabled, "This will cause a leak and performance issues, InputControlAction.Debug.Disable() has not been called.");
         }
 
         /// <summary>
@@ -1305,6 +1370,102 @@ namespace Vurbiri.Colonization.Controllers
         /// Provides a new <see cref="CameraActions" /> instance referencing this action map.
         /// </summary>
         public CameraActions @Camera => new CameraActions(this);
+
+        // Debug
+        private readonly InputActionMap m_Debug;
+        private List<IDebugActions> m_DebugActionsCallbackInterfaces = new List<IDebugActions>();
+        private readonly InputAction m_Debug_Show;
+        /// <summary>
+        /// Provides access to input actions defined in input action map "Debug".
+        /// </summary>
+        public struct DebugActions
+        {
+            private @InputControlAction m_Wrapper;
+
+            /// <summary>
+            /// Construct a new instance of the input action map wrapper class.
+            /// </summary>
+            public DebugActions(@InputControlAction wrapper) { m_Wrapper = wrapper; }
+            /// <summary>
+            /// Provides access to the underlying input action "Debug/Show".
+            /// </summary>
+            public InputAction @Show => m_Wrapper.m_Debug_Show;
+            /// <summary>
+            /// Provides access to the underlying input action map instance.
+            /// </summary>
+            public InputActionMap Get() { return m_Wrapper.m_Debug; }
+            /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Enable()" />
+            public void Enable() { Get().Enable(); }
+            /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Disable()" />
+            public void Disable() { Get().Disable(); }
+            /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.enabled" />
+            public bool enabled => Get().enabled;
+            /// <summary>
+            /// Implicitly converts an <see ref="DebugActions" /> to an <see ref="InputActionMap" /> instance.
+            /// </summary>
+            public static implicit operator InputActionMap(DebugActions set) { return set.Get(); }
+            /// <summary>
+            /// Adds <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
+            /// </summary>
+            /// <param name="instance">Callback instance.</param>
+            /// <remarks>
+            /// If <paramref name="instance" /> is <c>null</c> or <paramref name="instance"/> have already been added this method does nothing.
+            /// </remarks>
+            /// <seealso cref="DebugActions" />
+            public void AddCallbacks(IDebugActions instance)
+            {
+                if (instance == null || m_Wrapper.m_DebugActionsCallbackInterfaces.Contains(instance)) return;
+                m_Wrapper.m_DebugActionsCallbackInterfaces.Add(instance);
+                @Show.started += instance.OnShow;
+                @Show.performed += instance.OnShow;
+                @Show.canceled += instance.OnShow;
+            }
+
+            /// <summary>
+            /// Removes <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
+            /// </summary>
+            /// <remarks>
+            /// Calling this method when <paramref name="instance" /> have not previously been registered has no side-effects.
+            /// </remarks>
+            /// <seealso cref="DebugActions" />
+            private void UnregisterCallbacks(IDebugActions instance)
+            {
+                @Show.started -= instance.OnShow;
+                @Show.performed -= instance.OnShow;
+                @Show.canceled -= instance.OnShow;
+            }
+
+            /// <summary>
+            /// Unregisters <param cref="instance" /> and unregisters all input action callbacks via <see cref="DebugActions.UnregisterCallbacks(IDebugActions)" />.
+            /// </summary>
+            /// <seealso cref="DebugActions.UnregisterCallbacks(IDebugActions)" />
+            public void RemoveCallbacks(IDebugActions instance)
+            {
+                if (m_Wrapper.m_DebugActionsCallbackInterfaces.Remove(instance))
+                    UnregisterCallbacks(instance);
+            }
+
+            /// <summary>
+            /// Replaces all existing callback instances and previously registered input action callbacks associated with them with callbacks provided via <param cref="instance" />.
+            /// </summary>
+            /// <remarks>
+            /// If <paramref name="instance" /> is <c>null</c>, calling this method will only unregister all existing callbacks but not register any new callbacks.
+            /// </remarks>
+            /// <seealso cref="DebugActions.AddCallbacks(IDebugActions)" />
+            /// <seealso cref="DebugActions.RemoveCallbacks(IDebugActions)" />
+            /// <seealso cref="DebugActions.UnregisterCallbacks(IDebugActions)" />
+            public void SetCallbacks(IDebugActions instance)
+            {
+                foreach (var item in m_Wrapper.m_DebugActionsCallbackInterfaces)
+                    UnregisterCallbacks(item);
+                m_Wrapper.m_DebugActionsCallbackInterfaces.Clear();
+                AddCallbacks(instance);
+            }
+        }
+        /// <summary>
+        /// Provides a new <see cref="DebugActions" /> instance referencing this action map.
+        /// </summary>
+        public DebugActions @Debug => new DebugActions(this);
         private int m_KeyboardAndMouseSchemeIndex = -1;
         /// <summary>
         /// Provides access to the input control scheme.
@@ -1446,6 +1607,21 @@ namespace Vurbiri.Colonization.Controllers
             /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
             /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
             void OnPosition(InputAction.CallbackContext context);
+        }
+        /// <summary>
+        /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "Debug" which allows adding and removing callbacks.
+        /// </summary>
+        /// <seealso cref="DebugActions.AddCallbacks(IDebugActions)" />
+        /// <seealso cref="DebugActions.RemoveCallbacks(IDebugActions)" />
+        public interface IDebugActions
+        {
+            /// <summary>
+            /// Method invoked when associated input action "Show" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+            /// </summary>
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+            void OnShow(InputAction.CallbackContext context);
         }
     }
 }

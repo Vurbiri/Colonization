@@ -26,7 +26,7 @@ namespace Vurbiri.Colonization.UI
             _onValueChanged.Init(_activeToggle);
             _onValueChanged.Add(OnValueChanged);
 
-            Transition.OnExit.Add(_onValueChanged.Clear);
+            Transition.OnExit.Add(OnDestroy);
         }
 
         public void ItemsUpdate()
@@ -60,6 +60,8 @@ namespace Vurbiri.Colonization.UI
         private void OnDestroy()
         {
             _onValueChanged.Clear();
+            _toggles.Clear();
+            _activeToggle = null;
         }
     }
 }

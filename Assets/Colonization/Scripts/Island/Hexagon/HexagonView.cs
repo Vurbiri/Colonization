@@ -32,9 +32,6 @@ namespace Vurbiri.Colonization
             surface.Create(_thisTransform);
 
             _hexagonCaption.Init(id, surface.Currencies, this);
-#if UNITY_EDITOR
-            _hexagonCaption.SetKey_Ed(key);
-#endif
 
             if (surface.IsWater)
             {

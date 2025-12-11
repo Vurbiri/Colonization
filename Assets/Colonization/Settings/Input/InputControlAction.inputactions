@@ -1,4 +1,5 @@
 {
+    "version": 1,
     "name": "InputControlAction",
     "maps": [
         {
@@ -674,6 +675,67 @@
                     "action": "Position",
                     "isComposite": false,
                     "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "Debug",
+            "id": "f8fd0cae-d067-47b7-821e-8cac75e40eb4",
+            "actions": [
+                {
+                    "name": "Show",
+                    "type": "Button",
+                    "id": "8b3287f5-149d-4e8b-83de-80f6434e5141",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "Two Modifiers",
+                    "id": "17fe6918-eac0-4a1a-b08f-b95293fddd2e",
+                    "path": "TwoModifiers",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Show",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "modifier1",
+                    "id": "9e896772-ed15-4942-b761-7e7b1a38c67e",
+                    "path": "<Keyboard>/rightCtrl",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";KeyboardAndMouse",
+                    "action": "Show",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "modifier2",
+                    "id": "3af453b1-e149-4e71-9efc-2b4e9778f99e",
+                    "path": "<Keyboard>/leftShift",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";KeyboardAndMouse",
+                    "action": "Show",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "binding",
+                    "id": "dc0cc8f8-e9cf-444d-84a0-5e23e165b24d",
+                    "path": "<Keyboard>/delete",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";KeyboardAndMouse",
+                    "action": "Show",
+                    "isComposite": false,
+                    "isPartOfComposite": true
                 }
             ]
         }

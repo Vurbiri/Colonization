@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using Vurbiri.Collections;
 using Vurbiri.Reactive;
-using static Vurbiri.Storage;
 using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.International
@@ -28,7 +27,7 @@ namespace Vurbiri.International
             {
                 if (_currentLanguage != value)
                 {
-                    for (int i = _languages.Count - 1; i >= 0; --i)
+                    for (int i = 0; i < _languages.Count; ++i)
                     {
                         if (_languages[i] == value)
                         {
@@ -43,10 +42,17 @@ namespace Vurbiri.International
             }
         }
 
-        static Localization() => s_instance = new(0);
+        static Localization()
+        {
+#if UNITY_EDITOR
+            if(UnityEditor.EditorApplication.isPlayingOrWillChangePlaymode)
+#endif
+            s_instance = new(0);
+        }
+
         private Localization(int fileId) 
         {
-            var languages = LoadObjectFromJsonResource<List<LanguageType>>(CONST_L.LANG_FILE);
+            var languages = Storage.LoadObjectFromJsonResource<List<LanguageType>>(CONST_L.LANG_FILE);
             Throw.IfLengthZero(languages, "_languages");
 
             _text = new Dictionary<string, string>[Files.Count];
@@ -64,7 +70,7 @@ namespace Vurbiri.International
             _languages = new(languages.ToArray());
 
             SetLanguage(_defaultLanguage);
-            LoadFile(fileId, false);
+            LoadFile(fileId, true);
         }
 
         [Impl(256)] public Subscription Subscribe(Action<Localization> action, bool sendCallback = true) => _changed.Add(action, this, sendCallback);
@@ -74,7 +80,7 @@ namespace Vurbiri.International
         {
             if (!string.IsNullOrEmpty(code))
             {
-                for (int i = _languages.Count - 1; i >= 0; --i)
+                for (int i = 0; i < _languages.Count; ++i)
                     if (_languages[i].CodeEquals(code))
                         return _languages[i].Id;
             }
@@ -94,7 +100,7 @@ namespace Vurbiri.International
                     _text[i] = null;
             }
 
-            //GC.Collect();
+            GC.Collect();
         }
 
         [Impl(256)] public void LoadFile(int fileId, bool reload)
@@ -103,11 +109,7 @@ namespace Vurbiri.International
                 _text[fileId] = load;
         }
 
-        [Impl(256)] public void UnloadFile(int fileId)
-        {
-            _text[fileId] = null;
-            //GC.Collect();
-        }
+        [Impl(256)] public void UnloadFile(int fileId) => _text[fileId] = null;
 
         [Impl(256)] public string GetText(FileIdAndKey idAndKey, bool remove = false) => GetText(idAndKey.id, idAndKey.key, remove);
         public string GetText(int fileId, string key, bool remove = false)
@@ -143,6 +145,9 @@ namespace Vurbiri.International
         [Impl(256)] public bool RemoveKey(FileIdAndKey idAndKey) => _text[idAndKey.id] != null && _text[idAndKey.id].Remove(idAndKey.key);
         [Impl(256)] public bool RemoveKey(int fileId, string key) => _text[fileId] != null && _text[fileId].Remove(key);
 
+        [Impl(256)] public bool ContainsKey(FileIdAndKey idAndKey) => _text[idAndKey.id] != null && _text[idAndKey.id].ContainsKey(idAndKey.key);
+        [Impl(256)] public bool ContainsKey(int fileId, string key) => _text[fileId] != null && _text[fileId].ContainsKey(key);
+
         private void SetLanguage(LanguageType type)
         {
             string folder = type.Folder;
@@ -171,7 +176,7 @@ namespace Vurbiri.International
             }
             else
             {
-                localization.LoadFile(fileId, true);
+                localization.LoadFile(fileId, false);
             }
             return localization;
         }

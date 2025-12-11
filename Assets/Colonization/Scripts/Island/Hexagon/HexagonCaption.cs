@@ -257,10 +257,6 @@ namespace Vurbiri.Colonization
         }
 
 #if UNITY_EDITOR
-
-        [StartEditor]
-        [SerializeField] private TextMeshPro _keyText;
-
         public void OnValidate(Component parent)
         {
             parent.SetChildren(ref _thisTransform, "Caption");
@@ -269,17 +265,6 @@ namespace Vurbiri.Colonization
 
             _thisGameObject = _thisTransform.gameObject;
             _thisTransform.localRotation = Quaternion.Euler(ANGLE_X, 0f, 0f);
-        }
-
-        public void SetKey_Ed(Key key)
-        {
-            _keyText.text = $"{key.x},{key.y}";
-            _keyText.enabled = false;
-        }
-        public void ShowKey_Ed()
-        {
-            OnCaptionEnable(_keyText.enabled);
-            _keyText.enabled = !_keyText.enabled;
         }
 #endif
     }

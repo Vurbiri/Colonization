@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.UI
 {
@@ -11,68 +12,67 @@ namespace Vurbiri.UI
         [SerializeField] private int _height = 64;
         [SerializeField] private FilterMode _filterMode = FilterMode.Bilinear;
         [Space]
-        [SerializeField] private Color _colorBackground = Color.white;
-        [SerializeField] private Color _colorGraph = Color.black;
-        [SerializeField] private Color _colorAvg = Color.blue;
-        [SerializeField] private Color _colorMax = Color.green;
-        [SerializeField] private Color _colorMin = Color.red;
+        [SerializeField] private Color32 _colorBackground = Color.white;
+        [SerializeField] private Color32 _colorGraph = Color.black;
+        [SerializeField] private Color32 _colorAvg = Color.blue;
+        [SerializeField] private Color32 _colorMax = Color.green;
+        [SerializeField] private Color32 _colorMin = Color.red;
 
+        private Color32[] _pixels;
         private Texture2D _texture;
 
-        public int Size => _width;
+        public int Width { [Impl(256)] get => _width; }
 
-        private void Start()
+        private void Awake()
         {
+            _pixels = new Color32[_width * _height];
             _texture = new(_width, _height)
             {
                 name = "FPSGraph",
                 filterMode = _filterMode
             };
 
-            for (int i = 0; i < _width; i++)
-                for (int j = 0; j < _height; j++)
-                    _texture.SetPixel(i, j, _colorBackground);
-            _texture.Apply();
-
-            GetComponent<RawImage>().texture = _texture;
+            var image = GetComponent<RawImage>();
+            image.color = Color.white;
+            image.texture = _texture;
         }
 
-        public void UpdateTexture(IReadOnlyCollection<int> values, float fpsAvg, int fpsMax, int fpsMin)
+        public void UpdateTexture(IEnumerable<int> values, float fpsAvg, int fpsMax, int fpsMin)
         {
             if (_texture == null)
                 return;
 
-            //ClearTexture();
-
-            int count = values.Count;
             float scale = _height / (fpsMax * 1.15f);
-            int x, y, yAvg = MathI.Round(fpsAvg * scale), yMax = MathI.Round(fpsMax * scale), yMin = MathI.Round(fpsMin * scale);
+            int x = 0, y, yAvg = MathI.Round(fpsAvg * scale), yMax = MathI.Round(fpsMax * scale), yMin = MathI.Round(fpsMin * scale);
 
             foreach (int value in values)
             {
-                x = _width - count--;
-
-                for (int j = 0; j < _height; j++)
-                    _texture.SetPixel(x, j, _colorBackground);
+                for (y = 0; y < _height; ++y)
+                    SetPixel(x, y, _colorBackground);
 
                 y = MathI.Round(value * scale);
-                _texture.SetPixel(x, y, _colorGraph);
-                _texture.SetPixel(x, yAvg, _colorAvg);
-                _texture.SetPixel(x, yMax, _colorMax);
-                _texture.SetPixel(x, yMin, _colorMin);
+                SetPixel(x, y, _colorGraph);
+                SetPixel(x, yAvg, _colorAvg);
+                SetPixel(x, yMax, _colorMax);
+                SetPixel(x, yMin, _colorMin);
+
+                ++x;
             }
 
-            for (x = 0; x < count; x++)
+            for (; x < _width; ++x)
             {
-                for (int j = 0; j < _height; j++)
-                    _texture.SetPixel(x, j, _colorBackground);
+                for (y = 0; y < _height; ++y)
+                    SetPixel(x, y, _colorBackground);
 
-                _texture.SetPixel(x, yAvg, _colorAvg);
-                _texture.SetPixel(x, yMax, _colorMax);
-                _texture.SetPixel(x, yMin, _colorMin);
+                SetPixel(x, yAvg, _colorAvg);
+                SetPixel(x, yMax, _colorMax);
+                SetPixel(x, yMin, _colorMin);
             }
 
+            _texture.SetPixels32(_pixels);
             _texture.Apply();
         }
+
+        [Impl(256)] private void SetPixel(int x, int y, Color32 color) => _pixels[x + y * _width] = color;
     }
 }

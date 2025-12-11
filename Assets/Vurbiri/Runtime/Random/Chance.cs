@@ -11,7 +11,7 @@ namespace Vurbiri
 
         public const int MAX_CHANCE = 100;
 
-        public int Value { [Impl(256)] readonly get => _value; [Impl(256)] set => _value = MathI.Clamp(value, 0, MAX_CHANCE); }
+        public int Value { [Impl(256)] readonly get => _value; [Impl(256)] set => _value = value.Clamp(0, MAX_CHANCE); }
 
         public bool Roll
         {
@@ -26,7 +26,7 @@ namespace Vurbiri
         [Impl(256)] public Chance(int value) : this(value, SysRandom.Next(MAX_CHANCE)) { }
         [Impl(256)] private Chance(int value, int negentropy)
         {
-            _value = MathI.Clamp(value, 0, MAX_CHANCE);
+            _value = value.Clamp(0, MAX_CHANCE);
             _negentropy = negentropy;
         }
 
