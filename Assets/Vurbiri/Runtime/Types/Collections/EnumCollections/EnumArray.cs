@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Collections
 {
@@ -31,12 +32,14 @@ namespace Vurbiri.Collections
 
         [SerializeField] protected TValue[] _values;
 
-        public int Count => s_count;
+        private readonly Version _version = new();
 
-        public virtual TValue this[TType type] { get => _values[type.GetHashCode()]; set => _values[type.GetHashCode()] = value; }
-        public virtual TValue this[int index] { get => _values[index]; set => _values[index] = value; }
+        public int Count { [Impl(256)] get => s_count; }
 
-        public IReadOnlyList<TValue> Values => _values;
+        public virtual TValue this[TType type] { [Impl(256)] get => _values[type.GetHashCode()]; [Impl(256)] set { _values[type.GetHashCode()] = value; _version.Next(); } }
+        public virtual TValue this[int index] { [Impl(256)] get => _values[index]; [Impl(256)] set { _values[index] = value; _version.Next(); } }
+
+        public ReadOnlyArray<TValue> Values => _values;
 
         public EnumArray()
         {
@@ -56,8 +59,8 @@ namespace Vurbiri.Collections
                 _values[i] = collection[i];
         }
 
-        public IEnumerator<TValue> GetEnumerator() => new ArrayEnumerator<TValue>(_values, s_count);
-        IEnumerator IEnumerable.GetEnumerator() => new ArrayEnumerator<TValue>(_values, s_count);
+        public IEnumerator<TValue> GetEnumerator() => new ArrayEnumerator<TValue>(_values, s_count, _version);
+        IEnumerator IEnumerable.GetEnumerator() => new ArrayEnumerator<TValue>(_values, s_count, _version);
 
         public static implicit operator EnumArray<TType, TValue>(TValue[] values) => new(values);
     }

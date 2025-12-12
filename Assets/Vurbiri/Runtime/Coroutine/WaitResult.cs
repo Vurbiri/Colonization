@@ -7,7 +7,7 @@ namespace Vurbiri
         [Impl(256)] public static WaitResult<T> Instant<T>(T result) => new WaitResultSource<T>(false, result);
     }
 
-    public abstract class WaitResult<T> : Enumerator
+    public abstract class WaitResult<T> : AWait
     {
         protected bool _isWait = true;
         protected T _value;

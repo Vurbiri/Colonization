@@ -2,7 +2,7 @@ using System;
 
 namespace Vurbiri
 {
-    sealed public class WaitState<T> : Enumerator where T : Enum
+    sealed public class WaitState<T> : AWait where T : Enum
     {
         private readonly WaitStateSource<T> _source;
         private readonly int _waitStateHashCode;

@@ -14,8 +14,7 @@ namespace Vurbiri.Reactive.Collections
         protected T[] _values;
         protected int _capacity = BASE_CAPACITY;
         protected readonly RInt _count = new(0);
-
-        protected readonly VAction<T, TypeEvent> _changeEvent = new();
+        protected readonly ReactiveVersion<T, TypeEvent> _version = new();
 
         public T this[int index] { [Impl(256)] get => _values[index]; }
 
@@ -64,7 +63,7 @@ namespace Vurbiri.Reactive.Collections
                 }
             }
 
-            return _changeEvent.Add(action);
+            return _version.Add(action);
         }
 
         public bool Contains(T item)
@@ -73,8 +72,8 @@ namespace Vurbiri.Reactive.Collections
             return index >= 0 & index < _capacity && _values[index].Equals(item);
         }
 
-        public IEnumerator<T> GetEnumerator() => new SetEnumerator<T>(_values);
-        IEnumerator IEnumerable.GetEnumerator() => new SetEnumerator<T>(_values);
+        public IEnumerator<T> GetEnumerator() => _count == 0 ? EmptyEnumerator<T>.Instance : new SetEnumerator<T>(_values, _values.Length, _version);
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }
 
     //**********************************************************************************************
@@ -90,21 +89,19 @@ namespace Vurbiri.Reactive.Collections
         public ReactiveSet(int capacity)
         {
             _capacity = capacity;
-            _values = new T[_capacity];
+            _values = capacity == 0 ? Array.Empty<T>() : new T[capacity];
         }
 
         public void Add(T item)
         {
-            if (_count == _capacity)
+            int count = _count;
+
+            if (count == _capacity)
             {
                 _capacity = _capacity << 1 | BASE_CAPACITY;
+                Array.Resize(ref _values, _capacity);
 
-                T[] array = new T[_capacity];
-                for (int i = 0; i < _count; ++i)
-                    array[i] = _values[i];
-                _values = array;
-
-                AddItem(item, _count);
+                AddItem(item, count);
             }
             else
             {
@@ -145,13 +142,19 @@ namespace Vurbiri.Reactive.Collections
 
         private void RedirectEvents(T item, TypeEvent operation)
         {
+            if (operation == TypeEvent.Change || operation == TypeEvent.Subscribe)
+            {
+                _version.Signal(item, operation);
+                return;
+            }
+
             if (operation == TypeEvent.Remove)
             {
                 _values[item.Index] = null;
                 _count.Decrement();
             }
 
-            _changeEvent.Invoke(item, operation);
+            _version.Next(item, operation);
         }
     }
 }

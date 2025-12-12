@@ -2,7 +2,7 @@ using System.Collections;
 
 namespace Vurbiri
 {
-    sealed public class WaitFrames : Enumerator
+    sealed public class WaitFrames : AWait
     {
         private ushort _waitFrames;
         private ushort _currentFrames;

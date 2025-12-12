@@ -1,6 +1,7 @@
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Collections
@@ -10,8 +11,8 @@ namespace Vurbiri.Collections
     {
         public TValue[] Values { [Impl(256)] get => _values; }
 
-        public new TValue this[Id<TId> id] { [Impl(256)] get => _values[id.Value]; [Impl(256)] set => _values[id.Value] = value; }
-        public new TValue this[int index]  { [Impl(256)] get => _values[index];    [Impl(256)] set => _values[index] = value; }
+        public new TValue this[Id<TId> id] { [Impl(256)] get => _values[id.Value]; [Impl(256)] set { _values[id.Value] = value; _version.Next(); } }
+        public new TValue this[int index]  { [Impl(256)] get => _values[index];    [Impl(256)] set { _values[index] = value; _version.Next(); } }
 
         #region Constructors
         public IdArray() { }
@@ -22,10 +23,12 @@ namespace Vurbiri.Collections
         public IdArray(IReadOnlyList<TValue> list) : base(list) { }
         #endregion
 
-        public void Reset()
+        public void Clear()
         {
-            for (int i = 0; i < IdType<TId>.Count; ++i)
-                _values[i] = default;
+            if (RuntimeHelpers.IsReferenceOrContainsReferences<TValue>())
+                Array.Clear(_values, 0, IdType<TId>.Count);
+
+            _version.Next();
         }
 
         public static implicit operator IdArray<TId, TValue>(TValue[] value) => new(value);

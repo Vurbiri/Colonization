@@ -14,7 +14,7 @@ namespace Vurbiri.Colonization
         private const int COUNT = CurrencyId.MainCount;
 
         private readonly int[] _exchange;
-        private readonly VAction<ExchangeRate> _changeValue = new();
+        private readonly ReactiveVersion<ExchangeRate> _version = new();
         private Chance _chance;
         private int _rate;
 
@@ -39,18 +39,22 @@ namespace Vurbiri.Colonization
             return new(abilities, perks);
         }
 
-        public Subscription Subscribe(Action<ExchangeRate> action, bool instantGetValue = true) => _changeValue.Add(action, this, instantGetValue);
+        public Subscription Subscribe(Action<ExchangeRate> action, bool instantGetValue = true)
+        {
+            if (instantGetValue) action(this);
+            return _version.Add(action);
+        }
 
         public void Update()
         {
             for (int i = 0; i < CurrencyId.MainCount; ++i)
                 _exchange[i] = _rate - _chance.Select(1);
 
-            _changeValue.Invoke(this);
+            _version.Next(this);
         }
 
-        public IEnumerator<int> GetEnumerator() => new ArrayEnumerator<int>(_exchange, COUNT);
-        IEnumerator IEnumerable.GetEnumerator() => new ArrayEnumerator<int>(_exchange, COUNT);
+        public IEnumerator<int> GetEnumerator() => new ArrayEnumerator<int>(_exchange, COUNT, _version);
+        IEnumerator IEnumerable.GetEnumerator() => new ArrayEnumerator<int>(_exchange, COUNT, _version);
 
         private void OnExchangeRate(int value) => _rate = value;
         private void OnExchangeSaleChance(int value) => _chance.Value = value;

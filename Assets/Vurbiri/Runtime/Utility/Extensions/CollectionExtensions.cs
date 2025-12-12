@@ -73,13 +73,6 @@ namespace Vurbiri
         }
         [Impl(256)] public static T RandomExtract<T>(this List<T> self) => Extract<T>(self, UnityEngine.Random.Range(0, self.Count));
 
-        public static T[] Grow<T>(this T[] self, int count, int capacity) 
-        {
-            var values = new T[capacity];
-            for (int i = 0; i < count; ++i)
-                values[i] = self[i];
-            return values;
-        }
 
         public static void Shuffle<T>(this List<T> self)
         {

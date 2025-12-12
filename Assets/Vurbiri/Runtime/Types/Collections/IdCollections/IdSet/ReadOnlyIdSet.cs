@@ -12,12 +12,13 @@ namespace Vurbiri.Collections
     {
         [SerializeField] protected TValue[] _values = new TValue[IdType<TId>.Count];
         [SerializeField] protected int _count;
-        protected readonly int _capacity = IdType<TId>.Count;
+
+        protected readonly Version _version = new();
 
         public int Fullness { [Impl(256)] get => _count; }
-        public int Count { [Impl(256)] get => _capacity; }
-        public bool IsFull { [Impl(256)] get => _count == _capacity; }
-        public bool IsNotFull { [Impl(256)] get => _count < _capacity; }
+        public int Count { [Impl(256)] get => IdType<TId>.Count; }
+        public bool IsFull { [Impl(256)] get => _count == IdType<TId>.Count; }
+        public bool IsNotFull { [Impl(256)] get => _count < IdType<TId>.Count; }
 
         public TValue this[int id]     { [Impl(256)] get => _values[id]; }
         public TValue this[Id<TId> id] { [Impl(256)] get => _values[id.Value]; }
@@ -57,7 +58,7 @@ namespace Vurbiri.Collections
         [Impl(256)] public bool TryGet(int index, out TValue value) => (value = _values[index]) != null;
         [Impl(256)] public bool TryGet(Id<TId> id, out TValue value) => (value = _values[id.Value]) != null;
 
-        public IEnumerator<TValue> GetEnumerator() => new SetEnumerator<TValue>(_values, IdType<TId>.Count);
-        IEnumerator IEnumerable.GetEnumerator() => new SetEnumerator<TValue>(_values, IdType<TId>.Count);
+        public IEnumerator<TValue> GetEnumerator() => _count == 0 ? EmptyEnumerator<TValue>.Instance : new SetEnumerator<TValue>(_values, IdType<TId>.Count, _version);
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }
 }

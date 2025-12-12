@@ -1,6 +1,6 @@
 namespace Vurbiri
 {
-    public abstract class Enumerator : System.Collections.IEnumerator
+    public abstract class AWait : System.Collections.IEnumerator
     {
         public object Current => null;
 

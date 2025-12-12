@@ -10,11 +10,11 @@ namespace Vurbiri.Reactive.Collections
     public abstract class ReadOnlyReactiveList<T> : IReadOnlyList<T>
     {
         protected static readonly IEqualityComparer<T> s_comparer = EqualityComparer<T>.Default;
+        protected static readonly T[] s_empty = new T[0];
 
         protected T[] _values;
         protected readonly RInt _count = new(0);
-
-        protected readonly VAction<int, T, TypeEvent> _changeEvent = new();
+        protected readonly ReactiveVersion<int, T, TypeEvent> _version = new();
 
         public T this[int index] 
         {
@@ -36,9 +36,9 @@ namespace Vurbiri.Reactive.Collections
                     action(i, _values[i], TypeEvent.Subscribe);
             }
 
-            return _changeEvent.Add(action);
+            return _version.Add(action);
         }
-        public void Unsubscribe(Action<int, T, TypeEvent> action) => _changeEvent.Remove(action);
+        public void Unsubscribe(Action<int, T, TypeEvent> action) => _version.Remove(action);
 
         [Impl(256)] public bool Contains(T item) => IndexOf(item) >= 0;
 
@@ -49,8 +49,8 @@ namespace Vurbiri.Reactive.Collections
             return i;
         }
 
-        public IEnumerator<T> GetEnumerator() => new ArrayEnumerator<T>(_values, _count.Value);
-        IEnumerator IEnumerable.GetEnumerator() => new ArrayEnumerator<T>(_values, _count.Value);
+        public IEnumerator<T> GetEnumerator() => _count == 0 ? EmptyEnumerator<T>.Instance : new ArrayEnumerator<T>(_values, _count, _version);
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }
 
     //**********************************************************************************************
@@ -76,7 +76,7 @@ namespace Vurbiri.Reactive.Collections
                 if (!s_comparer.Equals(_values[index], value))
                 {
                     _values[index] = value;
-                    _changeEvent.Invoke(index, value, TypeEvent.Change);
+                    _version.Next(index, value, TypeEvent.Change);
                 }
             }
         }
@@ -86,29 +86,27 @@ namespace Vurbiri.Reactive.Collections
         [Impl(256)] public ReactiveList(int capacity)
         {
             _capacity = capacity;
-            _values = new T[_capacity];
+            _values = capacity == 0 ? s_empty : new T[capacity];
         }
 
-        public ReactiveList(IReadOnlyList<T> values)
+        [Impl(256)] public ReactiveList(ICollection<T> values)
         {
             _capacity = _count.Value = values.Count;
             _values = new T[_capacity];
-
-            for (int i = 0; i < _capacity; ++i)
-                _values[i] = values[i];
+            values.CopyTo(_values, 0);
         }
         #endregion
 
-        public void Signal(int index)
+        [Impl(256)] public void Signal(int index)
         {
             Throw.IfIndexOutOfRange(index, _count);
-            _changeEvent.Invoke(index, _values[index], TypeEvent.Change);
+            _version.Signal(index, _values[index], TypeEvent.Change);
         }
-        public void Signal(T item)
+        [Impl(256)] public void Signal(T item)
         {
             int index = IndexOf(item);
             if (index >= 0)
-                _changeEvent.Invoke(index, _values[index], TypeEvent.Change);
+                _version.Signal(index, _values[index], TypeEvent.Change);
         }
 
         public void AddOrReplace(T item)
@@ -118,7 +116,7 @@ namespace Vurbiri.Reactive.Collections
             if (index >= 0)
             {
                 _values[index] = item;
-                _changeEvent.Invoke(index, item, TypeEvent.Change);
+                _version.Next(index, item, TypeEvent.Change);
             }
             else
             {
@@ -133,7 +131,7 @@ namespace Vurbiri.Reactive.Collections
                 GrowArray();
 
             _values[_count] = item;
-            _changeEvent.Invoke(_count, item, TypeEvent.Add);
+            _version.Next(_count, item, TypeEvent.Add);
             _count.Increment();
         }
 
@@ -144,14 +142,15 @@ namespace Vurbiri.Reactive.Collections
             if (_count == _capacity)
                 GrowArray();
 
-            for (int i = _count; i > index; i--)
-                _values[i] = _values[i - 1];
+            if (index < _count)
+                Array.Copy(_values, index, _values, index + 1, _count - index);
 
             _values[index] = item;
-            _changeEvent.Invoke(index, item, TypeEvent.Insert);
+            _version.Next(index, item, TypeEvent.Insert);
             _count.Increment();
         }
 
+        [Impl(256)]
         public bool Remove(T item)
         {
             int index = IndexOf(item);
@@ -168,12 +167,12 @@ namespace Vurbiri.Reactive.Collections
             T temp = _values[index];
             
             _count.SilentRemove();
-            for (int i = index; i < _count; ++i)
-                _values[i] = _values[i + 1];
+            if (index < _count)
+                Array.Copy(_values, index + 1, _values, index, _count - index);
 
             _values[_count] = default;
 
-            _changeEvent.Invoke(index, temp, TypeEvent.Remove);
+            _version.Next(index, temp, TypeEvent.Remove);
             _count.Signal();
         }
 
@@ -181,20 +180,17 @@ namespace Vurbiri.Reactive.Collections
         {
             for (int i = 0; i < _count; ++i)
             {
-                _changeEvent.Invoke(i, _values[i], TypeEvent.Remove);
+                _version.Signal(i, _values[i], TypeEvent.Remove);
                 _values[i] = default;
             }
 
+            _version.Next();
             _count.Value = 0;
         }
 
-        public void CopyTo(T[] array, int arrayIndex)
-        {
-            for (int i = arrayIndex; i < _count; ++i)
-                array[i] = _values[i];
-        }
+        [Impl(256)] public void CopyTo(T[] array, int arrayIndex) => Array.Copy(_values, 0, array, arrayIndex, _count);
         #endregion
 
-        [Impl(256)] private void GrowArray() => _values = _values.Grow(_count, _capacity = _capacity << 1 | BASE_CAPACITY);
+        [Impl(256)] private void GrowArray() => System.Array.Resize(ref _values, _capacity = _capacity << 1 | BASE_CAPACITY);
     }
 }

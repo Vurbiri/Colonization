@@ -11,12 +11,16 @@ namespace Vurbiri.Collections
         public new TValue this[int index]
         {
             [Impl(256)] get => _values[index];
-            [Impl(256)] set => _values[index] = value;
+            [Impl(256)] set
+            {
+                _values[index] = value;
+                _version.Next();
+            }
         }
 
         [Impl(256)] public Array(int count) : base(count) { }
         [Impl(256)] public Array(params TValue[] values) : base(values) { }
-        [Impl(256), JsonConstructor] public Array(IReadOnlyList<TValue> list) : base(list) { }
+        [Impl(256), JsonConstructor] public Array(ICollection<TValue> collection) : base(collection) { }
 
         public void Resize(int newSize)
         {
@@ -29,6 +33,7 @@ namespace Vurbiri.Collections
 
                 _values = newArr;
                 _count = newSize;
+                _version.Next();
             }
         }
 

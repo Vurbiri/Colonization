@@ -20,7 +20,7 @@ namespace Vurbiri.Colonization
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)] 
-        public Enumerator Block(bool isActive)
+        public AWait Block(bool isActive)
         {
             if (isActive)
                 _stateMachine.SetState(_blockState);

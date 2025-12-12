@@ -6,7 +6,7 @@ using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri
 {
-    public class CoroutinesQueue : Enumerator, System.IDisposable
+    public class CoroutinesQueue : AWait, System.IDisposable
     {
         private readonly Queue<IEnumerator> _coroutines = new();
         private readonly Action _finalAction;

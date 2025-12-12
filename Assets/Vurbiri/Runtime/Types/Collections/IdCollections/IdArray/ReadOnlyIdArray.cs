@@ -12,6 +12,8 @@ namespace Vurbiri.Collections
     {
         [SerializeField] protected TValue[] _values = new TValue[IdType<TId>.Count];
 
+        protected readonly Version _version = new();
+
         public int Count { [Impl(256)]  get => IdType<TId>.Count; }
 
         public TValue this[Id<TId> id] { [Impl(256)] get => _values[id.Value]; }
@@ -46,8 +48,8 @@ namespace Vurbiri.Collections
 
         [Impl(256)] public ReadOnlyArray<TValue> ToArray() => new(_values);
 
-        public IEnumerator<TValue> GetEnumerator() => new ArrayEnumerator<TValue>(_values, IdType<TId>.Count);
-        IEnumerator IEnumerable.GetEnumerator() => new ArrayEnumerator<TValue>(_values, IdType<TId>.Count);
+        public IEnumerator<TValue> GetEnumerator() => new ArrayEnumerator<TValue>(_values, IdType<TId>.Count, _version);
+        IEnumerator IEnumerable.GetEnumerator() => new ArrayEnumerator<TValue>(_values, IdType<TId>.Count, _version);
 
         public static implicit operator ReadOnlyIdArray<TId, TValue>(TValue[] value) => new(value);
         public static implicit operator ReadOnlyIdArray<TId, TValue>(Roster<TValue> value) => new(value);

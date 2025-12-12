@@ -1,5 +1,7 @@
 using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Collections
@@ -8,7 +10,6 @@ namespace Vurbiri.Collections
     public class Roster<TValue> : ReadOnlyArray<TValue>, IList<TValue>
     {
         private const int BASE_CAPACITY = 3;
-
         private int _capacity;
 
         public new TValue this[int index]
@@ -22,6 +23,7 @@ namespace Vurbiri.Collections
             {
                 Throw.IfIndexOutOfRange(index, _count);
                 _values[index] = value;
+                _version.Next();
             }
         }
 
@@ -33,11 +35,10 @@ namespace Vurbiri.Collections
         [Impl(256)] public Roster(int capacity)
         {
             _capacity = capacity;
-            _values = new TValue[_capacity];
+            _values = capacity == 0 ? s_empty : new TValue[capacity];
         }
         [Impl(256)] public Roster(params TValue[] values) : base(values) => _capacity = _count;
-        [Impl(256)] public Roster(List<TValue> values) : base(values) => _capacity = _count;
-        [Impl(256), JsonConstructor] public Roster(IReadOnlyList<TValue> values) : base(values) => _capacity = _count;
+        [Impl(256), JsonConstructor] public Roster(ICollection<TValue> collection) : base(collection) => _capacity = _count;
         #endregion
 
         [Impl(256)] public void Add(TValue item)
@@ -46,6 +47,7 @@ namespace Vurbiri.Collections
                 GrowArray();
 
             _values[_count++] = item;
+            _version.Next();
         }
 
         [Impl(256)] public bool TryAdd(TValue item)
@@ -62,32 +64,35 @@ namespace Vurbiri.Collections
             if (_count == _capacity)
                 GrowArray();
 
-            for (int i = _count; i > index; --i)
-                _values[i] = _values[i - 1];
+            if (index < _count)
+                Array.Copy(_values, index, _values, index + 1, _count - index);
 
             _values[index] = item;
             ++_count;
+            _version.Next();
         }
 
         public bool Remove(TValue item)
         {
-            int index = -1;
-            while (++index < _count && !s_comparer.Equals(_values[index], item));
-            if (index < _count)
+            int index = IndexOf(item);
+            if (index >= 0)
+            {
                 RemoveAt(index);
+                return true;
+            }
 
-            return index < _count;
+            return false;
         }
 
         public void RemoveAt(int index)
         {
             Throw.IfIndexOutOfRange(index, _count);
 
-            --_count;
-            for (int i = index; i < _count; ++i)
-                _values[i] = _values[i + 1];
+            if (index < --_count)
+                Array.Copy(_values, index + 1, _values, index, _count - index);
 
             _values[_count] = default;
+            _version.Next();
         }
 
         public TValue Extract()
@@ -98,19 +103,16 @@ namespace Vurbiri.Collections
             return value;
         }
 
-        public void Clear()
+        [Impl(256)] public void Clear()
         {
-            for (int i = 0; i < _count; ++i)
-                _values[i] = default;
+            if (_count > 0 && RuntimeHelpers.IsReferenceOrContainsReferences<TValue>())
+                Array.Clear(_values, 0, _count);
 
             _count = 0;
+            _version.Next();
         }
 
-        public void CopyTo(TValue[] array, int arrayIndex)
-        {
-            for (int i = arrayIndex; i < _count; ++i)
-                array[i] = _values[i];
-        }
+        [Impl(256)] public void CopyTo(TValue[] array, int arrayIndex) => Array.Copy(_values, 0, array, arrayIndex, _count);
 
         [Impl(256)] public void TrimExcess() 
         {
@@ -119,6 +121,6 @@ namespace Vurbiri.Collections
         }
 
         [Impl(256)] private void GrowArray() => GrowArray(_capacity << 1 | BASE_CAPACITY);
-        [Impl(256)] private void GrowArray(int capacity) => _values = _values.Grow(_count, _capacity = capacity);
+        [Impl(256)] private void GrowArray(int capacity) => Array.Resize(ref _values, _capacity = capacity);
     }
 }

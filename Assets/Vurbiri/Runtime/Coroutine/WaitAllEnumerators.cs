@@ -4,7 +4,7 @@ using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri
 {
-    sealed public class WaitAllEnumerators : Enumerator
+    sealed public class WaitAllEnumerators : AWait
     {
         private readonly List<Routine> _coroutines = new();
 

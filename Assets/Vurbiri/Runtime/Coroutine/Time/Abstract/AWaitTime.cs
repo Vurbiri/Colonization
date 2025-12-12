@@ -5,7 +5,7 @@ using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 namespace Vurbiri
 {
     [System.Serializable]
-    public abstract class AWaitTime : Enumerator
+    public abstract class AWaitTime : AWait
     {
         [UnityEngine.SerializeField] private float _waitTime;
 
@@ -13,21 +13,21 @@ namespace Vurbiri
         private bool _isWait;
 
         public float Time { [Impl(256)] get => _waitTime; [Impl(256)] set => _waitTime = value; } 
-        public Enumerator CurrentTimer => _timer;
+        public AWait CurrentTimer => _timer;
 
         protected AWaitTime(Func<float> applicationTime) => _timer = new(applicationTime);
         protected AWaitTime(float time, Func<float> applicationTime) : this(applicationTime) => _waitTime = time;
         protected AWaitTime(AWaitTime time, Func<float> applicationTime) : this(applicationTime) => _waitTime = time._waitTime;
 
-        [Impl(256)] public Enumerator Restart() => _timer.Set(_waitTime);
+        [Impl(256)] public AWait Restart() => _timer.Set(_waitTime);
 
-        [Impl(256)] public Enumerator Restart(float value)
+        [Impl(256)] public AWait Restart(float value)
         {
             _waitTime = value;
             return _timer.Set(value);
         }
 
-        [Impl(256)] public Enumerator OffsetRestart(float offset) => _timer.Set(_waitTime + offset);
+        [Impl(256)] public AWait OffsetRestart(float offset) => _timer.Set(_waitTime + offset);
 
         sealed public override bool MoveNext()
         {
@@ -39,7 +39,7 @@ namespace Vurbiri
 
         #region Nested Timer
         // *******************************************************
-        sealed private class Timer : Enumerator
+        sealed private class Timer : AWait
         {
             private readonly Func<float> _applicationTime;
             private float _waitUntilTime;
@@ -48,7 +48,7 @@ namespace Vurbiri
 
             [Impl(256)] public override bool MoveNext() => _waitUntilTime > _applicationTime();
 
-            [Impl(256)] public Enumerator Set(float time)
+            [Impl(256)] public AWait Set(float time)
             {
                 _waitUntilTime = time + _applicationTime();
                 return this;

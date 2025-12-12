@@ -25,6 +25,7 @@ namespace Vurbiri.Collections
             {
                 _values[value.Id.Value] = value;
                 _count++;
+                _version.Next();
             }
             return result;
         }
@@ -41,6 +42,7 @@ namespace Vurbiri.Collections
                 _count++;
 
             _values[value.Id.Value] = value;
+            _version.Next();
         }
 
         [Impl(256)] public void ReplaceRange(IEnumerable<TValue> collection)

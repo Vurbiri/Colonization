@@ -5,7 +5,7 @@ using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri
 {
-	sealed public class WaitAll : Enumerator, System.IDisposable
+	sealed public class WaitAll : AWait, System.IDisposable
     {
         private readonly Dictionary<int, Coroutine> _coroutines = new();
         private readonly MonoBehaviour _mono;

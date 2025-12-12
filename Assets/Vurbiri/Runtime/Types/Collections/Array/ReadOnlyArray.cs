@@ -11,8 +11,11 @@ namespace Vurbiri.Collections
     public class ReadOnlyArray<TValue> : IReadOnlyList<TValue>, ISerializationCallbackReceiver
     {
         protected static readonly IEqualityComparer<TValue> s_comparer = EqualityComparer<TValue>.Default;
+        protected static readonly TValue[] s_empty = new TValue[0];
 
         [SerializeField] protected TValue[] _values;
+
+        protected readonly Version _version = new();
         protected int _count;
 
         public TValue this[int index] { [Impl(256)] get => _values[index]; }
@@ -30,12 +33,11 @@ namespace Vurbiri.Collections
             _count = values.Length;
         }
         [JsonConstructor]
-        public ReadOnlyArray(IReadOnlyList<TValue> list)
+        public ReadOnlyArray(ICollection<TValue> collection)
         {
-            _count = list.Count;
+            _count = collection.Count;
             _values = new TValue[_count];
-            for (int i = 0; i < _count; ++i)
-                _values[i] = list[i];
+            collection.CopyTo(_values, 0);
         }
         protected ReadOnlyArray() { }
 
@@ -55,8 +57,8 @@ namespace Vurbiri.Collections
         [Impl(256)] public int LeftIndex(int index) => (index == 0 ? _count : index) - 1;
         [Impl(256)] public int RightIndex(int index) => (index + 1) % _count;
 
-        [Impl(256)] public IEnumerator<TValue> GetEnumerator() => new ArrayEnumerator<TValue>(_values, _count);
-        [Impl(256)] IEnumerator IEnumerable.GetEnumerator() => new ArrayEnumerator<TValue>(_values, _count);
+        [Impl(256)] public IEnumerator<TValue> GetEnumerator() => _count == 0 ? EmptyEnumerator<TValue>.Instance : new ArrayEnumerator<TValue>(_values, _count, _version);
+        [Impl(256)] IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
         [Impl(256)] public static implicit operator ReadOnlyArray<TValue>(TValue[] values) => new(values);
 

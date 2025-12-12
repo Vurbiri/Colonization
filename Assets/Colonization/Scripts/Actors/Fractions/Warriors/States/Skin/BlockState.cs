@@ -17,7 +17,7 @@ namespace Vurbiri.Colonization
                 _wait = wait;
             }
 
-            public Enumerator Enable(bool enable)
+            public AWait Enable(bool enable)
             {
                 _sfx.Block(enable);
                 return enable ? _wait.Restart() : null;

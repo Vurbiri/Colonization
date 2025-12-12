@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Vurbiri
 {
-    public abstract class AMoveUsingLerp : Enumerator
+    public abstract class AMoveUsingLerp : AWait
     {
         [SerializeField] private Transform _transform;
         [SerializeField] private float _speed;

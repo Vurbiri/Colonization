@@ -11,7 +11,7 @@ namespace Vurbiri.Colonization
         protected readonly AbilitiesSet<ActorAbilityId> _abilities;
         protected ReactiveEffect[] _values;
         protected int _count, _capacity = 3;
-        protected readonly VAction<ReactiveEffect, TypeEvent> _eventChanged = new();
+        protected readonly ReactiveVersion<ReactiveEffect, TypeEvent> _version = new();
         
         public int Count { [Impl(256)] get => _count; }
 
@@ -29,7 +29,7 @@ namespace Vurbiri.Colonization
                     action(_values[i], TypeEvent.Subscribe);
             }
 
-            return _eventChanged.Add(action);
+            return _version.Add(action);
         }
 
         public bool Contains<T>(T code) where T : IEquatable<EffectCode>
@@ -47,7 +47,7 @@ namespace Vurbiri.Colonization
             return result;
         }
 
-        public IEnumerator<ReactiveEffect> GetEnumerator() => new ArrayEnumerator<ReactiveEffect>(_values, _count);
+        public IEnumerator<ReactiveEffect> GetEnumerator() => new ArrayEnumerator<ReactiveEffect>(_values, _count, _version);
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }
 
@@ -68,7 +68,7 @@ namespace Vurbiri.Colonization
                         return delta;
 
                 if (_count == _capacity)
-                    _values = _values.Grow(_count, _capacity = _capacity << 1 | 3);
+                    Array.Resize(ref _values, _capacity = _capacity << 1 | 3);
 
                 _values[_count] = effect;
                 effect.Adding(RedirectEvents, _count++);
@@ -114,7 +114,7 @@ namespace Vurbiri.Colonization
 
         public void Dispose()
         {
-            _eventChanged.Clear();
+            _version.Clear();
             for (int i = 0; i < _count; i++)
                 _values[i].Dispose();
             
@@ -142,7 +142,7 @@ namespace Vurbiri.Colonization
             if (operation == TypeEvent.Remove)
                 RemoveItem(effect);
 
-            _eventChanged.Invoke(effect, operation);
+            _version.Next(effect, operation);
         }
     }
 }

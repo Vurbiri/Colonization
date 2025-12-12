@@ -14,6 +14,8 @@ namespace Vurbiri.Colonization
         [SerializeField] protected int[] _values = new int[COUNT];
         [SerializeField] protected int _amount;
 
+        protected readonly Version _version = new();
+
         public int this[int index] { [Impl(256)] get => _values[index]; }
         public int this[Id<CurrencyId> id] { [Impl(256)] get => _values[id]; }
 
@@ -124,8 +126,8 @@ namespace Vurbiri.Colonization
         }
         #endregion
 
-        public IEnumerator<int> GetEnumerator() => new ArrayEnumerator<int>(_values, COUNT);
-        IEnumerator IEnumerable.GetEnumerator() => new ArrayEnumerator<int>(_values, COUNT);
+        public IEnumerator<int> GetEnumerator() => new ArrayEnumerator<int>(_values, COUNT, _version);
+        IEnumerator IEnumerable.GetEnumerator() => new ArrayEnumerator<int>(_values, COUNT, _version);
 
         #region Arithmetic
         public static MainCurrencies operator -(ReadOnlyCurrencies a, ReadOnlyMainCurrencies b)
@@ -251,32 +253,38 @@ namespace Vurbiri.Colonization
         [Impl(256)] public void Increment(Id<CurrencyId> id)
         {
             ++_values[id]; ++_amount;
+            _version.Next();
         }
         [Impl(256)] public void Decrement(Id<CurrencyId> id)
         {
             --_values[id]; --_amount;
+            _version.Next();
         }
 
         [Impl(256)] public void Set(Id<CurrencyId> id, int value)
         {
             _amount += value - _values[id];
             _values[id] = value;
+            _version.Next();
         }
         [Impl(256)] public void Add(Id<CurrencyId> id, int value)
         {
             _amount += value;
             _values[id] += value;
+            _version.Next();
         }
         [Impl(256)] public void Remove(Id<CurrencyId> id, int value)
         {
             _amount -= value;
             _values[id] -= value;
+            _version.Next();
         }
 
         [Impl(256)] public void AddToRandom(int value)
         {
             _values[Random.Range(0, COUNT)] += value;
             _amount += value;
+            _version.Next();
         }
 
         public void Multiply(int ratio)
@@ -287,6 +295,7 @@ namespace Vurbiri.Colonization
                     _values[i] *= ratio;
 
                 _amount *= ratio;
+                _version.Next();
             }
         }
 
@@ -297,6 +306,7 @@ namespace Vurbiri.Colonization
                 for (int i = 0; i < COUNT; ++i)
                     _values[i] += other[i];
                 _amount += other.Amount;
+                _version.Next();
             }
         }
 
@@ -311,6 +321,7 @@ namespace Vurbiri.Colonization
                 add = Random.Range(1, 2 + (count >> 2));
                 _values[index] += sign * add;
             }
+            _version.Next();
         }
 
         public void Clear()
@@ -318,6 +329,7 @@ namespace Vurbiri.Colonization
             for (int i = 0; i < COUNT; ++i)
                 _values[i] = 0;
             _amount = 0;
+            _version.Next();
         }
 
         [Impl(256)] public void DirtyReset(int index) => _values[index] = 0;
@@ -328,6 +340,7 @@ namespace Vurbiri.Colonization
             for (int i = 0; i < COUNT; ++i)
                 _values[i] = other[i];
             _amount = other.Amount;
+            _version.Next();
         }
 
         public void Normalize(int ratio)
@@ -339,6 +352,7 @@ namespace Vurbiri.Colonization
                     _values[i] = (_values[i] - max) * ratio;
 
                 _amount = (_amount - max * COUNT) * ratio;
+                _version.Next();
             }
         }
 
