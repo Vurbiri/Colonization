@@ -14,7 +14,6 @@ namespace Vurbiri.Colonization
                 protected readonly ReadOnlyArray<HitEffects> _effectsHint;
                 protected readonly int _countHits;
 
-                protected Coroutine _coroutineAction;
                 protected readonly WaitForSeconds _waitTargetSkillAnimation, _waitEndSkillAnimation;
 
                 public ASkillState(AStates<TActor, TSkin> parent, SkillSettings skill, int id) : base(parent, id, skill.Cost)
@@ -38,24 +37,8 @@ namespace Vurbiri.Colonization
                     return new MovementSkillState(parent, skill, speedRun, id);
                 }
 
-                public override void Enter() => _coroutineAction = StartCoroutine(Actions_Cn());
-
-                public override void Exit()
-                {
-                    if (_coroutineAction != null)
-                    {
-                        StopCoroutine(_coroutineAction);
-                        _coroutineAction = null;
-                    }
-                    signal.Send();
-                }
-
-                protected void ToExit()
-                {
-                    _coroutineAction = null;
-                    GetOutOfThisState();
-                }
-
+                public override void Enter() => StartCoroutine(Actions_Cn());
+                
                 protected abstract IEnumerator Actions_Cn();
                 protected abstract IEnumerator ApplySkill_Cn();
             }

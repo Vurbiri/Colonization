@@ -1,27 +1,29 @@
 using System.Collections;
 using System.Collections.Generic;
 
-namespace Vurbiri
+namespace Vurbiri.Collections
 {
-	internal class SetEnumerator<T> : IEnumerator<T> where T : class
+	internal struct SetEnumerator<T> : IEnumerator<T> where T : class
 	{
         private readonly T[] _values;
         private readonly Version.Current _version;
         private readonly int _count;
-        private int _cursor = 0;
+        private int _cursor;
         private T _current;
 
-        public T Current => _current;
+        public readonly T Current => _current;
 
-        object IEnumerator.Current => _current;
+        readonly object IEnumerator.Current => _current;
 
-        //public SetEnumerator(T[] values, Version.Current version) : this(values, values.Length) { }
         public SetEnumerator(T[] values, int count, Version.Current version)
         {
             _values = values;
             _count = count;
             _version = version;
+            _cursor = 0;
+            _current = null;
         }
+        public SetEnumerator(T[] values, int count) : this(values, count, Version.Static) { }
 
         public bool MoveNext()
         {
@@ -40,6 +42,6 @@ namespace Vurbiri
             _current = null;
         }
 
-        public void Dispose() { }
+        public readonly void Dispose() { }
     }
 }

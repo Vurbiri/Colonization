@@ -47,7 +47,8 @@ namespace Vurbiri.Colonization
                     Pay();
 
                     yield return wait;
-                    GetOutOfThisState();
+
+                    ToExit();
                 }
             }
         }

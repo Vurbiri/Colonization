@@ -4,12 +4,12 @@ using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 namespace Vurbiri
 {
     [System.Serializable, Newtonsoft.Json.JsonConverter(typeof(Converter))]
-    public struct Chance : System.IEquatable<Chance>
+    public struct Chance : System.IEquatable<Chance>, ISerializationCallbackReceiver
     {
-        [SerializeField] private int _value;
-        [SerializeField] private int _negentropy;
-
         public const int MAX_CHANCE = 100;
+
+        [SerializeField] private int _value;
+        private int _negentropy;
 
         public int Value { [Impl(256)] readonly get => _value; [Impl(256)] set => _value = value.Clamp(0, MAX_CHANCE); }
 
@@ -45,6 +45,11 @@ namespace Vurbiri
         public override readonly bool Equals(object obj) => obj is Chance chance && _value == chance._value;
         public readonly bool Equals(Chance other) => _value == other._value;
         public readonly override int GetHashCode() => _value.GetHashCode();
+
+        #region ISerializationCallbackReceiver
+        public readonly void OnBeforeSerialize() { }
+        public void OnAfterDeserialize() => _negentropy = SysRandom.Next(MAX_CHANCE);
+        #endregion
 
         public static implicit operator Chance(int value) => new(value);
 
@@ -101,7 +106,6 @@ namespace Vurbiri
 
 #if UNITY_EDITOR
         public const string valueField = nameof(_value);
-        public const string negentropyField = nameof(_negentropy);
 #endif
     }
 }

@@ -1,10 +1,10 @@
 using System;
 using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
-namespace Vurbiri
+namespace Vurbiri.Reactive.Collections
 {
 	//=======================================================================================
-	public class ReactiveVersion : Version, IUnsubscribed<Action>
+	public class ReactiveVersion : Vurbiri.Collections.Version, IUnsubscribed<Action>
 	{
 		private Action _action;
 
@@ -29,7 +29,7 @@ namespace Vurbiri
 		[Impl(256)] public void Clear() => _action = Dummy.Action;
 	}
 	//=======================================================================================
-	public class ReactiveVersion<TA> : Version, IUnsubscribed<Action<TA>>
+	public class ReactiveVersion<TA> : Vurbiri.Collections.Version, IUnsubscribed<Action<TA>>
 	{
 		private Action<TA> _action;
 
@@ -53,7 +53,7 @@ namespace Vurbiri
 		[Impl(256)] public void Clear() => _action = Dummy.Action;
 	}
 	//=======================================================================================
-	public class ReactiveVersion<TA, TB> : Version, IUnsubscribed<Action<TA, TB>>
+	public class ReactiveVersion<TA, TB> : Vurbiri.Collections.Version, IUnsubscribed<Action<TA, TB>>
 	{
 		private Action<TA, TB> _action;
 
@@ -77,7 +77,7 @@ namespace Vurbiri
 		[Impl(256)] public void Clear() => _action = Dummy.Action;
 	}
 	//=======================================================================================
-	public class ReactiveVersion<TA, TB, TC> : Version, IUnsubscribed<Action<TA, TB, TC>>
+	public class ReactiveVersion<TA, TB, TC> : Vurbiri.Collections.Version, IUnsubscribed<Action<TA, TB, TC>>
 	{
 		private Action<TA, TB, TC> _action;
 
@@ -101,7 +101,7 @@ namespace Vurbiri
 		[Impl(256)] public void Clear() => _action = Dummy.Action;
 	}
 	//=======================================================================================
-	public class ReactiveVersion<TA, TB, TC, TD> : Version, IUnsubscribed<Action<TA, TB, TC, TD>>
+	public class ReactiveVersion<TA, TB, TC, TD> : Vurbiri.Collections.Version, IUnsubscribed<Action<TA, TB, TC, TD>>
 	{
 		private Action<TA, TB, TC, TD> _action;
 

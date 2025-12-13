@@ -50,6 +50,7 @@
   "Saving": "Saving...",
   "GoodSave": "Game is saved",
   "ErrorSave": "Save error!",
+  "Exit": "Exit",
   "ExitToMenu": "Exit to main menu",
   "ExitToMenuMsg": "<align=\"center\">The game is not saved.\nAre you sure you want to exit?</align>"
 }

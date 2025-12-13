@@ -56,6 +56,18 @@ namespace Vurbiri.Colonization
             }
         }
 
+        public void AddMain(int value)
+        {
+            if (value != 0)
+            {
+                for (int i = 0; i < MainCount; ++i)
+                    _values[i].Add(value);
+
+                _amount.Add(value * MainCount);
+                _changeEvent.Invoke(this);
+            }
+        }
+
         public void AddBlood(int value)
         {
             if (value != 0)

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
+using Vurbiri.Collections;
 using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization
@@ -76,6 +77,12 @@ namespace Vurbiri.Colonization
         public ReadOnlyMainCurrencies(Id<CurrencyId> id, int value)
         {
             _values[id] = value; _amount = value;
+        }
+        public ReadOnlyMainCurrencies(int value)
+        {
+            for (int i = 0; i < COUNT; ++i)
+                _values[i] = value;
+            _amount = value * COUNT;
         }
 
         #region ToText

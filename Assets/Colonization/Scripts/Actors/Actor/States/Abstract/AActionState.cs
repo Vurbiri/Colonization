@@ -28,6 +28,13 @@ namespace Vurbiri.Colonization
 
                 sealed public override void Cancel() => Unselect(null);
 
+                public override void Exit()
+                {
+                    StopCoroutine();
+                    signal.Send();
+                }
+
+                [Impl(256)]
                 protected void Pay()
                 {
                     Moving.Off();

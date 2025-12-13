@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Runtime.CompilerServices;
-using UnityEngine;
 
 namespace Vurbiri.Colonization
 {
@@ -18,7 +17,6 @@ namespace Vurbiri.Colonization
                 private readonly ScaledMoveUsingLerp _move;
                 private readonly float _speed;
                 private readonly HitEffects _effectsHint;
-                protected Coroutine _coroutine;
                 protected Hexagon _target;
                 protected Key _direction;
 
@@ -32,22 +30,18 @@ namespace Vurbiri.Colonization
                 sealed public override void Enter()
                 {
                     if (_target != null)
-                        _coroutine = StartCoroutine(Move_Cn());
+                        StartCoroutine(Move_Cn());
                     else
                         GetOutOfThisState();
                 }
 
                 sealed public override void Exit()
                 {
-                    if (_coroutine != null)
-                    {
-                        StopCoroutine(_coroutine);
-                        _coroutine = null;
-                    }
+                    StopCoroutine();
 
                     _target = null;
-
                     _move.Skip();
+
                     signal.Send();
                 }
 
@@ -69,8 +63,7 @@ namespace Vurbiri.Colonization
                     CurrentHex = _target;
                     CurrentHex.ActorEnter(Actor);
 
-                    _coroutine = null;
-                    GetOutOfThisState();
+                    ToExit();
                 }
             }
             //******************************************************************************

@@ -63,5 +63,7 @@ namespace Vurbiri.Colonization
 
             _eventChanged.Invoke(this);
         }
+
+        [Impl(256)] public void Spawn(int demonId, Hexagon start) => _spawner.Create(demonId, start);
     }
 }

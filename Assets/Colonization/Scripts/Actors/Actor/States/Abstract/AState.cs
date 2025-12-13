@@ -12,6 +12,7 @@ namespace Vurbiri.Colonization
         {
             protected abstract class AState : ASelectableState
             {
+                private Coroutine _coroutine;
                 protected readonly AStates<TActor, TSkin> _parent;
 
                 #region Propirties
@@ -45,8 +46,21 @@ namespace Vurbiri.Colonization
                     _parent = parent;
                 }
 
-                [Impl(256)] protected Coroutine StartCoroutine(IEnumerator routine) => _parent._actor.StartCoroutine(routine);
-                [Impl(256)] protected void StopCoroutine(Coroutine routine) => _parent._actor.StopCoroutine(routine);
+                [Impl(256)] protected void ToExit()
+                {
+                    _coroutine = null;
+                    GetOutOfThisState();
+                }
+
+                [Impl(256)] protected void StartCoroutine(IEnumerator routine) => _coroutine = _parent._actor.StartCoroutine(routine);
+                [Impl(256)] protected void StopCoroutine()
+                {
+                    if (_coroutine != null)
+                    {
+                        _parent._actor.StopCoroutine(_coroutine);
+                        _coroutine = null;
+                    }
+                }
             }
         }
     }

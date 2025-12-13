@@ -78,6 +78,8 @@ namespace Vurbiri.Colonization
 
             return _eventPerk.Add(action);
         }
+        [Impl(256)] public void Unsubscribe(Action<Perk> action) => _eventPerk.Remove(action);
+
         [Impl(256)] public Subscription Subscribe(Action<HashSet<int>[]> action, bool instantGetValue = true)
         {
             return _eventHashSet.Add(action, _learnedPerks, instantGetValue);

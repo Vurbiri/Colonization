@@ -49,7 +49,11 @@ namespace Vurbiri.Colonization
                         GetOutOfThisState();
                 }
 
-                public override void Exit() => _targets.Clear();
+                public override void Exit()
+                {
+                    _targets.Clear();
+                    signal.Send();
+                }
 
                 private IEnumerator ApplySkill_Cn()
                 {
@@ -76,7 +80,8 @@ namespace Vurbiri.Colonization
                     Pay();
 
                     yield return wait;
-                    GetOutOfThisState();
+
+                    ToExit();
                 }
             }
         }

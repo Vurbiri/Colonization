@@ -188,6 +188,7 @@ namespace Vurbiri.Colonization
         }
         [Impl(256)] public bool CanRecruiting(Id<WarriorId> id) => _abilities.IsTrue(id.ToState());
 
+        [Impl(256)] public void Recruiting(Id<WarriorId> id, Hexagon hexagon) => _spawner.Create(id, hexagon);
         [Impl(256)] public void Recruiting(Id<WarriorId> id, Crossroad crossroad) => StartCoroutine(Recruiting_Cn(id, crossroad));
         public WaitSignal Recruiting_Wait(Id<WarriorId> id, Hexagon hexagon, ReadOnlyMainCurrencies cost)
         {
@@ -207,45 +208,6 @@ namespace Vurbiri.Colonization
             yield return hexagon;
             if (hexagon.IsNotNull)
                 yield return Recruiting_Wait(id, hexagon, GameContainer.Prices.Warriors[id]);
-        }
-        #endregion
-
-
-        // TSET !!!!!!!!!!!!!!
-        #region ================== SpawnTests ============================
-        public void SpawnTest(int id, int count)
-        {
-            UnityEngine.Debug.Log("SpawnTest");
-            Hexagon hexagon;
-            for (int i = 0; i < count; i++)
-            {
-                while (!(hexagon = GameContainer.Hexagons[HEX.NEARS.Random]).CanWarriorEnter);
-                _spawner.Create(id, hexagon);
-            }
-        }
-        public void SpawnTest(Id<WarriorId> id, Key key)
-        {
-            UnityEngine.Debug.Log("SpawnTest");
-            Hexagon hexagon;
-            if ((hexagon = GameContainer.Hexagons[key]).CanWarriorEnter)
-                _spawner.Create(id, hexagon);
-        }
-        public void SpawnDemonTest(Id<DemonId> id, Key key)
-        {
-            UnityEngine.Debug.Log("SpawnDemonTest");
-            Hexagon hexagon;
-            if ((hexagon = GameContainer.Hexagons[key]).CanDemonEnter)
-                _spawner.CreateDemon(id, hexagon);
-        }
-        public void SpawnDemonTest(int id, int count)
-        {
-            UnityEngine.Debug.Log("SpawnDemonTest");
-            Hexagon hexagon;
-            for (int i = 0; i < count; i++)
-            {
-                while (!(hexagon = GameContainer.Hexagons[HEX.NEARS.Random]).CanDemonEnter) ;
-                _spawner.CreateDemon(id, hexagon);
-            }
         }
         #endregion
     }

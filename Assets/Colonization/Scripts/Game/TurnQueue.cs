@@ -27,5 +27,11 @@ namespace Vurbiri.Colonization
             }
             SetPerson();
         }
+
+        [Impl(256)] public void Reset()
+        {
+            currentId = PlayerId.None;
+            isPerson = false;
+        }
     }
 }

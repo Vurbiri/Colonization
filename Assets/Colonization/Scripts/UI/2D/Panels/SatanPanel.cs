@@ -33,7 +33,7 @@ namespace Vurbiri.Colonization.UI
             GameContainer.Satan.Subscribe(SetValues, false);
 
             _indicator.canvasRenderer.SetAlpha(0f);
-            GameContainer.Satan.Interactable.Subscribe(IndicatorTurn);
+            GameContainer.GameEvents.Subscribe(IndicatorTurn);
         }
 
         private void SetLocalizationText(Localization localization)
@@ -55,39 +55,39 @@ namespace Vurbiri.Colonization.UI
             _levelTMP.text = satan.Level.ToStr();
         }
 
-        private void IndicatorTurn(bool run)
+        private void IndicatorTurn(Id<GameModeId> gameMode, TurnQueue turn)
         {
+            bool run = turn.currentId == PlayerId.Satan && (gameMode >= GameModeId.StartTurn & gameMode <= GameModeId.Play);
+            if (run & (run ^ _indicatorRun))
+                StartCoroutine(IndicatorTurn_Cn());
             _indicatorRun = run;
-            if (run) StartCoroutine(IndicatorTurn_Cn());
+        }
+        private IEnumerator IndicatorTurn_Cn()
+        {
+            float start = 0f, end = 1f, progress, sign;
+            _indicator.fillClockwise = true;
 
-            // ===== Local =====
-            IEnumerator IndicatorTurn_Cn()
+            yield return _waitStartIndicator.Restart();
+
+            _indicator.canvasRenderer.SetAlpha(1f);
+
+            while (_indicatorRun | !_indicator.fillClockwise)
             {
-                float start = 0f, end = 1f, progress, sign;
-                _indicator.fillClockwise = true;
+                progress = 0f; sign = end - start;
 
-                yield return _waitStartIndicator.Restart();
-
-                _indicator.canvasRenderer.SetAlpha(1f);
-
-                while (_indicatorRun | !_indicator.fillClockwise)
+                do
                 {
-                    progress = 0f; sign = end - start;
-
-                    do
-                    {
-                        progress += Time.unscaledDeltaTime * _indicatorSpeed;
-                        _indicator.fillAmount = start + sign * progress;
-                        yield return null;
-                    }
-                    while (progress < 1f);
-
-                    (start, end) = (end, start);
-                    _indicator.fillClockwise = !_indicator.fillClockwise;
+                    progress += Time.unscaledDeltaTime * _indicatorSpeed;
+                    _indicator.fillAmount = start + sign * progress;
+                    yield return null;
                 }
+                while (progress < 1f);
 
-                _indicator.canvasRenderer.SetAlpha(0f);
+                (start, end) = (end, start);
+                _indicator.fillClockwise = !_indicator.fillClockwise;
             }
+
+            _indicator.canvasRenderer.SetAlpha(0f);
         }
 
         private void OnDestroy()

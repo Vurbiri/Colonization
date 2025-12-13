@@ -1,25 +1,27 @@
 using System.Collections;
 using System.Collections.Generic;
 
-namespace Vurbiri
+namespace Vurbiri.Collections
 {
-	public class ArrayEnumerator<T> : IEnumerator<T>
+	public struct ArrayEnumerator<T> : IEnumerator<T>
 	{
         private readonly T[] _values;
         private readonly Version.Current _version;
         private readonly int _count;
-        private int _cursor = -1;
+        private int _cursor;
         private T _current;
 
-        public T Current => _current;
+        public readonly T Current => _current;
 
-        object IEnumerator.Current => _current;
+        readonly object IEnumerator.Current => _current;
 
         public ArrayEnumerator(T[] values, int count, Version.Current version)
         {
             _values = values;
-            _count = count;
             _version = version;
+            _count = count;
+            _cursor = -1;
+            _current = default;
         }
         public ArrayEnumerator(T[] values, int count) : this(values, count, Version.Static) { }
 
@@ -43,6 +45,6 @@ namespace Vurbiri
             _current = default;
         }
 
-        public void Dispose() { }
+        public readonly void Dispose() { }
     }
 }

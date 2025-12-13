@@ -42,6 +42,8 @@ namespace Vurbiri.Colonization
                 yield break;
             }
 
+            [Impl(256)] public void Create(int demonId, Hexagon start) => GameContainer.Actors.Create(ActorTypeId.Demon, demonId, _initData, start);
+
             [Impl(256)] public Actor Load(ActorLoadData loadData) => GameContainer.Actors.Load(ActorTypeId.Demon, _initData, loadData);
 
             [Impl(256)] public void AddPotential(int add) => _potential += add;

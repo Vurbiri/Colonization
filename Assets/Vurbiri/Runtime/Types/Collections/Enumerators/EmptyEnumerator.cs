@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
-namespace Vurbiri
+namespace Vurbiri.Collections
 {
     public class EmptyEnumerator<T> : IEnumerator<T>
     {

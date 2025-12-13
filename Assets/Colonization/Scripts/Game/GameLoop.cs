@@ -69,7 +69,7 @@ namespace Vurbiri.Colonization
             {
                 yield return null;
 
-                _gameMode = GameModeId.GameOver;
+                _gameMode = GameModeId.GameOver; _turnQueue.Reset();
                 _changeGameMode.InvokeOneShot(GameModeId.GameOver, _turnQueue);
                 _changeGameModes[GameModeId.GameOver].InvokeOneShot(_turnQueue, _hexId);
 

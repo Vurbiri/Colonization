@@ -1,80 +1,146 @@
+using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using Vurbiri.UI;
 
 namespace Vurbiri.Colonization
 {
 	public class DebugPanel : MonoBehaviour
 	{
-        private TMP_Dropdown _dropdown;
+		private TMP_Dropdown _dropdown;
+		private TMP_InputField _input;
+		private int _inputValue;
 
         private void Start()
-        {
-            _dropdown = GetComponentInChildren<TMP_Dropdown>();
+		{
+			_dropdown = GetComponentInChildren<TMP_Dropdown>();
             _dropdown.ClearOptions();
             _dropdown.AddOptions(new List<string>()
             {
+                "Main+",
+                "Blood+",
+                "Warrior",
+                "Demon",
+                "Chaos-",
+                "Chaos+",
+                "Score+",
+                "Artefact+",
                 "Spawn",
-                "Artefact",
-                "AddBlood",
             });
-            _dropdown.value = 0;
+			_dropdown.value = 0;
 
-            //SwitchEnable();
+            _input = GetComponentInChildren<TMP_InputField>();
+            _input.onEndEdit.AddListener(OnInput);
+
+            //gameObject.SetActive(false);
             GameContainer.InputController.OnDebug.Add(SwitchEnable);
-        }
+		}
 
-        public void Invoke()
-        {
-            var person = GameContainer.Person;
-            switch (_dropdown.value)
-            {
-                case 0: Spawn(); break;
-                case 1: person.Artefact.Next(UnityEngine.Random.Range(5, 10)); ; break;
-                case 2: AddBlood(13); break;
-                default: return;
-            }
-        }
+		public void Invoke()
+		{
+			switch (_dropdown.value)
+			{
+				case 0: GameContainer.Person.Resources.AddMain(_inputValue); break;
+				case 1: GameContainer.Person.Resources.AddBlood(_inputValue); break;
+				case 2: WarriorSpawn(_inputValue); break;
+				case 3: DemonSpawn(_inputValue); break;
+				case 4: GameContainer.Chaos.Add(-11 * _inputValue); break;
+				case 5: GameContainer.Chaos.Add(+11 * _inputValue); break;
+				case 6: GameContainer.Score.Add(PlayerId.Person, 5 * _inputValue); break;
+				case 7: Artefact(); break;
+				case 8: Spawn(); break;
 
-        private void AddBlood(int value)
-        {
-            for (int i = 0; i < PlayerId.HumansCount; ++i)
-                GameContainer.Humans[i].Resources.AddBlood(value);
+				default: break;
+			}
+		}
 
-            MessageBox.Open("test", MBButtonId.Ok, MBButtonId.Cancel);
-        }
+		public void OnInput(string input)
+		{
+			if(string.IsNullOrEmpty(input))
+			{
+				_input.text = "0";
+				_inputValue = 0;
+				return;
+			}
 
-        private void Spawn()
-        {
-            //_artefact.Next(UnityEngine.Random.Range(2, 10));
+			try
+			{
+				_inputValue = Int32.Parse(input);
+			}
+			catch
+			{
+				_input.text = "0";
+				_inputValue = 0;
+			}
+		}
 
-            var person = GameContainer.Person;
+		private void Artefact()
+		{
+			var perks = GameContainer.Person.Perks;
+			if (!perks.IsPerkLearned(MilitaryPerksId.Type, MilitaryPerksId.IsArtefact_1))
+				perks.Learn(MilitaryPerksId.Type, MilitaryPerksId.IsArtefact_1);
+			else
+				GameContainer.Person.Artefact.Next(_inputValue);
+		}
 
-            person.SpawnTest(WarriorId.Militia, HEX.RightUp);
-            person.SpawnTest(WarriorId.Solder, HEX.Right);
-            //person.SpawnTest(WarriorId.Wizard, HEX.LeftDown);
-            //person.SpawnTest(WarriorId.Warlock, HEX.Left);
-            //person.SpawnTest(WarriorId.Knight, HEX.LeftUp);
+		private void SwitchEnable()
+		{
+			gameObject.SetActive(!gameObject.activeSelf);
+		}
 
-            person.SpawnTest(WarriorId.Militia, HEX.RightDown);
-            //person.SpawnDemonTest(DemonId.Bomb, Key.Zero);
+		#region ================== Spawn ============================
+		public void WarriorSpawn(int warriorId)
+		{
+			if (warriorId > WarriorId.Knight || GameContainer.Person.IsMaxWarriors) return;
 
-            //person.SpawnDemonTest(DemonId.Imp, HEX.RightUp);
-            //person.SpawnDemonTest(DemonId.Bomb, HEX.Right);
-            //person.SpawnDemonTest(DemonId.Grunt, HEX.LeftDown);
-            //person.SpawnDemonTest(DemonId.Fatty, HEX.Left);
-            //person.SpawnDemonTest(DemonId.Boss, HEX.LeftUp);
+			Hexagon hexagon;
+			while (!(hexagon = GameContainer.Hexagons[HEX.NEARS.Random]).CanWarriorEnter) ;
+			GameContainer.Person.Recruiting(warriorId, hexagon);
+		}
+		public void WarriorSpawn(int warriorId, Key key)
+		{
+			if (warriorId > WarriorId.Knight || GameContainer.Person.IsMaxWarriors) return;
 
-            //person.SpawnTest(WarriorId.Knight, 2);
-            //person.SpawnDemonTest(DemonId.Boss, 5);
+			Hexagon hexagon;
+			if ((hexagon = GameContainer.Hexagons[key]).CanWarriorEnter)
+				GameContainer.Person.Recruiting(warriorId, hexagon);
+		}
+		
+		public void DemonSpawn(int demonId)
+		{
+			if (demonId > DemonId.Boss) return;
 
-            //person.SpawnDemonTest(DemonId.Imp, 5);
-        }
+			Hexagon hexagon = GameContainer.Hexagons[Key.Zero];
+			while (!hexagon.CanDemonEnter) hexagon = GameContainer.Hexagons[HEX.NEARS.Random];
+			GameContainer.Satan.Spawn(demonId, hexagon);
+		}
+		public void DemonSpawn(int demonId, Key key)
+		{
+			Hexagon hexagon;
+			if (demonId <= DemonId.Boss && (hexagon = GameContainer.Hexagons[key]).CanDemonEnter)
+				GameContainer.Satan.Spawn(demonId, hexagon);
+		}
 
-        private void SwitchEnable()
-        {
-            gameObject.SetActive(!gameObject.activeSelf);
-        }
-    }
+		private void Spawn()
+		{
+			WarriorSpawn(WarriorId.Militia, HEX.RightUp);
+			//WarriorSpawn(WarriorId.Solder, HEX.Right);
+			//WarriorSpawn(WarriorId.Wizard, HEX.LeftDown);
+			//WarriorSpawn(WarriorId.Warlock, HEX.Left);
+			//WarriorSpawn(WarriorId.Knight, HEX.LeftUp);
+
+			//WarriorSpawn(WarriorId.Militia, HEX.RightDown);
+			//DemonSpawn(DemonId.Bomb, Key.Zero);
+
+			//DemonSpawn(DemonId.Imp, HEX.RightUp);
+			//DemonSpawn(DemonId.Bomb, HEX.Right);
+			//DemonSpawn(DemonId.Grunt, HEX.LeftDown);
+			//DemonSpawn(DemonId.Fatty, HEX.Left);
+			//DemonSpawn(DemonId.Boss, HEX.LeftUp);
+
+			//WarriorSpawn(WarriorId.Knight);
+			//DemonSpawn(DemonId.Boss);
+		}
+		#endregion
+	}
 }

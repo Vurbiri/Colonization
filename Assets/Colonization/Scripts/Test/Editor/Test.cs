@@ -1,9 +1,7 @@
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
 using UnityEngine;
-using Vurbiri.Collections;
 
 namespace Vurbiri.Colonization
 {
@@ -17,85 +15,7 @@ namespace Vurbiri.Colonization
             
         }
 
-        public void RosterTest()
-        {
-            double test1, test2;
-            Stopwatch stopWatch = new();
-            List<int> list = new();
-            Roster<int> set = new();
-
-            TestListAdd(new());
-
-            Thread.Sleep(100);
-            stopWatch.Start();
-            TestListAdd(list);
-            stopWatch.Stop();
-            test1 = stopWatch.ElapsedTicks;
-
-            stopWatch.Restart();
-            TestHashAdd(set);
-            stopWatch.Stop();
-            test2 = stopWatch.ElapsedTicks;
-
-            DrawResultTest(test1, "List", test2, "Roster", "Add");
-
-            Thread.Sleep(100);
-            stopWatch.Restart();
-            TestListContains(list);
-            stopWatch.Stop();
-            test2 = stopWatch.ElapsedTicks;
-
-            stopWatch.Restart();
-            TestHashContains(set);
-            stopWatch.Stop();
-            test1 = stopWatch.ElapsedTicks;
-
-            DrawResultTest(test1, "List", test2, "Roster", "Contains");
-
-            Thread.Sleep(100);
-            stopWatch.Restart();
-            TestListRemove(list);
-            stopWatch.Stop();
-            test2 = stopWatch.ElapsedTicks;
-
-            stopWatch.Restart();
-            TestHashRemove(set);
-            stopWatch.Stop();
-            test1 = stopWatch.ElapsedTicks;
-
-            DrawResultTest(test1, "List", test2, "Roster", "Remove");
-
-            void TestListAdd(List<int> list)
-            {
-                for(int i = 0; i < 100; ++i)
-                    list.Add(i);
-            }
-            void TestHashAdd(Roster<int> set)
-            {
-                for (int i = 0; i < 100; ++i)
-                    set.Add(i);
-            }
-            void TestListRemove(List<int> list)
-            {
-                for (int i = 200; i >= 0; --i)
-                    list.Remove(i);
-            }
-            void TestHashRemove(Roster<int> set)
-            {
-                for (int i = 200; i >= 0; --i)
-                    set.Remove(i);
-            }
-            void TestListContains(List<int> list)
-            {
-                for (int i = 200; i >= 0; --i)
-                    list.Contains(i);
-            }
-            void TestHashContains(Roster<int> set)
-            {
-                for (int i = 200; i >= 0; --i)
-                    set.Contains(i);
-            }
-        }
+        
 
         public void MathITesting()
         {

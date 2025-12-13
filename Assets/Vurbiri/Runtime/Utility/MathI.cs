@@ -30,7 +30,9 @@ namespace Vurbiri
 			return num;
 		}
 
-		[Impl(256)] public static int SetRow(this int num, int row, bool isOne) => isOne ? num | (1 << row) : num & ~(1 << row);
+        [Impl(256)] public static bool IsRange(this int num, int min, int max) => num >= min & num <= max;
+
+        [Impl(256)] public static int SetRow(this int num, int row, bool isOne) => isOne ? num | (1 << row) : num & ~(1 << row);
 
         [Impl(256)] public static int Sqrt(this int num) => (int)MathF.Sqrt(num);
         [Impl(256)] public static int SqrtRound(this int num) => (int)(MathF.Sqrt(num) + 0.5f);

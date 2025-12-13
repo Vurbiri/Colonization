@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization
@@ -13,7 +12,6 @@ namespace Vurbiri.Colonization
             {
                 private readonly ScaledMoveUsingLerp _move;
                 private readonly WaitSignal _waitHexagon = new();
-                private Coroutine _coroutine;
                 private Hexagon _targetHex;
 
                 public override bool CanUse { [Impl(256)] get => base.CanUse & Actor._move.IsTrue; }
@@ -23,31 +21,20 @@ namespace Vurbiri.Colonization
                 public override void Enter()
                 {
                     if (IsPerson)
-                        _coroutine = StartCoroutine(PersonSelectHexagon_Cn());
+                        StartCoroutine(PersonSelectHexagon_Cn());
                     else
-                        _coroutine = StartCoroutine(AISelectHexagon_Cn());
+                        StartCoroutine(AISelectHexagon_Cn());
                 }
 
                 public override void Exit()
                 {
-                    if (_coroutine != null)
-                    {
-                        StopCoroutine(_coroutine);
-                        _coroutine = null;
-                    }
+                    StopCoroutine();
 
                     _move.Skip();
                     _waitHexagon.Cancel();
                     _targetHex = null;
 
                     signal.Send();
-                }
-
-                [Impl(256)]
-                private void ToExit()
-                {
-                    _coroutine = null;
-                    GetOutOfThisState();
                 }
 
                 public override void Unselect(ISelectable newSelectable)
@@ -96,7 +83,7 @@ namespace Vurbiri.Colonization
                     if (_targetHex == null)
                         ToExit();
                     else
-                        _coroutine = StartCoroutine(Move_Cn());
+                        StartCoroutine(Move_Cn());
                 }
 
                 private IEnumerator Move_Cn()

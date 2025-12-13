@@ -1,6 +1,6 @@
 using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
-namespace Vurbiri
+namespace Vurbiri.Collections
 {
 	public class Version
 	{
