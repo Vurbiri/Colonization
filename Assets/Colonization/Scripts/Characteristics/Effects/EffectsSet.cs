@@ -48,8 +48,9 @@ namespace Vurbiri.Colonization
             return result;
         }
 
-        public IEnumerator<ReactiveEffect> GetEnumerator() => new ArrayEnumerator<ReactiveEffect>(_values, _count, _version);
-        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+        [Impl(256)] public ArrayEnumerator<ReactiveEffect> GetEnumerator() => new(_values, _count, _version);
+        IEnumerator<ReactiveEffect> IEnumerable<ReactiveEffect>.GetEnumerator() => _count == 0 ? EmptyEnumerator<ReactiveEffect>.Instance : GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable<ReactiveEffect>)this).GetEnumerator();
     }
 
     //**************************************************************************************************

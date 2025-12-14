@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Collections
 {
@@ -11,9 +12,8 @@ namespace Vurbiri.Collections
         private int _cursor;
         private T _current;
 
-        public readonly T Current => _current;
-
-        readonly object IEnumerator.Current => _current;
+        public readonly T Current { [Impl(256)] get => _current; }
+        readonly object IEnumerator.Current { [Impl(256)] get => _current; }
 
         public ArrayEnumerator(T[] values, int count, Version.Current version)
         {
@@ -23,7 +23,6 @@ namespace Vurbiri.Collections
             _cursor = -1;
             _current = default;
         }
-        public ArrayEnumerator(T[] values, int count) : this(values, count, Version.Static) { }
 
         public bool MoveNext()
         {
@@ -39,12 +38,14 @@ namespace Vurbiri.Collections
             return false;
         }
 
+        [Impl(256)]
         public void Reset()
         {
             _cursor = -1;
             _current = default;
         }
 
+        [Impl(256)]
         public readonly void Dispose() { }
     }
 }

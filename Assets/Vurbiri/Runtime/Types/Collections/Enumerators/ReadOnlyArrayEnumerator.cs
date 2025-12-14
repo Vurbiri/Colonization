@@ -4,10 +4,9 @@ using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Collections
 {
-	public struct SetEnumerator<T> : IEnumerator<T> where T : class
-	{
+	public struct ReadOnlyArrayEnumerator<T> : IEnumerator<T>
+    {
         private readonly T[] _values;
-        private readonly Version.Current _version;
         private readonly int _count;
         private int _cursor;
         private T _current;
@@ -15,31 +14,31 @@ namespace Vurbiri.Collections
         public readonly T Current { [Impl(256)] get => _current; }
         readonly object IEnumerator.Current { [Impl(256)] get => _current; }
 
-        public SetEnumerator(T[] values, int count, Version.Current version)
+        public ReadOnlyArrayEnumerator(T[] values, int count)
         {
             _values = values;
             _count = count;
-            _version = version;
             _cursor = -1;
-            _current = null;
+            _current = default;
         }
 
         public bool MoveNext()
         {
-            _version.Validate();
+            if (++_cursor < _count)
+            {
+                _current = _values[_cursor];
+                return true;
+            }
 
-            bool canMoveNext; T current = null;
-            while ((canMoveNext = ++_cursor < _count) && (current = _values[_cursor]) == null);
-
-            _current = current;
-            return canMoveNext;
+            _current = default;
+            return false;
         }
 
         [Impl(256)]
         public void Reset()
         {
             _cursor = -1;
-            _current = null;
+            _current = default;
         }
 
         [Impl(256)]

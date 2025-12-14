@@ -8,7 +8,7 @@ namespace Vurbiri
 	public class RandomSequence<T> : IEnumerator<T>, IEnumerable<T>
     {
         protected T[] _values;
-        protected int _count, _capacity, _cursor = -1;
+        protected int _count, _cursor = -1;
         private T _current;
 
         public int Count { [Impl(256)] get => _count; }
@@ -29,16 +29,16 @@ namespace Vurbiri
         }
 
         #region Constructors
-        [Impl(256)] protected RandomSequence(int capacity)
+        [Impl(256)] protected RandomSequence(int count)
         {
-            _capacity = capacity;
-            _values = new T[capacity];
+            Throw.IfLess(count, 1);
+
+            _count = count;
+            _values = new T[count];
         }
 
         public RandomSequence(IReadOnlyList<T> ids) : this(ids.Count)
         {
-            _count = _capacity;
-
             _values[0] = ids[0];
             for (int i = 1, j; i < _count; ++i)
             {
@@ -50,8 +50,6 @@ namespace Vurbiri
         }
         public RandomSequence(params T[] ids) : this(ids.Length)
         {
-            _count = _capacity;
-
             _values[0] = ids[0];
             for (int i = 1, j; i < _count; ++i)
             {
@@ -65,11 +63,14 @@ namespace Vurbiri
 
         public bool MoveNext()
         {
-            bool next = ++_cursor < _count;
-            if (next)
+            if (++_cursor < _count)
+            {
                 _current = _values[_cursor];
+                return true;
+            }
 
-            return next;
+            _current = default;
+            return false;
         }
 
         [Impl(256)] public void Reset()
@@ -84,11 +85,12 @@ namespace Vurbiri
                 (_values[i] as IDisposable)?.Dispose();
         }
 
-        public IEnumerator<T> GetEnumerator()
+        [Impl(256)] public RandomSequence<T> GetEnumerator()
         {
             Shuffle();
             return this;
         }
+        IEnumerator<T> IEnumerable<T>.GetEnumerator() => GetEnumerator();
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
         private void Shuffle(int cursor = -1)

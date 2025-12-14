@@ -10,10 +10,10 @@ namespace Vurbiri.Reactive.Collections
     [JsonArray]
     public abstract class ReadOnlyReactiveSet<T> : IReadOnlyCollection<T> where T : class, IReactiveItem<T>
     {
-        protected const int BASE_CAPACITY = 7;
+        protected const int BASE_CAPACITY = 5;
 
         protected T[] _values;
-        protected int _capacity = BASE_CAPACITY;
+        protected int _capacity;
         protected readonly RInt _count = new(0);
         protected readonly ReactiveVersion<T, TypeEvent> _version = new();
 
@@ -73,8 +73,9 @@ namespace Vurbiri.Reactive.Collections
             return index >= 0 & index < _capacity && _values[index].Equals(item);
         }
 
-        public IEnumerator<T> GetEnumerator() => _count == 0 ? EmptyEnumerator<T>.Instance : new SetEnumerator<T>(_values, _values.Length, _version);
-        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+        [Impl(256)] public SetEnumerator<T> GetEnumerator() => new(_values, _capacity, _version);
+        IEnumerator<T> IEnumerable<T>.GetEnumerator() => _count == 0 ? EmptyEnumerator<T>.Instance : GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable<T>)this).GetEnumerator();
     }
 
     //**********************************************************************************************
@@ -84,7 +85,7 @@ namespace Vurbiri.Reactive.Collections
     {
         public ReactiveSet()
         {
-            _values = new T[_capacity];
+            _values = new T[_capacity = BASE_CAPACITY];
         }
 
         public ReactiveSet(int capacity)
@@ -134,6 +135,7 @@ namespace Vurbiri.Reactive.Collections
             _values = null;
         }
 
+        [Impl(256)]
         private void AddItem(T item, int index)
         {
             _values[index] = item;

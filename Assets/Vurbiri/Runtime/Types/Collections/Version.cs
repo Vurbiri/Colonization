@@ -4,8 +4,6 @@ namespace Vurbiri.Collections
 {
 	public class Version
 	{
-		public static readonly Current Static = new(new());
-		
 		protected int _version;
 
 		[Impl(256)] public void Next() => ++_version;

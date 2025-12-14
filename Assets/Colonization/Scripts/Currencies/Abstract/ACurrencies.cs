@@ -1,12 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 
 namespace Vurbiri.Colonization
 {
     using static CurrencyId;
 
-    public abstract class ACurrencies : IReadOnlyList<int>
+    public abstract class ACurrencies
     {
         public int Count
         {
@@ -20,9 +18,6 @@ namespace Vurbiri.Colonization
 
         public abstract int this[int index] { get; }
         public abstract int this[Id<CurrencyId> id] { get; }
-
-        public abstract IEnumerator<int> GetEnumerator();
-        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
         public static bool operator >=(ACurrencies left, ACurrencies right)
         {

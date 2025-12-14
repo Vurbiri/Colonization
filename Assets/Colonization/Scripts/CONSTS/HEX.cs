@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using UnityEngine;
 using Vurbiri.Collections;
 using static Vurbiri.Colonization.CONST;
+using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization
 {
@@ -97,19 +98,20 @@ namespace Vurbiri.Colonization
         {
             private readonly ReadOnlyArray<Key>[] _values;
 
-            public Key Random => _values.Rand().Rand();
+            public Key Random { [Impl(256)] get => _values.Rand().Rand(); }
 
-            public int Count => 3;
+            public int Count { [Impl(256)] get => 3; }
 
-            public ReadOnlyArray<Key> this[int index] => _values[index];
+            public ReadOnlyArray<Key> this[int index] { [Impl(256)] get => _values[index]; }
 
             public HearHexagons(ReadOnlyArray<Key> a, ReadOnlyArray<Key> b, ReadOnlyArray<Key> c)
             {
                 _values = new ReadOnlyArray<Key>[] { a, b, c };
             }
 
-            public IEnumerator<ReadOnlyArray<Key>> GetEnumerator() => new ArrayEnumerator<ReadOnlyArray<Key>>(_values, 3);
-            IEnumerator IEnumerable.GetEnumerator() => new ArrayEnumerator<ReadOnlyArray<Key>>(_values, 3);
+            [Impl(256)] public ReadOnlyArrayEnumerator<ReadOnlyArray<Key>> GetEnumerator() => new(_values, 3);
+            IEnumerator<ReadOnlyArray<Key>> IEnumerable<ReadOnlyArray<Key>>.GetEnumerator() => GetEnumerator();
+            IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
         }
     }
 }

@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Vurbiri.Collections;
@@ -8,7 +9,7 @@ namespace Vurbiri.Colonization
     using static CurrencyId;
 
     [System.Serializable]
-    sealed public class CurrenciesLite : ACurrencies
+    sealed public class CurrenciesLite : ACurrencies, IReadOnlyList<int>
     {
         [SerializeField] private int[] _values = new int[AllCount];
         [SerializeField] private int _amount = 0;
@@ -30,6 +31,8 @@ namespace Vurbiri.Colonization
             _values[Blood] = array[Blood];
         }
 
-        public override IEnumerator<int> GetEnumerator() => new ArrayEnumerator<int>(_values, AllCount);
+        [Impl(256)] public ReadOnlyArrayEnumerator<int> GetEnumerator() => new(_values, AllCount);
+        IEnumerator<int> IEnumerable<int>.GetEnumerator() => GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }
 }

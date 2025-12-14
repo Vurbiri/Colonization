@@ -59,8 +59,10 @@ namespace Vurbiri.Collections
                 _values[i] = collection[i];
         }
 
-        public IEnumerator<TValue> GetEnumerator() => new ArrayEnumerator<TValue>(_values, s_count, _version);
-        IEnumerator IEnumerable.GetEnumerator() => new ArrayEnumerator<TValue>(_values, s_count, _version);
+        [Impl(256)] public ArrayEnumerator<TValue> GetEnumerator() => new(_values, s_count, _version);
+        IEnumerator<TValue> IEnumerable<TValue>.GetEnumerator() => GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
 
         public static implicit operator EnumArray<TType, TValue>(TValue[] values) => new(values);
     }

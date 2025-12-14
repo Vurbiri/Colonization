@@ -133,8 +133,9 @@ namespace Vurbiri.Colonization
         }
         #endregion
 
-        public IEnumerator<int> GetEnumerator() => new ArrayEnumerator<int>(_values, COUNT, _version);
-        IEnumerator IEnumerable.GetEnumerator() => new ArrayEnumerator<int>(_values, COUNT, _version);
+        [Impl(256)] public ArrayEnumerator<int> GetEnumerator() => new(_values, COUNT, _version);
+        IEnumerator<int> IEnumerable<int>.GetEnumerator() => GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
         #region Arithmetic
         public static MainCurrencies operator -(ReadOnlyCurrencies a, ReadOnlyMainCurrencies b)

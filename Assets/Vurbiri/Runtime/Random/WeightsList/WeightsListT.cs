@@ -5,7 +5,7 @@ namespace Vurbiri
 {
 	public class WeightsList<T>
     {
-        private const int BASE_CAPACITY = 7;
+        private const int BASE_CAPACITY = 5;
         private static readonly IEqualityComparer<T> s_comparer = EqualityComparer<T>.Default;
 
         private Weight[] _weights;
@@ -63,11 +63,13 @@ namespace Vurbiri
         [Impl(256)] public int IndexOf(T item) => FindIndex(item) - 1;
         [Impl(256)] public bool Contains(T item) => FindIndex(item) > 0;
 
-        public void Clear()
+        [Impl(256)] public void Clear()
         {
-            for(int i = 1; i < _count; ++i)
-                _weights[i] = null;
-            _count = 1;
+            if (_count > 1)
+            {
+                System.Array.Clear(_weights, 1, _count);
+                _count = 1;
+            }
         }
 
         [Impl(256)] public void TrimExcess() => ReSize(_count);
@@ -127,14 +129,10 @@ namespace Vurbiri
             return _weights[current].value;
         }
 
-        private void ReSize(int newCapacity)
+        [Impl(256)] private void ReSize(int newCapacity)
         {
             _capacity = newCapacity;
-
-            var array = new Weight[newCapacity];
-            for (int i = 0; i < _count; ++i)
-                array[i] = _weights[i];
-            _weights = array;
+            System.Array.Resize(ref _weights, newCapacity);
         }
 
         #region Nested Weight

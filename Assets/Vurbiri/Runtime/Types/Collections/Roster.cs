@@ -112,8 +112,6 @@ namespace Vurbiri.Collections
             _version.Next();
         }
 
-        [Impl(256)] public void CopyTo(TValue[] array, int arrayIndex) => Array.Copy(_values, 0, array, arrayIndex, _count);
-
         [Impl(256)] public void TrimExcess() 
         {
             if(_count != _capacity)

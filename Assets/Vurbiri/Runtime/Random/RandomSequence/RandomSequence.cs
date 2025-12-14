@@ -8,8 +8,6 @@ namespace Vurbiri
         [Impl(256)] public RandomSequence(int count) : this(0, count) { }
         public RandomSequence(int min, int max) : base(max - min)
         {
-            _count = _capacity;
-
             _values[0] = min;
             for (int i = 1, j; i < _count; ++i)
             {

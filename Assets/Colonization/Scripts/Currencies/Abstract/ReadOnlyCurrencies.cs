@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using UnityEngine;
 using Vurbiri.Reactive;
 using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
@@ -103,12 +102,6 @@ namespace Vurbiri.Colonization
             return delta;
         }
 
-        sealed public override IEnumerator<int> GetEnumerator()
-        {
-            for (int i = 0; i < AllCount; ++i)
-                yield return _values[i].Value;
-        }
-
         #region Nested: ACurrency, MainCurrency, BloodCurrency
         //*******************************************************
         sealed protected class MainCurrency : ACurrency
@@ -176,5 +169,5 @@ namespace Vurbiri.Colonization
             public static int operator *(ACurrency a, ACurrency b) => a._value * b._value;
         }
         #endregion
-     }
+    }
 }

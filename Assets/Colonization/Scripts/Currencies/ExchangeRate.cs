@@ -55,8 +55,9 @@ namespace Vurbiri.Colonization
             _version.Next(this);
         }
 
-        public IEnumerator<int> GetEnumerator() => new ArrayEnumerator<int>(_exchange, COUNT, _version);
-        IEnumerator IEnumerable.GetEnumerator() => new ArrayEnumerator<int>(_exchange, COUNT, _version);
+        [Impl(256)] public ArrayEnumerator<int> GetEnumerator() => new(_exchange, COUNT, _version);
+        IEnumerator<int> IEnumerable<int>.GetEnumerator() => GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
         private void OnExchangeRate(int value) => _rate = value;
         private void OnExchangeSaleChance(int value) => _chance.Value = value;

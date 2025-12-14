@@ -50,8 +50,9 @@ namespace Vurbiri.Reactive.Collections
             return i;
         }
 
-        public IEnumerator<T> GetEnumerator() => _count == 0 ? EmptyEnumerator<T>.Instance : new ArrayEnumerator<T>(_values, _count, _version);
-        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+        [Impl(256)] public ArrayEnumerator<T> GetEnumerator() => new(_values, _count, _version);
+        IEnumerator<T> IEnumerable<T>.GetEnumerator() => _count == 0 ? EmptyEnumerator<T>.Instance : GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable<T>)this).GetEnumerator();
     }
 
     //**********************************************************************************************

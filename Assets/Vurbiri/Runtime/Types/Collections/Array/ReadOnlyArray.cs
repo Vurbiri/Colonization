@@ -57,8 +57,11 @@ namespace Vurbiri.Collections
         [Impl(256)] public int LeftIndex(int index) => (index == 0 ? _count : index) - 1;
         [Impl(256)] public int RightIndex(int index) => (index + 1) % _count;
 
-        [Impl(256)] public IEnumerator<TValue> GetEnumerator() => _count == 0 ? EmptyEnumerator<TValue>.Instance : new ArrayEnumerator<TValue>(_values, _count, _version);
-        [Impl(256)] IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+        [Impl(256)] public void CopyTo(TValue[] array, int arrayIndex) => Array.Copy(_values, 0, array, arrayIndex, _count);
+
+        [Impl(256)] public ArrayEnumerator<TValue> GetEnumerator() => new(_values, _count, _version);
+        IEnumerator<TValue> IEnumerable<TValue>.GetEnumerator() => _count == 0 ? EmptyEnumerator<TValue>.Instance : GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable<TValue>)this).GetEnumerator();
 
         [Impl(256)] public static implicit operator ReadOnlyArray<TValue>(TValue[] values) => new(values);
 

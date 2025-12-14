@@ -58,7 +58,8 @@ namespace Vurbiri.Collections
         [Impl(256)] public bool TryGet(int index, out TValue value) => (value = _values[index]) != null;
         [Impl(256)] public bool TryGet(Id<TId> id, out TValue value) => (value = _values[id.Value]) != null;
 
-        public IEnumerator<TValue> GetEnumerator() => _count == 0 ? EmptyEnumerator<TValue>.Instance : new SetEnumerator<TValue>(_values, IdType<TId>.Count, _version);
-        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+        [Impl(256)] public SetEnumerator<TValue> GetEnumerator() => new(_values, IdType<TId>.Count, _version);
+        IEnumerator<TValue> IEnumerable<TValue>.GetEnumerator() => _count == 0 ? EmptyEnumerator<TValue>.Instance : GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable<TValue>)this).GetEnumerator();
     }
 }

@@ -78,14 +78,10 @@ namespace Vurbiri
 
         [Impl(256)] public void TrimExcess() => ReSize(_count);
 
-        private void ReSize(int newCapacity)
+        [Impl(256)] private void ReSize(int newCapacity)
         {
             _capacity = newCapacity;
-
-            var array = new int[newCapacity];
-            for (int i = 0; i < _count; ++i)
-                array[i] = _weights[i];
-            _weights = array;
+            System.Array.Resize(ref _weights, newCapacity);
         }
     }
 }
