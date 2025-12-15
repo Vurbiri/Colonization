@@ -13,7 +13,7 @@ namespace Vurbiri.Colonization
             if (type == ActorTypeId.Demon)
             {
                 GameContainer.Score.ForKillingDemon(_id.Value, id);
-                _resources.AddBlood(id + 1);
+                _resources.Blood.Add(id + 1);
             }
             else
             {
@@ -21,7 +21,7 @@ namespace Vurbiri.Colonization
             }
         }
 
-        public abstract WaitResult<bool> OnGift(int giver, MainCurrencies gift, string msg);
+        public abstract WaitResult<bool> OnGift(int giver, LiteCurrencies gift, string msg);
 
         public abstract void OnLanding();
         public virtual void OnEndLanding() { }
@@ -31,12 +31,12 @@ namespace Vurbiri.Colonization
         public void OnProfit(Id<PlayerId> id, int hexId)
         {
             if (id == PlayerId.Satan)
-                _resources.AddBlood(_edifices.ShrinePassiveProfit);
+                _resources.Blood.Add(_edifices.ShrinePassiveProfit);
 
             if (hexId == HEX.GATE)
             {
-                _resources.AddBlood(_edifices.ShrineProfit);
-                _resources.ClampMain();
+                _resources.Blood.Add(_edifices.ShrineProfit);
+                _resources.Clamp();
                 return;
             }
 
@@ -61,7 +61,7 @@ namespace Vurbiri.Colonization
             int countBuffs = 0;
             int mainProfit = _abilities[HumanAbilityId.WarriorProfit];
             bool isArtefact = _abilities.IsTrue(HumanAbilityId.IsArtefact);
-            MainCurrencies profit = new();
+            LiteCurrencies profit = new();
             ReturnSignal returnSignal;
 
             GameContainer.InputController.Unselect();

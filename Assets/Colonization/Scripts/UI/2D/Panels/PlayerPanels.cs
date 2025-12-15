@@ -36,7 +36,7 @@ namespace Vurbiri.Colonization.UI
 
             Vector3 directionPopup = _directionPopup;
             _currencies.Init(directionPopup, currencies);
-            _blood.Init(directionPopup, currencies);
+            _blood.Init(directionPopup, currencies.Blood);
 
             _score.Init(directionPopup);
 

@@ -15,12 +15,12 @@ namespace Vurbiri.Colonization
 
             private Action<string> _onHint;
 
-            protected readonly MainCurrencies _cost = new();
+            protected readonly LiteCurrencies _cost = new();
             protected readonly string _nameKey, _descKey;
             protected string _strCost, _strName;
             protected bool _canCast;
 
-            public ReadOnlyMainCurrencies Cost
+            public ReadOnlyLiteCurrencies Cost
             {
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
                 get => _cost;
@@ -34,7 +34,7 @@ namespace Vurbiri.Colonization
 
             protected ASpell(int type, int id)
             {
-                _cost.Set(CurrencyId.Mana, s_costs[type][id]);
+                _cost[CurrencyId.Mana] = s_costs[type][id];
                 string key = s_keys[type][id];
                 _nameKey = string.Concat(key, "Name");
                 _descKey = string.Concat(key, "Desc");

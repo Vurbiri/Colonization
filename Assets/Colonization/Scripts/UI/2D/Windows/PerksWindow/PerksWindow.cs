@@ -30,7 +30,7 @@ namespace Vurbiri.Colonization.UI
 
             var person = GameContainer.Person;
             var perkTree = person.Perks;
-            var blood = person.Resources.Get(CurrencyId.Blood);
+            var blood = person.Resources.Blood;
 
             for(int i = _toggles.Count - 1; i >= 0; --i)
                _toggles[i].Init(perkTree, blood, _colorLearn);

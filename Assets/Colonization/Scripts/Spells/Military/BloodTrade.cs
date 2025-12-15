@@ -1,7 +1,6 @@
 using System.Text;
 using Vurbiri.International;
 using Vurbiri.UI;
-using static Vurbiri.Colonization.CurrencyId;
 
 namespace Vurbiri.Colonization
 {
@@ -17,17 +16,17 @@ namespace Vurbiri.Colonization
             public override bool Prep(SpellParam param)
             {
                 _blood = param.valueA - (param.valueA % s_settings.bloodTradePay);
-                return _canCast = !s_isCasting & _blood > 0 && Humans[param.playerId].Resources[Blood] >= _blood;
+                return _canCast = !s_isCasting & _blood > 0 && Humans[param.playerId].Resources.Blood >= _blood;
             }
 
             public override void Cast(SpellParam param)
             {
                 if (_canCast)
                 {
-                    _cost.RandomAddRange(_blood / s_settings.bloodTradePay * s_settings.bloodTradeBay);
+                    _cost.RandomAddRange(_blood / s_settings.bloodTradePay * s_settings.bloodTradeBay, CurrencyId.Count);
 
                     var resources = Humans[param.playerId].Resources;
-                    resources.Remove(Blood, _blood);
+                    resources.Blood.Remove(_blood);
                     resources.Add(_cost);
 
                     if (param.playerId == PlayerId.Person)

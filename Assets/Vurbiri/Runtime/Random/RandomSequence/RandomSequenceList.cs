@@ -11,7 +11,11 @@ namespace Vurbiri
         private int _capacity;
 
         [Impl(256)] public RandomSequenceList() : this(BASE_CAPACITY) { }
-        [Impl(256)] public RandomSequenceList(int capacity) : base(capacity) => _capacity = capacity;
+        [Impl(256)] public RandomSequenceList(int capacity) : base(capacity)
+        {
+            _capacity = capacity;
+            _count = 0;
+        }
         [Impl(256)] public RandomSequenceList(IReadOnlyList<T> ids) : base(ids) => _capacity = _count;
         [Impl(256)] public RandomSequenceList(params T[] ids) : base(ids) => _capacity = _count;
 

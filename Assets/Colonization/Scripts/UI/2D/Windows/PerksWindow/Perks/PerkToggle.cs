@@ -15,7 +15,7 @@ namespace Vurbiri.Colonization.UI
         private ReactiveCombination<int, int> _combination;
         private int _cost, _points;
 
-        public void Init(PerkTree perkTree, Currency blood, Color colorLearn)
+        public void Init(PerkTree perkTree, Blood blood, Color colorLearn)
         {
             Perk perk = perkTree[_typePerkId, _perkId];
             _hint.Init(perk);

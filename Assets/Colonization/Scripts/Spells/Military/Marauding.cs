@@ -10,7 +10,7 @@ namespace Vurbiri.Colonization
     {
         sealed private class Marauding : AMsgSpell
         {
-            private readonly MainCurrencies[] _currencies = new MainCurrencies[PlayerId.HumansCount];
+            private readonly LiteCurrencies[] _currencies = new LiteCurrencies[PlayerId.HumansCount];
             private readonly Stack<Occupation> _occupations = new(CONST.DEFAULT_MAX_EDIFICES << 1);
 
             private Marauding(int type, int id) : base(type, id)
@@ -101,7 +101,7 @@ namespace Vurbiri.Colonization
                     _profit = profit;
                 }
 
-                public bool Heist(MainCurrencies[] currencies, Id<PlayerId> playerId)
+                public bool Heist(LiteCurrencies[] currencies, Id<PlayerId> playerId)
                 {
                     int enemyId = _colony.Owner;
                     int currency = Humans[enemyId].Resources[_profit];

@@ -1,5 +1,4 @@
 using Vurbiri.International;
-using static Vurbiri.Colonization.CurrencyId;
 
 namespace Vurbiri.Colonization
 {
@@ -11,19 +10,18 @@ namespace Vurbiri.Colonization
 
             private Transmutation(int type, int id) : base(type, id) 
             {
-                _mana = _cost[Mana];
-                _strCost = SEPARATOR.Concat(string.Format(TAG.CURRENCY, Mana, _mana));
+                _mana = _cost[CurrencyId.Mana];
+                _strCost = SEPARATOR.Concat(string.Format(TAG.CURRENCY, CurrencyId.Mana, _mana));
             }
             public static void Create() => new Transmutation(EconomicSpellId.Type, EconomicSpellId.Transmutation);
             public override bool Prep(SpellParam param)
             {
                 var resources = Humans[param.playerId].Resources;
-                if (_canCast = !s_isCasting & resources[Mana] >= _mana)
+                int mana = resources[CurrencyId.Mana];
+                if (_canCast = !s_isCasting && mana >= _mana && (resources.Amount - mana) > 0)
                 {
-                    for (int i = 0; i < MainCount - 1; i++)
+                    for (int i = 0; i < CurrencyId.Mana; i++)
                         _cost.Set(i, resources[i]);
-
-                    _canCast = (_cost.Amount - _mana) > 0;
                 }
                 return _canCast;
             }
@@ -32,7 +30,8 @@ namespace Vurbiri.Colonization
             {
                 if(_canCast)
                 {
-                    _cost.RandomAddRange(-_cost.Amount + _mana, MainCount - 1);
+                    _cost.RandomAddRange(-_cost.Amount + _mana, CurrencyId.Mana);
+
                     ShowSpellName(param.playerId);
                     Humans[param.playerId].Pay(_cost);
 

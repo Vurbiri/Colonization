@@ -10,13 +10,13 @@ namespace Vurbiri.Colonization
             _abilities.ReplaceToDependent(HumanAbilityId.MaxShrine, s_shrinesCount, _edifices.shrines.CountReactive);
         }
 
-        public override WaitResult<bool> OnGift(int giver, MainCurrencies gift, string msg)
+        public override WaitResult<bool> OnGift(int giver, LiteCurrencies gift, string msg)
         {
             StartCoroutine(Gift_Cn(giver, gift, msg));
             return _waitGift.Restart();
 
             // Local
-            IEnumerator Gift_Cn(int giver, MainCurrencies gift, string msg)
+            IEnumerator Gift_Cn(int giver, LiteCurrencies gift, string msg)
             {
                 yield return MessageBox.Open(msg, out WaitButton wait, MBButton.OkNo);
 

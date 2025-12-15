@@ -7,7 +7,7 @@ namespace Vurbiri.Colonization.UI
 {
     public abstract class ASelectCurrencyCountWidget : MonoBehaviour
     {
-        [SerializeField] protected Id<CurrencyId> _id;
+        [SerializeField] protected Id<ProfitId> _id;
         [Space]
         [SerializeField] protected int _max;
         [SerializeField] protected int _step;
@@ -154,7 +154,7 @@ namespace Vurbiri.Colonization.UI
 
         protected void SetSpite_Ed()
         {
-            string name = $"{_id}_{CurrencyId.Names_Ed[_id]}";
+            string name = $"{_id.Value}_{ProfitId.Names_Ed[_id]}";
 
             UnityEditor.SerializedObject so = new(_icon);
             so.FindProperty("m_Sprite").objectReferenceValue = EUtility.FindMultipleSprite("SPA_C".Concat(name));

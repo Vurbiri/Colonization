@@ -17,7 +17,7 @@ namespace Vurbiri.Colonization
             _dropdown.ClearOptions();
             _dropdown.AddOptions(new List<string>()
             {
-                "Main+",
+                "Res.+",
                 "Blood+",
                 "Warrior",
                 "Demon",
@@ -40,8 +40,8 @@ namespace Vurbiri.Colonization
 		{
 			switch (_dropdown.value)
 			{
-				case 0: GameContainer.Person.Resources.AddMain(_inputValue); break;
-				case 1: GameContainer.Person.Resources.AddBlood(_inputValue); break;
+				case 0: GameContainer.Person.Resources.Add(_inputValue); break;
+				case 1: GameContainer.Person.Resources.Blood.Add(_inputValue); break;
 				case 2: WarriorSpawn(_inputValue); break;
 				case 3: DemonSpawn(_inputValue); break;
 				case 4: GameContainer.Chaos.Add(-11 * _inputValue); break;

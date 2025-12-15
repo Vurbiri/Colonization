@@ -4,7 +4,7 @@ namespace Vurbiri.Colonization.Storage
 {
     sealed public class HumanLoadData : APlayerLoadData
     {
-        public readonly CurrenciesLite resources;
+        public readonly StartCurrencies resources;
         public readonly int[] exchange;
         public readonly Dictionary<int, List<EdificeLoadData>> edifices;
         public readonly int[][] perks;

@@ -51,8 +51,8 @@ namespace Vurbiri.Collections
 
         [Impl(256)] public TValue Rand() => _values[UnityEngine.Random.Range(0, _count)];
 
-        [Impl(256)] public TValue Prev(int index) => _values[LeftIndex(index)];
-        [Impl(256)] public TValue Next(int index) => _values[RightIndex(index)];
+        [Impl(256)] public TValue Prev(int index) => _values[(index == 0 ? _count : index) - 1];
+        [Impl(256)] public TValue Next(int index) => _values[(index + 1) % _count];
 
         [Impl(256)] public int LeftIndex(int index) => (index == 0 ? _count : index) - 1;
         [Impl(256)] public int RightIndex(int index) => (index + 1) % _count;

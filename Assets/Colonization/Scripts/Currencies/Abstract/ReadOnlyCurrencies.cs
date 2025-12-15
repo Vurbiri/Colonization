@@ -1,31 +1,30 @@
 using System;
-using UnityEngine;
+using System.Text;
 using Vurbiri.Reactive;
 using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization
 {
-    using static CurrencyId;
-
-    public abstract class ReadOnlyCurrencies : ACurrencies, IReactive<ACurrencies>
+    public abstract partial class ReadOnlyCurrencies : IReactive<ReadOnlyCurrencies>
     {
-        protected ACurrency[] _values = new ACurrency[AllCount];
+        protected readonly Currency[] _values = new Currency[CurrencyId.Count];
+        protected readonly Blood _blood;
         protected RInt _amount = new(0);
-        protected Ability _maxAmount, _maxBlood;
-        protected readonly VAction<ACurrencies> _changeEvent = new();
+        protected Ability _maxAmount;
+        protected readonly VAction<ReadOnlyCurrencies> _changeEvent = new();
 
-        sealed public override int Amount { [Impl(256)] get => _amount; }
+        public int Amount { [Impl(256)] get => _amount; }
         public ReactiveValue<int> CurrentAmount { [Impl(256)] get => _amount; }
         public ReactiveValue<int> MaxAmount { [Impl(256)] get => _maxAmount; }
         public int PercentAmount { [Impl(256)] get => (100 * _amount) / _maxAmount; }
-        public ReactiveValue<int> MaxBlood { [Impl(256)] get => _maxBlood; }
-        public int PercentBlood { [Impl(256)] get => (100 * _values[Blood]) / _maxBlood; }
 
-        public bool IsOverResources => _maxAmount.Value < _amount.Value;
-        sealed public override bool IsEmpty => _amount == 0 & _values[Blood].Value == 0;
+        public Blood Blood { [Impl(256)] get => _blood; }
 
-        sealed public override int this[int index] { [Impl(256)] get => _values[index].Value; }
-        sealed public override int this[Id<CurrencyId> id] { [Impl(256)] get => _values[id.Value].Value; }
+        public bool IsOverResources { [Impl(256)] get => _maxAmount.Value < _amount.Value; }
+        public bool IsEmpty { [Impl(256)] get => _amount == 0 & _blood.Value == 0; }
+
+        public int this[int index] { [Impl(256)] get => _values[index].Value; }
+        public int this[Id<CurrencyId> id] { [Impl(256)] get => _values[id.Value].Value; }
 
         #region Min/Max
         public int MinIndex
@@ -33,7 +32,7 @@ namespace Vurbiri.Colonization
             get
             {
                 int minId = 0;
-                for (int i = 1; i < MainCount; ++i)
+                for (int i = 1; i < CurrencyId.Count; ++i)
                     if (_values[i] < _values[minId])
                         minId = i;
                 return minId;
@@ -44,7 +43,7 @@ namespace Vurbiri.Colonization
             get
             {
                 int maxId = 0;
-                for (int i = 1; i < MainCount; ++i)
+                for (int i = 1; i < CurrencyId.Count; ++i)
                     if (_values[i] > _values[maxId])
                         maxId = i;
                 return maxId;
@@ -53,35 +52,33 @@ namespace Vurbiri.Colonization
         #endregion
 
         #region Constructions
-        protected ReadOnlyCurrencies(ACurrencies other, Ability maxMainValue, Ability maxBloodValue)
+        protected ReadOnlyCurrencies(StartCurrencies start, Ability maxMainValue, Ability maxBloodValue)
         {
             _maxAmount = maxMainValue;
-            _maxBlood = maxBloodValue;
 
-            for (int i = 0; i < MainCount; ++i)
-                _values[i] = new MainCurrency(other[i]);
+            for (int i = 0; i < CurrencyId.Count; ++i)
+                _values[i] = start[i];
+            _amount.SilentValue = start.Amount;
 
-            _values[Blood] = new BloodCurrency(other[Blood], maxBloodValue);
-
-            _amount.SilentValue = other.Amount;
+            _blood = new Blood(start.BloodValue, maxBloodValue, RedirectBlood);
         }
         #endregion
 
-        [Impl(256)] public Subscription Subscribe(Action<ACurrencies> action, bool instantGetValue = true) => _changeEvent.Add(action, this, instantGetValue);
+        [Impl(256)] public Subscription Subscribe(Action<ReadOnlyCurrencies> action, bool instantGetValue = true) => _changeEvent.Add(action, this, instantGetValue);
 
-        [Impl(256)] public Currency Get(int index) => _values[index];
         [Impl(256)] public Currency Get(Id<CurrencyId> id) => _values[id.Value];
+        [Impl(256)] public ACurrency Get(Id<ProfitId> id) => id == ProfitId.Blood ? _blood : _values[id.Value];
 
-        [Impl(256)] public int PercentAmountExCurrency(int currencyId)
+        [Impl(256)] public int PercentAmountExCurrency(Id<CurrencyId> currencyId)
         {
             int currency = _values[currencyId].Value;
             return 100 * (_amount - currency) / (_maxAmount - currency);
         }
 
-        public int OverCount(ReadOnlyMainCurrencies values, out int lastIndex)
+        public int OverCount(ReadOnlyLiteCurrencies values, out int lastIndex)
         {
             int count = 0; lastIndex = -1;
-            for (int i = 0; i < MainCount; ++i)
+            for (int i = 0; i < CurrencyId.Count; ++i)
             {
                 if (values[i] > _values[i])
                 {
@@ -90,10 +87,10 @@ namespace Vurbiri.Colonization
             }
             return count;
         }
-        public int Deficit(ReadOnlyMainCurrencies values)
+        public int Deficit(ReadOnlyLiteCurrencies values)
         {
             int delta = 0;
-            for (int i = 0, cost; i < MainCount; ++i)
+            for (int i = 0, cost; i < CurrencyId.Count; ++i)
             {
                 cost = _values[i] - values[i];
                 if (cost < 0)
@@ -102,72 +99,15 @@ namespace Vurbiri.Colonization
             return delta;
         }
 
-        #region Nested: ACurrency, MainCurrency, BloodCurrency
-        //*******************************************************
-        sealed protected class MainCurrency : ACurrency
+        public void ToStringBuilder(StringBuilder sb)
         {
-            public MainCurrency() : base(0) { }
-            public MainCurrency(int value) : base(value) { }
+            for (int i = 0; i < CurrencyId.Count; ++i)
+                sb.AppendFormat(TAG.CURRENCY, i, _values[i].ToString());
 
-            public override int Add(int delta)
-            {
-                if (delta != 0)
-                {
-                    _value += delta;
-                    _onChange.Invoke(_value);
-                    _deltaValue.Invoke(delta);
-                }
-                return delta;
-            }
-            public override int Remove(int delta) => Add(-delta);
-
-            public override int Set(int value) => Add(value - _value);
+            sb.Append(" ");
+            sb.Append(_amount.ToString()); sb.Append("/"); sb.Append(_maxAmount.ToString());
         }
-        //*******************************************************
-        sealed protected class BloodCurrency : ACurrency
-        {
-            private readonly Ability _max;
-            
-            public BloodCurrency() : base(0) { }
-            public BloodCurrency(Ability maxValue) : this(0, maxValue) { }
-            public BloodCurrency(int value, Ability maxValue) : base(value)
-            {
-                _max = maxValue;
-            }
 
-            public override int Set(int value)
-            {
-                value = Mathf.Clamp(value, 0, _max.Value);
-                if (value != _value)
-                {
-                    int delta = value - _value;
-                    _value = value;
-
-                    _onChange.Invoke(value);
-                    _deltaValue.Invoke(delta);
-                }
-                return 0;
-            }
-
-            public override int Add(int delta) => Set(_value + delta);
-            public override int Remove(int delta) => Set(_value - delta);
-        }
-        //*******************************************************
-        protected abstract class ACurrency : Currency
-        {
-            public ACurrency(int value) => _value = value;
-
-            public abstract int Set(int value);
-            public abstract int Add(int value);
-            public abstract int Remove(int value);
-
-            public static int operator +(ACurrency currency, int value) => currency._value + value;
-            public static int operator +(int value, ACurrency currency) => value + currency._value;
-            public static int operator -(ACurrency currency, int value) => currency._value - value;
-            public static int operator -(int value, ACurrency currency) => value - currency._value;
-
-            public static int operator *(ACurrency a, ACurrency b) => a._value * b._value;
-        }
-        #endregion
+        private void RedirectBlood(int value) => _changeEvent.Invoke(this);
     }
 }

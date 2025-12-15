@@ -10,7 +10,7 @@ namespace Vurbiri.Colonization
             {
                 public override bool IsValid => true;
 
-                private Upgrade(Builder parent, Crossroad crossroad, ReadOnlyMainCurrencies cost) : base(parent, crossroad, cost, parent.Human.BuyEdificeUpgrade) { }
+                private Upgrade(Builder parent, Crossroad crossroad, ReadOnlyLiteCurrencies cost) : base(parent, crossroad, cost, parent.Human.BuyEdificeUpgrade) { }
 
                 public static void Create(Builder parent, Plans plans, ReadOnlyReactiveList<Crossroad> edifice)
                 {

@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri
 {
@@ -19,18 +20,18 @@ namespace Vurbiri
 
         [SerializeField] private int _id;
 
-        public readonly int Count => IdType<T>.Count;
+        public readonly int Count { [Impl(256)] get => IdType<T>.Count; }
 
-        public readonly bool this[int i] => ((_id >> i) & 1) > 0;
-        public readonly bool this[Id<T> id] => ((_id >> id.Value) & 1) > 0;
+        public readonly bool this[int i] { [Impl(256)] get => ((_id >> i) & 1) > 0; }
+        public readonly bool this[Id<T> id] { [Impl(256)] get => ((_id >> id.Value) & 1) > 0; }
 
         #region Constructors
-        public IdFlags(int value)
+        [Impl(256)] public IdFlags(int value)
         {
             Throw.IfOutOfRange(value, 0, IdType<T>.Count);
             _id = 1 << value;
         }
-        public IdFlags(Id<T> id)
+        [Impl(256)] public IdFlags(Id<T> id)
         {
             _id = 1 << id.Value;
         }
@@ -44,17 +45,17 @@ namespace Vurbiri
                 _id |= 1 << values[i];
             }
         }
-        public IdFlags(bool all)
+        [Impl(256)] public IdFlags(bool all)
         {
             _id = all ? s_maskId : 0;
         }
 
-        private IdFlags(int id, int i, bool operation)
+        [Impl(256)] private IdFlags(int id, int i, bool operation)
         {
             Throw.IfOutOfRange(i, 0, IdType<T>.Count);
             _id = operation ? id |= 1 << i : id &= ~(1 << i);
         }
-        private IdFlags(int id, Id<T> i, bool operation)
+        [Impl(256)] private IdFlags(int id, Id<T> i, bool operation)
         {
             _id = operation ? id |= 1 << i.Value : id &= ~(1 << i.Value);
         }
@@ -75,57 +76,98 @@ namespace Vurbiri
             return values;
         }
 
-        public readonly bool Equals(IdFlags<T> other) => (_id & s_maskId) == (other._id & s_maskId);
-        public readonly bool Equals(Id<T> id) => ((_id >> id.Value) & 1) > 0;
-        public readonly bool Equals(int i) => ((_id >> i) & 1) > 0;
+        [Impl(256)] public readonly IdFlags<U> Convert<U>() where U : IdType<U> => new()
+        {
+            _id = _id & IdFlags<U>.s_maskId
+        };
+
+        #region Equals
+        [Impl(256)] public readonly bool Equals(IdFlags<T> other) => (_id & s_maskId) == (other._id & s_maskId);
+        [Impl(256)] public readonly bool Equals(Id<T> id) => ((_id >> id.Value) & 1) > 0;
+        [Impl(256)] public readonly bool Equals(int i) => ((_id >> i) & 1) > 0;
         public override readonly bool Equals(object obj)
         {
-            if (obj is null) return false;
-
             if (obj is IdFlags<T> flags) return (_id & s_maskId) == (flags._id & s_maskId);
             if (obj is int i) return ((_id >> i) & 1) > 0;
             if (obj is Id<T> id) return ((_id >> id.Value) & 1) > 0;
 
             return false;
         }
+        #endregion
         public override readonly int GetHashCode() => _id.GetHashCode();
 
-        public static implicit operator IdFlags<T>(int value) => new(value);
-        public static implicit operator IdFlags<T>(Id<T> id) => new(id);
-        public static implicit operator IdFlags<T>(bool all) => new(all);
+        [Impl(256)] public static implicit operator IdFlags<T>(int value) => new(value);
+        [Impl(256)] public static implicit operator IdFlags<T>(Id<T> id) => new(id);
+        [Impl(256)] public static implicit operator IdFlags<T>(bool all) => new(all);
 
-        public static bool operator ==(IdFlags<T> a, IdFlags<T> b) => (a._id & s_maskId) == (b._id & s_maskId);
-        public static bool operator !=(IdFlags<T> a, IdFlags<T> b) => (a._id & s_maskId) != (b._id & s_maskId);
+        #region Comparison operators
+        [Impl(256)] public static bool operator ==(IdFlags<T> a, IdFlags<T> b) => (a._id & s_maskId) == (b._id & s_maskId);
+        [Impl(256)] public static bool operator !=(IdFlags<T> a, IdFlags<T> b) => (a._id & s_maskId) != (b._id & s_maskId);
 
-        public static bool operator ==(IdFlags<T> flags, int i) => ((flags._id >> i) & 1) > 0;
-        public static bool operator !=(IdFlags<T> flags, int i) => ((flags._id >> i) & 1) == 0;
+        [Impl(256)] public static bool operator ==(IdFlags<T> flags, int i) => ((flags._id >> i) & 1) > 0;
+        [Impl(256)] public static bool operator !=(IdFlags<T> flags, int i) => ((flags._id >> i) & 1) == 0;
 
-        public static bool operator ==(int i, IdFlags<T> flags) => ((flags._id >> i) & 1) > 0;
-        public static bool operator !=(int i, IdFlags<T> flags) => ((flags._id >> i) & 1) == 0;
+        [Impl(256)] public static bool operator ==(int i, IdFlags<T> flags) => ((flags._id >> i) & 1) > 0;
+        [Impl(256)] public static bool operator !=(int i, IdFlags<T> flags) => ((flags._id >> i) & 1) == 0;
 
-        public static bool operator ==(IdFlags<T> flags, Id<T> id) => ((flags._id >> id.Value) & 1) > 0;
-        public static bool operator !=(IdFlags<T> flags, Id<T> id) => ((flags._id >> id.Value) & 1) == 0;
+        [Impl(256)] public static bool operator ==(IdFlags<T> flags, Id<T> id) => ((flags._id >> id.Value) & 1) > 0;
+        [Impl(256)] public static bool operator !=(IdFlags<T> flags, Id<T> id) => ((flags._id >> id.Value) & 1) == 0;
 
-        public static bool operator ==(Id<T> id, IdFlags<T> flags) => ((flags._id >> id.Value) & 1) > 0;
-        public static bool operator !=(Id<T> id, IdFlags<T> flags) => ((flags._id >> id.Value) & 1) == 0;
+        [Impl(256)] public static bool operator ==(Id<T> id, IdFlags<T> flags) => ((flags._id >> id.Value) & 1) > 0;
+        [Impl(256)] public static bool operator !=(Id<T> id, IdFlags<T> flags) => ((flags._id >> id.Value) & 1) == 0;
+        #endregion
 
-        public static IdFlags<T> operator |(IdFlags<T> flags, int i) => new(flags._id, i, true);
-        public static IdFlags<T> operator |(int i, IdFlags<T> flags) => new(flags._id, i, true);
+        #region Logic operators
+        [Impl(256)] public static IdFlags<T> operator |(IdFlags<T> flags, int i) => new(flags._id, i, true);
+        [Impl(256)] public static IdFlags<T> operator |(int i, IdFlags<T> flags) => new(flags._id, i, true);
 
-        public static IdFlags<T> operator ^(IdFlags<T> flags, int i) => new(flags._id, i, false);
-        public static IdFlags<T> operator ^(int i, IdFlags<T> flags) => new(flags._id, i, false);
+        [Impl(256)] public static IdFlags<T> operator ^(IdFlags<T> flags, int i) => new(flags._id, i, false);
+        [Impl(256)] public static IdFlags<T> operator ^(int i, IdFlags<T> flags) => new(flags._id, i, false);
 
-        public static IdFlags<T> operator |(IdFlags<T> flags, Id<T> id) => new(flags._id, id, true);
-        public static IdFlags<T> operator |(Id<T> id, IdFlags<T> flags) => new(flags._id, id, true);
+        [Impl(256)] public static IdFlags<T> operator |(IdFlags<T> flags, Id<T> id) => new(flags._id, id, true);
+        [Impl(256)] public static IdFlags<T> operator |(Id<T> id, IdFlags<T> flags) => new(flags._id, id, true);
 
-        public static IdFlags<T> operator ^(IdFlags<T> flags, Id<T> id) => new(flags._id, id, false);
-        public static IdFlags<T> operator ^(Id<T> id, IdFlags<T> flags) => new(flags._id, id, false);
+        [Impl(256)] public static IdFlags<T> operator ^(IdFlags<T> flags, Id<T> id) => new(flags._id, id, false);
+        [Impl(256)] public static IdFlags<T> operator ^(Id<T> id, IdFlags<T> flags) => new(flags._id, id, false);
+        #endregion
 
-        public readonly IEnumerator<bool> GetEnumerator()
-        {
-            for (int i = 0; i < IdType<T>.Count; i++)
-                yield return this[i];
-        }
+        #region Enumerator
+        [Impl(256)] public readonly Enumerator GetEnumerator() => new(_id);
+
+        readonly IEnumerator<bool> IEnumerable<bool>.GetEnumerator() => GetEnumerator();
         readonly IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+        public struct Enumerator : IEnumerator<bool>
+        {
+            private readonly int _id;
+            private int _cursor;
+            private bool _current;
+
+            public readonly bool Current { [Impl(256)] get => _current; }
+            readonly object IEnumerator.Current { [Impl(256)] get => _current; }
+
+            [Impl(256)] public Enumerator(int id)
+            {
+                _id = id;
+                _cursor = -1;
+                _current = false;
+            }
+
+            [Impl(256)] public bool MoveNext()
+            {
+                if(++_cursor < IdType<T>.Count)
+                {
+                    _current = ((_id >> _cursor) & 1) > 0;
+                    return true;
+                }
+
+                return false;
+            }
+
+            [Impl(256)] public void Reset() => _cursor = -1;
+
+            [Impl(256)] public readonly void Dispose() { }
+        }
+        #endregion
     }
 }

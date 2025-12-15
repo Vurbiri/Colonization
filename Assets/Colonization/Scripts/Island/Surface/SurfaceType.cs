@@ -9,7 +9,7 @@ namespace Vurbiri.Colonization
 	{
         [ReadOnly, SerializeField] private Id<SurfaceId> _id;
         [Space]
-        [SerializeField] private IdFlags<CurrencyId> _profits;
+        [SerializeField] private IdFlags<ProfitId> _profits;
         [SerializeField] private GameObject _prefabSurface;
 
         private bool _isWater, _isGate;
@@ -18,7 +18,7 @@ namespace Vurbiri.Colonization
         public Id<SurfaceId> Id { [Impl(256)] get => _id; }
         public bool IsWater { [Impl(256)] get => _isWater; }
         public bool IsGate { [Impl(256)] get => _isGate; }
-        public IdFlags<CurrencyId> Currencies { [Impl(256)] get => _profits; }
+        public IdFlags<ProfitId> Profits { [Impl(256)] get => _profits; }
         public IProfit Profit { [Impl(256)] get => _profit.Instance; }
 
         public void Init()
@@ -45,7 +45,7 @@ namespace Vurbiri.Colonization
             if (id < SurfaceId.Water)
                 _profits = id;
             else if (id == SurfaceId.Gate)
-                _profits = CurrencyId.Blood;
+                _profits = ProfitId.Blood;
             else if (id == SurfaceId.Water)
                 _profits = new(0, 1, 2, 3, 4);
         }

@@ -21,7 +21,7 @@ namespace Vurbiri.Colonization
             }
 
             [Impl(256)] public IEnumerator Landing_Cn() => _builder.Landing_Cn();
-            [Impl(256)] public WaitResult<bool> GiftReceive(int giver, MainCurrencies gift) => _diplomat.Receive(giver, gift);
+            [Impl(256)] public WaitResult<bool> GiftReceive(int giver, LiteCurrencies gift) => _diplomat.Receive(giver, gift);
 
             [Impl(256)] public void Update() => _diplomat.Update();
 

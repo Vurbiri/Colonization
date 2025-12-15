@@ -10,17 +10,17 @@ namespace Vurbiri.Colonization
         {
             sealed private class LandBuild : Plan
             {
-                private readonly ReadOnlyMainCurrencies _allCost, _edificeCost, _roadCost;
+                private readonly ReadOnlyLiteCurrencies _allCost, _edificeCost, _roadCost;
                 private readonly Step[] _steps;
                 private readonly int _roadsCount;
                 private int _cursor;
 
-                private LandBuild(Builder parent, Crossroad crossroad, ReadOnlyMainCurrencies cost) : base(parent)
+                private LandBuild(Builder parent, Crossroad crossroad, ReadOnlyLiteCurrencies cost) : base(parent)
                 {
                     _steps = new Step[] { new(crossroad) };
                     _edificeCost = cost;
                 }
-                private LandBuild(Builder parent, Stack<Step> steps, ReadOnlyMainCurrencies edificeCost, ReadOnlyMainCurrencies roadCost, ReadOnlyMainCurrencies allCost) : base(parent)
+                private LandBuild(Builder parent, Stack<Step> steps, ReadOnlyLiteCurrencies edificeCost, ReadOnlyLiteCurrencies roadCost, ReadOnlyLiteCurrencies allCost) : base(parent)
                 {
                     _steps = steps.MoveToArray();
                     _roadsCount = _steps.Length - 1;
@@ -117,7 +117,7 @@ namespace Vurbiri.Colonization
                         yield return null;
 
                         int weight, index = crossroads.Count;
-                        ReadOnlyMainCurrencies cost; Crossroad crossroad;
+                        ReadOnlyLiteCurrencies cost; Crossroad crossroad;
                         while (index --> 0)
                         {
                             crossroad = crossroads[index];
@@ -155,7 +155,7 @@ namespace Vurbiri.Colonization
 
                         var prices = GameContainer.Prices.Edifices;
                         Stack<Step> steps = new(); int weight, roadCount; bool repeat = false;
-                        ReadOnlyMainCurrencies allCost, edificeCost, roadCost = GameContainer.Prices.Road;
+                        ReadOnlyLiteCurrencies allCost, edificeCost, roadCost = GameContainer.Prices.Road;
                         System.Func<Crossroad, int, int> GetWeight = parent.Colonies.Count == 0 ? parent.GetFirstColonyWeight : parent.GetColonyWeight;
 
                         do

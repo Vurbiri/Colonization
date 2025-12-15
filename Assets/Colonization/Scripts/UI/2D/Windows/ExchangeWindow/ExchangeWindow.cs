@@ -21,8 +21,8 @@ namespace Vurbiri.Colonization.UI
         [SerializeField, ReadOnly] private BankCurrencyWidget[] _bankCurrencies;
         [SerializeField, ReadOnly] private PlayerCurrencyWidget[] _playerCurrencies;
 
-        private readonly MainCurrencies _bankTrade = new();
-        private readonly MainCurrencies _price = new(), _pay = new();
+        private readonly LiteCurrencies _bankTrade = new();
+        private readonly LiteCurrencies _price = new(), _pay = new();
 
         public Switcher Init()
         {
@@ -34,7 +34,7 @@ namespace Vurbiri.Colonization.UI
             _closeButton.AddListener(_switcher.Close);
 
             var resources = GameContainer.Person.Resources;
-            for (int i = 0; i < CurrencyId.MainCount; i++)
+            for (int i = 0; i < CurrencyId.Count; i++)
             {
                 _bankCurrencies[i].Init(OnBankChangeCount);
                 _playerCurrencies[i].Init(resources, OnPlayerChangeCount);
@@ -68,7 +68,7 @@ namespace Vurbiri.Colonization.UI
 
         private void OnChangeRates(ExchangeRate rates)
         {
-            for (int i = 0; i < CurrencyId.MainCount; i++)
+            for (int i = 0; i < CurrencyId.Count; i++)
                 _bankCurrencies[i].SetRate(rates[i]);
             ResetValues();
         }
@@ -81,7 +81,7 @@ namespace Vurbiri.Colonization.UI
 
         private void ResetValues()
         {
-            for (int i = 0; i < CurrencyId.MainCount; i++)
+            for (int i = 0; i < CurrencyId.Count; i++)
             {
                 _bankCurrencies[i].ResetCount();
                 _playerCurrencies[i].ResetCount();

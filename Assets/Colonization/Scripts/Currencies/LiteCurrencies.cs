@@ -8,11 +8,9 @@ using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 namespace Vurbiri.Colonization
 {
     [System.Serializable]
-    public class ReadOnlyMainCurrencies : IReadOnlyList<int>
+    public class ReadOnlyLiteCurrencies : IReadOnlyList<int>
     {
-        protected const int COUNT = CurrencyId.MainCount;
-
-        [SerializeField] protected int[] _values = new int[COUNT];
+        [SerializeField] protected int[] _values = new int[CurrencyId.Count];
         [SerializeField] protected int _amount;
 
         protected readonly Version _version = new();
@@ -20,7 +18,7 @@ namespace Vurbiri.Colonization
         public int this[int index] { [Impl(256)] get => _values[index]; }
         public int this[Id<CurrencyId> id] { [Impl(256)] get => _values[id]; }
 
-        public int Count { [Impl(256)] get => COUNT; }
+        public int Count { [Impl(256)] get => CurrencyId.Count; }
         public int Amount { [Impl(256)] get => _amount; }
         public bool IsEmpty { [Impl(256)] get => _amount == 0; }
         public bool IsNotEmpty { [Impl(256)] get => _amount != 0; }
@@ -31,7 +29,7 @@ namespace Vurbiri.Colonization
             get
             {
                 int minId = 0;
-                for (int i = 1; i < COUNT; ++i)
+                for (int i = 1; i < CurrencyId.Count; ++i)
                     if (_values[i] < _values[minId])
                         minId = i;
                 return minId;
@@ -42,7 +40,7 @@ namespace Vurbiri.Colonization
             get
             {
                 int maxId = 0;
-                for (int i = 1; i < COUNT; ++i)
+                for (int i = 1; i < CurrencyId.Count; ++i)
                     if (_values[i] > _values[maxId])
                         maxId = i;
                 return maxId;
@@ -54,7 +52,7 @@ namespace Vurbiri.Colonization
             get
             {
                 int minValue = _values[0];
-                for (int i = 1; i < COUNT; ++i)
+                for (int i = 1; i < CurrencyId.Count; ++i)
                     if (_values[i] < minValue)
                         minValue = _values[i];
                 return minValue;
@@ -65,7 +63,7 @@ namespace Vurbiri.Colonization
             get
             {
                 int maxValue = _values[0];
-                for (int i = 1; i < COUNT; ++i)
+                for (int i = 1; i < CurrencyId.Count; ++i)
                     if (_values[i] > maxValue)
                         maxValue = _values[i];
                 return maxValue;
@@ -73,16 +71,18 @@ namespace Vurbiri.Colonization
         }
         #endregion
 
-        public ReadOnlyMainCurrencies() { }
-        public ReadOnlyMainCurrencies(Id<CurrencyId> id, int value)
+        public ReadOnlyLiteCurrencies() { }
+        public ReadOnlyLiteCurrencies(int value)
         {
-            _values[id] = value; _amount = value;
-        }
-        public ReadOnlyMainCurrencies(int value)
-        {
-            for (int i = 0; i < COUNT; ++i)
+            for (int i = 0; i < CurrencyId.Count; ++i)
                 _values[i] = value;
-            _amount = value * COUNT;
+            _amount = value * CurrencyId.Count;
+        }
+        public ReadOnlyLiteCurrencies(ReadOnlyLiteCurrencies other)
+        {
+            for (int i = 0; i < CurrencyId.Count; ++i)
+                _values[i] = other._values[i];
+            _amount = other._amount;
         }
 
         #region ToText
@@ -90,7 +90,7 @@ namespace Vurbiri.Colonization
         {
             if (_amount != 0)
             {
-                for (int i = 0, resource; i < COUNT; ++i)
+                for (int i = 0, resource; i < CurrencyId.Count; ++i)
                 {
                     resource = _values[i];
                     if (resource != 0)
@@ -101,14 +101,14 @@ namespace Vurbiri.Colonization
         }
         public void ToStringBuilder(StringBuilder sb)
         {
-            for (int i = 0; i < COUNT; ++i)
+            for (int i = 0; i < CurrencyId.Count; ++i)
                 sb.AppendFormat(TAG.CURRENCY, i, _values[i].ToString("+#;-#;0"));
         }
         public void PlusToStringBuilder(StringBuilder sb)
         {
             if (_amount > 0)
             {
-                for (int i = 0, resource; i < COUNT; ++i)
+                for (int i = 0, resource; i < CurrencyId.Count; ++i)
                 {
                     resource = _values[i];
                     if (resource > 0)
@@ -125,7 +125,7 @@ namespace Vurbiri.Colonization
         sealed public override string ToString()
         {
             StringBuilder sb = new();
-            for (int i = 0; i < COUNT; ++i)
+            for (int i = 0; i < CurrencyId.Count; ++i)
             {
                 sb.Append("["); sb.Append(_values[i]); sb.Append("]");
             }
@@ -133,44 +133,44 @@ namespace Vurbiri.Colonization
         }
         #endregion
 
-        [Impl(256)] public ArrayEnumerator<int> GetEnumerator() => new(_values, COUNT, _version);
+        [Impl(256)] public ArrayEnumerator<int> GetEnumerator() => new(_values, CurrencyId.Count, _version);
         IEnumerator<int> IEnumerable<int>.GetEnumerator() => GetEnumerator();
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
         #region Arithmetic
-        public static MainCurrencies operator -(ReadOnlyCurrencies a, ReadOnlyMainCurrencies b)
+        public static LiteCurrencies operator -(ReadOnlyCurrencies a, ReadOnlyLiteCurrencies b)
         {
-            MainCurrencies diff = new();
-            for (int i = 0; i < COUNT; ++i)
+            LiteCurrencies diff = new();
+            for (int i = 0; i < CurrencyId.Count; ++i)
                 diff._values[i] = a[i] - b._values[i];
             diff._amount = a.Amount - b._amount;
 
             return diff;
         }
-        public static ReadOnlyMainCurrencies operator -(ReadOnlyMainCurrencies a, ReadOnlyMainCurrencies b)
+        public static ReadOnlyLiteCurrencies operator -(ReadOnlyLiteCurrencies a, ReadOnlyLiteCurrencies b)
         {
-            ReadOnlyMainCurrencies diff = new();
-            for (int i = 0; i < COUNT; ++i)
+            ReadOnlyLiteCurrencies diff = new();
+            for (int i = 0; i < CurrencyId.Count; ++i)
                 diff._values[i] = a._values[i] - b._values[i];
             diff._amount = a._amount - b._amount;
 
             return diff;
         }
-        public static ReadOnlyMainCurrencies operator +(ReadOnlyMainCurrencies a, ReadOnlyMainCurrencies b)
+        public static ReadOnlyLiteCurrencies operator +(ReadOnlyLiteCurrencies a, ReadOnlyLiteCurrencies b)
         {
-            ReadOnlyMainCurrencies sum = new();
-            for (int i = 0; i < COUNT; ++i)
+            ReadOnlyLiteCurrencies sum = new();
+            for (int i = 0; i < CurrencyId.Count; ++i)
                 sum._values[i] = a._values[i] + b._values[i];
             sum._amount = a._amount + b._amount;
 
             return sum;
         }
-        public static ReadOnlyMainCurrencies operator *(ReadOnlyMainCurrencies currencies, int rate)
+        public static ReadOnlyLiteCurrencies operator *(ReadOnlyLiteCurrencies currencies, int rate)
         {
-            ReadOnlyMainCurrencies result = new();
+            ReadOnlyLiteCurrencies result = new();
             if (currencies._amount != 0 & rate != 0)
             {
-                for (int i = 0; i < COUNT; ++i)
+                for (int i = 0; i < CurrencyId.Count; ++i)
                     result._values[i] = currencies._values[i] * rate;
                 result._amount = currencies._amount * rate;
             }
@@ -180,52 +180,52 @@ namespace Vurbiri.Colonization
         #endregion
 
         #region Comparison
-        public static bool operator >=(ReadOnlyMainCurrencies left, ReadOnlyCurrencies right)
+        public static bool operator >=(ReadOnlyLiteCurrencies left, ReadOnlyCurrencies right)
         {
             if (left._amount < right.Amount)
                 return false;
 
-            for (int i = 0; i < COUNT; ++i)
+            for (int i = 0; i < CurrencyId.Count; ++i)
                 if (left._values[i] < right[i])
                     return false;
             return true;
         }
-        public static bool operator <=(ReadOnlyMainCurrencies left, ReadOnlyCurrencies right)
+        public static bool operator <=(ReadOnlyLiteCurrencies left, ReadOnlyCurrencies right)
         {
-            for (int i = 0; i < COUNT; ++i)
+            for (int i = 0; i < CurrencyId.Count; ++i)
                 if (left._values[i] > right[i])
                     return false;
             return true;
         }
 
-        public static bool operator >(ReadOnlyMainCurrencies left, ReadOnlyCurrencies right) => !(left <= right);
-        public static bool operator <(ReadOnlyMainCurrencies left, ReadOnlyCurrencies right) => !(left >= right);
+        public static bool operator >(ReadOnlyLiteCurrencies left, ReadOnlyCurrencies right) => !(left <= right);
+        public static bool operator <(ReadOnlyLiteCurrencies left, ReadOnlyCurrencies right) => !(left >= right);
 
-        public static bool operator >=(ReadOnlyCurrencies left, ReadOnlyMainCurrencies right)
+        public static bool operator >=(ReadOnlyCurrencies left, ReadOnlyLiteCurrencies right)
         {
             if (left.Amount < right._amount)
                 return false;
 
-            for (int i = 0; i < COUNT; ++i)
+            for (int i = 0; i < CurrencyId.Count; ++i)
                 if (left[i] < right._values[i])
                     return false;
             return true;
         }
-        public static bool operator <=(ReadOnlyCurrencies left, ReadOnlyMainCurrencies right)
+        public static bool operator <=(ReadOnlyCurrencies left, ReadOnlyLiteCurrencies right)
         {
-            for (int i = 0; i < COUNT; ++i)
+            for (int i = 0; i < CurrencyId.Count; ++i)
                 if (left[i] > right._values[i])
                     return false;
             return true;
         }
 
-        public static bool operator >(ReadOnlyCurrencies left, ReadOnlyMainCurrencies right) => !(left <= right);
-        public static bool operator <(ReadOnlyCurrencies left, ReadOnlyMainCurrencies right) => !(left >= right);
+        public static bool operator >(ReadOnlyCurrencies left, ReadOnlyLiteCurrencies right) => !(left <= right);
+        public static bool operator <(ReadOnlyCurrencies left, ReadOnlyLiteCurrencies right) => !(left >= right);
         #endregion
     }
 
     [System.Serializable]
-    public class MainCurrencies : ReadOnlyMainCurrencies
+    public class LiteCurrencies : ReadOnlyLiteCurrencies
     {
         public new int this[int index]
         {
@@ -238,26 +238,15 @@ namespace Vurbiri.Colonization
             [Impl(256)] set => Set(id, value);
         }
 
-        public MainCurrencies() { }
-        public MainCurrencies(ReadOnlyCurrencies other)
+        [Impl(256)] public LiteCurrencies() { }
+        [Impl(256)] public LiteCurrencies(ReadOnlyLiteCurrencies other) : base(other) { }
+        public LiteCurrencies(ReadOnlyCurrencies other)
         {
-            for (int i = 0; i < COUNT; ++i)
+            for (int i = 0; i < CurrencyId.Count; ++i)
                 _values[i] = other[i];
             _amount = other.Amount;
         }
-        public MainCurrencies(ReadOnlyMainCurrencies other)
-        {
-            for (int i = 0; i < COUNT; ++i)
-                _values[i] = other[i];
-            _amount = other.Amount;
-        }
-        public MainCurrencies(MainCurrencies other)
-        {
-            for (int i = 0; i < COUNT; ++i)
-                _values[i] = other._values[i];
-            _amount = other._amount;
-        }
-
+        
         [Impl(256)] public void Increment(Id<CurrencyId> id)
         {
             ++_values[id]; ++_amount;
@@ -275,6 +264,7 @@ namespace Vurbiri.Colonization
             _values[id] = value;
             _version.Next();
         }
+
         [Impl(256)] public void Add(Id<CurrencyId> id, int value)
         {
             _amount += value;
@@ -290,7 +280,7 @@ namespace Vurbiri.Colonization
 
         [Impl(256)] public void AddToRandom(int value)
         {
-            _values[Random.Range(0, COUNT)] += value;
+            _values[Random.Range(0, CurrencyId.Count)] += value;
             _amount += value;
             _version.Next();
         }
@@ -299,7 +289,7 @@ namespace Vurbiri.Colonization
         {
             if (_amount != 0)
             {
-                for (int i = 0; i < COUNT; ++i)
+                for (int i = 0; i < CurrencyId.Count; ++i)
                     _values[i] *= ratio;
 
                 _amount *= ratio;
@@ -307,21 +297,21 @@ namespace Vurbiri.Colonization
             }
         }
 
-        public void Add(ReadOnlyMainCurrencies other)
+        public void Add(ReadOnlyLiteCurrencies other)
         {
             if (other.IsNotEmpty)
             {
-                for (int i = 0; i < COUNT; ++i)
+                for (int i = 0; i < CurrencyId.Count; ++i)
                     _values[i] += other[i];
                 _amount += other.Amount;
                 _version.Next();
             }
         }
 
-        public void RandomAddRange(int count, int maxId = COUNT)
+        public void RandomAddRange(int count, int maxId)
         {
             _amount += count;
-            int sign = count < 0 ? -1 : 1; count = sign * count;
+            int sign = count.Sign(); count = sign * count;
 
             for (int add, index; count > 0; count -= add)
             {
@@ -334,7 +324,7 @@ namespace Vurbiri.Colonization
 
         public void Clear()
         {
-            for (int i = 0; i < COUNT; ++i)
+            for (int i = 0; i < CurrencyId.Count; ++i)
                 _values[i] = 0;
             _amount = 0;
             _version.Next();
@@ -343,41 +333,33 @@ namespace Vurbiri.Colonization
         [Impl(256)] public void DirtyReset(int index) => _values[index] = 0;
         [Impl(256)] public void ResetAmount() => _amount = 0;
 
-        public void Import(ReadOnlyCurrencies other)
-        {
-            for (int i = 0; i < COUNT; ++i)
-                _values[i] = other[i];
-            _amount = other.Amount;
-            _version.Next();
-        }
-
         public void Normalize(int ratio)
         {
             if (_amount != 0)
             {
                 int max = MaxValue;
-                for (int i = 0; i < COUNT; ++i)
+                for (int i = 0; i < CurrencyId.Count; ++i)
                     _values[i] = (_values[i] - max) * ratio;
 
-                _amount = (_amount - max * COUNT) * ratio;
+                _amount = (_amount - max * CurrencyId.Count) * ratio;
                 _version.Next();
             }
         }
 
         #region Arithmetic
-        public static MainCurrencies operator +(MainCurrencies a, MainCurrencies b)
+        public static LiteCurrencies operator +(LiteCurrencies a, LiteCurrencies b)
         {
-            MainCurrencies sum = new();
-            for (int i = 0; i < COUNT; ++i)
+            LiteCurrencies sum = new();
+            for (int i = 0; i < CurrencyId.Count; ++i)
                 sum._values[i] = a._values[i] + b._values[i];
             sum._amount = a._amount + b._amount;
 
             return sum;
         }
-        public static MainCurrencies operator -(MainCurrencies a, MainCurrencies b)
+        public static LiteCurrencies operator -(LiteCurrencies a, LiteCurrencies b)
         {
-            MainCurrencies diff = new();
-            for (int i = 0; i < COUNT; ++i)
+            LiteCurrencies diff = new();
+            for (int i = 0; i < CurrencyId.Count; ++i)
                 diff._values[i] = a._values[i] - b._values[i];
             diff._amount = a._amount - b._amount;
 

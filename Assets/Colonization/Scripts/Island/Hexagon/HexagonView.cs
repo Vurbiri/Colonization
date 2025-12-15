@@ -31,7 +31,7 @@ namespace Vurbiri.Colonization
 
             surface.Create(_thisTransform);
 
-            _hexagonCaption.Init(id, surface.Currencies, this);
+            _hexagonCaption.Init(id, surface.Profits, this);
 
             if (surface.IsWater)
             {

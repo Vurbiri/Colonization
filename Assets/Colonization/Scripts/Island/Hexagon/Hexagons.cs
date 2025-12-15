@@ -11,12 +11,12 @@ namespace Vurbiri.Colonization
         private readonly Dictionary<Key, Hexagon> _hexagons = new(HEX.MAX);
         private readonly List<Key>[] _hexagonsIdForKey = new List<Key>[HEX.IDS[^1] + 1];
         private readonly VAction<Hexagon> _eventChanged = new();
-        private readonly MainCurrencies _freeResources = new();
+        private readonly LiteCurrencies _freeResources = new();
 
         private int _groundCount = 0;
 
         public Hexagon this[Key key] { [Impl(256)] get => _hexagons[key]; }
-        public MainCurrencies FreeResources { [Impl(256)] get => _freeResources; }
+        public LiteCurrencies FreeResources { [Impl(256)] get => _freeResources; }
         public int GroundCount { [Impl(256)] get => _groundCount; }
 
         public Hexagons(Pool<HexagonMark> poolMarks)

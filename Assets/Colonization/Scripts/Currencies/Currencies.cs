@@ -1,37 +1,38 @@
-using System.Text;
 using Vurbiri.Colonization.Storage;
+using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization
 {
-    using static CurrencyId;
-
     sealed public class Currencies : ReadOnlyCurrencies
     {
-        private Currencies(ACurrencies other, Ability maxMainValue, Ability maxBloodValue) : base(other, maxMainValue, maxBloodValue) { }
+        public new int this[int index] { [Impl(256)] get => _values[index].Value; [Impl(256)] set => _values[index].Set(value); }
+        public new int this[Id<CurrencyId> id] { [Impl(256)] get => _values[id.Value].Value; [Impl(256)] set => _values[id.Value].Set(value); }
 
-        public static Currencies Create(ReadOnlyAbilities<HumanAbilityId> abilities, CurrenciesLite resDefault, HumanLoadData loadData)
+        private Currencies(StartCurrencies other, Ability maxMainValue, Ability maxBloodValue) : base(other, maxMainValue, maxBloodValue) { }
+
+        public static Currencies Create(ReadOnlyAbilities<HumanAbilityId> abilities, StartCurrencies resDefault, HumanLoadData loadData)
         {
             if (loadData.isLoaded & loadData.resources != null)
                 resDefault = loadData.resources;
             return new(resDefault, abilities[HumanAbilityId.MaxMainResources], abilities[HumanAbilityId.MaxBlood]);
         }
 
-        public void Add(ReadOnlyMainCurrencies other)
+        public void Add(ReadOnlyLiteCurrencies other)
         {
             if (other.IsNotEmpty)
             {
-                for (int i = 0; i < MainCount; ++i)
+                for (int i = 0; i < CurrencyId.Count; ++i)
                     _values[i].Add(other[i]);
 
                 _amount.Add(other.Amount);
                 _changeEvent.Invoke(this);
             }
         }
-        public void Remove(ReadOnlyMainCurrencies other)
+        public void Remove(ReadOnlyLiteCurrencies other)
         {
             if (other.IsNotEmpty)
             {
-                for (int i = 0; i < MainCount; ++i)
+                for (int i = 0; i < CurrencyId.Count; ++i)
                     _values[i].Remove(other[i]);
 
                 _amount.Remove(other.Amount);
@@ -39,7 +40,7 @@ namespace Vurbiri.Colonization
             }
         }
 
-        public void Add(int currencyId, int value)
+        public void Add(Id<CurrencyId> currencyId, int value)
         {
             if (value != 0)
             {
@@ -47,7 +48,7 @@ namespace Vurbiri.Colonization
                 _changeEvent.Invoke(this);
             }
         }
-        public void Remove(int currencyId, int value)
+        public void Remove(Id<CurrencyId> currencyId, int value)
         {
             if (value != 0)
             {
@@ -56,50 +57,46 @@ namespace Vurbiri.Colonization
             }
         }
 
-        public void AddMain(int value)
+        public void Add(int value)
         {
             if (value != 0)
             {
-                for (int i = 0; i < MainCount; ++i)
+                for (int i = 0; i < CurrencyId.Count; ++i)
                     _values[i].Add(value);
 
-                _amount.Add(value * MainCount);
+                _amount.Add(value * CurrencyId.Count);
+                _changeEvent.Invoke(this);
+            }
+        }
+        public void Remove(int value)
+        {
+            if (value != 0)
+            {
+                for (int i = 0; i < CurrencyId.Count; ++i)
+                    _values[i].Remove(value);
+
+                _amount.Remove(value * CurrencyId.Count);
                 _changeEvent.Invoke(this);
             }
         }
 
-        public void AddBlood(int value)
-        {
-            if (value != 0)
-            {
-                _values[Blood].Add(value);
-                _changeEvent.Invoke(this);
-            }
-        }
-        public void RemoveBlood(int value)
-        {
-            if (value != 0)
-            {
-                _values[Blood].Remove(value);
-                _changeEvent.Invoke(this);
-            }
-        }
-
-        public void ClampMain()
+        public void Clamp()
         {
             int delta = _amount.Value - _maxAmount.Value;
 
             if (delta > 0)
             {
-                int[] values = ConvertToInt(_values);
-                int maxIndex = 0;
-                while (delta --> 0)
+                var values = ConvertToInt(_values);
+                int maxIndex = 0, remove;
+                while (delta > 0)
                 {
                     maxIndex = FindMaxIndex(values, maxIndex);
-                    values[maxIndex]--;
+                    remove = delta / CurrencyId.Count + 1;
+                    values[maxIndex] -= remove;
+                    delta -= remove;
                 }
 
-                for (int index = 0; index < MainCount; index++)
+                for (int index = 0; index < CurrencyId.Count; index++)
                     _values[index].Set(values[index]);
 
                 _amount.Value = _maxAmount.Value;
@@ -108,10 +105,10 @@ namespace Vurbiri.Colonization
 
             #region Local: ConvertToInt(..), FindMaxIndex(..)
             //==============================================
-            static int[] ConvertToInt(ACurrency[] values)
+            static int[] ConvertToInt(Currency[] values)
             {
-                int[] array = new int[MainCount];
-                for (int i = 0; i < MainCount; ++i)
+                int[] array = new int[CurrencyId.Count];
+                for (int i = 0; i < CurrencyId.Count; ++i)
                     array[i] = values[i].Value;
 
                 return array;
@@ -119,10 +116,10 @@ namespace Vurbiri.Colonization
             //==============================================
             static int FindMaxIndex(int[] values, int startIndex)
             {
-                int index, maxIndex = startIndex, step = 1;
-                for(; step < MainCount; step++)
+                int index, maxIndex = startIndex, step = 0;
+                while(++step < CurrencyId.Count)
                 {
-                    index = (startIndex + step) % MainCount;
+                    index = (startIndex + step) % CurrencyId.Count;
                     if (values[index] > values[maxIndex] || (values[index] == values[maxIndex] && Chance.Rolling()))
                         maxIndex = index;
                 }
@@ -143,7 +140,7 @@ namespace Vurbiri.Colonization
 
         public void RandomIncrement()
         {
-            int j = UnityEngine.Random.Range(0, MainCount);
+            int j = UnityEngine.Random.Range(0, CurrencyId.Count);
             _values[j].Add(1);
             _amount.Add(1);
             _changeEvent.Invoke(this);
@@ -153,23 +150,14 @@ namespace Vurbiri.Colonization
         {
             if(_amount.Value > 0)
             {
-                int j = UnityEngine.Random.Range(0, MainCount);
+                int j = UnityEngine.Random.Range(0, CurrencyId.Count);
                 while(_values[j] == 0)
-                    j = ++j % MainCount;
+                    j = ++j % CurrencyId.Count;
                 
                 _values[j].Remove(1);
                 _amount.Remove(1);
                 _changeEvent.Invoke(this);
             }
-        }
-
-        public void MainToStringBuilder(StringBuilder sb)
-        {
-            for (int i = 0; i < MainCount; ++i)
-                sb.AppendFormat(TAG.CURRENCY, i, _values[i].ToString());
-
-            sb.Append(" ");
-            sb.Append(_amount.ToString()); sb.Append("/"); sb.Append(_maxAmount.ToString());
         }
     }
 }

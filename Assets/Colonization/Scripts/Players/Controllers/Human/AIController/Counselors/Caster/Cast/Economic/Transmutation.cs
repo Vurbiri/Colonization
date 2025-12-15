@@ -19,7 +19,7 @@ namespace Vurbiri.Colonization
                     static bool CheckResources(Currencies resources)
                     {
                         int count = 0; bool isMin = false;
-                        for (int i = 0, currency; i < CurrencyId.MainCount - 1; i++)
+                        for (int i = 0, currency; i < CurrencyId.Mana; i++)
                         {
                             currency = resources[i];
                             count += 100 * currency;

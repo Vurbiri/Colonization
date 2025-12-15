@@ -40,14 +40,14 @@ namespace Vurbiri.Colonization.UI
         public void Setup_Editor()
         {
             Vector2 widgetSize = _playerPrefab.Bounds.size + _widgetSpace;
-            Vector2 containerSize = new(widgetSize.x * CurrencyId.MainCount, widgetSize.y);
+            Vector2 containerSize = new(widgetSize.x * CurrencyId.Count, widgetSize.y);
             _giftContainer.sizeDelta = _playerContainer.sizeDelta = containerSize;
 
             widgetSize.y = 0f;
-            float value = widgetSize.x * (CurrencyId.MainCount * -0.5f + 0.5f);
+            float value = widgetSize.x * (CurrencyId.Count * -0.5f + 0.5f);
             Vector2 playerStart = new(value, -_playerPrefab.Bounds.position.y);
 
-            for (int i = 0; i < CurrencyId.MainCount; i++)
+            for (int i = 0; i < CurrencyId.Count; i++)
             {
                 _playerCurrencies[i].Init_Ed(i, playerStart + widgetSize * i);
             }
@@ -68,7 +68,7 @@ namespace Vurbiri.Colonization.UI
         {
             Delete_Editor();
 
-            for (int i = 0; i < CurrencyId.MainCount; i++)
+            for (int i = 0; i < CurrencyId.Count; i++)
                 _playerCurrencies[i] = EUtility.InstantiatePrefab(_playerPrefab, _playerContainer);
 
             Setup_Editor();
@@ -76,7 +76,7 @@ namespace Vurbiri.Colonization.UI
 
         public void Delete_Editor()
         {
-            for (int i = 0; i < CurrencyId.MainCount; i++)
+            for (int i = 0; i < CurrencyId.Count; i++)
                 EUtility.DestroyGameObject(ref _playerCurrencies[i]);
         }
 
@@ -108,11 +108,11 @@ namespace Vurbiri.Colonization.UI
 
         private void SetWidgets<T>(ref T[] components) where T : ASelectCurrencyCountWidget
         {
-            if (components == null || components.Length != CurrencyId.MainCount || components[0] == null)
+            if (components == null || components.Length != CurrencyId.Count || components[0] == null)
                 components = GetComponentsInChildren<T>();
 
-            if(components.Length != CurrencyId.MainCount)
-                Array.Resize(ref components, CurrencyId.MainCount);
+            if(components.Length != CurrencyId.Count)
+                Array.Resize(ref components, CurrencyId.Count);
         }
     }
 }

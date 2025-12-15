@@ -13,17 +13,15 @@ namespace Vurbiri.Colonization
     [JsonArray]
     public class ExchangeRate : IReadOnlyList<int>, IReactive<ExchangeRate>
     {
-        private const int COUNT = CurrencyId.MainCount;
-
         private readonly int[] _exchange;
         private readonly ReactiveVersion<ExchangeRate> _version = new();
         private Chance _chance;
         private int _rate;
 
         public int this[int index] { [Impl(256)] get => _exchange[index]; }
-        public int Count { [Impl(256)] get => COUNT; }
+        public int Count { [Impl(256)] get => CurrencyId.Count; }
 
-        private ExchangeRate(ReadOnlyAbilities<HumanAbilityId> abilities, PerkTree perks) : this(new int[COUNT], abilities, perks) => Update();
+        private ExchangeRate(ReadOnlyAbilities<HumanAbilityId> abilities, PerkTree perks) : this(new int[CurrencyId.Count], abilities, perks) => Update();
         private ExchangeRate(int[] data, ReadOnlyAbilities<HumanAbilityId> abilities, PerkTree perks)
         {
             _exchange = data;
@@ -49,13 +47,13 @@ namespace Vurbiri.Colonization
 
         public void Update()
         {
-            for (int i = 0; i < CurrencyId.MainCount; ++i)
+            for (int i = 0; i < CurrencyId.Count; ++i)
                 _exchange[i] = _rate - _chance.Select(1);
 
             _version.Next(this);
         }
 
-        [Impl(256)] public ArrayEnumerator<int> GetEnumerator() => new(_exchange, COUNT, _version);
+        [Impl(256)] public ArrayEnumerator<int> GetEnumerator() => new(_exchange, CurrencyId.Count, _version);
         IEnumerator<int> IEnumerable<int>.GetEnumerator() => GetEnumerator();
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 

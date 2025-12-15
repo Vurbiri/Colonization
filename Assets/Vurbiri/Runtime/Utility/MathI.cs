@@ -57,7 +57,10 @@ namespace Vurbiri
 			return result;
 		}
 
-		[Impl(256)] public static int Equal(int x, int y) => ~((x - y) | (y - x)) >> 31; // x == y ? -1 : 0
+        [Impl(256)] public static int Select(int x, int y, int mask) => (x & mask) | (y & ~mask);
+        [Impl(256)] public static int Select(int x, int y, bool isX) => Select(y, x, Convert.ToInt32(isX) - 1);
+
+        [Impl(256)] public static int Equal(int x, int y) => ~((x - y) | (y - x)) >> 31; // x == y ? -1 : 0
 		[Impl(256)] public static int NotEqual(int x, int y) => ((x - y) | (y - x)) >> 31; // x != y ? -1 : 0
 
 		[Impl(256)] public static int Less(this int x, int y) => ((x & ~y) | (~(x ^ y) & (x - y))) >> 31; // x < y ? -1 : 0
@@ -65,9 +68,5 @@ namespace Vurbiri
 
 		[Impl(256)] public static int Greater(this int x, int y) => ((y & ~x) | (~(y ^ x) & (y - x))) >> 31; // x > y ? -1 : 0
 		[Impl(256)] public static int GreaterOrEqual(this int x, int y) => ((y | ~x) & ((y ^ x) | ~(y - x))) >> 31; // x >= y ? -1 : 0
-
-		[Impl(256)] public static int Select(int x, int y, bool isX) => Select(y, x, Convert.ToInt32(isX) - 1);
-
-		[Impl(256)] private static int Select(int x, int y, int mask) => (x & mask) | (y & ~mask);
 	}
 }

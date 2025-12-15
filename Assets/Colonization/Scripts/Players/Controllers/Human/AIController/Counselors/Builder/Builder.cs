@@ -10,7 +10,7 @@ namespace Vurbiri.Colonization
         {
             private static readonly BuilderSettings s_settings;
             
-            private readonly MainCurrencies _profitWeights = new();
+            private readonly LiteCurrencies _profitWeights = new();
             private Plan _currentPlan = Plan.Empty;
 
             static Builder()
@@ -76,7 +76,7 @@ namespace Vurbiri.Colonization
                 }
             }
 
-            [Impl(256)] private int GetCostWeight(ReadOnlyMainCurrencies cost) => Resources.Deficit(cost) * s_settings.costWeight;
+            [Impl(256)] private int GetCostWeight(ReadOnlyLiteCurrencies cost) => Resources.Deficit(cost) * s_settings.costWeight;
             [Impl(256)] private static int GetEdificeWeight(int id) => s_settings.edificeWeight[id];
 
             private int GetProfitWeight(ReadOnlyArray<Hexagon> hexagons)

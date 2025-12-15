@@ -20,7 +20,7 @@ namespace Vurbiri.Colonization
             _counselors = new(this);
         }
 
-        public override WaitResult<bool> OnGift(int giver, MainCurrencies gift, string msg) => _counselors.GiftReceive(giver, gift);
+        public override WaitResult<bool> OnGift(int giver, LiteCurrencies gift, string msg) => _counselors.GiftReceive(giver, gift);
 
         public override void OnLanding()
         {
@@ -32,11 +32,10 @@ namespace Vurbiri.Colonization
             // ======= Local ==========
             IEnumerator OnLanding_Cn()
             {
-                _resources.AddBlood(_id.Value);
+                _resources.Blood.Add(_id.Value);
                 
                 yield return s_settings.waitPlayStart.Restart();
                 yield return _counselors.Landing_Cn();
-                //BuildPort(GameContainer.Crossroads.GetRandomPort());
 
                 GameContainer.GameLoop.EndLanding();
                 _coroutine = null;
@@ -77,14 +76,15 @@ namespace Vurbiri.Colonization
             _counselors.Dispose();
         }
 
-        private IEnumerator Exchange_Cn(ReadOnlyMainCurrencies needed, Out<bool> output)
+        private IEnumerator Exchange_Cn(ReadOnlyLiteCurrencies needed, Out<bool> output)
         {
             bool result = _resources >= needed;
 
             if (!result)
             {
-                int exchangeBlood = _resources[CurrencyId.Blood] >> (_perks.IsAllLearned() ? 0 : 1);
-                if (exchangeBlood > s_settings.minExchangeBlood && Chance.Rolling(_resources.PercentBlood - s_settings.percentBloodOffset))
+                var blood = _resources.Blood;
+                int exchangeBlood = blood >> (_perks.IsAllLearned() ? 0 : 1);
+                if (exchangeBlood > s_settings.minExchangeBlood && Chance.Rolling(blood.Percent - s_settings.percentBloodOffset))
                 {
                     _spellBook.Cast(MilitarySpellId.Type, MilitarySpellId.BloodTrade, new(_id, Random.Range(s_settings.minExchangeBlood, exchangeBlood + 1)));
                     result = _resources >= needed;
@@ -98,7 +98,7 @@ namespace Vurbiri.Colonization
                     int exchange = _exchange[exchangeIndex], exchangeValue = delta * exchange;
                     if (((_resources.Amount - current) - (needed.Amount - need)) > exchangeValue && Chance.Rolling((int)(6.251f * (20 - exchange * exchange))))
                     {
-                        MainCurrencies pay = new(), diff = _resources - needed;
+                        LiteCurrencies pay = new(), diff = _resources - needed;
                         pay.Remove(exchangeIndex, delta);
                         diff.Set(exchangeIndex, 0);
 

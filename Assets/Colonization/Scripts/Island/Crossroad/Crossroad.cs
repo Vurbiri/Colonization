@@ -146,7 +146,7 @@ namespace Vurbiri.Colonization
             }
             else if (_waterCount == 0)
             {
-                MainCurrencies profitId = new();
+                LiteCurrencies profitId = new();
                 _countFreeLink = 3;
                 _states.SetNextId(EdificeId.Camp, EdificeGroupId.Colony);
                 for (int i = 0; i < HEX_COUNT; ++i)
@@ -241,15 +241,15 @@ namespace Vurbiri.Colonization
         #endregion
 
         #region ================== Profit ============================
-        public void ProfitFromPort(MainCurrencies profit, int idHex, int shiftProfit)
+        public void ProfitFromPort(LiteCurrencies profit, int idHex, int shiftProfit)
         {
             for (int i = 0; i < HEX_COUNT; ++i)
                 if (_hexagons[i].TryGetProfit(idHex, true, out Id<CurrencyId> currencyId))
                     profit.Add(currencyId, _states.profit << shiftProfit);
         }
-        public MainCurrencies ProfitFromColony(int idHex, int compensationRes)
+        public LiteCurrencies ProfitFromColony(int idHex, int compensationRes)
         {
-            MainCurrencies profit = new();
+            LiteCurrencies profit = new();
             Hexagon hex;
             int countEnemy = 0;
 
@@ -271,7 +271,7 @@ namespace Vurbiri.Colonization
 
             return profit;
         }
-        public void GetNetProfit(MainCurrencies profit)
+        public void GetNetProfit(LiteCurrencies profit)
         {
             for (int i = 0; i < HEX_COUNT; ++i)
                 profit.Add(_hexagons[i].GetProfit(), _states.profit);

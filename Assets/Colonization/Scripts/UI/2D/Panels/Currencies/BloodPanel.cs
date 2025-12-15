@@ -4,9 +4,9 @@ namespace Vurbiri.Colonization.UI
 {
     sealed public class BloodPanel : ASinglyPanel<CurrentMaxPopup>
     {
-        public void Init(Vector3 directionPopup, ReadOnlyCurrencies currencies)
+        public void Init(Vector3 directionPopup, Blood blood)
         {
-            _widget.Init(currencies.Get(CurrencyId.Blood), currencies.MaxBlood, directionPopup);
+            _widget.Init(directionPopup, blood);
 
             Destroy(this);
         }

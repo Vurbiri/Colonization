@@ -50,7 +50,7 @@ namespace Vurbiri.Colonization
             {
                 _perks.Extract(ref _perk);
 
-                if (_perk != null && Resources[CurrencyId.Blood] >= _perk.Cost)
+                if (_perk != null && Resources.Blood >= _perk.Cost)
                 {
                     Human.BuyPerk(_perk);
 

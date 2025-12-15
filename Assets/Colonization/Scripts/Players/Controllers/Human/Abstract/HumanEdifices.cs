@@ -51,9 +51,9 @@ namespace Vurbiri.Colonization
                 s_shrinesCount.Add(shrines.Count);
             }
 
-            public MainCurrencies ProfitFromEdifices(int hexId)
+            public LiteCurrencies ProfitFromEdifices(int hexId)
             {
-                MainCurrencies profit = new();
+                LiteCurrencies profit = new();
 
                 for (int i = ports.Count - 1; i >= 0; i--)
                     ports[i].ProfitFromPort(profit, hexId, _abilities[HumanAbilityId.PortsProfitShift]);

@@ -1,19 +1,18 @@
 using Vurbiri.Collections;
-using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization
 {
     public class ProfitArray : IProfit
     {
         private static ReadOnlyArray<Id<CurrencyId>> s_values;
-        private int _value = -1;
+        private Id<CurrencyId> _currency = CurrencyId.None;
 
-        public IProfit Instance { [Impl(256)] get => new ProfitArray(); }
-        public Id<CurrencyId> Value { [Impl(256)] get => _value; }
+        public IProfit Instance => new ProfitArray();
+        public Id<CurrencyId> Currency => _currency;
 
-        public ProfitArray(IdFlags<CurrencyId> profits) => s_values ??= new(profits.GetValues());
+        public ProfitArray(IdFlags<ProfitId> profits) => s_values ??= new(profits.Convert<CurrencyId>().GetValues().ToArray());
         private ProfitArray() { }
 
-        [Impl(256)] public Id<CurrencyId> Set() => _value = s_values.Rand();
+        public Id<CurrencyId> Set() => _currency = s_values.Rand();
     }
 }

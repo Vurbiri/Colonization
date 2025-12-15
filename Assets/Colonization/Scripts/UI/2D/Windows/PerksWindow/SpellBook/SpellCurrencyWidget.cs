@@ -1,6 +1,5 @@
 using System;
 using UnityEngine;
-using Vurbiri.Reactive;
 
 namespace Vurbiri.Colonization.UI
 {
@@ -12,6 +11,7 @@ namespace Vurbiri.Colonization.UI
         public void Init(ReadOnlyCurrencies currencies, Action<int> action)
         {
             _subscription = currencies.Get(_id).Subscribe(SetMax);
+
             a_changeCount = action;
             action(_count);
         }

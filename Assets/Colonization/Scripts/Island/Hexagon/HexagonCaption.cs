@@ -31,7 +31,7 @@ namespace Vurbiri.Colonization
         private Coroutine _fadeCoroutine, _profitCoroutine, _newIdCoroutine;
         private Subscription _subscription;
 
-        public void Init(int id, IdFlags<CurrencyId> flags, MonoBehaviour mono)
+        public void Init(int id, IdFlags<ProfitId> flags, MonoBehaviour mono)
         {
             _currencyTextRenderer = _currencyText.GetComponent<Renderer>();
             _idTextRenderer = _idText.GetComponent<Renderer>();
@@ -40,8 +40,8 @@ namespace Vurbiri.Colonization
             _prevColor = GameContainer.UI.Colors.TextDefault;
             _profitColor =  GameContainer.UI.Colors.GetTextColor(id != HEX.GATE);
 
-            StringBuilder sb = new(TAG.TAG_SPRITE_LENGTH * CurrencyId.Count);
-            for (int i = 0; i < CurrencyId.Count; i++)
+            StringBuilder sb = new(TAG.TAG_SPRITE_LENGTH * ProfitId.Count);
+            for (int i = 0; i < ProfitId.Count; i++)
                 if (flags[i]) sb.AppendFormat(TAG.SPRITE, i.ToStr());
             _currencyText.text = _defaultCurrencyText = sb.ToString();
 
@@ -112,9 +112,9 @@ namespace Vurbiri.Colonization
             #endregion
 
         }
-        [Impl(256)] public void Profit(int currency)
+        [Impl(256)] public void Profit(Id<CurrencyId> profit)
         {
-            _currencyText.text = string.Format(TAG.SPRITE, currency.ToStr());
+            _currencyText.text = string.Format(TAG.SPRITE, profit.Value.ToStr());
             Profit();
         }
         [Impl(256)] public void ResetProfit()

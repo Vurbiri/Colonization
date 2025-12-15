@@ -23,7 +23,7 @@ namespace Vurbiri.Colonization.UI
         [SerializeField, ReadOnly] private PlayerCurrencyWidget[] _playerCurrencies;
 
         private readonly string[] _ok = new string[PlayerId.AICount], _cancel = new string[PlayerId.AICount];
-        private readonly MainCurrencies _gift = new();
+        private readonly LiteCurrencies _gift = new();
         private Id<PlayerId> _currentPlayer = PlayerId.None;
 
         public Switcher Init(GiftButton[] giftButtons)
@@ -39,7 +39,7 @@ namespace Vurbiri.Colonization.UI
                 giftButtons[i].AddListener(Switch);
 
             var resources = GameContainer.Person.Resources;
-            for (int i = 0; i < CurrencyId.MainCount; i++)
+            for (int i = 0; i < CurrencyId.Count; i++)
                 _playerCurrencies[i].Init(resources, OnChangeCount);
 
             Localization.Instance.Subscribe(SetLocalizationText);
@@ -86,7 +86,7 @@ namespace Vurbiri.Colonization.UI
 
         private void ResetValues()
         {
-            for (int i = 0; i < CurrencyId.MainCount; i++)
+            for (int i = 0; i < CurrencyId.Count; i++)
             {
                 _playerCurrencies[i].ResetCount();
                 _gift.DirtyReset(i);

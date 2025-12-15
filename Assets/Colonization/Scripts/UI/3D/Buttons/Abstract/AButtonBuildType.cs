@@ -8,7 +8,7 @@ namespace Vurbiri.Colonization.UI
         [SerializeField] protected FileIdAndKey _getText;
         [SerializeField] protected Id<T> _id;
 
-        protected ReadOnlyMainCurrencies _cost;
+        protected ReadOnlyLiteCurrencies _cost;
         protected ReadOnlyCurrencies _cash;
         protected Subscription _subscription;
         protected string _caption;
@@ -17,7 +17,7 @@ namespace Vurbiri.Colonization.UI
 
         public Id<T> Id => _id;
 
-        public virtual void Init(ReadOnlyMainCurrencies cost, AWorldMenu parent)
+        public virtual void Init(ReadOnlyLiteCurrencies cost, AWorldMenu parent)
         {
             base.InternalInit(OnClick, true);
             

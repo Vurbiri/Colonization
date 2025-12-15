@@ -10,12 +10,12 @@ namespace Vurbiri.Colonization.UI
         [SerializeField, Key(LangFiles.Gameplay)] private string _key;
         [SerializeField] private bool _extract;
 
-        private ReadOnlyMainCurrencies _cost;
+        private ReadOnlyLiteCurrencies _cost;
         private ReadOnlyCurrencies _cash;
         private Subscription _subscription;
         private string _caption;
 
-        public void Init(ReadOnlyMainCurrencies cost, Action action)
+        public void Init(ReadOnlyLiteCurrencies cost, Action action)
         {
             base.InternalInit(action, true);
             _cost = cost;

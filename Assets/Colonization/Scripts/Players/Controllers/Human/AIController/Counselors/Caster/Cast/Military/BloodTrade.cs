@@ -15,7 +15,7 @@ namespace Vurbiri.Colonization
                 public override IEnumerator TryCasting_Cn()
                 {
                     IEnumerator casting = null;
-                    int blood = Resources[CurrencyId.Blood];
+                    int blood = Resources.Blood;
                     if (Resources.PercentAmount < 90 & PerkTree.IsAllLearned() & blood >= SpellBook.BloodTradeCost)
                         casting = Casting_Cn(Random.Range(SpellBook.BloodTradeCost, blood + 1));
 

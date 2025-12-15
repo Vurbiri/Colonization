@@ -71,7 +71,7 @@ namespace Vurbiri.Colonization
 
             [Impl(256)] private void SetMinResources(ReadOnlyCurrencies resources)
             {
-                for(int i = 0; i < CurrencyId.MainCount; ++i)
+                for(int i = 0; i < CurrencyId.Count; ++i)
                     if (resources[i] == _minResCount)
                         _minResources.Add(i);
             }

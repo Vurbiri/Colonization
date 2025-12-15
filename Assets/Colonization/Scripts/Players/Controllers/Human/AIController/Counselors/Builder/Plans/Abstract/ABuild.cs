@@ -8,13 +8,13 @@ namespace Vurbiri.Colonization
         {
             private abstract class ABuild : Plan
             {
-                public delegate WaitSignal Build(Crossroad crossroad, ReadOnlyMainCurrencies cost);
+                public delegate WaitSignal Build(Crossroad crossroad, ReadOnlyLiteCurrencies cost);
 
                 protected readonly Crossroad _crossroad;
-                private readonly ReadOnlyMainCurrencies _cost;
+                private readonly ReadOnlyLiteCurrencies _cost;
                 private readonly Build _build;
 
-                protected ABuild(Builder parent, Crossroad crossroad, ReadOnlyMainCurrencies cost, Build build) : base(parent)
+                protected ABuild(Builder parent, Crossroad crossroad, ReadOnlyLiteCurrencies cost, Build build) : base(parent)
                 {
                     _crossroad = crossroad; _cost = cost; _build = build;
                 }

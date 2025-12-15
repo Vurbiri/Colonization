@@ -1,16 +1,14 @@
-using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
-
 namespace Vurbiri.Colonization
 {
     public class ProfitSingle : IProfit
     {
-        private readonly Id<CurrencyId> _value;
+        private readonly Id<CurrencyId> _currency;
 
-        public IProfit Instance { [Impl(256)] get => this; }
-        public Id<CurrencyId> Value { [Impl(256)] get => _value; }
+        public IProfit Instance => this;
+        public Id<CurrencyId> Currency => _currency;
 
-        public ProfitSingle(IdFlags<CurrencyId> profits) => _value = profits.First();
+        public ProfitSingle(IdFlags<ProfitId> profits) => _currency = profits.Convert<CurrencyId>().First();
 
-        [Impl(256)] public Id<CurrencyId> Set() => _value;
+        public Id<CurrencyId> Set() => _currency;
     }
 }

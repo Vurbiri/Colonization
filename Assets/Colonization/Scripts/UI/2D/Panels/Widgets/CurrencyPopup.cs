@@ -8,7 +8,7 @@ namespace Vurbiri.Colonization.UI
         [Space]
         [SerializeField] private PopupTextWidgetUI _popup;
 
-        public void Init(int id, ReadOnlyCurrencies currencies, Vector3 offsetPopup)
+        public void Init(Id<CurrencyId> id, ReadOnlyCurrencies currencies, Vector3 offsetPopup)
         {
             base.Init();
             _popup.Init(offsetPopup);

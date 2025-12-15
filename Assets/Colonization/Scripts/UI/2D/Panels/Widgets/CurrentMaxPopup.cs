@@ -9,12 +9,12 @@ namespace Vurbiri.Colonization.UI
         [Space]
         [SerializeField] private PopupTextWidgetUI _popup;
 
-        public void Init(Currency blood, IReactive<int> max, Vector3 offsetPopup)
+        public void Init(Vector3 directionPopup, Blood blood)
         {
             base.Init();
-            _popup.Init(offsetPopup);
+            _popup.Init(directionPopup);
 
-            _reactiveCurrentMax = new(blood, max, SetCurrentMax);
+            _reactiveCurrentMax = new(blood, blood.Max, SetCurrentMax);
             _subscription += blood.SubscribeDelta(_popup.Run);
         }
 

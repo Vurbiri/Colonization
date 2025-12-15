@@ -169,32 +169,32 @@ namespace Vurbiri.Colonization
         {
             currencyId = _profit.Set();
 
-            if (!_isWater)
+            if (_isWater)
+            {
+                Caption.Profit(currencyId);
+            }
+            else
             {
                 Caption.Profit();
 
                 if (!_isGate)
                 {
-                    for (int i = _crossroads.Count - 1; i >= 0; --i)
-                        if (_crossroads[i].IsColony) 
+                    for (int i = 0; i < _crossroads.Count; ++i)
+                        if (_crossroads[i].IsColony)
                             return false;
-                    
+
                     return true;
                 }
-
-                return false;
             }
-
-            Caption.Profit(_profit.Value);
             return false;
         }
         [Impl(256)] public void ResetProfit() => Caption.ResetProfit();
 
-        [Impl(256)] public Id<CurrencyId> GetProfit() => _profit.Value;
+        [Impl(256)] public Id<CurrencyId> GetProfit() => _profit.Currency;
         [Impl(256)] public bool TryGetProfit(int hexId, bool isPort, out Id<CurrencyId> currencyId)
         {
-            currencyId = _profit.Value;
-            return hexId == _id & isPort == _isWater;
+            currencyId = _profit.Currency;
+            return hexId == _id & isPort == _isWater & currencyId != CurrencyId.None;
         }
         #endregion
 
