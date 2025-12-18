@@ -16,7 +16,7 @@ namespace VurbiriEditor.Colonization
         [MenuItem(MENU, false, MENU_CH_ORDER)]
         private static void ShowWindow()
         {
-            GetWindow<HumanAbilitiesWindow>(NAME).minSize = new(225f, 300f);
+            GetWindow<HumanAbilitiesWindow>(true, NAME).minSize = new(225f, 570f);
         }
 
         public void CreateGUI()

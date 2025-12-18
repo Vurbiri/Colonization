@@ -12,7 +12,7 @@ namespace VurbiriEditor.UI
     sealed public class VSliderIntEditor : AVSliderEditor<int>
     {
         private const string NAME = VUI_CONST_ED.SLIDER_INT, RESOURCE = "VSliderInt";
-        private const string MENU = VUI_CONST_ED.NAME_CREATE_MENU + NAME;
+        private const string MENU = VUI_CONST_ED.CREATE_MENU_NAME + NAME;
 
         protected override int Value { get => _valueProperty.intValue; set => _valueProperty.intValue = value; }
         protected override int MinValue { get => _minValueProperty.intValue; set => _minValueProperty.intValue = value; }

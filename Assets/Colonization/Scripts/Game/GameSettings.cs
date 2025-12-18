@@ -11,7 +11,7 @@ namespace Vurbiri.Colonization
         private int _maxScore;
         private readonly RBool _hexagonShow;
         private readonly RBool _trackingCamera;
-        private readonly bool _isTutorial;
+        private readonly bool _isFirst;
 
         private readonly VAction<GameSettings, bool> _eventChanged = new();
 
@@ -23,7 +23,7 @@ namespace Vurbiri.Colonization
         public int MaxScore { [Impl(256)] get => _maxScore; }
         public RBool HexagonShow { [Impl(256)] get => _hexagonShow; }
         public RBool TrackingCamera { [Impl(256)] get => _trackingCamera; }
-        public bool IsTutorial { [Impl(256)] get => _isTutorial; }
+        public bool IsFirstStart { [Impl(256)] get => _isFirst; }
 
         public GameSettings() : this(false, 0, true, true, true) { }
         private GameSettings(bool isLoad, int maxScore, bool isHexagonShow, bool trackingCamera, bool isTutorial = false)
@@ -32,7 +32,7 @@ namespace Vurbiri.Colonization
             _maxScore = maxScore;
             _hexagonShow = new(isHexagonShow);
             _trackingCamera = new(trackingCamera);
-            _isTutorial = isTutorial;
+            _isFirst = isTutorial;
 
             _hexagonShow.Subscribe(OnChangedReactiveValue, false);
             _trackingCamera.Subscribe(OnChangedReactiveValue, false);

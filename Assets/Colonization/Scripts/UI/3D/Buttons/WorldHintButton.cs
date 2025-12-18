@@ -12,7 +12,7 @@ namespace Vurbiri.Colonization.UI
         public void Init(Action action)
         {
             base.InternalInit(action, true);
-            Localization.Instance.Subscribe(SetLocalizationText);
+            Localization.Subscribe(SetLocalizationText);
         }
 
         public void Setup(bool isEnable, bool interactable = true)
@@ -29,7 +29,7 @@ namespace Vurbiri.Colonization.UI
         protected override void OnDestroy()
         {
             base.OnDestroy();
-            Localization.Instance.Unsubscribe(SetLocalizationText);
+            Localization.Unsubscribe(SetLocalizationText);
         }
     }
 }

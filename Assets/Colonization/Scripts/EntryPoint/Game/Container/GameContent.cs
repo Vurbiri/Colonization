@@ -4,7 +4,6 @@ using Vurbiri.Colonization.Controllers;
 using Vurbiri.Colonization.Storage;
 using Vurbiri.Colonization.UI;
 using Vurbiri.EntryPoint;
-using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.EntryPoint
 {
@@ -32,8 +31,6 @@ namespace Vurbiri.Colonization.EntryPoint
 
         public Pool<EffectsBar> poolEffectsBar;
 
-        public WorldHint worldHint;
-        public CanvasHint canvasHint;
         public ReadOnlyIdArray<ActorAbilityId, Sprite> abilities;
 
         public SharedMono shared;

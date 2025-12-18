@@ -21,7 +21,7 @@ namespace VurbiriEditor.Colonization
         [SerializeField] private PlayerColors _playerColors;
         [SerializeField] private ProjectColors _projectColors;
         [Space]
-        [SerializeField, HideInInspector] private AHint[] _hints;
+        [SerializeField, HideInInspector] private Hint[] _hints;
         [SerializeField, HideInInspector] private PlayerPanels _playerPanels;
         [SerializeField, HideInInspector] private PerksWindow _perksWindow;
         [SerializeField, HideInInspector] private ExchangeWindow _exchangeWindow;

@@ -14,7 +14,6 @@ namespace Vurbiri.Colonization
 
         private readonly string[] _names = new string[PlayerId.Count];
         private readonly VAction<PlayerNames> _eventThisChanged = new();
-        private Subscription _subscription;
 
         public string this[Id<PlayerId> id] => _names[id.Value];
         public string this[int index] => _names[index];
@@ -37,7 +36,7 @@ namespace Vurbiri.Colonization
             if (!storage.TryLoadPlayerNames(out _customNames)) 
                 _customNames = new string[PlayerId.Count];
 
-            _subscription = Localization.Instance.Subscribe(SetNames);
+            Localization.Subscribe(SetNames);
             storage.BindPlayerNames(this);
 
             return this;
@@ -55,9 +54,10 @@ namespace Vurbiri.Colonization
 
             return true;
         }
+
         public void Dispose()
         {
-            _subscription?.Dispose();
+            Localization.Unsubscribe(SetNames);
         }
 
         private void SetNames(Localization localization)

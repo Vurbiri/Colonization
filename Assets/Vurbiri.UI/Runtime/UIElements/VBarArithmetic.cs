@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Vurbiri.UI
 {
 #if UNITY_EDITOR
-    [AddComponentMenu(VUI_CONST_ED.NAME_MENU + VUI_CONST_ED.BAR_ARITHMETIC, VUI_CONST_ED.BAR_ORDER)]
+    [AddComponentMenu(VUI_CONST_ED.MENU_NAME + VUI_CONST_ED.BAR_ARITHMETIC, VUI_CONST_ED.BAR_ORDER)]
     [RequireComponent(typeof(RectTransform))]
 #endif
     sealed public class VBarArithmetic : AVBarBase

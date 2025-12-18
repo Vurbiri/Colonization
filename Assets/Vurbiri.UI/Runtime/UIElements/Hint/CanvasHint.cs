@@ -3,20 +3,23 @@ using UnityEngine;
 namespace Vurbiri.UI
 {
     [RequireComponent(typeof(CanvasGroup))]
-    sealed public class CanvasHint : AHint
+    sealed public class CanvasHint : Hint
     {
         [SerializeField] private float _edgeX;
         [Space]
         [SerializeField] private RectTransform _canvasRectTransform;
 
-        public void Init(bool last)
+        public override bool Init()
         {
-            base.Init();
+            if (base.Init())
+            {
+                if (_canvasRectTransform != transform.parent)
+                    transform.SetParent(_canvasRectTransform);
 
-            if(_canvasRectTransform != transform.parent)
-                transform.SetParent(_canvasRectTransform);
-            if(last)
                 transform.SetAsLastSibling();
+                return true;
+            }
+            return false;
         }
 
         protected override void SetPosition(Transform transform, Vector3 offset)
@@ -56,10 +59,17 @@ namespace Vurbiri.UI
         {
             base.OnValidate();
 
-            if (_canvasRectTransform == null)
-                _canvasRectTransform = GetComponentInParent<Canvas>().GetComponent<RectTransform>();
+            if (UnityEditor.PrefabUtility.IsPartOfPrefabAsset(gameObject))
+                return;
 
-            if (_canvasRectTransform != transform.parent)
+            if (_canvasRectTransform == null)
+            {
+                var canvas = GetComponentInParent<Canvas>();
+                if (canvas != null)
+                _canvasRectTransform = canvas.GetComponent<RectTransform>();
+            }
+
+            if (_canvasRectTransform != null && _canvasRectTransform != transform.parent)
                 transform.SetParent(_canvasRectTransform);
         }
 #endif

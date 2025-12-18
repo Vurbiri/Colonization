@@ -12,7 +12,7 @@ namespace Vurbiri.Colonization.UI
         public Event<IMenu, bool> Init()
         {
             base.InternalInit(OnClick, false);
-            Localization.Instance.Subscribe(SetText);
+            Localization.Subscribe(SetText);
             
             return _changeEvent;
         }
@@ -55,7 +55,7 @@ namespace Vurbiri.Colonization.UI
         protected override void OnDestroy()
         {
             base.OnDestroy();
-            Localization.Instance.Unsubscribe(SetText);
+            Localization.Unsubscribe(SetText);
             _unAction?.Dispose();
         }
     }

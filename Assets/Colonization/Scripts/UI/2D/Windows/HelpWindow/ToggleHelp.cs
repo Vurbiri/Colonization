@@ -36,7 +36,7 @@ namespace Vurbiri.Colonization
                 return;
 
             var so = new UnityEditor.SerializedObject(this);
-            so.FindProperty(nameof(_group)).objectReferenceValue = GetComponentInParent<HelpWindow>();
+            so.FindProperty(nameof(_group)).objectReferenceValue = GetComponentInParent<HelpToggleGroup>();
             so.ApplyModifiedProperties();
         }
 #endif

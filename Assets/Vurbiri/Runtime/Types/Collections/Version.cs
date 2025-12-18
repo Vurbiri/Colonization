@@ -25,7 +25,7 @@ namespace Vurbiri.Collections
 			[Impl(256)] public readonly void Validate()
 			{
 				if (_version != _parent._version)
-					Errors.InvalidOperation();
+					Errors.InvalidOperation("Collection was modified; enumeration operation may not execute.");
 			}
 		}
 		//--------------------------------------------

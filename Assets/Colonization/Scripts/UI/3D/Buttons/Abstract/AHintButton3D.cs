@@ -14,12 +14,12 @@ namespace Vurbiri.Colonization.UI
 #if UNITY_EDITOR
             if (!Application.isPlaying) return;
 #endif
-            base.InternalInit(GameContainer.UI.WorldHint, 0.505f);
+            base.InternalInit(HintId.World, 0.505f);
         }
 
         protected virtual void InternalInit(Action action, bool active)
         {
-            base.InternalInit(GameContainer.UI.WorldHint, action, 0.505f);
+            base.InternalInit(HintId.World, action, 0.505f);
 
             _thisGameObject = gameObject;
             _thisGameObject.SetActive(active);

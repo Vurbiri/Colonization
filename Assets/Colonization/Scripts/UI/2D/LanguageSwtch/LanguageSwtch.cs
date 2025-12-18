@@ -1,10 +1,8 @@
 using UnityEngine;
-using Vurbiri.EntryPoint;
-using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.UI
 {
-    public class LanguageSwitch : VToggleGroup<LanguageItem>
+    public class LanguageSwitch : AToggleGroup<LanguageItem>
     {
         [SerializeField] private bool _isSave;
 
@@ -26,7 +24,7 @@ namespace Vurbiri.Colonization.UI
             _onValueChanged.Init(_activeToggle);
             _onValueChanged.Add(OnValueChanged);
 
-            Transition.OnExit.Add(OnDestroy);
+            Vurbiri.EntryPoint.Transition.OnExit.Add(OnDestroy);
         }
 
         public void ItemsUpdate()
@@ -55,13 +53,6 @@ namespace Vurbiri.Colonization.UI
                 if (_isSave) 
                     profile.Apply();
             }
-        }
-
-        private void OnDestroy()
-        {
-            _onValueChanged.Clear();
-            _toggles.Clear();
-            _activeToggle = null;
         }
     }
 }

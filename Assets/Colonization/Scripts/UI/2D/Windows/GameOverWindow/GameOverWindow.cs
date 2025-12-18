@@ -21,13 +21,11 @@ namespace Vurbiri.Colonization
         [Space]
         [SerializeField] private Place[] _places;
 
-        private readonly VAction<int> _onOpen = new();
-        private int _id;
+        private Action<Switcher> _onOpen;
 
-        public void Init(int id, Action<int> onOpenWindow)
+        public void Init(Action<Switcher> onOpenWindow)
         {
-            _id = id;
-            _onOpen.Add(onOpenWindow);
+            _onOpen = onOpenWindow;
 
             GameContainer.Chaos.OnGameOver.Add(GameOver);
             gameObject.SetActive(false);
@@ -35,7 +33,7 @@ namespace Vurbiri.Colonization
 
         private void GameOver(Winner winner)
         {
-            _onOpen.Invoke(_id);
+            _onOpen.Invoke(null);
             GameContainer.CameraController.ToDefaultPosition();
 
             GetComponentInChildren<VButton>().AddListener(Transition.Exit);

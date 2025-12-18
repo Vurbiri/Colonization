@@ -130,7 +130,7 @@ namespace Vurbiri.Colonization
 			//WarriorSpawn(WarriorId.Knight, HEX.LeftUp);
 
 			//WarriorSpawn(WarriorId.Militia, HEX.RightDown);
-			//DemonSpawn(DemonId.Bomb, Key.Zero);
+			DemonSpawn(DemonId.Imp, HEX.Right);
 
 			//DemonSpawn(DemonId.Imp, HEX.RightUp);
 			//DemonSpawn(DemonId.Bomb, HEX.Right);

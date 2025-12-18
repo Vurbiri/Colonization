@@ -9,7 +9,7 @@ namespace Vurbiri.Colonization.UI
     {
         public MoveUI(SeparatorEffectUI separator) : base(separator, CONST.MOVE_SKILL_COST)
         {
-            Localization.Instance.Subscribe(SetTexts);
+            Localization.Subscribe(SetTexts);
         }
 
         private void SetTexts(Localization localization)
@@ -30,7 +30,7 @@ namespace Vurbiri.Colonization.UI
 
         public override void Dispose()
         {
-            Localization.Instance.Unsubscribe(SetTexts);
+            Localization.Unsubscribe(SetTexts);
         }
     }
 }

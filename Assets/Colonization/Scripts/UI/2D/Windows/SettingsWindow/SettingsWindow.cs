@@ -5,9 +5,8 @@ using Vurbiri.UI;
 
 namespace Vurbiri.Colonization
 {
-	public class SettingsWindow : MonoBehaviour
-	{
-        [SerializeField] protected Switcher _switcher;
+	public class SettingsWindow : ASwitchableWindow
+    {
         [Space]
         [SerializeField] private IdArray<MixerId, VSliderFloat> _sounds;
         [SerializeField] private VSliderInt _quality;
@@ -18,9 +17,9 @@ namespace Vurbiri.Colonization
         private bool _isApply;
         protected bool _isSaveSettings = true;
 
-        public virtual Switcher Init()
+        public override Switcher Init()
         {
-            _switcher.Init(this);
+            _switcher.Init(this, true);
 
             for (int i = 0; i < MixerId.Count; ++i)
             {
@@ -77,13 +76,12 @@ namespace Vurbiri.Colonization
         }
 
 #if UNITY_EDITOR
-        protected virtual void OnValidate()
+        protected override void OnValidate()
         {
             if (UnityEditor.EditorApplication.isPlayingOrWillChangePlaymode)
                 return;
 
-            _switcher ??= new();
-            _switcher.OnValidate(this);
+            base.OnValidate();
 
             this.SetChildren(ref _language);
             this.SetChildren(ref _quality);
@@ -99,15 +97,6 @@ namespace Vurbiri.Colonization
             }
 
             this.SetChildren(ref _closeButton);
-        }
-
-        public void UpdateVisuals_Ed(float pixelsPerUnit, ProjectColors colors)
-        {
-            var color = colors.PanelBack.SetAlpha(1f);
-            var mainImage = GetComponent<UnityEngine.UI.Image>();
-
-            mainImage.color = color;
-            mainImage.pixelsPerUnitMultiplier = pixelsPerUnit;
         }
 #endif
     }

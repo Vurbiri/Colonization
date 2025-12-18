@@ -12,15 +12,13 @@ namespace Vurbiri.Colonization.UI
 		[SerializeField, ReadOnly] private SpellPanel _panel;
 		[SerializeField, ReadOnly] private int _points;
 
-        private CanvasHint _hint;
-		private string _hintText;
+		private readonly Id<HintId> _hint = HintId.Canvas;
+        private string _hintText;
 		private bool _isShowingHint = false;
 		private Vector3 _offsetHint;
 
 		public void Init(PerkTree perkTree, SpellBook spellBook, Action closeWindow)
 		{
-			_hint = GameContainer.UI.CanvasHint;
-
             _offsetHint = new(0f, _thisRectTransform.rect.size.y * 0.48f, 0f);
 
 			perkTree.GetProgress(_panel.Type).Subscribe(OnInteractable);

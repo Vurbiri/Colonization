@@ -1,8 +1,8 @@
 {
   "gateDefense": 3,
   "potentialFromLvlRatio": 3,
-  "maxCurseBase": 1100,
-  "maxCursePerLevel": 22,
+  "maxCurseBase": 1200,
+  "maxCursePerLevel": 24,
   "cursePerTurn": 135,
   "cursePerShrine": -5,
   "cursePerKillWarrior": [

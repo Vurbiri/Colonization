@@ -11,7 +11,7 @@ namespace VurbiriEditor.UI
     public class VBarArithmeticEditor : Editor
     {
         private const string NAME = VUI_CONST_ED.BAR_ARITHMETIC, RESOURCE = "VBarArithmetic";
-        private const string MENU = VUI_CONST_ED.NAME_CREATE_MENU + NAME;
+        private const string MENU = VUI_CONST_ED.CREATE_MENU_NAME + NAME;
 
         private SerializedProperty _fillRectProperty;
         private SerializedProperty _directionProperty;

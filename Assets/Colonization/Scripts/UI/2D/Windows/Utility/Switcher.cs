@@ -1,6 +1,6 @@
 using System;
+using System.Collections;
 using UnityEngine;
-using Vurbiri.EntryPoint;
 using Vurbiri.UI;
 using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
@@ -12,74 +12,97 @@ namespace Vurbiri.Colonization.UI
         [SerializeField] private CanvasGroupSwitcher _canvasSwitcher;
 
         private MonoBehaviour _parent;
-        private bool _isOpen;
-        private int _id;
+        private bool _isOpen, _isForceClose;
 
-        public readonly ComboAction<int> onOpen = new();
-        public readonly VAction onClose = new();
+        public readonly ComboAction<Switcher> onOpen = new();
+        public readonly ComboAction<Switcher> onClose = new();
 
-        public bool IsOpen => _isOpen;
+        public bool IsOpen { [Impl(256)] get => _isOpen; }
 
-        [Impl(256)] public void Init(MonoBehaviour parent)
+        public Switcher() { }
+
+        [Impl(256)] public void Init(MonoBehaviour parent, bool isForceClose = true)
         {
             _parent = parent;
+            _isForceClose = isForceClose;
             _canvasSwitcher.Set(_isOpen = false);
 
-            Transition.OnExit.Add(OnSceneExit);
+            Vurbiri.EntryPoint.Transition.OnExit.Add(OnSceneExit);
         }
-        [Impl(256)] public Switcher Setup(int id, Action<int> onOpenWindow, Action onCloseWindow)
+        [Impl(256)] public Switcher Setup(Action<Switcher> onOpenWindow, Action<Switcher> onCloseWindow)
         {
-            _id = id;
             onOpen.Add(onOpenWindow);
             onClose.Add(onCloseWindow);
             return this;
         }
-                
-        public void Switch()
-        {
-            StopCoroutine();
 
-            if (_isOpen = !_isOpen)
-                OpenInternal();
+        [Impl(256)] public void Switch()
+        {
+            if (_isOpen)
+                CloseInternal();
             else
+                OpenInternal();
+        }
+
+        [Impl(256)] public void Open()
+        {
+            if (!_isOpen)
+                OpenInternal();
+        }
+        [Impl(256)] public void Close()
+        {
+            if (_isOpen)
                 CloseInternal();
         }
 
-        public void Open()
+        public void SilentOpen()
         {
             if (!_isOpen)
             {
-                _isOpen = true;
                 StopCoroutine();
-                OpenInternal();
+                _parent.StartCoroutine(Show());
             }
         }
-
-        public void Close()
+        public void SilentClose()
         {
             if (_isOpen)
             {
-                _isOpen = false;
                 StopCoroutine();
-                CloseInternal();
+                _parent.StartCoroutine(Hide());
             }
         }
 
-        [Impl(256)] public void TryClose(int id)
+        [Impl(256)] public void ForceClose()
         {
-            if (id != _id) Close();
+            if (_isForceClose & _isOpen) 
+                CloseInternal();
+        }
+
+        [Impl(256)] public IEnumerator Show()
+        {
+            _isOpen = true;
+            return _canvasSwitcher.Show();
+        }
+        [Impl(256)] public IEnumerator Hide()
+        {
+            _isOpen = false;
+            return _canvasSwitcher.Hide();
         }
 
         [Impl(256)] private void OpenInternal()
         {
+            _isOpen = true;
+            StopCoroutine();
             _parent.StartCoroutine(_canvasSwitcher.Show());
-            onOpen.Invoke(_id);
+            onOpen.Invoke(this);
         }
 
         [Impl(256)] private void CloseInternal()
         {
+            _isOpen = false;
+            StopCoroutine();
             _parent.StartCoroutine(_canvasSwitcher.Hide());
-            onClose.Invoke();
+            onClose.Invoke(this);
         }
 
         [Impl(256)] private void StopCoroutine()
@@ -95,6 +118,13 @@ namespace Vurbiri.Colonization.UI
         }
 
 #if UNITY_EDITOR
+
+        public Switcher(MonoBehaviour parent)
+        {
+            _canvasSwitcher = new();
+            _canvasSwitcher.OnValidate(parent, 6);
+        }
+
         public void OnValidate(MonoBehaviour parent)
         {
             _canvasSwitcher.OnValidate(parent, 6);

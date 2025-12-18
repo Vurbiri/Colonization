@@ -127,7 +127,7 @@ namespace Vurbiri.Colonization
         {
             ReactiveEffect temp;
 
-            _count--;
+            --_count;
             for (int i = effect.Index; i < _count; i++)
             {
                 temp = _values[i + 1];

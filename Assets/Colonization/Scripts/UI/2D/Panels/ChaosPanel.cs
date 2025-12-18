@@ -18,11 +18,11 @@ namespace Vurbiri.Colonization.UI
 
         public void Init()
         {
-            base.InternalInit(GameContainer.UI.CanvasHint, 0.3f);
+            base.InternalInit(HintId.Canvas, 0.3f);
 
             _max = GameContainer.Chaos.Max;
 
-            Localization.Instance.Subscribe(SetLocalizationText);
+            Localization.Subscribe(SetLocalizationText);
             GameContainer.Chaos.Subscribe(SetValue, false);
         }
 
@@ -45,7 +45,7 @@ namespace Vurbiri.Colonization.UI
 
         private void OnDestroy()
         {
-            Localization.Instance.Unsubscribe(SetLocalizationText);
+            Localization.Unsubscribe(SetLocalizationText);
         }
 
 #if UNITY_EDITOR

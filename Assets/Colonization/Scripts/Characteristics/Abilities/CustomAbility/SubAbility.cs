@@ -12,7 +12,7 @@ namespace Vurbiri.Colonization
         public bool IsZero { [Impl(256)] get => _value == 0; }
         public bool IsMax { [Impl(256)] get => _value == _maxValue; }
         public bool IsNotMax { [Impl(256)] get => _value < _maxValue; }
-        public int Percent { [Impl(256)] get => _value * 100 / _maxValue; }
+        public int Percent { [Impl(256)] get => (int)Math.Ceiling(_value * 100.0 / _maxValue); }
 
         public SubAbility(AAbility<TId> self, Ability max, Ability restore) : base(self)
         {

@@ -6,18 +6,18 @@ namespace Vurbiri.UI
 {
 	public abstract class AHintElement : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
-        private AHint _hint;
+        private Id<HintId> _hint;
         private bool _isShowingHint = false;
         protected Vector3 _hintOffset;
 
         protected RectTransform _thisRectTransform;
         protected string _hintText;
 
-        protected void InternalInit(AHint hint, float heightRatio = 0.5263f)
+        protected void InternalInit(Id<HintId> hint, float heightRatio = 0.5263f)
         {
             _hint = hint;
             _thisRectTransform = GetComponent<RectTransform>();
-            _hintOffset = AHint.GetOffsetHint(_thisRectTransform, heightRatio);
+            _hintOffset = _thisRectTransform.GetOffsetHint(heightRatio);
         }
 
         public void OnPointerEnter(PointerEventData eventData)

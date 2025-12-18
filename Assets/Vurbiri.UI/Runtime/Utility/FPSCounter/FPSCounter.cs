@@ -4,7 +4,10 @@ using UnityEngine;
 
 namespace Vurbiri.UI
 {
+#if UNITY_EDITOR
+    [AddComponentMenu(VUI_CONST_ED.UTILITY_MENU_NAME + "FPS/Counter", VUI_CONST_ED.UTILITY_MENU_ORDER)]
     [RequireComponent(typeof(TextMeshProUGUI))]
+#endif
     public class FPSCounter : MonoBehaviour
     {
         private const string TEXT = "FPS: {0,3}\nAvg: {1,4:N1}\nMax: {2,3}\nMin: {3,3}";

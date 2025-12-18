@@ -10,6 +10,7 @@ namespace Vurbiri.Colonization
             private abstract class Plan
             {
                 private readonly Builder _builder;
+                protected int _attempts;
                 protected bool _done;
 
                 #region Parent Properties
@@ -22,8 +23,8 @@ namespace Vurbiri.Colonization
                 public static Plan Empty { get; } = new Dummy();
 
                 public bool Done { [Impl(256)] get => _done; }
-                public abstract bool IsValid { get; }
-                
+                public virtual bool IsValid { [Impl(256)] get { int chance = 100 - (++_attempts) * 10; Log.Info(chance); return Chance.Rolling(chance); } }
+
                 [Impl(256)] protected Plan(Builder parent) => _builder = parent;
 
                 public abstract IEnumerator Execution_Cn();

@@ -31,7 +31,7 @@ namespace Vurbiri.Colonization
                 {
                     get
                     {
-                        bool isValid = FreeRoadCount >= (_roadsCount - _cursor) && _steps[_cursor].crossroad.IsRoadConnect(HumanId); 
+                        bool isValid = base.IsValid && FreeRoadCount >= (_roadsCount - _cursor) && _steps[_cursor].crossroad.IsRoadConnect(HumanId); 
                         for (int i = _cursor; isValid & i < _roadsCount; i++ )
                             isValid = _steps[i].link.IsEmpty;
 
@@ -66,6 +66,7 @@ namespace Vurbiri.Colonization
                             yield return Human.BuyRoad(step.crossroad.Type, step.link, _roadCost);
                             yield return s_delayHalfSecond.Restart();
                             canRoadBuild = _cursor < _roadsCount;
+                            --_attempts;
 #if TEST_AI
                             Log.Info($"[Builder::LandBuild] {HumanId} built Road");
 #endif

@@ -1,18 +1,23 @@
 using System;
-using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.UI
 {
-    public class SpellBookGroup : VToggleGroup<SpellToggle>
+    public class SpellBookGroup : AToggleGroup<SpellToggle>
     {
         public void Init(PerkTree perkTree, SpellBook spellBook, Action closeWindow, Action<SpellToggle> valueChange)
         {
-            _allowSwitchOff = true;
-
             foreach (var spell in _toggles)
                 spell.Init(perkTree, spellBook, closeWindow);
 
             _onValueChanged.Add(valueChange);
+
+            Vurbiri.EntryPoint.Transition.OnExit.Add(OnDestroy);
+        }
+
+        public void OnOtherValueChanged(PerkToggle toggle)
+        {
+            if (toggle != null)
+                ForceOff();
         }
 
 #if UNITY_EDITOR

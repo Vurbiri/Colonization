@@ -84,7 +84,7 @@ namespace Vurbiri.Colonization.UI
             this.SetComponent(ref rectTransform);
         }
 
-        public void Init_Editor(Perk perk, PerksWindow group)
+        public void Init_Editor(Perk perk, PerksToggleGroup group)
         {
             UnityEditor.SerializedObject so = new(this);
             so.FindProperty(nameof(_typePerkId)).intValue = perk.Type;

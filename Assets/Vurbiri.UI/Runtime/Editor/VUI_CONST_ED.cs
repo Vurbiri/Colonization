@@ -2,8 +2,9 @@ namespace Vurbiri.UI
 {
     public static class VUI_CONST_ED
 	{
-		public const string NAME_MENU = "UI Vurbiri/";
-        public const string NAME_CREATE_MENU = "GameObject/" + NAME_MENU;
+		public const string MENU_NAME = "UI Vurbiri/";
+        public const string UTILITY_MENU_NAME = MENU_NAME + "Utilities/";
+        public const string CREATE_MENU_NAME = "GameObject/" + MENU_NAME;
         public const int CREATE_MENU_PRIORITY = 8;
 
         public const string BUTTON = "Button";
@@ -25,6 +26,7 @@ namespace Vurbiri.UI
         public const string SELECTABLE = "Selectable";
         public const int SELECTABLE_ORDER = 36;
 
+        public const int UTILITY_MENU_ORDER = 45;
 
         public const int TOGGLE_GROUP_EXECUTION_ORDER = 12;
     }

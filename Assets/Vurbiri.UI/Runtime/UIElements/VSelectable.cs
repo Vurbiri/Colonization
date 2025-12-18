@@ -6,7 +6,7 @@ using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 namespace Vurbiri.UI
 {
 #if UNITY_EDITOR
-	[AddComponentMenu(VUI_CONST_ED.NAME_MENU + VUI_CONST_ED.SELECTABLE, VUI_CONST_ED.SELECTABLE_ORDER)]
+	[AddComponentMenu(VUI_CONST_ED.MENU_NAME + VUI_CONST_ED.SELECTABLE, VUI_CONST_ED.SELECTABLE_ORDER)]
 	[ExecuteAlways, SelectionBase, DisallowMultipleComponent]
 #endif
 	public partial class VSelectable : Selectable

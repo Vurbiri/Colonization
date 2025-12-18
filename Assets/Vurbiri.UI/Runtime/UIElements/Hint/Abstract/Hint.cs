@@ -1,47 +1,75 @@
 using System.Collections;
-using System.Runtime.CompilerServices;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.UI
 {
-    [RequireComponent(typeof(CanvasGroup))]
-    public abstract class AHint : MonoBehaviour
+    public abstract class Hint : MonoBehaviour
     {
+        internal readonly static Hint[] s_instances = new Hint[HintId.Count];
+        
+        [SerializeField, ReadOnly] private Id<HintId> _type;
+        [Space]
         [SerializeField] private Image _backImage;
         [SerializeField] private TextMeshProUGUI _hintTMP;
         [Space]
         [SerializeField] private Vector2 _maxSize;
         [SerializeField] private Vector2 _padding;
         [Space]
-        [SerializeField, MinMax(0f, 5f)] private WaitRealtime _timeDelay = 1.5f;
-        [SerializeField] private CanvasGroupSwitcher _waitSwitch;
+        [SerializeField, MinMax(0f, 5f)] private WaitRealtime _timeDelay;
+        [SerializeField] private CanvasGroupSwitcher _switcher;
 
         protected RectTransform _backTransform, _hintTransform;
         private Coroutine _coroutineShow, _coroutineHide;
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Vector3 GetOffsetHint(RectTransform rectTransform, float heightRatio)
-        {
-            var pivot = rectTransform.pivot;
-            var size = rectTransform.rect.size;
+        [Impl(256)] public static Hint GetInstance(Id<HintId> id) => s_instances[id];
+        [Impl(256)] public static THint GetInstance<THint>() where THint : Hint => (THint)s_instances[HintId.Get<THint>()];
 
-            return new(size.x * (0.5f - pivot.x), size.y * (Mathf.Abs(0.5f - pivot.y) + heightRatio), 0f);
+        public static THint FindInstance<THint>() where THint : Hint
+        {
+            int id = HintId.Get<THint>();
+            if (s_instances[id] == null)
+            {
+                var instances = FindObjectsOfType<THint>();
+                if (instances != null && instances.Length > 0)
+                {
+                    s_instances[id] = instances[0];
+                    for (int i = instances.Length - 1; i > 0; --i)
+                        Destroy(instances[i].gameObject);
+                }
+            }
+            return (THint)s_instances[id];
         }
 
-        public void Init()
+        private void Awake() => Init();
+
+        public virtual bool Init()
         {
-            _waitSwitch.Disable();
+            var instance = s_instances[_type];
 
-            _backTransform = _backImage.rectTransform;
-            _hintTransform = _hintTMP.rectTransform;
+            if (instance == null)
+            {
+                s_instances[_type] = this;
 
-            _hintTMP.enableWordWrapping = true;
-            _hintTMP.overflowMode = TextOverflowModes.Overflow;
+                _switcher.Disable();
+
+                _backTransform = _backImage.rectTransform;
+                _hintTransform = _hintTMP.rectTransform;
+
+                _hintTMP.enableWordWrapping = true;
+                _hintTMP.overflowMode = TextOverflowModes.Overflow;
+            }
+            else if (instance != this)
+            {
+                Destroy(gameObject);
+                return false;
+            }
+            return true;
         }
 
-        public bool Show(string text, Transform transform, Vector3 offset)
+        [Impl(256)] public bool Show(string text, Transform transform, Vector3 offset)
         {
             bool result;
             if (result = !string.IsNullOrEmpty(text) & gameObject.activeInHierarchy)
@@ -51,7 +79,7 @@ namespace Vurbiri.UI
             }
             return result;
         }
-        public bool Hide()
+        [Impl(256)] public bool Hide()
         {
             StopCoroutine(ref _coroutineShow);
             _coroutineHide ??= StartCoroutine(Hide_Cn());
@@ -59,7 +87,7 @@ namespace Vurbiri.UI
             return true;
         }
 
-        public void SetColors(Color backColor, Color textColor)
+        [Impl(256)] public void SetColors(Color backColor, Color textColor)
         {
             _backImage.color = backColor;
             _hintTMP.color = textColor;
@@ -85,17 +113,17 @@ namespace Vurbiri.UI
             yield return null;
             SetPosition(transform, offset);
 
-            yield return _waitSwitch.Show();
+            yield return _switcher.Show();
             _coroutineShow = null;
         }
 
         private IEnumerator Hide_Cn()
         {
-            yield return _waitSwitch.Hide();
+            yield return _switcher.Hide();
             _coroutineHide = null;
         }
 
-        private void StopCoroutine(ref Coroutine coroutine)
+        [Impl(256)] private void StopCoroutine(ref Coroutine coroutine)
         {
             if (coroutine != null)
             {
@@ -106,9 +134,15 @@ namespace Vurbiri.UI
 
         private void OnDisable()
         {
-            _waitSwitch.Disable();
+            _switcher.Disable();
             _coroutineHide = null;
             _coroutineShow = null;
+        }
+
+        private void OnDestroy()
+        {
+            if (s_instances[_type] == this)
+                s_instances[_type] = null;
         }
 
 #if UNITY_EDITOR
@@ -122,10 +156,12 @@ namespace Vurbiri.UI
 
         protected virtual void OnValidate()
         {
+            _type = HintId.Get(GetType());
+
             this.SetChildren(ref _backImage);
             this.SetChildren(ref _hintTMP);
 
-            _waitSwitch.OnValidate(this, 8);
+            _switcher.OnValidate(this, 8);
         }
 #endif
     }

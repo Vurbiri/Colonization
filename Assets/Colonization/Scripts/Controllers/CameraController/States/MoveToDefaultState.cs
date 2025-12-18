@@ -26,6 +26,9 @@ namespace Vurbiri.Colonization.Controllers
                 _default = controller._default;
                 _zoom = controller._zoom;
 
+                _oldPosition = Vector3.zero;
+                _oldHeight = _default.height;
+
                 float widthDistance = HEX.DIAMETER_IN * CONST.MAX_CIRCLES;
                 float heightDistance = _default.height - _zoom.heightZoomMin - _zoom.minDeltaHeight * 0.9f;
                 _maxSqrDistance = heightDistance * heightDistance;

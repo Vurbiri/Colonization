@@ -1,21 +1,17 @@
 using UnityEditor;
 using UnityEngine;
 using Vurbiri.Colonization.UI;
-using VurbiriEditor.UI;
 
 namespace VurbiriEditor.Colonization.UI
 {
 	[CustomEditor(typeof(PerksWindow), true)]
-	public class PerksWindowEditor : VToggleGroupEditor
+	public class PerksWindowEditor : Editor
     {
         private PerksWindow _perksWindow;
 
-        protected override void OnEnable()
+        protected void OnEnable()
 		{
-			base.OnEnable();
-
             _perksWindow = (PerksWindow)target;
-
         }
 		
 		public override void OnInspectorGUI()

@@ -29,7 +29,7 @@ namespace Vurbiri.Colonization.UI
 
         public void Init()
         {
-            base.InternalInit(GameContainer.UI.CanvasHint, 0.48f);
+            base.InternalInit(HintId.Canvas, 0.48f);
 
             var person = GameContainer.Person;
             _level.Init(person.Artefact.MaxLevel);
@@ -39,7 +39,7 @@ namespace Vurbiri.Colonization.UI
                 _timers.Push(new(_showDuration));
             }
 
-            _subscription += Localization.Instance.Subscribe(SetLocalizationText);
+            _subscription += Localization.Subscribe(SetLocalizationText);
             _subscription += person.Artefact.Subscribe(SetHintValues);
 
             _subscription += person.GetAbility(HumanAbilityId.IsArtefact).Subscribe(value => gameObject.SetActive(value > 0));

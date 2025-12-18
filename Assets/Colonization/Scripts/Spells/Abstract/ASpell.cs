@@ -40,7 +40,7 @@ namespace Vurbiri.Colonization
                 _descKey = string.Concat(key, "Desc");
                 _onHint = Dummy.Action;
 
-                Localization.Instance.Subscribe(SetHint, false);
+                Localization.Subscribe(SetHint, false);
                 s_spells[type][id] = this;
             }
 
@@ -52,7 +52,7 @@ namespace Vurbiri.Colonization
 
             public void Clear()
             {
-                Localization.Instance.Unsubscribe(SetHint);
+                Localization.Unsubscribe(SetHint);
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]

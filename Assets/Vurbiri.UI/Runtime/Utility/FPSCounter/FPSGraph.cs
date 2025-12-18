@@ -5,7 +5,10 @@ using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.UI
 {
+#if UNITY_EDITOR
+    [AddComponentMenu(VUI_CONST_ED.UTILITY_MENU_NAME + "FPS/Graph", VUI_CONST_ED.UTILITY_MENU_ORDER)]
     [RequireComponent(typeof(RawImage))]
+#endif
     public class FPSGraph : MonoBehaviour
     {
         [SerializeField] private int _width = 128;

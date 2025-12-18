@@ -25,11 +25,11 @@ namespace Vurbiri.Colonization.UI
 
         public void Init()
         {
-            base.InternalInit(GameContainer.UI.CanvasHint, 0.48f);
+            base.InternalInit(HintId.Canvas, 0.48f);
 
             _bar.color = _icon.color = GameContainer.UI.PlayerColors[PlayerId.Satan]; _icon = null;
 
-            Localization.Instance.Subscribe(SetLocalizationText);
+            Localization.Subscribe(SetLocalizationText);
             GameContainer.Satan.Subscribe(SetValues, false);
 
             _indicator.canvasRenderer.SetAlpha(0f);
@@ -92,7 +92,7 @@ namespace Vurbiri.Colonization.UI
 
         private void OnDestroy()
         {
-            Localization.Instance.Unsubscribe(SetLocalizationText);
+            Localization.Unsubscribe(SetLocalizationText);
         }
 
 #if UNITY_EDITOR

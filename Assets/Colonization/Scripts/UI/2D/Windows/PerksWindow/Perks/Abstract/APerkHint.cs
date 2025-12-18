@@ -13,13 +13,13 @@ namespace Vurbiri.Colonization.UI
 
         public virtual void Init(Perk perk)
         {
-            base.InternalInit(GameContainer.UI.CanvasHint, 0.48f);
-            _subscription = Localization.Instance.Subscribe(SetTextAndCost);
+            base.InternalInit(HintId.Canvas, 0.48f);
+            _subscription = Localization.Subscribe(SetTextAndCost);
         }
 
         public void Learn()
         {
-            _subscription ^= Localization.Instance.Subscribe(SetText);
+            _subscription ^= Localization.Subscribe(SetText);
             _cost = null;
         }
 

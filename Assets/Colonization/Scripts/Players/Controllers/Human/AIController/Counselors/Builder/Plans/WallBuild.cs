@@ -6,8 +6,6 @@ namespace Vurbiri.Colonization
         {
             sealed private class WallBuild : ABuild
             {
-                public override bool IsValid => true;
-
                 private WallBuild(Builder parent, Crossroad crossroad) : base(parent, crossroad, GameContainer.Prices.Wall, parent.Human.BuyWall) { }
 
                 public static void Create(Builder parent, Plans plans)

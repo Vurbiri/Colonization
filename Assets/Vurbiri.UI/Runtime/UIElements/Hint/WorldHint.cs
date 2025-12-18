@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Vurbiri.UI
 {
-    sealed public class WorldHint : AHint
+    sealed public class WorldHint : Hint
     {
         protected override void SetPosition(Transform transform, Vector3 offset)
         {

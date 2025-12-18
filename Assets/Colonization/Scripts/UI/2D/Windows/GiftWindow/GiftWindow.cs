@@ -42,7 +42,7 @@ namespace Vurbiri.Colonization.UI
             for (int i = 0; i < CurrencyId.Count; i++)
                 _playerCurrencies[i].Init(resources, OnChangeCount);
 
-            Localization.Instance.Subscribe(SetLocalizationText);
+            Localization.Subscribe(SetLocalizationText);
 
             return _switcher;
         }
@@ -117,7 +117,7 @@ namespace Vurbiri.Colonization.UI
 
         private void OnDestroy()
         {
-            Localization.Instance.Unsubscribe(SetLocalizationText);
+            Localization.Unsubscribe(SetLocalizationText);
         }
     }
 }

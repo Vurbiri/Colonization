@@ -3,7 +3,7 @@ using UnityEngine;
 namespace Vurbiri.UI
 {
 #if UNITY_EDITOR
-    [AddComponentMenu(VUI_CONST_ED.NAME_MENU + VUI_CONST_ED.SLIDER_FLOAT, VUI_CONST_ED.SLIDER_ORDER)]
+    [AddComponentMenu(VUI_CONST_ED.MENU_NAME + VUI_CONST_ED.SLIDER_FLOAT, VUI_CONST_ED.SLIDER_ORDER)]
     [RequireComponent(typeof(RectTransform))]
 #endif
     sealed public class VSliderFloat : AVSlider<float>

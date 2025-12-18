@@ -15,7 +15,6 @@ namespace Vurbiri.Colonization
             private static readonly DiplomatSettings s_settings;
 
             private readonly WaitResultSource<bool> _waitGift = new();
-            private readonly Subscription _subscription;
             private string _giftMsg, _colonyMsg, _portMsg;
             private int _ratio;
             
@@ -24,7 +23,7 @@ namespace Vurbiri.Colonization
             public Diplomat(AIController parent) : base(parent)
 			{
                 _ratio = s_settings.ratio;
-                _subscription = Localization.Instance.Subscribe(SetText);
+                Localization.Subscribe(SetText);
             }
 
             [Impl(256)] public void Update() => _ratio = s_settings.ratio;
@@ -92,7 +91,7 @@ namespace Vurbiri.Colonization
                 #endregion
             }
 
-            public override void Dispose() => _subscription.Dispose();
+            public override void Dispose() => Localization.Unsubscribe(SetText);
 
             private void SetText(Localization localization)
             {

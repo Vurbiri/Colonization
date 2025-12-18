@@ -9,7 +9,7 @@ namespace VurbiriEditor.UI
     sealed public class VBarFloatEditor : AVBarEditor<float>
     {
         private const string NAME = VUI_CONST_ED.BAR_FLOAT, RESOURCE = "VBarFloat";
-        private const string MENU = VUI_CONST_ED.NAME_CREATE_MENU + NAME;
+        private const string MENU = VUI_CONST_ED.CREATE_MENU_NAME + NAME;
 
         protected override float Value { get => _valueProperty.floatValue; set => _valueProperty.floatValue = value; }
         protected override float MinValue { get => _minValueProperty.floatValue; set => _minValueProperty.floatValue = value; }

@@ -12,7 +12,6 @@ namespace Vurbiri.Colonization.UI
 
         private ReadOnlyLiteCurrencies _cost;
         private ReadOnlyCurrencies _cash;
-        private Subscription _subscription;
         private string _caption;
 
         public void Init(ReadOnlyLiteCurrencies cost, Action action)
@@ -20,7 +19,7 @@ namespace Vurbiri.Colonization.UI
             base.InternalInit(action, true);
             _cost = cost;
             _cash = GameContainer.Person.Resources;
-            _subscription = Localization.Instance.Subscribe(SetText);
+            Localization.Subscribe(SetText);
         }
 
         public void Setup(bool isEnable)
@@ -56,7 +55,7 @@ namespace Vurbiri.Colonization.UI
         protected override void OnDestroy()
         {
             base.OnDestroy();
-            _subscription?.Dispose();
+            Localization.Unsubscribe(SetText);
         }
     }
 }

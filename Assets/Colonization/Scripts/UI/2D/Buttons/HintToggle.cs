@@ -6,6 +6,9 @@ using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.UI
 {
+#if UNITY_EDITOR
+    [AddComponentMenu(VUI_CONST_ED.MENU_NAME + "Hint Toggle", VUI_CONST_ED.TOGGLE_ORDER)]
+#endif
     sealed public class HintToggle : AHintToggle<HintToggle>
     {
         private const float RATIO = 0.5f;
@@ -15,13 +18,13 @@ namespace Vurbiri.Colonization.UI
 
         public void Init(bool value, Action<bool> action)
         {
-            base.InternalInit(GameContainer.UI.CanvasHint, value, action, RATIO);
-            Localization.Instance.Subscribe(SetLocalizationText);
+            base.InternalInit(HintId.Canvas, value, action, RATIO);
+            Localization.Subscribe(SetLocalizationText);
         }
         public void Init(RBool rBool)
         {
-            base.InternalInit(GameContainer.UI.CanvasHint, rBool, rBool.GetSetor<bool>(nameof(rBool.Value)), RATIO);
-            Localization.Instance.Subscribe(SetLocalizationText);
+            base.InternalInit(HintId.Canvas, rBool, rBool.GetSetor<bool>(nameof(rBool.Value)), RATIO);
+            Localization.Subscribe(SetLocalizationText);
         }
 
         private void SetLocalizationText(Localization localization)
@@ -32,7 +35,7 @@ namespace Vurbiri.Colonization.UI
         protected override void OnDestroy()
         {
             base.OnDestroy();
-            Localization.Instance.Unsubscribe(SetLocalizationText);
+            Localization.Unsubscribe(SetLocalizationText);
         }
     }
 }

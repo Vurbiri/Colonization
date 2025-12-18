@@ -46,7 +46,8 @@ namespace Vurbiri.Colonization
 
                 sealed public override IEnumerator Execution_Cn(Out<bool> isContinue)
                 {
-                    yield return TryUseHeal_Cn();
+                    if (_wounded.Count > 0)
+                        yield return Settings.heal.TryUse_Cn(Actor, _wounded.Roll);
 
                     yield return Settings.selfBuffs.TryUse_Cn(Actor);
 
@@ -62,12 +63,12 @@ namespace Vurbiri.Colonization
 
                     isContinue.Set(Actor._AP > 0);
                     Exit();
-                    yield break;
                 }
 
                 sealed public override void Dispose()
                 {
                     _enemies.Clear();
+                    _wounded.Clear();
                 }
             }
         }

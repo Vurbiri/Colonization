@@ -4,7 +4,6 @@ using Vurbiri.Colonization.Controllers;
 using Vurbiri.Colonization.EntryPoint;
 using Vurbiri.Colonization.Storage;
 using Vurbiri.Colonization.UI;
-using Vurbiri.UI;
 using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization
@@ -42,12 +41,8 @@ namespace Vurbiri.Colonization
 
         public new class UI : ProjectContainer.UI
         {
-            public static WorldHint WorldHint           { [Impl(256)] get => s_content.worldHint; }
-            public static CanvasHint CanvasHint         { [Impl(256)] get => s_content.canvasHint; }
-
-            public static ReadOnlyIdArray<ActorAbilityId, Sprite> SpritesOfAbilities    { [Impl(256)] get => s_content.abilities; }
- 
-            public static Pool<EffectsBar> EffectsBar   { [Impl(256)] get => s_content.poolEffectsBar; }
+            public static ReadOnlyIdArray<ActorAbilityId, Sprite> SpritesOfAbilities { [Impl(256)] get => s_content.abilities; }
+            public static Pool<EffectsBar> EffectsBar { [Impl(256)] get => s_content.poolEffectsBar; }
         }
         
 #if TEST_LOAD

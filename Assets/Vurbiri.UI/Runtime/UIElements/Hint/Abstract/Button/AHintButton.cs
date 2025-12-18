@@ -7,21 +7,21 @@ namespace Vurbiri.UI
 {
 	public abstract class AHintButton : AVButton
     {
-        private AHint _hint;
+        private Id<HintId> _hint;
         private bool _isShowingHint = false;
         private Vector3 _hintOffset;
 
         protected string _hintText;
 
         [Impl(256)]
-        protected void InternalInit(AHint hint, float heightRatio)
+        protected void InternalInit(Id<HintId> hint, float heightRatio)
         {
             _hint = hint;
-            _hintOffset = AHint.GetOffsetHint(_thisRectTransform, heightRatio);
+            _hintOffset = _thisRectTransform.GetOffsetHint(heightRatio);
         }
 
         [Impl(256)]
-        protected void InternalInit(AHint hint, Action action, float heightRatio)
+        protected void InternalInit(Id<HintId> hint, Action action, float heightRatio)
         {
             InternalInit(hint, heightRatio);
             _onClick.Add(action);

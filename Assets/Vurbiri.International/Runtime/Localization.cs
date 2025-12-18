@@ -2,184 +2,195 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Vurbiri.Collections;
-using Vurbiri.Reactive;
 using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.International
 {
-    public class Localization : IReactive<Localization>
-    {
-        private static readonly Localization s_instance;
+	public class Localization
+	{
+		private static readonly Localization s_instance;
+		
+		private readonly Dictionary<string, string>[] _text;
+		private readonly ReadOnlyArray<LanguageType> _languages;
+		private readonly LanguageType _defaultLanguage;
+		private readonly VAction<Localization> _changed = new();
+		private LanguageType _currentLanguage;
 
-        private readonly Dictionary<string, string>[] _text;
-        private readonly ReadOnlyArray<LanguageType> _languages;
-        private readonly VAction<Localization> _changed = new();
-        private readonly LanguageType _defaultLanguage;
-        private LanguageType _currentLanguage;
+		public static Localization Instance { [Impl(256)] get => s_instance; }
+		public ReadOnlyArray<LanguageType> Languages { [Impl(256)] get => _languages; }
+		public SystemLanguage CurrentId
+		{
+			[Impl(256)] 
+			get => _currentLanguage.Id;
+			set
+			{
+				if (_currentLanguage != value)
+				{
+					for (int i = 0; i < _languages.Count; ++i)
+					{
+						if (_languages[i] == value)
+						{
+							SetLanguage(_languages[i]);
+							return;
+						}
+					}
 
-        public static Localization Instance { [Impl(256)] get => s_instance; }
-        public ReadOnlyArray<LanguageType> Languages { [Impl(256)] get => _languages; }
-        public SystemLanguage CurrentId
-        {
-            [Impl(256)] 
-            get => _currentLanguage.Id;
-            set
-            {
-                if (_currentLanguage != value)
-                {
-                    for (int i = 0; i < _languages.Count; ++i)
-                    {
-                        if (_languages[i] == value)
-                        {
-                            SetLanguage(_languages[i]);
-                            return;
-                        }
-                    }
+					if (_currentLanguage != _defaultLanguage)
+						SetLanguage(_defaultLanguage);
+				}
+			}
+		}
 
-                    if (_currentLanguage != _defaultLanguage)
-                        SetLanguage(_defaultLanguage);
-                }
-            }
-        }
-
-        static Localization()
-        {
+		static Localization()
+		{
 #if UNITY_EDITOR
-            if(UnityEditor.EditorApplication.isPlayingOrWillChangePlaymode)
+			if (UnityEditor.EditorApplication.isPlayingOrWillChangePlaymode)
 #endif
-            s_instance = new(0);
-        }
+			s_instance = new(0);
+		}
 
-        private Localization(int fileId) 
-        {
-            var languages = Storage.LoadObjectFromJsonResource<List<LanguageType>>(CONST_L.LANG_FILE);
-            Throw.IfLengthZero(languages, "_languages");
+		private Localization(int fileId) 
+		{
+			var languages = Storage.LoadObjectFromJsonResource<List<LanguageType>>(CONST_L.LANG_FILE);
+			Throw.IfLengthZero(languages, "_languages");
 
-            _text = new Dictionary<string, string>[Files.Count];
+			_text = new Dictionary<string, string>[Files.Count];
 
-            for (int i = languages.Count - 1; i >= 0; --i)
-            {
-                if (languages[i] == SystemLanguage.Unknown)
-                {
-                    _defaultLanguage = languages.Extract(i);
-                    break;
-                }
-            }
+			for (int i = languages.Count - 1; i >= 0; --i)
+			{
+				if (languages[i] == SystemLanguage.Unknown)
+				{
+					_defaultLanguage = languages.Extract(i);
+					break;
+				}
+			}
 
-            _defaultLanguage ??= languages[0];
-            _languages = new(languages.ToArray());
+			_defaultLanguage ??= languages[0];
+			_languages = new(languages.ToArray());
 
-            SetLanguage(_defaultLanguage);
-            LoadFile(fileId, true);
-        }
+			SetLanguage(_defaultLanguage);
+			LoadFile(fileId, true);
+		}
 
-        [Impl(256)] public Subscription Subscribe(Action<Localization> action, bool sendCallback = true) => _changed.Add(action, this, sendCallback);
-        [Impl(256)] public void Unsubscribe(Action<Localization> action) => _changed.Remove(action);
+		[Impl(256)] public static Subscription Subscribe(Action<Localization> action, bool sendCallback = true)
+		{
+#if UNITY_EDITOR
+			if (!UnityEditor.EditorApplication.isPlayingOrWillChangePlaymode) return Subscription.Empty;
+#endif
+			return s_instance._changed.Add(action, s_instance, sendCallback);
+		}
+		[Impl(256)] public static void Unsubscribe(Action<Localization> action)
+		{
+#if UNITY_EDITOR
+			if (UnityEditor.EditorApplication.isPlayingOrWillChangePlaymode)
+#endif
+			s_instance._changed.Remove(action);
+		}
 
-        public SystemLanguage IdFromCode(string code)
-        {
-            if (!string.IsNullOrEmpty(code))
-            {
-                for (int i = 0; i < _languages.Count; ++i)
-                    if (_languages[i].CodeEquals(code))
-                        return _languages[i].Id;
-            }
+		public SystemLanguage IdFromCode(string code)
+		{
+			if (!string.IsNullOrEmpty(code))
+			{
+				for (int i = 0; i < _languages.Count; ++i)
+					if (_languages[i].CodeEquals(code))
+						return _languages[i].Id;
+			}
 
-            return _defaultLanguage.Id;
-        }
+			return _defaultLanguage.Id;
+		}
 
-        [Impl(256)] public bool IsFileLoaded(int fileId) => _text[fileId] != null;
+		[Impl(256)] public bool IsFileLoaded(int fileId) => _text[fileId] != null;
 
-        public void SetFiles(FileIds fileIds, bool reload)
-        {
-            for (int i = 0; i < Files.Count; i++)
-            {
-                if (fileIds[i]) 
-                    LoadFile(i, reload);
-                else 
-                    _text[i] = null;
-            }
+		public void SetFiles(FileIds fileIds, bool reload)
+		{
+			for (int i = 0; i < Files.Count; i++)
+			{
+				if (fileIds[i]) 
+					LoadFile(i, reload);
+				else 
+					_text[i] = null;
+			}
 
-            GC.Collect();
-        }
+			GC.Collect();
+		}
 
-        [Impl(256)] public void LoadFile(int fileId, bool reload)
-        {
-            if ((reload || _text[fileId] == null) && Files.TryLoad(_currentLanguage.Folder, fileId, out Dictionary<string, string> load))
-                _text[fileId] = load;
-        }
+		[Impl(256)] public void LoadFile(int fileId, bool reload)
+		{
+			if ((reload || _text[fileId] == null) && Files.TryLoad(_currentLanguage.Folder, fileId, out Dictionary<string, string> load))
+				_text[fileId] = load;
+		}
 
-        [Impl(256)] public void UnloadFile(int fileId) => _text[fileId] = null;
+		[Impl(256)] public void UnloadFile(int fileId) => _text[fileId] = null;
 
-        [Impl(256)] public string GetText(FileIdAndKey idAndKey, bool remove = false) => GetText(idAndKey.id, idAndKey.key, remove);
-        public string GetText(int fileId, string key, bool remove = false)
-        {
-            string text;
-            var dictionary = _text[fileId];
-            if (dictionary == null)
-                Log.Info(text = $"File [{Files.GetName(fileId)}] not loaded.");
-            else if (!dictionary.TryGetValue(key, out text))
-                Log.Info(text = $"Key [{key}] not found in file [{Files.GetName(fileId)}].");
-            else if (remove)
-                dictionary.Remove(key);
+		[Impl(256)] public string GetText(FileIdAndKey idAndKey, bool remove = false) => GetText(idAndKey.id, idAndKey.key, remove);
+		public string GetText(int fileId, string key, bool remove = false)
+		{
+			string text;
+			var dictionary = _text[fileId];
+			if (dictionary == null)
+				Log.Info(text = $"File [{Files.GetName(fileId)}] not loaded.");
+			else if (!dictionary.TryGetValue(key, out text))
+				Log.Info(text = $"Key [{key}] not found in file [{Files.GetName(fileId)}].");
+			else if (remove)
+				dictionary.Remove(key);
 
-            return text;
-        }
+			return text;
+		}
 
-        [Impl(256)] public bool TryGetText(FileIdAndKey idAndKey, out string text)
-        {
-            var dictionary = _text[idAndKey.id]; text = null;
-            return dictionary != null && dictionary.TryGetValue(idAndKey.key, out text);
-        }
-        [Impl(256)] public bool TryGetText(int fileId, string key, out string text)
-        {
-            var dictionary = _text[fileId]; text = null;
-            return dictionary != null && dictionary.TryGetValue(key, out text);
-        }
+		[Impl(256)] public bool TryGetText(FileIdAndKey idAndKey, out string text)
+		{
+			var dictionary = _text[idAndKey.id]; text = null;
+			return dictionary != null && dictionary.TryGetValue(idAndKey.key, out text);
+		}
+		[Impl(256)] public bool TryGetText(int fileId, string key, out string text)
+		{
+			var dictionary = _text[fileId]; text = null;
+			return dictionary != null && dictionary.TryGetValue(key, out text);
+		}
 
-        [Impl(256)] public string GetFormatText(int fileId, string key, params object[] args) => string.Format(GetText(fileId, key), args);
-        [Impl(256)] public string GetFormatText(int fileId, string key, object arg0, object arg1, object arg2) => string.Format(GetText(fileId, key), arg0, arg1, arg2);
-        [Impl(256)] public string GetFormatText(int fileId, string key, object arg0, object arg1) => string.Format(GetText(fileId, key), arg0, arg1);
-        [Impl(256)] public string GetFormatText(int fileId, string key, object arg0) => string.Format(GetText(fileId, key), arg0);
+		[Impl(256)] public string GetFormatText(int fileId, string key, params object[] args) => string.Format(GetText(fileId, key), args);
+		[Impl(256)] public string GetFormatText(int fileId, string key, object arg0, object arg1, object arg2) => string.Format(GetText(fileId, key), arg0, arg1, arg2);
+		[Impl(256)] public string GetFormatText(int fileId, string key, object arg0, object arg1) => string.Format(GetText(fileId, key), arg0, arg1);
+		[Impl(256)] public string GetFormatText(int fileId, string key, object arg0) => string.Format(GetText(fileId, key), arg0);
 
-        [Impl(256)] public bool RemoveKey(FileIdAndKey idAndKey) => _text[idAndKey.id] != null && _text[idAndKey.id].Remove(idAndKey.key);
-        [Impl(256)] public bool RemoveKey(int fileId, string key) => _text[fileId] != null && _text[fileId].Remove(key);
+		[Impl(256)] public bool RemoveKey(FileIdAndKey idAndKey) => _text[idAndKey.id] != null && _text[idAndKey.id].Remove(idAndKey.key);
+		[Impl(256)] public bool RemoveKey(int fileId, string key) => _text[fileId] != null && _text[fileId].Remove(key);
 
-        [Impl(256)] public bool ContainsKey(FileIdAndKey idAndKey) => _text[idAndKey.id] != null && _text[idAndKey.id].ContainsKey(idAndKey.key);
-        [Impl(256)] public bool ContainsKey(int fileId, string key) => _text[fileId] != null && _text[fileId].ContainsKey(key);
+		[Impl(256)] public bool ContainsKey(FileIdAndKey idAndKey) => _text[idAndKey.id] != null && _text[idAndKey.id].ContainsKey(idAndKey.key);
+		[Impl(256)] public bool ContainsKey(int fileId, string key) => _text[fileId] != null && _text[fileId].ContainsKey(key);
 
-        private void SetLanguage(LanguageType type)
-        {
-            string folder = type.Folder;
-            for (int i = 0; i < Files.Count; i++)
-                if (_text[i] != null && Files.TryLoad(folder, i, out Dictionary<string, string> load))
-                    _text[i] = load;
+		private void SetLanguage(LanguageType type)
+		{
+			string folder = type.Folder;
+			for (int i = 0; i < Files.Count; i++)
+				if (_text[i] != null && Files.TryLoad(folder, i, out Dictionary<string, string> load))
+					_text[i] = load;
 
-            _currentLanguage = type;
-            _changed.Invoke(this);
-        }
+			_currentLanguage = type;
+			_changed.Invoke(this);
+		}
 
 #if UNITY_EDITOR
-        private static WeakReference<Localization> s_weakLocalization;
-        public static Localization ForEditor(int fileId)
-        {
-            Localization localization;
-            if (s_weakLocalization == null)
-            {
-                localization = new(fileId);
-                s_weakLocalization = new(localization);
-            }
-            else if (!s_weakLocalization.TryGetTarget(out localization))
-            {
-                localization = new(fileId);
-                s_weakLocalization.SetTarget(localization);
-            }
-            else
-            {
-                localization.LoadFile(fileId, false);
-            }
-            return localization;
-        }
+		private static WeakReference<Localization> s_weakLocalization;
+		public static Localization ForEditor(int fileId)
+		{
+			Localization localization;
+			if (s_weakLocalization == null)
+			{
+				localization = new(fileId);
+				s_weakLocalization = new(localization);
+			}
+			else if (!s_weakLocalization.TryGetTarget(out localization))
+			{
+				localization = new(fileId);
+				s_weakLocalization.SetTarget(localization);
+			}
+			else
+			{
+				localization.LoadFile(fileId, false);
+			}
+			return localization;
+		}
 #endif
-    }
+	}
 }

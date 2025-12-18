@@ -1659,7 +1659,7 @@
     "m_Title": "Color",
     "m_Position": {
         "x": -2173.0,
-        "y": 242.00006103515626
+        "y": 242.00001525878907
     }
 }
 
@@ -2683,7 +2683,7 @@
     "m_StageCapability": 3,
     "m_BareResource": false,
     "m_Texture": {
-        "m_SerializedTexture": "{\"texture\":{\"instanceID\":0}}",
+        "m_SerializedTexture": "",
         "m_Guid": ""
     },
     "m_DefaultType": 0
@@ -4605,7 +4605,7 @@
     "m_ObjectId": "b900ebaf94d946e2be1537a8d76b1245",
     "m_Title": "Mask",
     "m_Position": {
-        "x": -1450.9998779296875,
+        "x": -1451.0001220703125,
         "y": 937.9999389648438
     }
 }
@@ -4782,7 +4782,7 @@
     "m_StageCapability": 3,
     "m_BareResource": false,
     "m_Texture": {
-        "m_SerializedTexture": "{\"texture\":{\"instanceID\":0}}",
+        "m_SerializedTexture": "",
         "m_Guid": ""
     },
     "m_DefaultType": 0
@@ -5422,8 +5422,8 @@
     "m_ObjectId": "ef2b689a197245d3bd126c9f5d0425ee",
     "m_Title": "EngeMask",
     "m_Position": {
-        "x": -2031.000244140625,
-        "y": 922.9998779296875
+        "x": -2031.0001220703125,
+        "y": 923.0000610351563
     }
 }
 

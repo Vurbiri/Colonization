@@ -4,19 +4,19 @@ using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.UI
 {
-	public abstract class AHintButton<THint, TValue> : AVButton<TValue> where THint : AHint
+	public abstract class AHintButton<TValue> : AVButton<TValue>
     {
-        private THint _hint;
+        private Id<HintId> _hint;
         private bool _isShowingHint = false;
         private Vector3 _hintOffset;
 
         protected string _hintText;
 
         [Impl(256)]
-        protected void InternalInit(THint hint, float heightRatio)
+        protected void InternalInit(Id<HintId> hint, float heightRatio)
         {
             _hint = hint;
-            _hintOffset = AHint.GetOffsetHint(_thisRectTransform, heightRatio);
+            _hintOffset = _thisRectTransform.GetOffsetHint(heightRatio);
         }
 
         sealed public override void OnPointerEnter(PointerEventData eventData)
@@ -34,6 +34,9 @@ namespace Vurbiri.UI
         protected override void OnDisable()
         {
             base.OnDisable();
+#if UNITY_EDITOR
+            if (!Application.isPlaying) return;
+#endif
             Hide();
         }
 

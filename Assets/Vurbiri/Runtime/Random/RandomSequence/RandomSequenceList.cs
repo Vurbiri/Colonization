@@ -33,7 +33,7 @@ namespace Vurbiri
         public void Remove(T item)
         {
             int index = _count;
-            while (index --> _count && !s_comparer.Equals(_values[index], item));
+            while (index --> 0 && !s_comparer.Equals(_values[index], item));
 
             if(index >= 0)
             {

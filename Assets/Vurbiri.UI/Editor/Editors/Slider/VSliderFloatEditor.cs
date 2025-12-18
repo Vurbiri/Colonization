@@ -10,7 +10,7 @@ namespace VurbiriEditor.UI
 	sealed public class VSliderFloatEditor : AVSliderEditor<float>
     {
         private const string NAME = VUI_CONST_ED.SLIDER_FLOAT, RESOURCE = "VSliderFloat";
-        private const string MENU = VUI_CONST_ED.NAME_CREATE_MENU + NAME;
+        private const string MENU = VUI_CONST_ED.CREATE_MENU_NAME + NAME;
 
         protected override float Value { get => _valueProperty.floatValue; set => _valueProperty.floatValue = value; }
         protected override float MinValue { get => _minValueProperty.floatValue; set => _minValueProperty.floatValue = value; }

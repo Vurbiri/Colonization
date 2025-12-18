@@ -26,7 +26,7 @@ namespace Vurbiri.Colonization.UI
             _renderer = _label.canvasRenderer;
             _renderer.SetAlpha(0f);
 
-            _subscription = Localization.Instance.Subscribe(SetFullText);
+            _subscription = Localization.Subscribe(SetFullText);
             GameContainer.GameEvents.Subscribe(GameModeId.StartTurn, ReInit);
         }
 
@@ -73,7 +73,7 @@ namespace Vurbiri.Colonization.UI
         {
             GameContainer.GameEvents.Unsubscribe(GameModeId.StartTurn, ReInit);
 
-            _subscription ^= Localization.Instance.Subscribe(SetText);
+            _subscription ^= Localization.Subscribe(SetText);
         }
 
         private void SetFullText(Localization localization)

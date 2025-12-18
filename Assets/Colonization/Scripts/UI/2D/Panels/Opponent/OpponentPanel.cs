@@ -32,7 +32,7 @@ namespace Vurbiri.Colonization.UI
         public void Init(Vector3 offsetPopup, Diplomacy diplomacy)
         {
             _popup.Init(offsetPopup);
-            base.InternalInit(GameContainer.UI.CanvasHint);
+            base.InternalInit(HintId.Canvas);
 
             _min = diplomacy.Min; _max = diplomacy.Max;
 

@@ -11,7 +11,7 @@ namespace Vurbiri.Colonization
                 private readonly HitEffects _effects;
                 private Chance _chance;
  
-                public override bool CanUse => base.CanUse && _chance.Roll;
+                public override bool CanUse => base.CanUse && AP.IsMax && _chance.Roll;
 
                 public JumpState(SpecSkillSettings specSkill, FattyStates parent) : base(parent, CONST.SPEC_SKILL_ID, specSkill.Cost)
                 {

@@ -28,12 +28,14 @@ namespace Vurbiri.UI
             [Impl(256)] set => _speed = System.MathF.Max(MIN_SPEED, value);
         }
 
+        public CanvasGroupSwitcher() { }
         public CanvasGroupSwitcher(CanvasGroup canvasGroup, float speed)
         {
             _speed = speed;
             _canvasGroup = canvasGroup;
             Disable();
         }
+
 
         [Impl(256)]
         public void Set(bool show)

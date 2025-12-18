@@ -52,7 +52,7 @@ namespace Vurbiri.Colonization.UI
 
         private Vector2 PerkSize => _perkPrefab.rectTransform.sizeDelta + _perkSpace;
 
-        public void UpdateVisuals_Ed(float pixelsPerUnit, ProjectColors colors)
+        public override void UpdateVisuals_Ed(float pixelsPerUnit, ProjectColors colors)
         {
             Color color = colors.PanelBack.SetAlpha(1f);
             Image image = GetComponent<Image>();
@@ -140,7 +140,7 @@ namespace Vurbiri.Colonization.UI
 
                 Vector2 positionPerk = new(perk.position, perk.Level);
                 perkToggle.rectTransform.anchoredPosition = perkSize * positionPerk + offset;
-                perkToggle.Init_Editor(perk, this);
+                perkToggle.Init_Editor(perk, _perksGroup);
             }
         }
         private void CreatePerks_Ed(PerkToggle[] perks, int count, Transform parent)
@@ -157,11 +157,11 @@ namespace Vurbiri.Colonization.UI
 
             SpellId spellId = new(EconomicSpellId.Type, 0);
             for (spellId.id = 0; spellId.id < EconomicSpellId.Count; spellId.id++)
-                _economicSpells[spellId.id] = EUtility.InstantiatePrefab(_spellPrefab, _economicSpellsContainer).Init_Editor(panels[spellId], _spellBook);
+                _economicSpells[spellId.id] = EUtility.InstantiatePrefab(_spellPrefab, _economicSpellsContainer).Init_Editor(panels[spellId], _spellBookGroup);
 
             spellId.type = MilitarySpellId.Type;
             for (spellId.id = 0; spellId.id < MilitarySpellId.Count; spellId.id++)
-                _militarySpells[spellId.id] = EUtility.InstantiatePrefab(_spellPrefab, _militarySpellsContainer).Init_Editor(panels[spellId], _spellBook);
+                _militarySpells[spellId.id] = EUtility.InstantiatePrefab(_spellPrefab, _militarySpellsContainer).Init_Editor(panels[spellId], _spellBookGroup);
         }
         
         private void DeleteT_Ed<T>(T[] objects, int count, Transform parent) where T : MonoBehaviour
@@ -194,13 +194,9 @@ namespace Vurbiri.Colonization.UI
         {
             base.OnValidate();
 
-            _allowSwitchOff = true;
+            this.SetChildren(ref _perksGroup);
+            this.SetChildren(ref _spellBookGroup);
 
-            this.SetChildren(ref _spellBook);
-
-            _switcher.OnValidate(this);
-
-            this.SetChildren(ref _learnButton);
             this.SetChildren(ref _closeButton);
 
             _progressBars ??= new();

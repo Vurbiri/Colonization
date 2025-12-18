@@ -11,6 +11,8 @@ namespace Vurbiri
     {
         private Action _action;
 
+        public static readonly Subscription Empty = new(Dummy.Action);
+
         private Subscription(Action action) => _action = action;
 
         internal static Subscription Create<T>(IUnsubscribed<T> subscriber, T action) where T : Delegate

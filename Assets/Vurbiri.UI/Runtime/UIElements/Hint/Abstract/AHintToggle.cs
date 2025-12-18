@@ -7,23 +7,23 @@ namespace Vurbiri.UI
 {
 	public abstract class AHintToggle<TToggle> : VToggleGraphic<TToggle> where TToggle : AHintToggle<TToggle>
     {
-        private AHint _hint;
+        private Id<HintId> _hint;
         private bool _isShowingHint = false;
         private Vector3 _hintOffset;
 
         protected string _hintText;
 
         [Impl(256)]
-        protected void InternalInit(AHint hint, bool value, float heightRatio)
+        protected void InternalInit(Id<HintId> hint, bool value, float heightRatio)
         {
             _hint = hint;
             SetValue(value, false);
 
-            _hintOffset = AHint.GetOffsetHint(_thisRectTransform, heightRatio);
+            _hintOffset = _thisRectTransform.GetOffsetHint(heightRatio);
         }
 
         [Impl(256)]
-        protected void InternalInit(AHint hint, bool value, Action<bool> action, float heightRatio)
+        protected void InternalInit(Id<HintId> hint, bool value, Action<bool> action, float heightRatio)
         {
             InternalInit(hint, value, heightRatio);
             _onValueChanged.Add(action);

@@ -11,7 +11,7 @@ namespace Vurbiri.Colonization
             protected abstract class Heal : State
             {
                 protected const int BASE_HP = 105;
-                private readonly WeightsList<Actor> _wounded = new(3);
+                protected readonly WeightsList<Actor> _wounded = new(3);
 
                 [Impl(256)] protected Heal(AI<TSettings, TActorId, TStateId> parent) : base(parent) { }
 
@@ -27,26 +27,15 @@ namespace Vurbiri.Colonization
                         for (int i = 0; i < friends.Count; i++)
                         {
                             friend = friends[i];
-                            //Log.Warning($"[Heal] ChanceValue {Settings.heal.ChanceValue(Actor, friend)}");
-                            if (heal.CanUsed(Actor, friend))
-                                _wounded.Add(friend, BASE_HP - friend._HP.Percent);
+                             if (heal.CanUsed(Actor, friend))
+                                _wounded.Add(friend, (BASE_HP - friend._HP.Percent) << (friend._owner == OwnerId ? 1 : 0));
                         }
                     }
-                    //Log.Warning($"[Heal] wounded {_wounded.Count}");
+
                     return _wounded.Count > 0;
                 }
 
-                [Impl(256)] protected IEnumerator TryUseHeal_Cn()
-                {
-                    if (_wounded.Count > 0)
-                    {
-                        yield return Settings.heal.TryUse_Cn(Actor, _wounded.Roll);
-                        _wounded.Clear();
-                    }
-                    yield break;
-                }
-
-                [Impl(256)] protected IEnumerator TryHeal_Cn()
+                protected IEnumerator TryHeal_Cn()
                 {
                     if (!Settings.heal.IsValid)
                         yield break;

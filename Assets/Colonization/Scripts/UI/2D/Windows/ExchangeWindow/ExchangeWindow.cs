@@ -3,10 +3,8 @@ using UnityEngine;
 
 namespace Vurbiri.Colonization.UI
 {
-	public partial class ExchangeWindow : MonoBehaviour
+	public partial class ExchangeWindow : ASwitchableWindow
     {
-        [SerializeField] private Switcher _switcher;
-        [Space]
         [SerializeField] private TextMeshProUGUI _bankAmount;
         [SerializeField] private TextMeshProUGUI _playerAmount;
         [Space]
@@ -24,7 +22,7 @@ namespace Vurbiri.Colonization.UI
         private readonly LiteCurrencies _bankTrade = new();
         private readonly LiteCurrencies _price = new(), _pay = new();
 
-        public Switcher Init()
+        public override Switcher Init()
         {
             _switcher.Init(this);
             _switcher.onClose.Add(ResetValues);

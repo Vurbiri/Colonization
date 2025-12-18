@@ -35,7 +35,7 @@ namespace Vurbiri.Colonization.EntryPoint
                         
             loading.Add(_islandCreator.Init(out content.hexagons, out content.crossroads));
             loading.Add(new CreatePlayers(content, _playerSettings));
-            loading.Add(_initUI.Init(content));
+            loading.Add(_initUI);
             loading.Add(new ClearResources());
             loading.Add(new GameplayStart());
 

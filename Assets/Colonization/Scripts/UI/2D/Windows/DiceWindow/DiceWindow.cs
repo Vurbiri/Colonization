@@ -6,13 +6,12 @@ using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.UI
 {
-	public class DiceWindow : MonoBehaviour
-	{
+	public class DiceWindow : ASwitchableWindow
+    {
+        [Space]
         [SerializeField] private FloatRnd _delayAI;
         [SerializeField] private WaitRealtime _openTime;
         [SerializeField] private WaitRealtime _closeTime;
-        [Space]
-        [SerializeField] private CanvasGroupSwitcher _canvasSwitcher;
         [Space]
         [SerializeField] private VButton _stopButton;
         [SerializeField] private TextMeshProUGUI _result;
@@ -24,15 +23,9 @@ namespace Vurbiri.Colonization.UI
         private readonly WaitRealtime _waitAI = new();
         private readonly WaitSignal _waitPerson = new();
 
-        private readonly VAction<int> _onOpen = new();
-        private readonly VAction _onClose = new();
-        private int _id;
-
-        public void Init(int id, Action<int> onOpenWindow, Action onCloseWindow)
-		{
-            _id = id;
-            _onOpen.Add(onOpenWindow);
-            _onClose.Add(onCloseWindow);
+        public override Switcher Init()
+        {
+            _switcher.Init(this, false);
 
             for (int i = 0; i < CONST.DICES_COUNT; i++)
                 _dices[i] = new(_labelsDice[i]);
@@ -41,16 +34,34 @@ namespace Vurbiri.Colonization.UI
             _stopButton.Lock = true;
             _stopButton.AddListener(_waitPerson.Send);
 
-            GameContainer.GameLoop.Subscribe(GameModeId.WaitRoll, Roll);
+            var game = GameContainer.GameEvents;
+            game.Subscribe(GameModeId.WaitRoll, OnWaitRoll);
+            if(game.GameMode == GameModeId.Roll)
+                game.Subscribe(GameModeId.Roll, OnRoll);
 
-            _canvasSwitcher.Disable();
+            return _switcher;
         }
 
-        public void Roll(TurnQueue turnQueue, int hexId) => StartCoroutine(Roll_Cn(turnQueue.isPerson));
+        private void OnWaitRoll(TurnQueue turnQueue, int hexId) => StartCoroutine(Roll_Cn(turnQueue.isPerson));
+
+        private void OnRoll(TurnQueue turnQueue, int hexId)
+        {
+            GameContainer.GameEvents.Unsubscribe(GameModeId.Roll, OnRoll);
+            StartCoroutine(OnRoll_Cn());
+
+            // ======== Local ===========
+            IEnumerator OnRoll_Cn()
+            {
+                yield return _openTime.Restart();
+                GameContainer.GameLoop.Profit();
+            }
+        }
 
         private IEnumerator Roll_Cn(bool isPerson)
         {
-            _onOpen.Invoke(_id);
+            var switcher = _switcher;
+
+            switcher.onOpen.Invoke(switcher);
 
             _result.text = string.Empty;
 
@@ -59,7 +70,7 @@ namespace Vurbiri.Colonization.UI
 
             _stopButton.InteractableAndUnlock(isPerson, isPerson);
 
-            yield return _canvasSwitcher.Show();
+            yield return switcher.Show();
             yield return isPerson ? _waitPerson.Restart() : _waitAI.Restart(_delayAI);
 
             _stopButton.interactable = false;
@@ -72,12 +83,12 @@ namespace Vurbiri.Colonization.UI
             GameContainer.GameLoop.Roll(result);
 
             yield return _openTime.Restart();
-            yield return _canvasSwitcher.Hide();
+            yield return switcher.Hide();
             yield return _closeTime.Restart();
 
             yield return GameContainer.CameraController.FromDefaultPosition(true);
 
-            _onClose.Invoke();
+            switcher.onClose.Invoke(switcher);
             GameContainer.GameLoop.Profit();
         }
 
@@ -87,9 +98,12 @@ namespace Vurbiri.Colonization.UI
         [SerializeField, Range(0.5f, 1f)] private float _panelsBrightness = 0.8f;
         [SerializeField, HideInInspector] private UnityEngine.UI.Image _mainImage, _resultImage;
 
-        private void OnValidate()
+        protected override void OnValidate()
         {
-            _canvasSwitcher.OnValidate(this, 6);
+            if (UnityEditor.EditorApplication.isPlayingOrWillChangePlaymode)
+                return;
+
+            base.OnValidate();
 
             this.SetChildren(ref _stopButton);
             this.SetChildren(ref _result, "Result_TMP");
@@ -106,7 +120,7 @@ namespace Vurbiri.Colonization.UI
             _resultImage.color = _mainImage.color.Brightness(_panelsBrightness);
         }
 
-        public void UpdateVisuals_Ed(float pixelsPerUnit, ProjectColors colors)
+        public override void UpdateVisuals_Ed(float pixelsPerUnit, ProjectColors colors)
         {
             Color color = colors.PanelBack.SetAlpha(1f);
 

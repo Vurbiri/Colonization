@@ -22,7 +22,7 @@ namespace Vurbiri.Colonization.UI
             _effectsTarget = effectsTarget;
             _effectsSelf = effectsSelf;
 
-            Localization.Instance.Subscribe(SetTexts);
+            Localization.Subscribe(SetTexts);
         }
 
         private void SetTexts(Localization localization)
@@ -60,7 +60,7 @@ namespace Vurbiri.Colonization.UI
 
         public override void Dispose()
         {
-            Localization.Instance.Unsubscribe(SetTexts);
+            Localization.Unsubscribe(SetTexts);
         }
 
         // Nested
