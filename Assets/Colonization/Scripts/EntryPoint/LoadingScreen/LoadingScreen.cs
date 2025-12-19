@@ -4,20 +4,21 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using Vurbiri.EntryPoint;
+using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization.UI
 {
     [RequireComponent(typeof(CanvasGroup))]
     sealed public class LoadingScreen : AClosedSingleton<LoadingScreen>, ILoadingScreen
     {
-        [SerializeField, Range(0.1f, 2f)] private float _smoothSpeed = 0.5f;
+        [SerializeField, MinMax(1f, 3f)] private WaitRealtime _smooth = 2f;
         [SerializeField, Range(0.1f, 2f)] private float _indicatorSpeed = 0.5f;
         [Space]
-        [SerializeField] private CanvasGroup _canvasGroup;
-        [SerializeField] private RectTransform _fillBar;
+        [SerializeField] private Image _background, _indicator;
         [SerializeField] private TextMeshProUGUI _descText;
-        [SerializeField] private Image _indicator;
+        [SerializeField] private Graphic _bar, _value;
 
+        private RectTransform _fillBar;
         private Graphic[] _graphics;
 
         private DrivenRectTransformTracker _tracker;
@@ -30,10 +31,11 @@ namespace Vurbiri.Colonization.UI
             base.Awake();
             if (s_instance == this)
             {
-                _graphics = new Graphic[] { _descText, _indicator, _fillBar.parent.GetComponent<Graphic>() };
+                _fillBar = _value.rectTransform;
+                _graphics = new Graphic[] { _indicator, _descText, _bar, _value };
+                _bar = null; _value = null;
 
                 SetActive(true);
-                _canvasGroup.alpha = 1f;
             }
         }
 
@@ -41,44 +43,35 @@ namespace Vurbiri.Colonization.UI
         {
             SetActive(true);
 
-            float alpha = _canvasGroup.alpha;
-            while (alpha < 1)
-            {
-                _canvasGroup.alpha = alpha += Time.unscaledDeltaTime * _smoothSpeed;
-                yield return null;
-            }
-            _canvasGroup.alpha = 1f;
+            _background.CrossFadeAlpha(1f, _smooth.Time, true);
+            yield return _smooth.Restart();
+
             CrossFadeAlpha(1f);
         }
 
         public IEnumerator SmoothOff()
         {
-            _canvasGroup.blocksRaycasts = false;
+            _background.raycastTarget = false;
             CrossFadeAlpha(0f);
 
-            float alpha = _canvasGroup.alpha;
-            while (alpha > 0f)
-            {
-                _canvasGroup.alpha = alpha -= Time.unscaledDeltaTime * _smoothSpeed;
-                yield return null;
-            }
+            _background.CrossFadeAlpha(0f, _smooth.Time, true);
+            yield return _smooth.Restart();
 
-            _canvasGroup.alpha = 0f;
             gameObject.SetActive(false);
         }
 
+        [Impl(256)]
         private void SetActive(bool active)
         {
-            _canvasGroup.blocksRaycasts = active;
+            _background.raycastTarget = active;
             gameObject.SetActive(active);
         }
 
+        [Impl(256)]
         private void CrossFadeAlpha(float alpha)
         {
-            for(int i = _graphics.Length - 1; i >= 0; i--)
-            {
+            for(int i = _graphics.Length - 1; i >= 0; --i)
                 _graphics[i].CrossFadeAlpha(alpha, 0.1f, true);
-            }
         }
 
         private IEnumerator IndicatorTurn_Cn()
@@ -121,11 +114,11 @@ namespace Vurbiri.Colonization.UI
         {
             base.OnValidate();
 
-            this.SetComponent(ref _canvasGroup);
-
-            this.SetChildren(ref _descText);
-            this.SetChildren(ref _fillBar, "Value");
+            this.SetChildren(ref _background, "Background");
             this.SetChildren(ref _indicator, "Indicator");
+            this.SetChildren(ref _descText);
+            this.SetChildren(ref _bar, "Bar");
+            this.SetChildren(ref _value, "Value");
         }
 #endif
     }

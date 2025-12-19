@@ -32,7 +32,7 @@ namespace Vurbiri.Colonization.EntryPoint
             Localization.Instance.SetFiles(_localizationFiles, true);
 
             _contentInit.CreateObjectsAndFillingContainer(content);
-                        
+
             loading.Add(_islandCreator.Init(out content.hexagons, out content.crossroads));
             loading.Add(new CreatePlayers(content, _playerSettings));
             loading.Add(_initUI);

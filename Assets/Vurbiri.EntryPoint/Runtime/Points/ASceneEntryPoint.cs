@@ -1,5 +1,4 @@
 using UnityEngine;
-using Vurbiri.Reactive;
 
 namespace Vurbiri.EntryPoint
 {
@@ -28,7 +27,9 @@ namespace Vurbiri.EntryPoint
         private void OnDestroy()
         {
             if (s_instance == this)
+            {
                 s_instance = null;
+            }
         }
     }
 }

@@ -36,19 +36,21 @@ namespace Vurbiri.International.Editor
 
         public static (Rect, Rect, Rect) CalkPosition(Rect position)
         {
+            const float s_space = 2f;
+
             float offset = indentLevel * 15f;
             float fieldWidth = position.width - EditorGUIUtility.labelWidth;
             float idSize = fieldWidth * 0.31f;
-            float keySize = fieldWidth - idSize - 2f;
+            float keySize = fieldWidth - idSize - s_space * 2f;
 
             Rect labelRect = position, idRect = position, keyRect = position;
 
-            labelRect.width = EditorGUIUtility.labelWidth - offset + 2f;
+            labelRect.width = EditorGUIUtility.labelWidth - offset + s_space;
             idRect.width = idSize + offset;
             keyRect.width = keySize + offset;
 
             idRect.x += labelRect.width;
-            keyRect.x = idRect.x + idSize + 2f;
+            keyRect.x = idRect.x + idSize + s_space;
 
             return (labelRect, idRect, keyRect);
         }

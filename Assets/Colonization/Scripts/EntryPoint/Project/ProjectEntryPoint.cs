@@ -3,17 +3,19 @@ using Vurbiri.International;
 
 namespace Vurbiri.Colonization.EntryPoint
 {
-    sealed public class ProjectEntryPoint : AProjectEntryPoint
+	sealed public class ProjectEntryPoint : AProjectEntryPoint
 	{
-        protected override string LoadingDesc => Localization.Instance.GetText(LangFiles.Main, "Loading");
-
-        private void Start()
+		[UnityEngine.SerializeField] private FileIdAndKey _loadingDesc;
+		
+		private void Start()
 		{
-            var init = GetComponent<ProjectInitialization>();
-            var content = new ProjectContent();
+			var init = GetComponent<ProjectInitialization>();
+			var content = new ProjectContent();
 
-            Init(new ProjectContainer(content), init.Screen);
-            init.Init(content, _loading, this);
-        }
+			Init(new ProjectContainer(content), init.Screen);
+			init.Init(content, _loading, this);
+		}
+
+		protected override string LoadingDesc() => Localization.Instance.GetText(_loadingDesc);
 	}
 }

@@ -87,7 +87,7 @@ namespace Vurbiri.Colonization
             public readonly int CompareTo(Score other) => other.score - score;
         }
         // ************************************************
-        [System.Serializable]
+        [Serializable]
 		private class Caption
 		{
 			[SerializeField] private FileIdAndKey _getText;
@@ -103,7 +103,7 @@ namespace Vurbiri.Colonization
             }
 		}
         // ************************************************
-        [System.Serializable]
+        [Serializable]
         private class Place
         {
             public TextMeshProUGUI player;

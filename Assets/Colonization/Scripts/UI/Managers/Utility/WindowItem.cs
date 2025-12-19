@@ -22,17 +22,16 @@ namespace Vurbiri.Colonization
         [Impl(256)]
         public void Init(Action<Switcher> onOpenWindow, Action<Switcher> onCloseWindow, ref AVButton button)
         {
-            var switcher = _window.Init().Setup(onOpenWindow, onCloseWindow);
-            
             button = _button;
+            var switcher = _window.Init().Setup(onOpenWindow, onCloseWindow);
             button.AddListener(switcher.Switch);
         }
 
 #if UNITY_EDITOR
-        public void OnValidate(string window, string button)
+        public void OnValidate(string name)
         {
-            EUtility.SetObject(ref _window, window);
-            EUtility.SetObject(ref _button, button);
+            EUtility.SetObject(ref _window, name.Concat("Window"));
+            EUtility.SetObject(ref _button, name.Concat("Button"));
         }
 #endif
     }

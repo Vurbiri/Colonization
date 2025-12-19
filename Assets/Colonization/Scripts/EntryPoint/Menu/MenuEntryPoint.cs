@@ -13,11 +13,11 @@ namespace Vurbiri.Colonization.EntryPoint
         public override void Enter(Loading loading, Transition transition)
         {
             transition.Setup(new MenuContainer(new()), _nextScene);
-            print("[MainMenu] Enter");
+            print("[MainMenuPoint] Enter");
 
             Localization.Instance.SetFiles(_localizationFiles, true);
 
-            loading.Add(Exit_Cn());
+            //loading.Add(Exit_Cn());
         }
 
         private IEnumerator Exit_Cn()

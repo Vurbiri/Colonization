@@ -7,12 +7,13 @@ namespace Vurbiri.EntryPoint
     {
         protected static AProjectEntryPoint s_instance;
 
-        [SerializeField] private LoadScene _emptyScene;
+        [SerializeField] private LoadEmptyScene _emptyScene;
 
+        private readonly LoadScene _loadScene;
         private IDisposable _container;
         protected Loading _loading;
 
-        protected abstract string LoadingDesc { get; }
+        public AProjectEntryPoint() => _loadScene = new(LoadingDesc);
 
         private void Awake()
         {
@@ -27,6 +28,8 @@ namespace Vurbiri.EntryPoint
             }
         }
 
+        protected abstract string LoadingDesc();
+
         protected void Init(IDisposable container, ILoadingScreen screen, IEnterParam enterParam = null)
         {
             _container = container;
@@ -37,7 +40,7 @@ namespace Vurbiri.EntryPoint
 
         private void LoadScene(int nextScene)
         {
-            _loading.Add(_emptyScene.Load(), new LoadSceneStep(nextScene, LoadingDesc));
+            _loading.Add(_emptyScene, _loadScene.Load(nextScene));
         }
 
         private void EnterScene(ASceneEntryPoint sceneEntryPoint)
@@ -49,6 +52,7 @@ namespace Vurbiri.EntryPoint
         {
             if (s_instance == this)
             {
+                _loading.Dispose();
                 _container.Dispose();
                 s_instance = null;
             }

@@ -26,7 +26,7 @@ namespace Vurbiri.Colonization.UI
         protected abstract void SetTextAndCost(Localization localization);
         protected abstract void SetText(Localization localization);
 
-        public void Dispose()
+        private void OnDestroy()
         {
             _subscription.Dispose();
         }

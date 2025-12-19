@@ -109,18 +109,15 @@ namespace Vurbiri.Colonization.UI
         #endregion
 
 #if UNITY_EDITOR
-
-        
-
         public void OnValidate()
         {
             if (Application.isPlaying) return;
 
             EUtility.SetArray(ref _windows, Window.Count);
-            _windows[Window.Perks]?.OnValidate("PerksWindow", "PerksButton");
-            _windows[Window.Exchange]?.OnValidate("ExchangeWindow", "ExchangeButton");
-            _windows[Window.Settings]?.OnValidate("SettingsWindow", "SettingsButton");
-            _windows[Window.Help]?.OnValidate("HelpWindow", "HelpButton");
+            _windows[Window.Perks]?.OnValidate("Perks");
+            _windows[Window.Exchange]?.OnValidate("Exchange");
+            _windows[Window.Settings]?.OnValidate("Settings");
+            _windows[Window.Help]?.OnValidate("Help");
 
             EUtility.SetObject(ref _giftWindow);
             EUtility.SetObjects(ref _giftButtons);

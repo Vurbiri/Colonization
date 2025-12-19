@@ -10,7 +10,7 @@ using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.UI
 {
-	sealed public class ArtefactPanel : AHintElement, IDisposable
+	sealed public class ArtefactPanel : AHintElement
     {
         private const string NAME = "{0,-13}";
 
@@ -78,11 +78,6 @@ namespace Vurbiri.Colonization.UI
             _hintText = stringBuilder.ToString();
         }
 
-        public void Dispose()
-        {
-            _subscription?.Dispose();
-        }
-
         private void ShowProfit(TextMeshProUGUI tmp, int profit)
         {
             if(profit != 0)
@@ -113,6 +108,8 @@ namespace Vurbiri.Colonization.UI
             }
             renderer.SetAlpha(0f);
         }
+
+        private void OnDestroy() => _subscription?.Dispose();
 
         #region Nested structs Level, Ability
         //*************************************************

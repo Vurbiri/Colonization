@@ -2,21 +2,16 @@ namespace Vurbiri.EntryPoint
 {
     sealed internal class PostLoadSceneStep : AEnumeratorStep
     {
-        private bool _run;
+        private int _counter;
 
         public PostLoadSceneStep() : base("...") { }
 
-        public void Stop() => _run = false;
         public ALoadingStep Restart() 
         {
-            _run = true;
+            _counter = 5;
             return this;
         }
 
-        public override bool MoveNext()
-        {
-            UnityEngine.Debug.Log("PostLoadSceneStep");
-            return _run;
-        }
+        public override bool MoveNext() => --_counter > 0;
     }
 }

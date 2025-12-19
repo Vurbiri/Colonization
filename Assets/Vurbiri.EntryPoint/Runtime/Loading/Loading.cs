@@ -2,99 +2,102 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.EntryPoint
 {
-    public class Loading : IDisposable
-    {
-        private static Loading s_instance;
+	public class Loading : IDisposable
+	{
+		private static Loading s_instance;
 
-        private readonly Queue<ILoadingStep> _steps = new();
-        private readonly MonoBehaviour _mono;
-        private readonly ILoadingScreen _screen;
+		private readonly Queue<ILoadingStep> _steps = new();
+		private readonly MonoBehaviour _mono;
+		private readonly ILoadingScreen _screen;
 
-        private Coroutine _runningCoroutine = null;
-        private ILoadingStep _currentStep = null;
-        private float _currentWeight, _maxWeight;
+		private Coroutine _runningCoroutine = null;
+		private ILoadingStep _currentStep = null;
+		private float _currentWeight, _maxWeight;
 
-        public static Loading Create(ILoadingScreen screen, MonoBehaviour mono) => s_instance ??= new(screen, mono);
-        private Loading(ILoadingScreen screen, MonoBehaviour mono)
-        {
-            _screen = screen;
-            _mono = mono;
-        }
+		public int Count { [Impl(256)] get => _steps.Count; }
 
-        public void Add(IEnumerator coroutine) => Add(new CoroutineStep(coroutine));
-        public void Add(IEnumerator coroutine, string desc) => Add(new CoroutineStep(coroutine, desc));
-        public void Add(IEnumerator coroutine, string desc, float weight) => Add(new CoroutineStep(coroutine, desc, weight));
+		[Impl(256)] public static Loading Create(ILoadingScreen screen, MonoBehaviour mono) => s_instance ??= new(screen, mono);
+		private Loading(ILoadingScreen screen, MonoBehaviour mono)
+		{
+			_screen = screen;
+			_mono = mono;
+		}
 
-        public void Add(ILoadingStep step)
-        {
-            _steps.Enqueue(step); 
-            Run(step.Weight);
-        }
-        public void Add(ILoadingStep stepA, ILoadingStep stepB)
-        {
-            _steps.Enqueue(stepA); _steps.Enqueue(stepB);
-            Run(stepA.Weight + stepB.Weight);
-        }
-        public void Add(params ILoadingStep[] steps)
-        {
-            float weight = 0f;
-            for (int i = 0; i < steps.Length; i++)
-            {
-                _steps.Enqueue(steps[i]);
-                weight += steps[i].Weight;
-            }
-            Run(weight);
-        }
+		[Impl(256)] public void Add(IEnumerator coroutine) => Add(new CoroutineStep(coroutine));
+		[Impl(256)] public void Add(IEnumerator coroutine, string desc) => Add(new CoroutineStep(coroutine, desc));
+		[Impl(256)] public void Add(IEnumerator coroutine, string desc, float weight) => Add(new CoroutineStep(coroutine, desc, weight));
 
-        private void Run(float weight)
-        {
-            if (_currentStep == null)
-            {
-                if (_runningCoroutine != null)
-                    _mono.StopCoroutine(_runningCoroutine);
+		[Impl(256)] public void Add(ILoadingStep step)
+		{
+			_steps.Enqueue(step); 
+			Run(step.Weight);
+		}
+		[Impl(256)] public void Add(ILoadingStep stepA, ILoadingStep stepB)
+		{
+			_steps.Enqueue(stepA); _steps.Enqueue(stepB);
+			Run(stepA.Weight + stepB.Weight);
+		}
+		[Impl(256)] public void Add(params ILoadingStep[] steps)
+		{
+			float weight = 0f;
+			for (int i = 0; i < steps.Length; i++)
+			{
+				_steps.Enqueue(steps[i]);
+				weight += steps[i].Weight;
+			}
+			Run(weight);
+		}
 
-                _screen.Progress = _currentWeight = _maxWeight = 0f;
-                _currentStep = _steps.Peek();
-                _runningCoroutine = _mono.StartCoroutine(Run_Cn());
-            }
+		private void Run(float weight)
+		{
+			if (_currentStep == null)
+			{
+				if (_runningCoroutine != null)
+					_mono.StopCoroutine(_runningCoroutine);
 
-            _maxWeight += weight;
-        }
+				_screen.Progress = _currentWeight = _maxWeight = 0f;
+				_currentStep = _steps.Peek();
+				_runningCoroutine = _mono.StartCoroutine(Run_Cn());
+			}
 
-        private IEnumerator Run_Cn()
-        {
-            yield return _screen.SmoothOn();
+			_maxWeight += weight;
+		}
 
-            while (_steps.Count > 0)
-            {
-                _currentStep = _steps.Dequeue();
-                _screen.Description = _currentStep.Description;
+		private IEnumerator Run_Cn()
+		{
+			yield return _screen.SmoothOn();
 
-                yield return _currentStep.GetEnumerator();
+			while (_steps.Count > 0)
+			{
+				_currentStep = _steps.Dequeue();
+				_screen.Description = _currentStep.Description;
 
-                _currentWeight += _currentStep.Weight;
-                _screen.Progress = _currentWeight / _maxWeight;
-            }
+				yield return _currentStep.GetEnumerator();
 
-            _currentStep = null;
+				_currentWeight += _currentStep.Weight;
+				_screen.Progress = _currentWeight / _maxWeight;
+			}
 
-            yield return _screen.SmoothOff();
+			_currentStep = null;
 
-            _runningCoroutine = null;
-        }
+			yield return _screen.SmoothOff();
 
-        public void Dispose()
-        {
-            if (s_instance == this)
-            {
-                if (_runningCoroutine != null)
-                    _mono.StopCoroutine(_runningCoroutine);
+			_runningCoroutine = null;
+		}
 
-                s_instance = null;
-            }
-        }
-    }
+		public void Dispose()
+		{
+			if (s_instance == this)
+			{
+				if (_runningCoroutine != null)
+					_mono.StopCoroutine(_runningCoroutine);
+
+				s_instance = null;
+			}
+		}
+	}
 }

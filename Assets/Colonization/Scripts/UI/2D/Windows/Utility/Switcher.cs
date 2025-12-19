@@ -55,7 +55,7 @@ namespace Vurbiri.Colonization.UI
                 CloseInternal();
         }
 
-        public void SilentOpen()
+        [Impl(256)] public void SilentOpen()
         {
             if (!_isOpen)
             {
@@ -63,7 +63,7 @@ namespace Vurbiri.Colonization.UI
                 _parent.StartCoroutine(Show());
             }
         }
-        public void SilentClose()
+        [Impl(256)] public void SilentClose()
         {
             if (_isOpen)
             {
