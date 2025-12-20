@@ -36,7 +36,7 @@ namespace Vurbiri.Colonization.UI
             _durationTMP.sortingOrder = orderLevel;
 
             _sprite.sprite = GameContainer.UI.SpritesOfAbilities[effect.TargetAbility];
-            _sprite.color = GameContainer.UI.Colors.GetTextColor(effect.IsPositive);
+            _sprite.color = GameContainer.UI.Colors.GetColor(effect.IsPositive);
 
             Index = effect.Index;
             Duration = effect.Duration;

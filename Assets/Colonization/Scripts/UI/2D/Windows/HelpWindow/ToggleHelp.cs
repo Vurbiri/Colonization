@@ -39,6 +39,12 @@ namespace Vurbiri.Colonization
             so.FindProperty(nameof(_group)).objectReferenceValue = GetComponentInParent<HelpToggleGroup>();
             so.ApplyModifiedProperties();
         }
+
+        public void SetColors_Ed(SceneColorsEd colors)
+        {
+            GetComponent<UnityEngine.UI.Image>().SetColorField(colors.panelBack.Brightness(0.33f));
+            GetComponentInChildren<TMPro.TMP_Text>().SetColorField(colors.panelText);
+        }
 #endif
     }
 }

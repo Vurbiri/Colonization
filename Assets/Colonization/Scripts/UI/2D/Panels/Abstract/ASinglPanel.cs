@@ -8,10 +8,10 @@ namespace Vurbiri.Colonization.UI
         [SerializeField] protected TWidget _widget;
 
 #if UNITY_EDITOR
-        public virtual RectTransform UpdateVisuals_Editor(float pixelsPerUnit, Vector2 padding, ProjectColors colors)
+        public virtual RectTransform UpdateVisuals_Editor(float pixelsPerUnit, Vector2 padding, SceneColorsEd colors)
         {
             Image image = GetComponent<Image>();
-            image.color = colors.PanelBack;
+            image.color = colors.panelBack;
             image.pixelsPerUnitMultiplier = pixelsPerUnit;
 
             var thisRectTransform = GetComponent<RectTransform>();

@@ -148,10 +148,11 @@ namespace Vurbiri.UI
 #if UNITY_EDITOR
         public virtual void UpdateVisuals_Ed(Color backColor, Color textColor)
         {
-            SetColors(backColor, textColor);
+            _backImage.SetColorField(backColor);
+            _hintTMP.SetColorField(textColor);
 
-            _hintTMP.rectTransform.sizeDelta = _maxSize;
             _backImage.rectTransform.sizeDelta = _maxSize + _padding;
+            _hintTMP.rectTransform.sizeDelta = _maxSize;
         }
 
         protected virtual void OnValidate()

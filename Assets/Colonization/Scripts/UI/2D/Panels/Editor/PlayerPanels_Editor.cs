@@ -7,6 +7,8 @@ namespace Vurbiri.Colonization.UI
     public partial class PlayerPanels
     {
         [StartEditor]
+        [SerializeField, Range(0f, 1f)] private float _panelAlpha = 0.96f;
+        [Space]
         [SerializeField] private Vector2 _paddingIn = new(6f, 8f);
         [SerializeField, Range(1f, 10f)] private float _spaceIn = 4f;
         [Header("Between")]
@@ -14,17 +16,20 @@ namespace Vurbiri.Colonization.UI
         [SerializeField, Range(0.1f, 1f)] private float _advRatioSpaceOut = 0.6f;
         [EndEditor] public bool endEditor;
 
-        public void UpdateVisuals_Ed(float pixelsPerUnit, ProjectColors colors, Vector3 position)
+        public void UpdateVisuals_Ed(float pixelsPerUnit, ProjectColors colors, SceneColorsEd sceneColors, Vector3 position)
         {
-            RectTransform rectWarriors   = _warriors.UpdateVisuals_Editor(pixelsPerUnit, _paddingIn, colors);
-            RectTransform rectColonies   = _colonies.UpdateVisuals_Editor(pixelsPerUnit, _paddingIn, colors);
-            RectTransform rectPorts      = _ports.UpdateVisuals_Editor(pixelsPerUnit, _paddingIn, colors);
-            RectTransform rectShrines    = _shrines.UpdateVisuals_Editor(pixelsPerUnit, _paddingIn, colors);
-            RectTransform rectRoads      = _roads.UpdateVisuals_Editor(pixelsPerUnit, _paddingIn, colors);
-            RectTransform rectCurrencies = _currencies.UpdateVisuals_Editor(pixelsPerUnit, _paddingIn, _spaceIn, colors);
-            RectTransform rectBlood      = _blood.UpdateVisuals_Editor(pixelsPerUnit, _paddingIn, colors);
-            RectTransform rectScore      = _score.UpdateVisuals_Editor(pixelsPerUnit, _paddingIn, colors);
-            RectTransform rectArtefact   = _artefactPanel.UpdateVisuals_Editor(rectScore.rect.height, colors);
+            var scene = sceneColors.Clone();
+            scene.panelBack = scene.panelBack.SetAlpha(_panelAlpha);
+
+            RectTransform rectWarriors   = _warriors.UpdateVisuals_Editor(pixelsPerUnit, _paddingIn, scene);
+            RectTransform rectColonies   = _colonies.UpdateVisuals_Editor(pixelsPerUnit, _paddingIn, scene);
+            RectTransform rectPorts      = _ports.UpdateVisuals_Editor(pixelsPerUnit, _paddingIn, scene);
+            RectTransform rectShrines    = _shrines.UpdateVisuals_Editor(pixelsPerUnit, _paddingIn, scene);
+            RectTransform rectRoads      = _roads.UpdateVisuals_Editor(pixelsPerUnit, _paddingIn, scene);
+            RectTransform rectCurrencies = _currencies.UpdateVisuals_Editor(pixelsPerUnit, _paddingIn, _spaceIn, scene);
+            RectTransform rectBlood      = _blood.UpdateVisuals_Editor(pixelsPerUnit, _paddingIn, scene);
+            RectTransform rectScore      = _score.UpdateVisuals_Editor(pixelsPerUnit, _paddingIn, scene);
+            RectTransform rectArtefact   = _artefactPanel.UpdateVisuals_Editor(rectScore.rect.height, colors, scene);
 
             //======= Positions
             var advPadding = _spaceOut * _advRatioSpaceOut;

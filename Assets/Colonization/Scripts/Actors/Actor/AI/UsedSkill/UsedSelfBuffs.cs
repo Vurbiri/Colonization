@@ -23,7 +23,7 @@ namespace Vurbiri.Colonization
             public int skill;
             public MinMaxHP currentHP;
             public Chance chance;
-#pragma warning restore
+#pragma warning restore 649
 
             public IEnumerator TryUse(Actor target)
             {

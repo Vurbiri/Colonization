@@ -54,10 +54,10 @@ namespace Vurbiri.Colonization.UI
         }
 
 #if UNITY_EDITOR
-        public override RectTransform UpdateVisuals_Editor(float pixelsPerUnit, Vector2 padding, ProjectColors colors)
+        public override RectTransform UpdateVisuals_Editor(float pixelsPerUnit, Vector2 padding, SceneColorsEd colors)
         {
-            _toggle.CheckmarkOn.color = colors.PanelBack;
-            _toggle.CheckmarkOff.color = colors.PanelBack;
+            _toggle.CheckmarkOn.color = colors.panelBack;
+            _toggle.CheckmarkOff.color = colors.panelBack;
 
             RectTransform thisRectTransform = base.UpdateVisuals_Editor(pixelsPerUnit, padding, colors);
 

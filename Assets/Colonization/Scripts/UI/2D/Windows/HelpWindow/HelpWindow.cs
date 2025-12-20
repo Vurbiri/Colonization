@@ -1,6 +1,8 @@
-using Vurbiri.Colonization.UI;
+#if UNITY_EDITOR
+using UnityEngine.UI;
+#endif
 
-namespace Vurbiri.Colonization
+namespace Vurbiri.Colonization.UI
 {
     sealed public class HelpWindow : ASwitchableWindow
     {
@@ -15,17 +17,18 @@ namespace Vurbiri.Colonization
         }
 
 #if UNITY_EDITOR
-        public override void UpdateVisuals_Ed(float pixelsPerUnit, ProjectColors colors)
+        public void UpdateVisuals_Ed(float pixelsPerUnit, SceneColorsEd colors)
         {
-            var color = colors.PanelBack.SetAlpha(1f);
+            GetComponent<Image>().SetImageFields(colors.panelBack, pixelsPerUnit);
+            this.GetComponentInChildren<Image>("TogglesBack").SetImageFields(colors.panelBack, pixelsPerUnit);
 
-            var image = GetComponent<UnityEngine.UI.Image>();
-            image.color = color;
-            image.pixelsPerUnitMultiplier = pixelsPerUnit;
+            GetComponentInChildren<SimpleButton>().SetColor_Ed(colors.panelBack);
 
-            image = this.GetComponentInChildren<UnityEngine.UI.Image>("TogglesBack");
-            image.color = color;
-            image.pixelsPerUnitMultiplier = pixelsPerUnit;
+            foreach (var image in GetComponentInChildren<Scrollbar>().GetComponentsInChildren<Image>())
+                image.SetColorField(colors.elements);
+
+            foreach (var toggle in GetComponentsInChildren<ToggleHelp>())
+                toggle.SetColors_Ed(colors);
         }
 #endif
     }

@@ -11,8 +11,6 @@ namespace Vurbiri.Colonization
         [SerializeField] private IdArray<MixerId, VSliderFloat> _sounds;
         [SerializeField] private VSliderInt _quality;
         [SerializeField] private LanguageSwitch _language;
-        [Space]
-        [SerializeField] private SimpleButton _closeButton;
 
         private bool _isApply;
         protected bool _isSaveSettings = true;
@@ -31,8 +29,7 @@ namespace Vurbiri.Colonization
             _switcher.onClose.Add(OnClose);
             _switcher.onOpen.Add(OnOpen);
 
-            _closeButton.AddListener(Cancel);
-            _closeButton = null;
+            GetComponentInChildren<SimpleButton>().AddListener(Cancel);
 
             return _switcher;
         }
@@ -95,8 +92,29 @@ namespace Vurbiri.Colonization
                 _sounds[i].MinValue = AudioMixer<MixerId>.MIN_VALUE;
                 _sounds[i].MaxValue = AudioMixer<MixerId>.MAX_VALUE;
             }
+        }
 
-            this.SetChildren(ref _closeButton);
+        public void UpdateVisuals_Ed(float pixelsPerUnit, SceneColorsEd colors)
+        {
+            GetComponent<UnityEngine.UI.Image>().SetImageFields(colors.panelBack, pixelsPerUnit);
+
+            GetComponentInChildren<SimpleButton>().SetColor_Ed(colors.panelBack);
+
+            SetSlider(_quality, colors);
+            foreach (var slider in _sounds)
+                SetSlider(slider, colors);
+
+            foreach (var item in _language.GetComponentsInChildren<LanguageItem>())
+                item.SetColors_Ed(colors);
+        }
+
+        private void SetSlider(Component slider, SceneColorsEd colors)
+        {
+            foreach (var image in slider.GetComponentsInChildren<UnityEngine.UI.Image>())
+                image.SetColorField(colors.elements);
+
+            slider.GetComponentInChildren<TMPro.TMP_Text>().SetColorField(colors.panelText);
+
         }
 #endif
     }

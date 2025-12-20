@@ -24,14 +24,10 @@ namespace Vurbiri.Colonization
                 _switcher.OnValidate(this);
         }
 
-        public virtual void UpdateVisuals_Ed(float pixelsPerUnit, ProjectColors colors)
-        {
-            var color = colors.PanelBack.SetAlpha(1f);
-            var mainImage = GetComponent<UnityEngine.UI.Image>();
-
-            mainImage.color = color;
-            mainImage.pixelsPerUnitMultiplier = pixelsPerUnit;
-        }
+        //public virtual void UpdateVisuals_Ed(float pixelsPerUnit, ProjectColors project, SceneColorsEd scene)
+        //{
+        //    GetComponent<UnityEngine.UI.Image>().SetImageFields(scene.panelBack, pixelsPerUnit);
+        //}
 #endif
     }
 }

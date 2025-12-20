@@ -15,5 +15,20 @@ namespace Vurbiri.Colonization.UI
             Resources.UnloadAsset(self);
             return self._colors.Init();
         }
+
+#if UNITY_EDITOR
+        [StartEditor, Space]
+        [MinMax(1f, 2f)] public RefFloat windowsPixelsPerUnit = 1.6f;
+        [Space]
+        public SceneColorsEd menu;
+        [Space]
+        public SceneColorsEd game;
+        [EndEditor] public bool endEditor;
+
+        private void OnValidate()
+        {
+            _colors.SetHintTextTag(game.hintText);
+        }
+#endif
     }
 }

@@ -31,9 +31,9 @@ namespace Vurbiri.Colonization.UI
 
 #if UNITY_EDITOR
         public Vector2 Size => ((RectTransform)transform).rect.size;
-        public void Init_Editor(ProjectColors colors)
+        public void Init_Editor(SceneColorsEd colors)
         {
-            _valueTMP.color = colors.PanelText;
+            _valueTMP.color = colors.panelText;
         }
 
         protected virtual void OnValidate()

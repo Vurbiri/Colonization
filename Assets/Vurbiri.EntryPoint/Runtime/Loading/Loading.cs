@@ -19,8 +19,9 @@ namespace Vurbiri.EntryPoint
 		private float _currentWeight, _maxWeight;
 
 		public int Count { [Impl(256)] get => _steps.Count; }
+        public bool Running { [Impl(256)] get => _currentStep != null; }
 
-		[Impl(256)] public static Loading Create(ILoadingScreen screen, MonoBehaviour mono) => s_instance ??= new(screen, mono);
+        [Impl(256)] public static Loading Create(ILoadingScreen screen, MonoBehaviour mono) => s_instance ??= new(screen, mono);
 		private Loading(ILoadingScreen screen, MonoBehaviour mono)
 		{
 			_screen = screen;

@@ -120,14 +120,12 @@ namespace Vurbiri.Colonization.UI
             _resultImage.color = _mainImage.color.Brightness(_panelsBrightness);
         }
 
-        public override void UpdateVisuals_Ed(float pixelsPerUnit, ProjectColors colors)
+        public void UpdateVisuals_Ed(float pixelsPerUnit, SceneColorsEd colors)
         {
-            Color color = colors.PanelBack.SetAlpha(1f);
-
-            _mainImage.color = color;
+            _mainImage.color = colors.panelBack;
             _mainImage.pixelsPerUnitMultiplier = pixelsPerUnit;
 
-            _resultImage.color = color.Brightness(_panelsBrightness);
+            _resultImage.color = colors.panelBack.Brightness(_panelsBrightness);
         }
 #endif
     }

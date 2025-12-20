@@ -48,7 +48,7 @@ namespace Vurbiri.Colonization.UI
         public void ForceRun(int delta)
         {
             _thisGameObject.SetActive(true);
-            _queue.Enqueue(Run_Cn(GameContainer.UI.Colors.GetTextColor(delta > 0), delta.ToString("+#;-#;0")));
+            _queue.Enqueue(Run_Cn(GameContainer.UI.Colors.GetColor(delta > 0), delta.ToString("+#;-#;0")));
         }
 
         private IEnumerator Run_Cn(Color textColor, string text)

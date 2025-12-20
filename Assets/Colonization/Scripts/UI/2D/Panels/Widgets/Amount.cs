@@ -32,7 +32,7 @@ namespace Vurbiri.Colonization.UI
             else 
             {
                 var colors = GameContainer.UI.Colors;
-                _valueTMP.text = string.Format(AMOUNT, colors.PanelTextTag, amount, max);
+                _valueTMP.text = string.Format(AMOUNT, colors.TextDefaultTag, amount, max);
                 _hintText = string.Format(_textNormalHint, colors.HintTextTag, amount, max);
             }
         }
@@ -51,9 +51,9 @@ namespace Vurbiri.Colonization.UI
         }
 
 #if UNITY_EDITOR
-        public void Init_Editor(Vector3 position, ProjectColors settings)
+        public void Init_Editor(Vector3 position, SceneColorsEd colors)
         {
-            Init_Editor(settings);
+            Init_Editor(colors);
             transform.localPosition = position;
         }
 #endif

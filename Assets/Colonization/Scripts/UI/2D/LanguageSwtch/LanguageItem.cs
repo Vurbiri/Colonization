@@ -30,5 +30,13 @@ namespace Vurbiri.Colonization.UI
 #endif
             return _isOn;
         }
+
+#if UNITY_EDITOR
+        public void SetColors_Ed(SceneColorsEd colors)
+        {
+            this.GetComponentInChildren<Image>("Button").SetColorField(colors.panelBack);
+            _name.SetColorField(colors.panelText);
+        }
+#endif
     }
 }

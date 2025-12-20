@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Vurbiri.Colonization.UI;
@@ -34,7 +35,7 @@ namespace Vurbiri.Colonization.EntryPoint
             AsyncOperation operation = SceneManager.LoadSceneAsync(_startScene);
             operation.allowSceneActivation = false;
 
-            Log.Info("[EntryPoint] Start Init Project");
+            Log.Info("[ProjectInitialization] Start");
 
             Localization.Instance.SetFiles(_localizationFiles, false);
 
@@ -52,15 +53,13 @@ namespace Vurbiri.Colonization.EntryPoint
             Destroy(this);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static void SetColors(ProjectColors colors)
         {
-            MessageBox.SetColors(colors.PanelBack.SetAlpha(1f), colors.TextDefault);
-
             Banner.Colors[MessageTypeId.Info]    = colors.TextDefault;
             Banner.Colors[MessageTypeId.Warning] = colors.TextWarning;
             Banner.Colors[MessageTypeId.Error]   = colors.TextNegative;
             Banner.Colors[MessageTypeId.Profit]  = colors.TextPositive;
-
         }
 
 #if UNITY_EDITOR

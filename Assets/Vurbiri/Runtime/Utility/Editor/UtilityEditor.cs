@@ -4,8 +4,10 @@ namespace Vurbiri
 {
     using System.Collections.Generic;
     using System.Linq;
+    using TMPro;
     using UnityEditor;
     using UnityEngine;
+    using UnityEngine.UI;
     using Vurbiri.Collections;
 
     public static class EUtility
@@ -135,6 +137,22 @@ namespace Vurbiri
                 LogErrorFind<T>("component", null);
         }
 
+        // ********************************************
+        public static void SetColorField(this Graphic self, Color color) => SetColorField<Graphic>(self, color, "m_Color");
+        public static void SetColorField(this TMP_Text self, Color color) => SetColorField<TMP_Text>(self, color, "m_fontColor");
+        public static void SetColorField<T>(T self, Color color, string field) where T : Object
+        {
+            SerializedObject so = new(self);
+            so.FindProperty(field).colorValue = color;
+            so.ApplyModifiedProperties();
+        }
+        public static void SetImageFields(this Image self, Color color, float pixelsPerUnit)
+        {
+            SerializedObject so = new(self);
+            so.FindProperty("m_Color").colorValue = color;
+            so.FindProperty("m_PixelsPerUnitMultiplier").floatValue = pixelsPerUnit;
+            so.ApplyModifiedProperties();
+        }
         // ********************************************
 
         public static T GetComponentInChildren<T>(this Component self, string name) where T : Component

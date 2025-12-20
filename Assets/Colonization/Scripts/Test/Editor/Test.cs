@@ -2,6 +2,7 @@ using System;
 using System.Diagnostics;
 using System.Threading;
 using UnityEngine;
+using Vurbiri.UI;
 
 namespace Vurbiri.Colonization
 {
@@ -12,10 +13,8 @@ namespace Vurbiri.Colonization
 
 		public void Testing()
 		{
- 
+			MessageBox.Open("Test", MBButton.OkCancel);
 		}
-
-		
 
 		public void MathITesting()
 		{

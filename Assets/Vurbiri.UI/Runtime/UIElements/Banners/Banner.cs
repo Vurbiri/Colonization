@@ -190,7 +190,7 @@ namespace Vurbiri.UI
             }
 #endif
         }
-#pragma warning restore
+#pragma warning restore 649
         #endregion
 
 #if UNITY_EDITOR

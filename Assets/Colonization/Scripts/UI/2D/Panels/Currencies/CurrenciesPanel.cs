@@ -19,10 +19,10 @@ namespace Vurbiri.Colonization.UI
         }
 
 #if UNITY_EDITOR
-        public RectTransform UpdateVisuals_Editor(float pixelsPerUnit, Vector2 padding, float space, ProjectColors colors)
+        public RectTransform UpdateVisuals_Editor(float pixelsPerUnit, Vector2 padding, float space, SceneColorsEd colors)
         {
             Image image = GetComponent<Image>();
-            image.color = colors.PanelBack;
+            image.color = colors.panelBack;
             image.pixelsPerUnitMultiplier = pixelsPerUnit;
 
             RectTransform thisRectTransform = (RectTransform)transform;

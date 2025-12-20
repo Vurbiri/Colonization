@@ -22,6 +22,8 @@ namespace Vurbiri.Colonization.EntryPoint
 
         public override void Enter(Loading loading, Transition transition)
         {
+            Log.Info($"[GameEntryPoint] Enter");
+
             GameContent content = new();
 #if TEST_LOAD
             transition.Setup(new GameContainer(content, _isLoad), _nextScene);

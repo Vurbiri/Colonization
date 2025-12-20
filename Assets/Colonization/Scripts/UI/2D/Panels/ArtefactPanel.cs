@@ -149,11 +149,11 @@ namespace Vurbiri.Colonization.UI
             }
 
 #if UNITY_EDITOR
-            public void Init_Editor(Component parent, ProjectColors colors)
+            public void Init_Editor(Component parent, SceneColorsEd colors)
             {
                 _hintKey = "Level";
                 parent.SetChildren(ref _levelTMP, "LevelTMP");
-                _levelTMP.color = colors.TextDark;
+                _levelTMP.color = colors.textDark;
             }
 #endif
         }
@@ -203,7 +203,7 @@ namespace Vurbiri.Colonization.UI
             }
 
 #if UNITY_EDITOR
-            public void Init_Editor(BuffSettings settings, Component parent, ProjectColors colors)
+            public void Init_Editor(BuffSettings settings, Component parent, ProjectColors colors, SceneColorsEd scene)
             {
                 _textFormat = "{0,3:+#;;0}" + (settings.typeModifier == TypeModifierId.Addition ? "\u0019" : "%");
 
@@ -219,7 +219,7 @@ namespace Vurbiri.Colonization.UI
                 if (_valueDeltaTMP == null || _valueDeltaTMP.gameObject.name != name)
                     _valueDeltaTMP = EUtility.GetComponentInChildren<TextMeshProUGUI>(parent, name);
 
-                _valueTMP.color = colors.PanelText;
+                _valueTMP.color = scene.panelText;
                 _valueDeltaTMP.color = colors.TextPositive;
             }
 #endif
@@ -231,17 +231,17 @@ namespace Vurbiri.Colonization.UI
         //[StartEditor]
         [SerializeField, HideInInspector] private BuffsScriptable _settings;
 
-        public RectTransform UpdateVisuals_Editor(float side, ProjectColors colors)
+        public RectTransform UpdateVisuals_Editor(float side, ProjectColors colors, SceneColorsEd scene)
         {
             List<BuffSettings> settings = _settings.Settings;
 
-            GetComponent<Image>().color = colors.PanelBack;
+            GetComponent<Image>().color = scene.panelBack;
 
-            _level.Init_Editor(this, colors);
+            _level.Init_Editor(this, scene);
 
             EUtility.SetArray(ref _abilities, settings.Count);
             for (int i = 0; i < settings.Count; i++)
-                _abilities[i].Init_Editor(settings[i], this, colors);
+                _abilities[i].Init_Editor(settings[i], this, colors, scene);
 
             var thisRectTransform = GetComponent<RectTransform>();
             thisRectTransform.sizeDelta = new(side, side);

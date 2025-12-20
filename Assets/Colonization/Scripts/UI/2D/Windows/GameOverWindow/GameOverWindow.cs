@@ -149,9 +149,9 @@ namespace Vurbiri.Colonization
             this.SetComponent(ref _mainImage);
         }
 
-        public void UpdateVisuals_Ed(float pixelsPerUnit, ProjectColors colors)
+        public void UpdateVisuals_Ed(float pixelsPerUnit, SceneColorsEd colors)
         {
-            Color color = colors.PanelBack.SetAlpha(1f);
+            Color color = colors.panelBack;
 
             _mainImage.color = color;
             _mainImage.pixelsPerUnitMultiplier = pixelsPerUnit;

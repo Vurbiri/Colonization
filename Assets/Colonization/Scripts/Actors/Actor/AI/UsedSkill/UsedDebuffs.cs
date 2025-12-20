@@ -32,7 +32,7 @@ namespace Vurbiri.Colonization
 #pragma warning disable 649
             public int skill;
             public Chance chance;
-#pragma warning restore
+#pragma warning restore 649
 
             [Impl(256)] public readonly bool CanUsed(Actor.Actions action, Actor target) => action.CanUsedSkill(skill) && !action.IsApplied(skill, target);
 

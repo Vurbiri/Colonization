@@ -53,9 +53,9 @@ namespace Vurbiri.Colonization
 			public SkillApplied applied;
 			public MinMaxHP selfHP;
 			public MinMaxHP targetHP;
-#pragma warning restore
+#pragma warning restore 649
 
-			[Impl(256)] public bool CanUsed(Actor user, Actor target)
+            [Impl(256)] public bool CanUsed(Actor user, Actor target)
 			{
 				return user.Action.CanUsedSkill(skill) && applied.IsValid(user, target, skill) && selfHP.IsValid(user) && targetHP.IsValid(target);
 			}

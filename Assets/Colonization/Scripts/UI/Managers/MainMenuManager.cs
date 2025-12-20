@@ -9,8 +9,6 @@ namespace Vurbiri.Colonization
         [SerializeField] private VButton _continue;
         [SerializeField] private WindowItem[] _windows;
 
-        private Switcher _current;
-
         private void Start()
         {
 			var game = ProjectContainer.GameSettings;
@@ -18,22 +16,11 @@ namespace Vurbiri.Colonization
 			if (_continue.interactable = game.IsLoad)
                 _continue.AddListener(Vurbiri.EntryPoint.Transition.Exit);
 
-
-            for(int i = 0; i < Window.Count; ++i)
-                _windows[i].Init(OnOpenWindow, OnCloseWindow);
+            Manager manager = new();
+            for (int i = 0; i < Window.Count; ++i)
+                _windows[i].Init(manager.OnOpenWindow, manager.OnCloseWindow);
 
             Destroy(this);
-        }
-
-        private void OnOpenWindow(Switcher switcher)
-        {
-            _current?.SilentClose();
-            _current = switcher;
-        }
-        private void OnCloseWindow(Switcher switcher)
-        {
-            if (_current == switcher)
-                _current = null;
         }
 
         #region Constants
@@ -47,6 +34,22 @@ namespace Vurbiri.Colonization
         }
         #endregion
 
+        private class Manager
+        {
+            private Switcher _current;
+
+            public void OnOpenWindow(Switcher switcher)
+            {
+                _current?.SilentClose();
+                _current = switcher;
+            }
+            public void OnCloseWindow(Switcher switcher)
+            {
+                if (_current == switcher)
+                    _current = null;
+            }
+        }
+
 #if UNITY_EDITOR
         private void OnValidate()
         {
@@ -57,6 +60,15 @@ namespace Vurbiri.Colonization
             EUtility.SetArray(ref _windows, Window.Count);
             _windows[0]?.OnValidate("Settings");
             //_windows[Window.Exchange]?.OnValidate("ExchangeWindow", "ExchangeButton");
+        }
+
+        public void SetColors_Ed(SceneColorsEd colors)
+        {
+            foreach (var image in GetComponentsInChildren<UnityEngine.UI.Image>())
+                image.SetColorField(colors.menu);
+
+            foreach (var text in GetComponentsInChildren<TMPro.TMP_Text>())
+                text.SetColorField(colors.panelText);
         }
 #endif
     }

@@ -42,6 +42,8 @@ namespace Vurbiri.Colonization.UI
         {
             this.SetComponent(ref _target);
         }
+
+        public void SetColor_Ed(Color color) => _target.SetColorField(color);
 #endif
     }
 }

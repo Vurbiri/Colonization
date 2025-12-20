@@ -21,18 +21,16 @@ namespace Vurbiri.Colonization.UI
 
         private Vector2 PlayerWidgetSize => _playerPrefab.Bounds.size + _widgetSpace;
 
-        public override void UpdateVisuals_Ed(float pixelsPerUnit, ProjectColors colors)
+        public void UpdateVisuals_Ed(float pixelsPerUnit, ProjectColors project, SceneColorsEd scene)
         {
-            Color color = colors.PanelBack.SetAlpha(1f);
-
-            _mainImage.color = color;
+            _mainImage.color = scene.panelBack;
             _mainImage.pixelsPerUnitMultiplier = pixelsPerUnit;
 
-            _closeButton.Color = color;
+            _closeButton.Color = scene.panelBack;
 
-            _colors.zero = colors.TextDefault;
-            _colors.negative = colors.TextNegative;
-            _colors.positive = colors.TextPositive;
+            _colors.zero = project.TextDefault;
+            _colors.negative = project.TextNegative;
+            _colors.positive = project.TextPositive;
         }
 
         public void Setup_Editor()

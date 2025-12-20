@@ -38,7 +38,7 @@ namespace Vurbiri.Colonization
             _mono = mono;
 
             _prevColor = GameContainer.UI.Colors.TextDefault;
-            _profitColor =  GameContainer.UI.Colors.GetTextColor(id != HEX.GATE);
+            _profitColor =  GameContainer.UI.Colors.GetColor(id != HEX.GATE);
 
             StringBuilder sb = new(TAG.TAG_SPRITE_LENGTH * ProfitId.Count);
             for (int i = 0; i < ProfitId.Count; i++)

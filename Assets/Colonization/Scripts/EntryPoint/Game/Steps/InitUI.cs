@@ -3,6 +3,7 @@ using UnityEngine;
 using Vurbiri.Colonization.UI;
 using Vurbiri.EntryPoint;
 using Vurbiri.International;
+using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.EntryPoint
 {
@@ -15,13 +16,15 @@ namespace Vurbiri.Colonization.EntryPoint
         [SerializeField] private ChaosPanel _chaosPanel;
         [SerializeField] private SatanPanel _satanPanel;
         [SerializeField] private ButtonsPanel _buttonsPanel;
+        [Space]
+        [SerializeField] private MessageBoxColors _messageBoxColors;
 
         public string Description => Localization.Instance.GetText(LangFiles.Main, "InitUIStep");
         public float Weight => 0.2f;
 
         public IEnumerator GetEnumerator()
         {
-            yield return null;
+            MessageBox.SetColors(_messageBoxColors);
 
             _managers.Init();
 
@@ -56,6 +59,13 @@ namespace Vurbiri.Colonization.EntryPoint
                 EUtility.SetObject(ref _satanPanel);
                 EUtility.SetObject(ref _buttonsPanel);
             }
+        }
+
+        public void SetColors_Ed(SceneColorsEd colors)
+        {
+            _messageBoxColors.window = colors.panelBack;
+            _messageBoxColors.text = colors.panelText;
+            _messageBoxColors.button = colors.elements;
         }
 #endif
     }

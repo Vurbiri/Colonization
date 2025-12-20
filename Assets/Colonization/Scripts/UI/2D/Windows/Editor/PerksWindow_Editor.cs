@@ -52,14 +52,13 @@ namespace Vurbiri.Colonization.UI
 
         private Vector2 PerkSize => _perkPrefab.rectTransform.sizeDelta + _perkSpace;
 
-        public override void UpdateVisuals_Ed(float pixelsPerUnit, ProjectColors colors)
+        public void UpdateVisuals_Ed(float pixelsPerUnit, SceneColorsEd colors)
         {
-            Color color = colors.PanelBack.SetAlpha(1f);
             Image image = GetComponent<Image>();
-            image.color = color;
+            image.color = colors.panelBack;
             image.pixelsPerUnitMultiplier = pixelsPerUnit;
 
-            _closeButton.Color = color;
+            _closeButton.Color = colors.panelBack;
         }
 
         public void Setup_Ed()

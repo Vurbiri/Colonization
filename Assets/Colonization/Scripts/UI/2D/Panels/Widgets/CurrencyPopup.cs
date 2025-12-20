@@ -27,7 +27,7 @@ namespace Vurbiri.Colonization.UI
 
 #if UNITY_EDITOR
 
-        public void Init_Editor(int id, Vector3 position, ProjectColors colors)
+        public void Init_Editor(int id, Vector3 position, SceneColorsEd colors)
         {
             Init_Editor(colors);
             transform.localPosition = position;

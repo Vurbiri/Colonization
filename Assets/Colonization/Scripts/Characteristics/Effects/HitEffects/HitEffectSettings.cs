@@ -130,7 +130,7 @@ namespace Vurbiri.Colonization
 #pragma warning disable 414
         [SerializeField] private TargetOfSkill _parentTarget_ed;
         [SerializeField] private bool _isWarrior_ed;
-#pragma warning restore
+#pragma warning restore 414
 
         public const string isSelfField = nameof(_isSelf);
         public const string useAttackField = nameof(_useAttack);

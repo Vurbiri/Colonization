@@ -8,9 +8,7 @@ namespace VurbiriEditor
     [CustomPropertyDrawer(typeof(MinMaxAttribute))]
 	public class MinMaxDrawer : ARValueDrawer
     {
-        private readonly string NAME_X = "x", NAME_Y = "y";
-
-        private readonly HashSet<System.Type> _excludeTypes = new() { typeof(IntRnd), typeof(WaitRealtime), typeof(WaitScaledTime) };
+        private readonly List<System.Type> _excludeTypes = new() { typeof(IntRnd), typeof(WaitRealtime), typeof(WaitScaledTime) };
 
         public override void OnGUI(Rect position, SerializedProperty mainProperty, GUIContent label)
 		{
@@ -26,8 +24,8 @@ namespace VurbiriEditor
 
             if (mainProperty.propertyType == SerializedPropertyType.Vector2 | mainProperty.propertyType == SerializedPropertyType.Vector2Int)
             {
-                minProperty = mainProperty.FindPropertyRelative(NAME_X);
-                maxProperty = mainProperty.FindPropertyRelative(NAME_Y);
+                minProperty = mainProperty.FindPropertyRelative(nameof(Vector2.x));
+                maxProperty = mainProperty.FindPropertyRelative(nameof(Vector2.y));
             }
             else
             {
@@ -35,7 +33,7 @@ namespace VurbiriEditor
                 maxProperty = mainProperty.FindPropertyRelative(range.nameMax);
             }
 
-            if (minProperty == null | maxProperty == null || minProperty.propertyType != maxProperty.propertyType)
+            if (minProperty == null || maxProperty == null || minProperty.propertyType != maxProperty.propertyType)
             {
                 EditorGUI.PropertyField(position, mainProperty, label, true);
                 return;
