@@ -18,7 +18,7 @@ namespace Vurbiri.Colonization.UI
 
 #if UNITY_EDITOR
         [StartEditor, Space]
-        [MinMax(1f, 2f)] public RefFloat windowsPixelsPerUnit = 1.6f;
+        [MinMax(1f, 2f)] public RefFloat windowsPixelsPerUnit = new(1.6f);
         [Space]
         public SceneColorsEd menu;
         [Space]

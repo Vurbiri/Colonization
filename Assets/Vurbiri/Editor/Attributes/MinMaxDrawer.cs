@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using Vurbiri;
+using static UnityEditor.EditorGUI;
 
 namespace VurbiriEditor
 {
@@ -9,16 +10,21 @@ namespace VurbiriEditor
 	public class MinMaxDrawer : ARValueDrawer
     {
         private readonly List<System.Type> _excludeTypes = new() { typeof(IntRnd), typeof(WaitRealtime), typeof(WaitScaledTime) };
+        private readonly System.Type _refValue = typeof(RefValue<>);
 
         public override void OnGUI(Rect position, SerializedProperty mainProperty, GUIContent label)
 		{
             if (attribute is not MinMaxAttribute range || _excludeTypes.Contains(fieldInfo.FieldType))
             {
-                EditorGUI.PropertyField(position, mainProperty, label, true);
+                PropertyField(position, mainProperty, label, true);
                 return;
             }
 
-            position.height = EditorGUIUtility.singleLineHeight;
+            if(fieldInfo.FieldType.IsGeneric(_refValue))
+            {
+                DrawRefValue(position, mainProperty.FindPropertyRelative("_value"), label, range);
+                return;
+            }
 
             SerializedProperty minProperty, maxProperty;
 
@@ -35,26 +41,51 @@ namespace VurbiriEditor
 
             if (minProperty == null || maxProperty == null || minProperty.propertyType != maxProperty.propertyType)
             {
-                EditorGUI.PropertyField(position, mainProperty, label, true);
+                PropertyField(position, mainProperty, label, true);
                 return;
             }
 
-            label = EditorGUI.BeginProperty(position, label, mainProperty);
+            position.height = EditorGUIUtility.singleLineHeight;
 
-            if (minProperty.propertyType == SerializedPropertyType.Float)
+            label = BeginProperty(position, label, mainProperty);
             {
-                VEditorGUI.MinMaxSlider(position, label, minProperty, maxProperty, range.min, range.max);
+                if (minProperty.propertyType == SerializedPropertyType.Float)
+                {
+                    VEditorGUI.MinMaxSlider(position, label, minProperty, maxProperty, range.min, range.max);
 
+                }
+                else if (minProperty.propertyType == SerializedPropertyType.Integer)
+                {
+                    VEditorGUI.MinMaxSlider(position, label, minProperty, maxProperty, range.min.Round(), range.max.Round());
+                }
+                else
+                {
+                    PropertyField(position, mainProperty, label, true);
+                }
             }
-            else if(minProperty.propertyType == SerializedPropertyType.Integer)
+            EndProperty();
+        }
+
+        private static void DrawRefValue(Rect position, SerializedProperty property, GUIContent label, MinMaxAttribute range)
+        {
+            position.height = EditorGUIUtility.singleLineHeight;
+
+            label = BeginProperty(position, label, property);
             {
-                VEditorGUI.MinMaxSlider(position, label, minProperty, maxProperty, range.min.Round(), range.max.Round());
+                if (property.propertyType == SerializedPropertyType.Float)
+                {
+                    property.floatValue = Slider(position, label, property.floatValue, range.min, range.max);
+                }
+                else if (property.propertyType == SerializedPropertyType.Integer)
+                {
+                    property.intValue = IntSlider(position, label, property.intValue, range.min.Round(), range.max.Round());
+                }
+                else
+                {
+                    PropertyField(position, property, label);
+                }
             }
-            else
-            {
-                EditorGUI.PropertyField(position, mainProperty, label, true);
-            }
-            EditorGUI.EndProperty();
+            EndProperty();
         }
     }
 }
