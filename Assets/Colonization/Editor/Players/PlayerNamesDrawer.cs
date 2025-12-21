@@ -9,7 +9,7 @@ namespace VurbiriEditor.Colonization
 	public class PlayerNamesDrawer : PropertyDrawer
 	{
         private readonly string F_NAME = "_nameKeys";
-        private readonly GUIContent[] labels = { new(PlayerId.Names_Ed[0]), new(PlayerId.Names_Ed[1]), new(PlayerId.Names_Ed[2]),new(PlayerId.Names_Ed[3]) };
+        private readonly GUIContent[] labels = { new(PlayerId.Names_Ed[0]), new(PlayerId.Names_Ed[1]), new(PlayerId.Names_Ed[2]), new(PlayerId.Names_Ed[3]) };
 
         private readonly float _height = EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing;
 		

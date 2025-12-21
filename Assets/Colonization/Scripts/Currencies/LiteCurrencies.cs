@@ -96,7 +96,6 @@ namespace Vurbiri.Colonization
                     if (resource != 0)
                         sb.AppendFormat(TAG.COLOR_CURRENCY, i.ToStr(), resource.ToString("+#;-#;0"), resource > 0 ? hexPlusColor : hexMinusColor);
                 }
-                sb.Append(TAG.COLOR_OFF);
             }
         }
         public void ToStringBuilder(StringBuilder sb)

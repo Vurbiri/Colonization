@@ -8,143 +8,146 @@ namespace Vurbiri.Colonization.UI
 {
 	sealed public class OpponentPanel : AHintElement 
 	{
-        private const string SEPARATOR = "|";
+		private const string SEPARATOR = "|";
 
-        [SerializeField, Id(typeof(PlayerId))] private int _id;
-        [Space]
-        [SerializeField] private Image _icon;
-        [SerializeField] private Image _diplomacy;
-        [Space]
-        [SerializeField] private Image _indicator;
-        [SerializeField] private Image _indicatorTurn;
-        [SerializeField, Range(0.1f, 2f)] private float _indicatorSpeed;
-        [SerializeField] private WaitRealtime _waitStartIndicator;
-        [Space]
-        [SerializeField] private Sprite _friend;
-        [SerializeField] private Sprite _enemy;
-        [Space]
-        [SerializeField] private PopupTextWidgetUI _popup;
+		[SerializeField, Id(typeof(PlayerId))] private int _id;
+		[Space]
+		[SerializeField] private Image _icon;
+		[SerializeField] private Image _diplomacy;
+		[Space]
+		[SerializeField] private Image _indicator;
+		[SerializeField] private Image _indicatorTurn;
+		[SerializeField, Range(0.1f, 2f)] private float _indicatorSpeed;
+		[SerializeField] private WaitRealtime _waitStartIndicator;
+		[Space]
+		[SerializeField] private Sprite _friend;
+		[SerializeField] private Sprite _enemy;
+		[Space]
+		[SerializeField] private PopupTextWidgetUI _popup;
 
-        private Subscription _unsub;
-        private int _relation, _min, _max;
-        private bool _indicatorRun;
+		private Subscription _unsub;
+		private int _relation, _min, _max;
+		private bool _indicatorRun;
 
-        public void Init(Vector3 offsetPopup, Diplomacy diplomacy)
-        {
-            _popup.Init(offsetPopup);
-            base.InternalInit(HintId.Canvas);
+		public void Init(Vector3 offsetPopup)
+		{
+			var diplomacy = GameContainer.Diplomacy;
+			var names = GameContainer.UI.PlayerNames;
 
-            _min = diplomacy.Min; _max = diplomacy.Max;
+			_popup.Init(offsetPopup);
+			base.InternalInit(HintId.Canvas);
 
-            diplomacy.Subscribe(OnDiplomacy, false);
-            SetRelation(diplomacy.GetRelationToPerson(_id));
+			_min = diplomacy.Min; _max = diplomacy.Max;
 
-            _icon.color = GameContainer.UI.PlayerColors[_id]; _icon = null;
-            _unsub = GameContainer.UI.PlayerNames.Subscribe(_ => SetRelation(_relation), false);
+			_unsub = diplomacy.Subscribe(OnDiplomacy, false);
+			SetRelation(diplomacy.GetRelationToPerson(_id), names[_id]);
 
-            _indicator.canvasRenderer.SetAlpha(0f); _indicatorTurn.canvasRenderer.SetAlpha(0f);
-            GameContainer.GameEvents.Subscribe(IndicatorTurn);
-        }
+			_icon.color = GameContainer.UI.PlayerColors[_id]; _icon = null;
+			_unsub += names.Subscribe(_id, name => SetRelation(_relation, name), false);
 
-        private void OnDiplomacy(Diplomacy diplomacy)
-        {
-            int relation = diplomacy.GetRelationToPerson(_id);
+			_indicator.canvasRenderer.SetAlpha(0f); _indicatorTurn.canvasRenderer.SetAlpha(0f);
+			GameContainer.GameEvents.Subscribe(IndicatorTurn);
+		}
 
-            if (_relation != relation)
-            {
-                _popup.ForceRun(relation - _relation);
-                SetRelation(relation);
-            }
-        }
+		private void OnDiplomacy(Diplomacy diplomacy)
+		{
+			int relation = diplomacy.GetRelationToPerson(_id);
 
-        private void SetRelation(int relation)
-        {
-            _relation = relation;
+			if (_relation != relation)
+			{
+				_popup.ForceRun(relation - _relation);
+				SetRelation(relation, GameContainer.UI.PlayerNames[_id]);
+			}
+		}
 
-            StringBuilder sb = new(64);
-            sb.AppendLine(GameContainer.UI.PlayerNames[_id]);
-            sb.AppendLine(CONST_UI.SEPARATOR);
+		private void SetRelation(int relation, string name)
+		{
+			_relation = relation;
 
-            if (relation > 0)
-            {
-                sb.Append(GameContainer.UI.Colors.TextPositiveTag);
-                sb.Append(relation.ToStr()); sb.Append(SEPARATOR); sb.Append(_max.ToStr());
-                _diplomacy.sprite = _friend;
-            }
-            else
-            {
-                sb.Append(GameContainer.UI.Colors.TextNegativeTag);
-                sb.Append((relation - 1).ToStr()); sb.Append(SEPARATOR); sb.Append(_min.ToStr());
-                _diplomacy.sprite = _enemy;
-            }
-            
-            _hintText = sb.ToString();
-        }
+			StringBuilder sb = new(64);
+			sb.AppendLine(name);
+			sb.AppendLine(CONST_UI.SEPARATOR);
 
-        private void IndicatorTurn(Id<GameModeId> gameMode, TurnQueue turn)
-        {
-            bool run = turn.currentId == _id && (gameMode >= GameModeId.StartTurn & gameMode <= GameModeId.Play);
-            if (run & (run ^ _indicatorRun))
-                StartCoroutine(IndicatorTurn_Cn());
-            _indicatorRun = run;
-        }
-        private IEnumerator IndicatorTurn_Cn()
-        {
-            float start = 0f, end = 1f, progress, sign;
-            _indicator.fillClockwise = true;
+			if (relation > 0)
+			{
+				sb.Append(GameContainer.UI.Colors.TextPositiveTag);
+				sb.Append(relation.ToStr()); sb.Append(SEPARATOR); sb.Append(_max.ToStr());
+				_diplomacy.sprite = _friend;
+			}
+			else
+			{
+				sb.Append(GameContainer.UI.Colors.TextNegativeTag);
+				sb.Append((relation - 1).ToStr()); sb.Append(SEPARATOR); sb.Append(_min.ToStr());
+				_diplomacy.sprite = _enemy;
+			}
+			
+			_hintText = sb.ToString();
+		}
 
-            yield return _waitStartIndicator.Restart();
+		private void IndicatorTurn(Id<GameModeId> gameMode, TurnQueue turn)
+		{
+			bool run = turn.currentId == _id && (gameMode >= GameModeId.StartTurn & gameMode <= GameModeId.Play);
+			if (run & (run ^ _indicatorRun))
+				StartCoroutine(IndicatorTurn_Cn());
+			_indicatorRun = run;
+		}
+		private IEnumerator IndicatorTurn_Cn()
+		{
+			float start = 0f, end = 1f, progress, sign;
+			_indicator.fillClockwise = true;
 
-            _indicator.canvasRenderer.SetAlpha(1f);
-            _indicatorTurn.canvasRenderer.SetAlpha(1f);
+			yield return _waitStartIndicator.Restart();
 
-            while (_indicatorRun | !_indicator.fillClockwise)
-            {
-                progress = 0f; sign = end - start;
+			_indicator.canvasRenderer.SetAlpha(1f);
+			_indicatorTurn.canvasRenderer.SetAlpha(1f);
 
-                do
-                {
-                    progress += Time.unscaledDeltaTime * _indicatorSpeed;
-                    _indicator.fillAmount = start + sign * progress;
-                    yield return null;
-                }
-                while (progress < 1f);
+			while (_indicatorRun | !_indicator.fillClockwise)
+			{
+				progress = 0f; sign = end - start;
 
-                (start, end) = (end, start);
-                _indicator.fillClockwise = !_indicator.fillClockwise;
-            }
+				do
+				{
+					progress += Time.unscaledDeltaTime * _indicatorSpeed;
+					_indicator.fillAmount = start + sign * progress;
+					yield return null;
+				}
+				while (progress < 1f);
 
-            _indicator.canvasRenderer.SetAlpha(0f);
-            _indicatorTurn.canvasRenderer.SetAlpha(0f);
-        }
+				(start, end) = (end, start);
+				_indicator.fillClockwise = !_indicator.fillClockwise;
+			}
 
-        private void OnDestroy()
-        {
-            _unsub?.Dispose();
-        }
+			_indicator.canvasRenderer.SetAlpha(0f);
+			_indicatorTurn.canvasRenderer.SetAlpha(0f);
+		}
+
+		private void OnDestroy()
+		{
+			_unsub?.Dispose();
+		}
 
 #if UNITY_EDITOR
 
-        public Vector2 UpdateVisuals_Editor(float offset)
-        {
-            var rectTransform = (RectTransform)transform.parent;
-            rectTransform.anchoredPosition = new(offset, 0f);
+		public Vector2 UpdateVisuals_Editor(float offset)
+		{
+			var rectTransform = (RectTransform)transform.parent;
+			rectTransform.anchoredPosition = new(offset, 0f);
 
-            return rectTransform.sizeDelta;
-        }
+			return rectTransform.sizeDelta;
+		}
 
-        private void OnValidate()
-        {
-            if (Application.isPlaying) return;
+		private void OnValidate()
+		{
+			if (Application.isPlaying) return;
 
-            this.SetChildren(ref _icon, "Icon");
-            this.SetChildren(ref _diplomacy, "Relation");
-            this.SetChildren(ref _indicator, "Indicator");
-            this.SetChildren(ref _indicatorTurn, "IndicatorTurn");
+			this.SetChildren(ref _icon, "Icon");
+			this.SetChildren(ref _diplomacy, "Relation");
+			this.SetChildren(ref _indicator, "Indicator");
+			this.SetChildren(ref _indicatorTurn, "IndicatorTurn");
 
-            EUtility.SetAsset(ref _friend, "SP_IconFriend");
-            EUtility.SetAsset(ref _enemy, "SP_IconEnemy");
-        }
+			EUtility.SetAsset(ref _friend, "SP_IconFriend");
+			EUtility.SetAsset(ref _enemy, "SP_IconEnemy");
+		}
 #endif
-    }
+	}
 }

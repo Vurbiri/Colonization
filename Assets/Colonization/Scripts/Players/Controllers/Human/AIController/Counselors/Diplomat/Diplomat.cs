@@ -122,9 +122,9 @@ namespace Vurbiri.Colonization
                         string msg = null;
                         if (receiver == PlayerId.Person)
                         {
-                            StringBuilder sb = new(TAG.ALING_CENTER, 256);
+                            StringBuilder sb = new(256);
                             sb.AppendLine(_giftMsg);
-                            gift.PlusToStringBuilder(sb); sb.Append(TAG.ALING_OFF);
+                            gift.PlusToStringBuilder(sb);
                             msg = sb.ToString();
                         }
                         var wait = GameContainer.Humans[receiver].OnGift(HumanId, gift, msg);

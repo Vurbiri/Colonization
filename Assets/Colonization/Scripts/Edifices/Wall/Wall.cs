@@ -13,7 +13,7 @@ namespace Vurbiri.Colonization
 
         public WaitSignal Init(Id<PlayerId> playerId, IReadOnlyList<CrossroadLink> links, bool isSFX)
         {
-            GetComponent<MeshRenderer>().SetSharedMaterial(GameContainer.Materials[playerId].materialLit, _idMaterial);
+            GetComponent<MeshRenderer>().SetSharedMaterial(GameContainer.Materials[playerId].Lit, _idMaterial);
 
             foreach (var link in links)
                 _graphicSides[link.Id].Open(link.IsOwner);

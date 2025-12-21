@@ -18,7 +18,7 @@ namespace Vurbiri.Colonization
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             protected void SetMsg(Localization localization)
             {
-                _strMsg = string.Concat(TAG.ALING_CENTER, _strName, "\n \n", localization.GetText(FILE, _msgKey), TAG.ALING_OFF);
+                _strMsg = string.Concat(_strName, "\n \n", localization.GetText(FILE, _msgKey));
             }
         }
     }

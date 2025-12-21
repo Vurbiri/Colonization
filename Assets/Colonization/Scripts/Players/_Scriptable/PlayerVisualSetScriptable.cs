@@ -1,5 +1,4 @@
 using UnityEngine;
-using Vurbiri.Colonization.EntryPoint;
 
 namespace Vurbiri.Colonization
 {
@@ -21,8 +20,8 @@ namespace Vurbiri.Colonization
 
             content.playerColors = _colors;
             content.playerNames = _nameKeys.Init(content.projectStorage);
-            content.playerUINames = new(_colors, _nameKeys);
-            content.humansMaterials = new(_colors, _defaultMaterialLit, _defaultMaterialUnlit, _defaultMaterialWarrior);
+            content.playerUINames = new(content.playerNames, content.playerColors);
+            content.humansMaterials = new(content.playerColors, _defaultMaterialLit, _defaultMaterialUnlit, _defaultMaterialWarrior);
 
             Resources.UnloadAsset(this);
         }

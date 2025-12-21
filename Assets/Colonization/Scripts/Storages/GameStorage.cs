@@ -1,13 +1,16 @@
 namespace Vurbiri.Colonization.Storage
 {
-    sealed public class GameStorage : AStorage
+    public class GameStorage : System.IDisposable
     {
+        private readonly IStorageService _storage;
         private readonly HumanStorage[] _humanStorages = new HumanStorage[PlayerId.HumansCount];
         private readonly SatanStorage _satanStorage;
         private readonly bool _isLoad;
+        private Subscription _subscription;
 
-        public GameStorage(bool isLoad) : base(GameContainer.StorageService)
+        public GameStorage(bool isLoad)
         {
+            _storage = GameContainer.StorageService;
             _isLoad = isLoad;
 
             ContractResolver.Add(new GameLoop.Converter(), new Crossroad.Converter());
@@ -72,9 +75,9 @@ namespace Vurbiri.Colonization.Storage
         }
         #endregion
 
-        public override void Dispose()
+        public void Dispose()
         {
-            base.Dispose();
+            _subscription?.Dispose();
             for (int i = 0; i < PlayerId.HumansCount; ++i)
                 _humanStorages[i].Dispose();
         }

@@ -21,6 +21,7 @@
   "Apply": "Apply",
   "Reset": "Reset",
   "Cancel": "Cancel",
+  "LostProgressMsg": "Your current game progress will be lost. \nContinue?",
   "ErrorLogon": "Authorization failed",
   "ErrorStorage": "Error! Saving progress is not available!",
   "GoodSaveSettings": "Settings is saved",

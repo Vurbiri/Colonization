@@ -29,7 +29,7 @@ namespace Vurbiri.Colonization.EntryPoint
         {
             yield return new WaitRealtime(.5f);
             Transition.Exit();
-            print("[MainMenu] Exit");
+            print("[MainMenuPoint] Exit");
         }
 
         private class Dummy : System.IDisposable { public void Dispose() { } }

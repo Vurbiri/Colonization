@@ -10,7 +10,7 @@ namespace Vurbiri.Colonization
         protected readonly Id<PlayerId> _id;
         private int _flags;
 
-        public PlayerInteractable(Id<PlayerId> playerId, Subscription subscriptions)
+        public PlayerInteractable(Id<PlayerId> playerId, ref Subscription subscriptions)
         {
             _id = playerId;
 

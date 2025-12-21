@@ -1,11 +1,10 @@
 using System;
-using Vurbiri.Colonization.Storage;
 using Vurbiri.Reactive;
 using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization
 {
-    public partial class GameSettings : IReactive<GameSettings, bool>
+    public partial class GameSettings
     {
         private bool _isLoad;
         private int _maxScore;
@@ -13,7 +12,7 @@ namespace Vurbiri.Colonization
         private readonly RBool _trackingCamera;
         private readonly bool _isFirst;
 
-        private readonly VAction<GameSettings, bool> _eventChanged = new();
+        private readonly VAction<GameSettings, bool> _change = new();
 
         public bool IsLoad
         {
@@ -26,44 +25,37 @@ namespace Vurbiri.Colonization
         public bool IsFirstStart { [Impl(256)] get => _isFirst; }
 
         public GameSettings() : this(false, 0, true, true, true) { }
-        private GameSettings(bool isLoad, int maxScore, bool isHexagonShow, bool trackingCamera, bool isTutorial = false)
+        private GameSettings(bool isLoad, int maxScore, bool isHexagonShow, bool trackingCamera, bool isFirst = false)
         {
             _isLoad = isLoad;
             _maxScore = maxScore;
             _hexagonShow = new(isHexagonShow);
             _trackingCamera = new(trackingCamera);
-            _isFirst = isTutorial;
+            _isFirst = isFirst;
 
             _hexagonShow.Subscribe(OnChangedReactiveValue, false);
             _trackingCamera.Subscribe(OnChangedReactiveValue, false);
         }
 
-        [Impl(256)] public Subscription Subscribe(Action<GameSettings, bool> action, bool instantGetValue = true) => _eventChanged.Add(action, this, instantGetValue, instantGetValue);
+        [Impl(256)] public Subscription Subscribe(Action<GameSettings, bool> action, bool instantGetValue = true) => _change.Add(action, this, instantGetValue, instantGetValue);
 
         [Impl(256)]
         public void Start()
         {
             _isLoad = true;
-            _eventChanged.Invoke(this, false);
+            _change.Invoke(this, false);
         }
 
-        public void Reset()
-        {
-            int score = 0;
-            if (_isLoad && ProjectContainer.StorageService.TryGet(SAVE_KEYS.SCORE, out int[] scores))
-                score = scores[PlayerId.Person];
-
-            Reset(score);
-        }
         [Impl(256)]
         public void Reset(int score)
         {
             _isLoad = false;
-            if (score > _maxScore) _maxScore = score;
+            _maxScore = MathI.Max(score, _maxScore);
 
-            _eventChanged.Invoke(this, true);
+            _change.Invoke(this, true);
+            
         }
 
-        private void OnChangedReactiveValue(bool value) => _eventChanged.Invoke(this, false);
+        private void OnChangedReactiveValue(bool value) => _change.Invoke(this, false);
     }
 }

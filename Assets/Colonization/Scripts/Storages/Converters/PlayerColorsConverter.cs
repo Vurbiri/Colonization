@@ -17,13 +17,15 @@ namespace Vurbiri.Colonization
 
             public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
             {
+                const float F_MAX_BYTE = byte.MaxValue;
+
                 var data = serializer.Deserialize<float[][]>(reader);
 
                 float[] color;
                 for (int i = 0; i < SIZE_ARRAY; ++i)
                 {
                     color = data[i];
-                    _colors._colors[i] = new(color[0], color[1], color[2]);
+                    _colors._colors[i] = new(color[0] / F_MAX_BYTE, color[1] / F_MAX_BYTE, color[2] / F_MAX_BYTE);
                 }
 
                 return _colors;
@@ -32,6 +34,7 @@ namespace Vurbiri.Colonization
             protected override void WriteJson(JsonWriter writer, PlayerColors colors, JsonSerializer serializer)
             {
                 Color color;
+
                 writer.WriteStartArray();
                 for (int i = 0; i < SIZE_ARRAY; ++i)
                 {
@@ -39,9 +42,9 @@ namespace Vurbiri.Colonization
                     {
                         color = colors._colors[i];
 
-                        writer.WriteValue(Math.Round(color.r, 2));
-                        writer.WriteValue(Math.Round(color.g, 2));
-                        writer.WriteValue(Math.Round(color.b, 2));
+                        writer.WriteValue(color.r.ToByte());
+                        writer.WriteValue(color.g.ToByte());
+                        writer.WriteValue(color.b.ToByte());
                     }
                     writer.WriteEndArray();
                 }

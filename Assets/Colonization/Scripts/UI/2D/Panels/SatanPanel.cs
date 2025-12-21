@@ -29,21 +29,21 @@ namespace Vurbiri.Colonization.UI
 
             _bar.color = _icon.color = GameContainer.UI.PlayerColors[PlayerId.Satan]; _icon = null;
 
-            Localization.Subscribe(SetLocalizationText);
+            GameContainer.UI.PlayerNames.Subscribe(PlayerId.Satan, SetName);
             GameContainer.Satan.Subscribe(SetValues, false);
 
             _indicator.canvasRenderer.SetAlpha(0f);
             GameContainer.GameEvents.Subscribe(IndicatorTurn);
         }
 
-        private void SetLocalizationText(Localization localization)
+        private void SetName(string name)
         {
             StringBuilder sb = new(80);
-            sb.AppendLine(GameContainer.UI.PlayerNames[PlayerId.Satan]);
+            sb.AppendLine(name);
             sb.AppendLine(CONST_UI.SEPARATOR);
-            sb.Append(localization.GetText(_hintKey, true));
+            sb.Append(Localization.Instance.GetText(_hintKey, true));
             _localizedText = sb.ToString();
-            
+
             SetValues(GameContainer.Satan);
         }
 
@@ -92,7 +92,7 @@ namespace Vurbiri.Colonization.UI
 
         private void OnDestroy()
         {
-            Localization.Unsubscribe(SetLocalizationText);
+            GameContainer.UI.PlayerNames?.Unsubscribe(PlayerId.Satan, SetName);
         }
 
 #if UNITY_EDITOR

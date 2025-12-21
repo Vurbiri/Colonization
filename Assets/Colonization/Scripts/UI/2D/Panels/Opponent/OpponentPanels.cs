@@ -11,10 +11,9 @@ namespace Vurbiri.Colonization.UI
 		public void Init()
 		{
             Vector3 direction = _directionPopup;
-			Diplomacy diplomacy = GameContainer.Diplomacy;
 
             for (int i = 0; i < PlayerId.AICount; i++)
-				_panels[i].Init(direction, diplomacy);
+				_panels[i].Init(direction);
 
             Destroy(this);
 		}

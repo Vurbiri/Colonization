@@ -1,16 +1,16 @@
-using Vurbiri.Reactive;
-
 namespace Vurbiri.Colonization.Storage
 {
     using static SAVE_KEYS;
 
-    sealed public class ProjectStorage : AStorage
+    public class ProjectStorage : System.IDisposable
     {
+        private readonly IStorageService _storage;
         private readonly AudioMixer<MixerId>.Converter _mixerConverter = new();
         private readonly Profile.Converter _profileConverter = new();
         private readonly PlayerColors.Converter _colorsConverter = new();
+        private Subscription _subscription;
 
-        public ProjectStorage(IStorageService storage) : base(storage) { }
+        public ProjectStorage(IStorageService storage) => _storage = storage;
 
         public void SetAndBindAudioMixer(AudioMixer<MixerId> mixer)
         {
@@ -29,9 +29,9 @@ namespace Vurbiri.Colonization.Storage
         }
 
         public bool TryLoadPlayerNames(out string[] names) => _storage.TryGet(NAMES, out names);
-        public void BindPlayerNames(IReactive<PlayerNames> reactive)
+        public void BindPlayerNames(PlayerNames reactive)
         {
-            _subscription += reactive.Subscribe(names => _storage.Set(NAMES, names.CustomNames), false);
+            _subscription += reactive.Subscribe(values => _storage.Set(NAMES, values), false);
         }
 
         public GameSettings LoadGameSettings()
@@ -42,17 +42,16 @@ namespace Vurbiri.Colonization.Storage
             _subscription += settings.Subscribe(BindGameSettings, notLoad);
             return settings;
         }
-        private void BindGameSettings(GameSettings settings, bool isSave)
+        private void BindGameSettings(GameSettings settings, bool isClear)
         {
-            if (isSave)
-            {
-                _storage.Clear();
-                _storage.Save(GAME_SETTINGS, settings);
-            }
-            else
-            {
-                _storage.Set(GAME_SETTINGS, settings);
-            }
+            _storage.Set(GAME_SETTINGS, settings);
+
+            if (isClear)
+                _storage.Clear(NotClear);
         }
+
+        public void Save() => _storage.Save();
+
+        public void Dispose() => _subscription?.Dispose();
     }
 }

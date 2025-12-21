@@ -32,7 +32,7 @@ namespace Vurbiri.Colonization
             _id = playerId;
             _isPerson = isPerson;
             _waitAll = new(GameContainer.Shared);
-            _interactable = new(playerId, _subscription);
+            _interactable = new(playerId, ref _subscription);
         }
 
         #region ---------------- Diplomacy ----------------

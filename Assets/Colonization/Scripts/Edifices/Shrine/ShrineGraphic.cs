@@ -17,10 +17,10 @@ namespace Vurbiri.Colonization
         {
             HumanMaterials visual = GameContainer.Materials[playerId];
 
-            GetComponent<MeshRenderer>().SetSharedMaterial(visual.materialUnlit, _idMaterial);
+            GetComponent<MeshRenderer>().SetSharedMaterial(visual.Unlit, _idMaterial);
 
             MainModule main = _pillarFlame.main;
-            Color color = visual.color.SetAlpha(_alfa);
+            Color color = visual.Color.SetAlpha(_alfa);
             main.startColor = new(color.Brightness(_brightness), color.Brightness(2f - _brightness)) { mode = ParticleSystemGradientMode.TwoColors };
 
             var signal = isSFX ? _edificeSFX.Run(transform) : _edificeSFX.Destroy();

@@ -1,9 +1,8 @@
 using UnityEngine;
 using Vurbiri.Collections;
-using Vurbiri.Colonization.UI;
 using Vurbiri.UI;
 
-namespace Vurbiri.Colonization
+namespace Vurbiri.Colonization.UI
 {
 	public class SettingsWindow : ASwitchableWindow
     {

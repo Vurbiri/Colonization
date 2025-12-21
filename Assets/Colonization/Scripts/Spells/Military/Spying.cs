@@ -25,7 +25,7 @@ namespace Vurbiri.Colonization
                     StringBuilder sb = null;
                     if (isPerson)
                     {
-                        sb = new(TAG.ALING_CENTER, 666);
+                        sb = new(666);
                         sb.AppendLine(_strName); sb.AppendLine();
                     }
 

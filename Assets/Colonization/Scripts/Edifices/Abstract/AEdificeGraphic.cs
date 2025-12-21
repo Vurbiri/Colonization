@@ -13,7 +13,7 @@ namespace Vurbiri.Colonization
 
         public virtual WaitSignal Init(Id<PlayerId> playerId, IReadOnlyList<CrossroadLink> links, bool isSFX)
         {
-            _meshRenderer.SetSharedMaterial(GameContainer.Materials[playerId].materialLit, _idMaterial);
+            _meshRenderer.SetSharedMaterial(GameContainer.Materials[playerId].Lit, _idMaterial);
 
             Destroy(this);
             return isSFX ? _edificeSFX.Run(transform) : _edificeSFX.Destroy();

@@ -30,7 +30,7 @@ namespace Vurbiri.Colonization
             public const int Settings = 1;
             public const int Help     = 2;
 
-            public const int Count = 1;
+            public const int Count = 2;
         }
         #endregion
 
@@ -58,8 +58,8 @@ namespace Vurbiri.Colonization
             EUtility.SetObject(ref _continue, "ContinueButton");
 
             EUtility.SetArray(ref _windows, Window.Count);
-            _windows[0]?.OnValidate("Settings");
-            //_windows[Window.Exchange]?.OnValidate("ExchangeWindow", "ExchangeButton");
+            _windows[Window.NewGame]?.OnValidate("New");
+            _windows[Window.Settings]?.OnValidate("Settings");
         }
 
         public void SetColors_Ed(SceneColorsEd colors)

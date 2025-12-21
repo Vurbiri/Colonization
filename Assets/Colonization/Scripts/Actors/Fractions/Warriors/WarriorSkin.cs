@@ -9,7 +9,7 @@ namespace Vurbiri.Colonization
 
         public override void Init(Id<PlayerId> owner, Skills skills)
         {
-            GetComponentInChildren<SkinnedMeshRenderer>().sharedMaterial = GameContainer.Materials[owner].materialWarriors;
+            GetComponentInChildren<SkinnedMeshRenderer>().sharedMaterial = GameContainer.Materials[owner].Warriors;
 
             var sfx = GetComponent<WarriorSFX>();
             sfx.Init(skills.HitSfxNames);

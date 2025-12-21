@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using Vurbiri.Reactive;
+using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization
 {
@@ -9,25 +10,24 @@ namespace Vurbiri.Colonization
     {
         [SerializeField] private Color[] _colors;
 
-        private readonly VAction<PlayerColors> _eventThisChanged = new();
+        private readonly VAction<PlayerColors> _colorsChange = new();
+        private readonly VAction<Color>[] _colorChanges = new VAction<Color>[PlayerId.Count];
 
-        public Color this[int index] => _colors[index];
-        public Color this[Id<PlayerId> id] => this[id.Value];
+        public Color this[int index] { [Impl(256)] get => _colors[index]; }
+        public Color this[Id<PlayerId> id] { [Impl(256)] get => _colors[id.Value]; }
 
-        public Color[] Colors
+        public Color[] Colors { [Impl(256)] get => _colors; }
+
+        public PlayerColors()
         {
-            get => _colors;
-            set
-            {
-                if(!this.Equals(value))
-                {
-                    _colors = value;
-                    _eventThisChanged.Invoke(this);
-                }
-            }
+            for (int i = 0; i < PlayerId.Count; ++i)
+                _colorChanges[i] = new();
         }
 
-        public Subscription Subscribe(Action<PlayerColors> action, bool instantGetValue = true) => _eventThisChanged.Add(action, this, instantGetValue);
+        public Subscription Subscribe(Action<PlayerColors> action, bool instantGetValue = true) => _colorsChange.Add(action, this, instantGetValue);
+
+        [Impl(256)] public Subscription Subscribe(int playerId, Action<Color> action, bool instant = true) => _colorChanges[playerId].Add(action, _colors[playerId], instant);
+        [Impl(256)] public void Unsubscribe(int playerId, Action<Color> action) => _colorChanges[playerId].Remove(action);
 
         public bool Equals(Color[] colors)
         {

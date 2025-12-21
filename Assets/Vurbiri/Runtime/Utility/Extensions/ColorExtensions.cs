@@ -29,9 +29,10 @@ namespace Vurbiri
             return self.r == other.r && self.g == other.g && self.b == other.b && self.a == other.a;
         }
 
-        private const float F_MIN_BYTE = byte.MinValue, F_MAX_BYTE = byte.MaxValue;
-        private static byte ToByte(float value)
+        public static byte ToByte(this float value)
         {
+            const float F_MIN_BYTE = byte.MinValue, F_MAX_BYTE = byte.MaxValue;
+
             value = value * F_MAX_BYTE + 0.5f;
             if (value < F_MIN_BYTE) return byte.MinValue;
             if (value > F_MAX_BYTE) return byte.MaxValue;
