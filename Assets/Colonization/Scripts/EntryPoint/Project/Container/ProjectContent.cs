@@ -23,9 +23,9 @@ namespace Vurbiri.Colonization
 
         public void Dispose() 
         {
-            playerUINames?.Dispose();
-            projectStorage?.Dispose();
             playerNames?.Dispose();
+            playerColors?.Dispose();
+            projectStorage?.Dispose();
         }
     }
 }

@@ -8,7 +8,7 @@ namespace Vurbiri.UI
     {
         private Id<HintId> _hint;
         private bool _isShowingHint = false;
-        private Vector3 _hintOffset;
+        private HintOffset _hintOffset;
 
         protected string _hintText;
 
@@ -16,7 +16,7 @@ namespace Vurbiri.UI
         protected void InternalInit(Id<HintId> hint, float heightRatio)
         {
             _hint = hint;
-            _hintOffset = _thisRectTransform.GetOffsetHint(heightRatio);
+            _hintOffset = _thisRectTransform.GetHintOffset(heightRatio);
         }
 
         sealed public override void OnPointerEnter(PointerEventData eventData)

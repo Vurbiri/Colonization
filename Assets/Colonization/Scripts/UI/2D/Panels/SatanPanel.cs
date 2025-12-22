@@ -3,6 +3,7 @@ using System.Text;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Vurbiri.Collections;
 using Vurbiri.International;
 using Vurbiri.UI;
 
@@ -29,17 +30,17 @@ namespace Vurbiri.Colonization.UI
 
             _bar.color = _icon.color = GameContainer.UI.PlayerColors[PlayerId.Satan]; _icon = null;
 
-            GameContainer.UI.PlayerNames.Subscribe(PlayerId.Satan, SetName);
+            GameContainer.UI.PlayerNames.Subscribe(SetName);
             GameContainer.Satan.Subscribe(SetValues, false);
 
             _indicator.canvasRenderer.SetAlpha(0f);
             GameContainer.GameEvents.Subscribe(IndicatorTurn);
         }
 
-        private void SetName(string name)
+        private void SetName(ReadOnlyArray<string> names)
         {
             StringBuilder sb = new(80);
-            sb.AppendLine(name);
+            sb.AppendLine(names[PlayerId.Satan]);
             sb.AppendLine(CONST_UI.SEPARATOR);
             sb.Append(Localization.Instance.GetText(_hintKey, true));
             _localizedText = sb.ToString();
@@ -92,7 +93,8 @@ namespace Vurbiri.Colonization.UI
 
         private void OnDestroy()
         {
-            GameContainer.UI.PlayerNames?.Unsubscribe(PlayerId.Satan, SetName);
+            if(GameContainer.Valid)
+                GameContainer.UI.PlayerNames.Unsubscribe(SetName);
         }
 
 #if UNITY_EDITOR

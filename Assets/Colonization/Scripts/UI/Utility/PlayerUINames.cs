@@ -1,48 +1,30 @@
-using System;
-using UnityEngine;
+using Vurbiri.Collections;
 using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization
 {
-	public class PlayerUINames : IDisposable
+	public class PlayerUINames
 	{
-        private readonly UIName[] _names = new UIName[PlayerId.Count];
-        private readonly Subscription _unsub;
+        private readonly string[] _names = new string[PlayerId.Count];
 
         public string this[Id<PlayerId> id] { [Impl(256)] get => _names[id.Value]; }
         public string this[int index] { [Impl(256)] get => _names[index];}
 
         public PlayerUINames(PlayerNames names, PlayerColors colors)
         {
-            for (int i = 0; i < PlayerId.Count; i++)
-                _names[i] = new(i, names, colors, ref _unsub);
+            names.Subscribe(Set, false);
+            colors.Subscribe(Set, false);
+
+            Set(names, colors);
         }
 
-        public void Dispose() => _unsub.Dispose();
+        private void Set(ReadOnlyArray<string> names) => Set(names, ProjectContainer.UI.PlayerColors);
+        private void Set(PlayerColors colors) => Set(ProjectContainer.UI.PlayerNames, colors);
 
-        // ******************** Nested *******************
-        private class UIName
+        [Impl(256)] private void Set(ReadOnlyArray<string> names, PlayerColors colors)
         {
-            private readonly int _id;
-            private string _name;
-
-            public string Name { [Impl(256)] get => _name; }
-
-            public UIName(int id, PlayerNames names, PlayerColors colors, ref Subscription unsub)
-            {
-                _id = id;
-                unsub += names.Subscribe(id, Set, false);
-                unsub += colors.Subscribe(id, Set, false);
-
-                Set(names[id], colors[id]);
-            }
-
-            [Impl(256)] public static implicit operator string(UIName self) => self._name;
-
-            private void Set(Color color) => Set(ProjectContainer.UI.PlayerNames[_id], color);
-            private void Set(string name) => Set(name, ProjectContainer.UI.PlayerColors[_id]);
-
-            [Impl(256)] private void Set(string name, Color color) => this._name = $"<{color.ToHex()}>{name}</color>";
+            for (int i = 0; i < PlayerId.Count; ++i)
+                _names[i] = $"<{colors[i].ToHex()}>{names[i]}</color>";
         }
     }
 }

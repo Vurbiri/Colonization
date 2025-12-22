@@ -43,7 +43,7 @@ namespace Vurbiri.Colonization.UI
 			SetRelation(diplomacy.GetRelationToPerson(_id), names[_id]);
 
 			_icon.color = GameContainer.UI.PlayerColors[_id]; _icon = null;
-			_unsub += names.Subscribe(_id, name => SetRelation(_relation, name), false);
+			_unsub += names.Subscribe(names => SetRelation(_relation, names[_id]), false);
 
 			_indicator.canvasRenderer.SetAlpha(0f); _indicatorTurn.canvasRenderer.SetAlpha(0f);
 			GameContainer.GameEvents.Subscribe(IndicatorTurn);

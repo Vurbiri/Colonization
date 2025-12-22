@@ -32,7 +32,13 @@ namespace Vurbiri.Collections
             }
         }
 
+        [Impl(256)] public void Import(TValue[] values)
+        {
+            _values = values;
+            _count = values.Length;
+            _version.Next();
+        }
+
         [Impl(256)] public static implicit operator Array<TValue>(TValue[] values) => new(values);
-      
     }
 }

@@ -11,7 +11,7 @@ namespace Vurbiri
         
         private readonly List<JsonConverter> _converters = new()
         {
-            new ColorConverter(),
+            new ColorConverter(), new Color32Converter(),
             new Vector2Converter(), new Vector3Converter(), new Vector2IntConverter(), new Vector3IntConverter(),
         };
 

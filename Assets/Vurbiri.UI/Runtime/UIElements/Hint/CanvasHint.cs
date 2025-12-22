@@ -5,8 +5,8 @@ namespace Vurbiri.UI
     [RequireComponent(typeof(CanvasGroup))]
     sealed public class CanvasHint : Hint
     {
-        [SerializeField] private float _edgeX;
         [Space]
+        [SerializeField] private Vector2 _edge;
         [SerializeField] private RectTransform _canvasRectTransform;
 
         public override bool Init()
@@ -22,28 +22,28 @@ namespace Vurbiri.UI
             return false;
         }
 
-        protected override void SetPosition(Transform transform, Vector3 offset)
+        protected override void SetPosition(RectTransform rectTransform, HintOffset offset)
         {
-            var position = _canvasRectTransform.InverseTransformPoint(transform.position);
-            var thisSize = _backTransform.sizeDelta * 0.5f;
-            var parentSize = _canvasRectTransform.sizeDelta * 0.5f;
+            var position = offset.GetCenterPosition(_canvasRectTransform.InverseTransformPoint(rectTransform.position));
+            var hintSize = _backTransform.sizeDelta * 0.5f;
+            var viewSize = _canvasRectTransform.sizeDelta * 0.5f - (hintSize + _edge);
+            var deltaY = offset.GetDeltaY(hintSize.y);
+            var deltaX = viewSize.x - position.x;
 
-            position.x += offset.x;
-            float delta = (position.x - thisSize.x - _edgeX) + parentSize.x;
-            if (delta > 0f)
+            if (deltaX > 0f)
             {
-                delta = (position.x + thisSize.x + _edgeX) - parentSize.x;
-                if (delta < 0f)
-                    delta = 0f;
+                deltaX = -viewSize.x - position.x;
+                if (deltaX < 0f)
+                    deltaX = 0f;
             }
+            position.x += deltaX;
 
-            offset.x = -delta;
-            offset.y += thisSize.y;
+            if (position.y < viewSize.y - deltaY)
+                position.y += deltaY;
+            else
+                position.y -= deltaY;
 
-            if (position.y > 0f)
-                offset.y = -offset.y;
-
-            _backTransform.localPosition = position + offset;
+            _backTransform.localPosition = position;
         }
 
 #if UNITY_EDITOR
@@ -66,7 +66,7 @@ namespace Vurbiri.UI
             {
                 var canvas = GetComponentInParent<Canvas>();
                 if (canvas != null)
-                _canvasRectTransform = canvas.GetComponent<RectTransform>();
+                    _canvasRectTransform = canvas.GetComponent<RectTransform>();
             }
 
             if (_canvasRectTransform != null && _canvasRectTransform != transform.parent)

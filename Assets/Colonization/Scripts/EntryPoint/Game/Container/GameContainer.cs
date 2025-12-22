@@ -12,6 +12,8 @@ namespace Vurbiri.Colonization
     {
         private static GameContent s_content;
 
+        public new static bool Valid                    { [Impl(256)] get => ProjectContainer.Valid && s_content != null; }
+
         public static GameStorage Storage               { [Impl(256)] get => s_content.storage; }
         public static GameLoop GameLoop                 { [Impl(256)] get => s_content.gameLoop; }
         public static GameEvents GameEvents             { [Impl(256)] get => s_content.gameLoop; }

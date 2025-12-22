@@ -1,5 +1,4 @@
 using System;
-using UnityEngine;
 using UnityEngine.EventSystems;
 using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
@@ -9,7 +8,7 @@ namespace Vurbiri.UI
     {
         private Id<HintId> _hint;
         private bool _isShowingHint = false;
-        private Vector3 _hintOffset;
+        private HintOffset _hintOffset;
 
         protected string _hintText;
 
@@ -19,7 +18,7 @@ namespace Vurbiri.UI
             _hint = hint;
             SetValue(value, false);
 
-            _hintOffset = _thisRectTransform.GetOffsetHint(heightRatio);
+            _hintOffset = _thisRectTransform.GetHintOffset(heightRatio);
         }
 
         [Impl(256)]

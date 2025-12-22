@@ -9,6 +9,9 @@ namespace Vurbiri.Colonization
 	{
         private static ProjectContent s_projectContent;
 
+        public static bool Valid
+        { [Impl(256)] get => s_projectContent != null; }
+
         public static Settings Settings              
         { [Impl(256)] get => s_projectContent.settings; }
 

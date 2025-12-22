@@ -1,5 +1,6 @@
 namespace Vurbiri.Colonization.Storage
 {
+    using Vurbiri.Collections;
     using static SAVE_KEYS;
 
     public class ProjectStorage : System.IDisposable
@@ -29,9 +30,9 @@ namespace Vurbiri.Colonization.Storage
         }
 
         public bool TryLoadPlayerNames(out string[] names) => _storage.TryGet(NAMES, out names);
-        public void BindPlayerNames(PlayerNames reactive)
+        public void BindPlayerNames(Event<ReadOnlyArray<string>> onChange)
         {
-            _subscription += reactive.Subscribe(values => _storage.Set(NAMES, values), false);
+            _subscription += onChange.Add(values => _storage.Set(NAMES, values));
         }
 
         public GameSettings LoadGameSettings()

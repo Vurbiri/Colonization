@@ -14,16 +14,15 @@ namespace Vurbiri.Colonization.UI
 
 		private readonly Id<HintId> _hint = HintId.Canvas;
         private string _hintText;
-		private bool _isShowingHint = false;
-		private Vector3 _offsetHint;
+        private HintOffset _hintOffset;
+        private bool _isShowingHint = false;
 
 		public void Init(PerkTree perkTree, SpellBook spellBook, Action closeWindow)
 		{
-            _offsetHint = new(0f, _thisRectTransform.rect.size.y * 0.48f, 0f);
-
-			perkTree.GetProgress(_panel.Type).Subscribe(OnInteractable);
+            _hintOffset = _thisRectTransform.GetHintOffset(0.48f);
+            perkTree.GetProgress(_panel.Type).Subscribe(OnInteractable);
 			_panel.Init(spellBook, closeWindow).OnHint += SetText;
-		}
+        }
 
 		private void SetText(string hintText) => _hintText = hintText;
 
@@ -31,7 +30,7 @@ namespace Vurbiri.Colonization.UI
 		{
 			base.OnPointerEnter(eventData);
 			if (!_isShowingHint)
-				_isShowingHint = _hint.Show(_hintText, _thisRectTransform, _offsetHint);
+				_isShowingHint = _hint.Show(_hintText, _thisRectTransform, _hintOffset);
 		}
 
 		public override void OnPointerExit(PointerEventData eventData)

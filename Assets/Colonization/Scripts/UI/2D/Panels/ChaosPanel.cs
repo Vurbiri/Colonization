@@ -8,8 +8,9 @@ namespace Vurbiri.Colonization.UI
     sealed public class ChaosPanel : AHintElement
     {
         [SerializeField] private FileIdAndKey _hintKey;
+        [SerializeField, Range(-1f, 1f)] private float _hintOffsetY;
         [Space]
-        [SerializeField] private UnityEngine.Gradient _color;
+        [SerializeField] private Gradient _color;
         [Space]
         [SerializeField] private Image _bar;
 
@@ -18,7 +19,7 @@ namespace Vurbiri.Colonization.UI
 
         public void Init()
         {
-            base.InternalInit(HintId.Canvas, 0.3f);
+            base.InternalInit(HintId.Canvas, _hintOffsetY);
 
             _max = GameContainer.Chaos.Max;
 

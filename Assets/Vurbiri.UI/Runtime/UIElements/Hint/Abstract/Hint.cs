@@ -69,7 +69,7 @@ namespace Vurbiri.UI
             return true;
         }
 
-        [Impl(256)] public bool Show(string text, Transform transform, Vector3 offset)
+        [Impl(256)] public bool Show(string text, RectTransform transform, HintOffset offset)
         {
             bool result;
             if (result = !string.IsNullOrEmpty(text) & gameObject.activeInHierarchy)
@@ -93,9 +93,9 @@ namespace Vurbiri.UI
             _hintTMP.color = textColor;
         }
 
-        protected abstract void SetPosition(Transform transform, Vector3 offset);
+        protected abstract void SetPosition(RectTransform transform, HintOffset offset);
 
-        private IEnumerator Show_Cn(string text, Transform transform, Vector3 offset)
+        private IEnumerator Show_Cn(string text, RectTransform transform, HintOffset offset)
         {
             yield return _timeDelay.Restart();
 

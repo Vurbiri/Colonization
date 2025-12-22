@@ -63,6 +63,7 @@ namespace Vurbiri.Collections
         IEnumerator<TValue> IEnumerable<TValue>.GetEnumerator() => _count == 0 ? EmptyEnumerator<TValue>.Instance : GetEnumerator();
         IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable<TValue>)this).GetEnumerator();
 
+        
         [Impl(256)] public static implicit operator ReadOnlyArray<TValue>(TValue[] values) => new(values);
 
         public void OnAfterDeserialize() => _count = _values != null ? _values.Length : -1;

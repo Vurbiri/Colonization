@@ -4,10 +4,9 @@ namespace Vurbiri.UI
 {
     sealed public class WorldHint : Hint
     {
-        protected override void SetPosition(Transform transform, Vector3 offset)
+        protected override void SetPosition(RectTransform rectTransform, HintOffset offset)
         {
-            offset.y += _backTransform.sizeDelta.y * 0.5f;
-            _backTransform.localPosition = transform.localPosition + offset;
+            _backTransform.localPosition = offset.GetOffsetPosition(rectTransform.localPosition, _backTransform.sizeDelta.y * 0.5f);
         }
     }
 }

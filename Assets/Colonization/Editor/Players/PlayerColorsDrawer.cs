@@ -8,7 +8,7 @@ namespace VurbiriEditor.Colonization
     [CustomPropertyDrawer(typeof(PlayerColors))]
 	public class PlayerColorsDrawer : PropertyDrawer
 	{
-        private readonly string P_NAME = "_colors";
+        private readonly string P_NAME = "_defaults";
         private readonly float _height = EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing;
 
         public override void OnGUI(Rect position, SerializedProperty mainProperty, GUIContent label)

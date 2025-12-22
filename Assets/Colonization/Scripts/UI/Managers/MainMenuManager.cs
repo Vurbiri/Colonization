@@ -11,14 +11,13 @@ namespace Vurbiri.Colonization
 
         private void Start()
         {
-			var game = ProjectContainer.GameSettings;
-
-			if (_continue.interactable = game.IsLoad)
-                _continue.AddListener(Vurbiri.EntryPoint.Transition.Exit);
-
-            Manager manager = new();
+            var manager = new Manager();
             for (int i = 0; i < Window.Count; ++i)
                 _windows[i].Init(manager.OnOpenWindow, manager.OnCloseWindow);
+
+            var game = ProjectContainer.GameSettings;
+            if (_continue.interactable = game.IsLoad)
+                _continue.AddListener(manager.Continue);
 
             Destroy(this);
         }
@@ -47,6 +46,12 @@ namespace Vurbiri.Colonization
             {
                 if (_current == switcher)
                     _current = null;
+            }
+
+            public void Continue()
+            {
+                _current?.SilentClose();
+                Vurbiri.EntryPoint.Transition.Exit();
             }
         }
 

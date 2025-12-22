@@ -10,7 +10,7 @@ namespace Vurbiri.UI
         public const float MIN_SPEED = 0.1f;
 
         [SerializeField] private CanvasGroup _canvasGroup;
-        [SerializeField, Range(MIN_SPEED, 10f)] private float _speed;
+        [SerializeField, Range(MIN_SPEED, 15f)] private float _speed;
 
         private float _start, _end, _sign;
         private float _progress = 1f;

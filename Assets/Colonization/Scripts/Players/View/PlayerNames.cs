@@ -7,69 +7,73 @@ using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization
 {
-	[System.Serializable]
+	[Serializable]
 	public class PlayerNames : IDisposable
-	{
+    {
 		[SerializeField, Key(LangFiles.Main)] private string[] _nameKeys;
-		private Array<string> _customNames;
+		
+        private readonly string[] _defaults = new string[PlayerId.HumansCount];
+        private readonly Array<string> _names = new(PlayerId.Count);
+        private readonly Array<string> _customs = new(PlayerId.HumansCount);
 
-		private readonly string[] _defaults = new string[PlayerId.HumansCount];
-        private readonly string[] _names = new string[PlayerId.Count];
         private readonly VAction<ReadOnlyArray<string>> _namesChange = new();
-		private readonly VAction<string>[] _nameChanges = new VAction<string>[PlayerId.Count];
+        private readonly VAction<ReadOnlyArray<string>> _customsChange = new();
 
-		public string this[Id<PlayerId> id] { [Impl(256)] get => _names[id.Value]; }
+        public string this[Id<PlayerId> id] { [Impl(256)] get => _names[id.Value]; }
 		public string this[int index] { [Impl(256)] get => _names[index]; }
 
-		public PlayerNames()
+        public PlayerNames Init(ProjectStorage storage)
 		{
-			for (int i = 0; i < PlayerId.Count; ++i)
-				_nameChanges[i] = new();
-		}
-
-		public PlayerNames Init(ProjectStorage storage)
-		{
-            if (!storage.TryLoadPlayerNames(out string[] customNames))
-                customNames = new string[PlayerId.HumansCount];
-
-            _customNames = customNames;
+            if (storage.TryLoadPlayerNames(out string[] customs))
+                _customs.Import(customs);
 
             Localization.Subscribe(SetNames);
-			storage.BindPlayerNames(this);
+			storage.BindPlayerNames(_customsChange);
 
 			return this;
 		}
 
-		public string GetDefaultName(int index) => Localization.Instance.GetText(LangFiles.Main, _nameKeys[index]);
-
 		[Impl(256)] public Subscription Subscribe(Action<ReadOnlyArray<string>> action, bool instantGetValue = true) => _namesChange.Add(action, _names, instantGetValue);
+        [Impl(256)] public void Unsubscribe(Action<ReadOnlyArray<string>> action) => _namesChange.Remove(action);
 
-		[Impl(256)] public Subscription Subscribe(int playerId, Action<string> action, bool instant = true) => _nameChanges[playerId].Add(action, _names[playerId], instant);
-		[Impl(256)] public void Unsubscribe(int playerId, Action<string> action) => _nameChanges[playerId].Remove(action);
+        [Impl(256)] public string GetDefault(int id) => _defaults[id];
 
-        public void ResetCustomName(int id)
+        public void TrySetCustomNames(string[] names)
         {
-            if(!string.IsNullOrWhiteSpace(_customNames[id]))
-			{
-                _customNames[id] = null;
-                SetName(id, _defaults[id]);
-            }
-        }
+            bool change = false; string name;
+            for (int i = 0; i < PlayerId.HumansCount; ++i)
+            {
+                name = names[i].Trim();
+                if(!string.IsNullOrEmpty(name))
+                {
+                    if(_defaults[i] == name)
+                    {
+                        if (!string.IsNullOrEmpty(_customs[i]))
+                        {
+                            _customs[i] = string.Empty;
+                            _names[i] = _defaults[i];
 
-        public string SetCustomName(int id, string name)
-		{
-            name = name.Trim();
+                            change = true;
+                        }
+                    }
+                    else
+                    {
+                        if (_customs[i] != name)
+                        {
+                            _customs[i] = name;
+                            _names[i] = name;
 
-            if (string.IsNullOrWhiteSpace(name))
-			{
-				ResetCustomName(id);
+                            change = true;
+                        }
+                    }
+                }
             }
-			else if (_customNames[id] != name)
-			{
-				_customNames[id] = name;
-				SetName(id, name);
+
+            if (change)
+            {
+                _customsChange.Invoke(_customs);
+                _namesChange.Invoke(_names);
             }
-			return _names[id];
         }
 
         public void Dispose()
@@ -78,39 +82,33 @@ namespace Vurbiri.Colonization
             Localization.Unsubscribe(SetNames);
         }
 
+        [Impl(256)] public static implicit operator ReadOnlyArray<string>(PlayerNames playerNames) => playerNames._names;
+
         private void SetNames(Localization localization)
 		{
 			int index = 0;
 			if (ProjectContainer.YSDK.TryGetPlayerName(out string name))
 			{
-				SetName(PlayerId.Person, name, _customNames[PlayerId.Person]);
+				SetName(PlayerId.Person, name, _customs[PlayerId.Person]);
                 index = PlayerId.AI_01;
 			}
 
 			for (; index < PlayerId.HumansCount; ++index)
-                SetName(index, localization.GetText(LangFiles.Main, _nameKeys[index], true), _customNames[index]);
+                SetName(index, localization.GetText(LangFiles.Main, _nameKeys[index], true), _customs[index]);
 
 			name = localization.GetText(LangFiles.Main, _nameKeys[PlayerId.Satan], true);
             _names[PlayerId.Satan] = name;
-            _nameChanges[PlayerId.Satan].Invoke(name);
-        }
 
-        private void SetName(int id, string name, string customName)
-		{
-            _defaults[id] = name;
+            _namesChange.Invoke(_names);
 
-            if (!string.IsNullOrWhiteSpace(customName))
-				name = customName;
-
-            _names[id] = name;
-            _nameChanges[id].Invoke(name);
-        }
-
-        [Impl(256)] private void SetName(int id, string name)
-        {
-            _names[id] = name;
-            _nameChanges[id].Invoke(name);
-            _namesChange.Invoke(_customNames);
+            // ------------ Local -----------------
+            [Impl(256)] void SetName(int id, string name, string custom)
+            {
+                _defaults[id] = name;
+                if (!string.IsNullOrEmpty(custom))
+                    name = custom;
+                _names[id] = name;
+            }
         }
 
 #if UNITY_EDITOR
