@@ -16,46 +16,46 @@ Shader "UI/Gradient"
 
 		[Toggle(UNITY_UI_ALPHACLIP)] _UseUIAlphaClip ("Use Alpha Clip", Float) = 0
 
-		[Hidden] _IsVertical ("Is Vertical", Int) = 0
-		[Hidden] _Color0 ("Color 0", Color) = (0, 0, 0, 1)
-		[Hidden] _Color1 ("Color 1", Color) = (1, 1, 1, 1)
-		[Hidden] _Color2 ("Color 2", Color) = (1, 1, 1, 1)
-		[Hidden] _Color3 ("Color 3", Color) = (1, 1, 1, 1)
-		[Hidden] _Color4 ("Color 4", Color) = (1, 1, 1, 1)
-		[Hidden] _Color5 ("Color 5", Color) = (1, 1, 1, 1)
-		[Hidden] _Color6 ("Color 6", Color) = (1, 1, 1, 1)
-		[Hidden] _Color7 ("Color 7", Color) = (1, 1, 1, 1)
+		[HideInInspector][Toggle(IS_VERTICAL)] IS_VERTICAL ("Is Vertical", Int) = 0
+		[HideInInspector] _Color0 ("Color 0", Color) = (0, 0, 0, 1)
+		[HideInInspector] _Color1 ("Color 1", Color) = (1, 1, 1, 1)
+		[HideInInspector] _Color2 ("Color 2", Color) = (1, 1, 1, 1)
+		[HideInInspector] _Color3 ("Color 3", Color) = (1, 1, 1, 1)
+		[HideInInspector] _Color4 ("Color 4", Color) = (1, 1, 1, 1)
+		[HideInInspector] _Color5 ("Color 5", Color) = (1, 1, 1, 1)
+		[HideInInspector] _Color6 ("Color 6", Color) = (1, 1, 1, 1)
+		[HideInInspector] _Color7 ("Color 7", Color) = (1, 1, 1, 1)
 	 
-		[Hidden] _ColorTime0 ("Color Time 0", Float) = 0
-		[Hidden] _ColorTime1 ("Color Time 1", Float) = 1
-		[Hidden] _ColorTime2 ("Color Time 2", Float) = -1
-		[Hidden] _ColorTime3 ("Color Time 3", Float) = -1
-		[Hidden] _ColorTime4 ("Color Time 4", Float) = -1
-		[Hidden] _ColorTime5 ("Color Time 5", Float) = -1
-		[Hidden] _ColorTime6 ("Color Time 6", Float) = -1
-		[Hidden] _ColorTime7 ("Color Time 7", Float) = -1
+		[HideInInspector] _ColorTime0 ("Color Time 0", Float) = 0
+		[HideInInspector] _ColorTime1 ("Color Time 1", Float) = 1
+		[HideInInspector] _ColorTime2 ("Color Time 2", Float) = -1
+		[HideInInspector] _ColorTime3 ("Color Time 3", Float) = -1
+		[HideInInspector] _ColorTime4 ("Color Time 4", Float) = -1
+		[HideInInspector] _ColorTime5 ("Color Time 5", Float) = -1
+		[HideInInspector] _ColorTime6 ("Color Time 6", Float) = -1
+		[HideInInspector] _ColorTime7 ("Color Time 7", Float) = -1
 
-		[Hidden] _Colors ("Colors", Int) = 2
+		[HideInInspector] _Colors ("Colors", Int) = 2
 		 
-		[Hidden] _Alpha0 ("Alpha 0", Float) = 1
-		[Hidden] _Alpha1 ("Alpha 1", Float) = 1
-		[Hidden] _Alpha2 ("Alpha 2", Float) = -1
-		[Hidden] _Alpha3 ("Alpha 3", Float) = -1
-		[Hidden] _Alpha4 ("Alpha 4", Float) = -1
-		[Hidden] _Alpha5 ("Alpha 5", Float) = -1
-		[Hidden] _Alpha6 ("Alpha 6", Float) = -1
-		[Hidden] _Alpha7 ("Alpha 7", Float) = -1
+		[HideInInspector] _Alpha0 ("Alpha 0", Float) = 1
+		[HideInInspector] _Alpha1 ("Alpha 1", Float) = 1
+		[HideInInspector] _Alpha2 ("Alpha 2", Float) = -1
+		[HideInInspector] _Alpha3 ("Alpha 3", Float) = -1
+		[HideInInspector] _Alpha4 ("Alpha 4", Float) = -1
+		[HideInInspector] _Alpha5 ("Alpha 5", Float) = -1
+		[HideInInspector] _Alpha6 ("Alpha 6", Float) = -1
+		[HideInInspector] _Alpha7 ("Alpha 7", Float) = -1
 
-		[Hidden] _AlphaTime0 ("Alpha Time 0", Float) = 0
-		[Hidden] _AlphaTime1 ("Alpha Time 1", Float) = 1
-		[Hidden] _AlphaTime2 ("Alpha Time 2", Float) = -1
-		[Hidden] _AlphaTime3 ("Alpha Time 3", Float) = -1
-		[Hidden] _AlphaTime4 ("Alpha Time 4", Float) = -1
-		[Hidden] _AlphaTime5 ("Alpha Time 5", Float) = -1
-		[Hidden] _AlphaTime6 ("Alpha Time 6", Float) = -1
-		[Hidden] _AlphaTime7 ("Alpha Time 7", Float) = -1
+		[HideInInspector] _AlphaTime0 ("Alpha Time 0", Float) = 0
+		[HideInInspector] _AlphaTime1 ("Alpha Time 1", Float) = 1
+		[HideInInspector] _AlphaTime2 ("Alpha Time 2", Float) = -1
+		[HideInInspector] _AlphaTime3 ("Alpha Time 3", Float) = -1
+		[HideInInspector] _AlphaTime4 ("Alpha Time 4", Float) = -1
+		[HideInInspector] _AlphaTime5 ("Alpha Time 5", Float) = -1
+		[HideInInspector] _AlphaTime6 ("Alpha Time 6", Float) = -1
+		[HideInInspector] _AlphaTime7 ("Alpha Time 7", Float) = -1
 
-		[Hidden] _Alphas ("Alphas", Int) = 2
+		[HideInInspector] _Alphas ("Alphas", Int) = 2
 	}
 
 	SubShader
@@ -98,6 +98,7 @@ Shader "UI/Gradient"
 
 			#pragma multi_compile_local _ UNITY_UI_CLIP_RECT
 			#pragma multi_compile_local _ UNITY_UI_ALPHACLIP
+			#pragma multi_compile_local _ IS_VERTICAL
 
 			struct appdata_t
 			{
@@ -109,9 +110,9 @@ Shader "UI/Gradient"
 
 			struct v2f
 			{
-				float4 vertex   : SV_POSITION;
-				fixed4 color    : COLOR;
-				float2 texcoord  : TEXCOORD0;
+				float4 vertex		 : SV_POSITION;
+				fixed4 color		 : COLOR;
+				float2 texcoord		 : TEXCOORD0;
 				float4 worldPosition : TEXCOORD1;
 				UNITY_VERTEX_OUTPUT_STEREO
 			};
@@ -122,7 +123,6 @@ Shader "UI/Gradient"
 			float4 _ClipRect;
 			float4 _MainTex_ST;
 
-			int _IsVertical;
 			float4 _Color0, _Color1, _Color2, _Color3, _Color4, _Color5, _Color6, _Color7;
 			float  _Alpha0, _Alpha1, _Alpha2, _Alpha3, _Alpha4, _Alpha5, _Alpha6, _Alpha7;
 			float  _ColorTime0, _ColorTime1, _ColorTime2, _ColorTime3, _ColorTime4, _ColorTime5, _ColorTime6, _ColorTime7;
@@ -141,7 +141,11 @@ Shader "UI/Gradient"
 				float  av1 = aa[0], av2 = aa[_Alphas - 1];
 				float  at1 = at[0], at2 = at[_Alphas - 1];
 
-				float t = _IsVertical ? texcoord.y : texcoord.x;
+				#ifdef IS_VERTICAL
+				float t = texcoord.y;
+				#else
+				float t = texcoord.x;
+				#endif
 
 				for (int i = 0; i < _Colors; i++)
 				{

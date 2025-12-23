@@ -1,5 +1,3 @@
-// Unity built-in shader source. Copyright (c) 2016 Unity Technologies. MIT license (see license.txt)
-
 Shader "UI/Default ZTest"
 {
     Properties
@@ -72,9 +70,9 @@ Shader "UI/Default ZTest"
 
             struct v2f
             {
-                float4 vertex   : SV_POSITION;
-                fixed4 color    : COLOR;
-                float2 texcoord  : TEXCOORD0;
+                float4 vertex        : SV_POSITION;
+                fixed4 color         : COLOR;
+                float2 texcoord      : TEXCOORD0;
                 float4 worldPosition : TEXCOORD1;
                 UNITY_VERTEX_OUTPUT_STEREO
             };

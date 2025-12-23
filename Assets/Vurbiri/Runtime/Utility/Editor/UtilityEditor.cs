@@ -146,6 +146,12 @@ namespace Vurbiri
             so.FindProperty(field).colorValue = color;
             so.ApplyModifiedProperties();
         }
+        public static void SetMaterialField(this Image self, Material material)
+        {
+            SerializedObject so = new(self);
+            so.FindProperty("m_Material").objectReferenceValue = material;
+            so.ApplyModifiedProperties();
+        }
         public static void SetImageFields(this Image self, Color color, float pixelsPerUnit)
         {
             SerializedObject so = new(self);

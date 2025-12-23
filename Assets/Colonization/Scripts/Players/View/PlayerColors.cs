@@ -5,7 +5,7 @@ using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 namespace Vurbiri.Colonization
 {
     [Serializable]
-    public partial class PlayerColors : IDisposable
+    public partial class PlayerColors
     {
         [SerializeField] private Color[] _colors;
         [SerializeField] private Color32[] _defaults;
@@ -27,11 +27,6 @@ namespace Vurbiri.Colonization
                     return false;
 
             return true;
-        }
-
-        public void Dispose()
-        {
-            _colorsChange.Clear();
         }
 
 #if UNITY_EDITOR

@@ -84,7 +84,7 @@ namespace Vurbiri.International
 #if UNITY_EDITOR
 			if (UnityEditor.EditorApplication.isPlayingOrWillChangePlaymode)
 #endif
-			s_instance._changed.Remove(action);
+			s_instance?._changed.Remove(action);
 		}
 
 		public SystemLanguage IdFromCode(string code)

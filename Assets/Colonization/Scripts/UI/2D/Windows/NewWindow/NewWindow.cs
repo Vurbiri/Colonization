@@ -88,6 +88,18 @@ namespace Vurbiri.Colonization.UI
         private void OnApplicationQuit() => OnDestroy();
 
 #if UNITY_EDITOR
+
+        public void UpdateVisuals_Ed(float pixelsPerUnit, SceneColorsEd colors)
+        {
+            GetComponent<UnityEngine.UI.Image>().SetImageFields(colors.panelBack, pixelsPerUnit);
+
+            GetComponentInChildren<SimpleButton>().SetColor_Ed(colors.panelBack);
+
+            var startButton = this.GetComponentInChildren<UnityEngine.UI.Image>("StartButton");
+            startButton.SetColorField(colors.menu);
+            startButton.GetComponentInChildren<TMPro.TMP_Text>().SetColorField(colors.panelText);
+        }
+
         protected override void OnValidate()
         {
             if (UnityEditor.EditorApplication.isPlayingOrWillChangePlaymode)

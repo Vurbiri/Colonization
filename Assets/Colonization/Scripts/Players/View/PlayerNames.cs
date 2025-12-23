@@ -78,7 +78,6 @@ namespace Vurbiri.Colonization
 
         public void Dispose()
         {
-            _namesChange.Clear();
             Localization.Unsubscribe(SetNames);
         }
 

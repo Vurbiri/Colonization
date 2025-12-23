@@ -23,6 +23,11 @@ namespace Vurbiri
             self.a = alpha;
             return self;
         }
+        [Impl(256)] public static Color SetComponent(this Color self, int component, float value)
+        {
+            self[component] = value;
+            return self;
+        }
 
         [Impl(256)] public static bool IsEquals(this Color32 self, Color32 other)
         {

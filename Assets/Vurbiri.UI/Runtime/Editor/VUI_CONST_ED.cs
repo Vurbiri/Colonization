@@ -14,13 +14,13 @@ namespace Vurbiri.UI
         public const string TOGGLE_GROUP = "Toggle Group";
         public const int TOGGLE_ORDER = 31;
 
-        public const string BAR_FLOAT = "Bar Float";
-        public const string BAR_INT = "Bar Int";
-        public const string BAR_ARITHMETIC = "Bar Arithmetic";
+        public const string BAR_FLOAT = "Float Bar";
+        public const string BAR_INT = "Int Bar";
+        public const string BAR_ARITHMETIC = "Arithmetic Bar";
         public const int BAR_ORDER = 33;
 
-        public const string SLIDER_FLOAT = "Slider Float";
-        public const string SLIDER_INT = "Slider Int";
+        public const string SLIDER_FLOAT = "Float Slider";
+        public const string SLIDER_INT = "Int Slider";
         public const int SLIDER_ORDER = 34;
 
         public const string SELECTABLE = "Selectable";

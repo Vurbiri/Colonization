@@ -1,5 +1,6 @@
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 namespace VurbiriEditor.UI
 {
@@ -26,6 +27,7 @@ namespace VurbiriEditor.UI
 			EditorGUILayout.Space();
 
 			var material = (Material)materialEditor.target;
+            var keyVertical = new LocalKeyword(material.shader, "IS_VERTICAL");
 
             bool isDirty = false;
 
@@ -65,14 +67,14 @@ namespace VurbiriEditor.UI
                 isDirty = true;
             }
 
-            bool isVertical = material.GetInt("_IsVertical") > 0;
+            bool isVertical = material.IsKeywordEnabled(keyVertical);
             EditorGUI.BeginChangeCheck();
             {
                 isVertical = EditorGUILayout.Toggle("Is Vertical", isVertical);
             }
 			if (EditorGUI.EndChangeCheck())
 			{
-				material.SetInt("_IsVertical", isVertical ? 1 : 0);
+				material.SetKeyword(keyVertical, isVertical);
                 isDirty = true;
             }
 
