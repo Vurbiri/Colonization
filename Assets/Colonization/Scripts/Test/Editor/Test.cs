@@ -1,8 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
 using UnityEngine;
-using Vurbiri.UI;
 
 namespace Vurbiri.Colonization
 {
@@ -13,8 +13,16 @@ namespace Vurbiri.Colonization
 
 		public void Testing()
 		{
-			MessageBox.Open("Test", MBButton.OkCancel);
-		}
+			var arr = new Q[] { new() };
+			print(arr[0].x);
+			arr[0].Add(5);
+            print(arr[0].x);
+
+			List<Q> list = new() { new() };
+            print(list[0].x);
+            list[0].Add(5);
+            print(list[0].x);
+        }
 
 		public void MathITesting()
 		{
@@ -78,6 +86,13 @@ namespace Vurbiri.Colonization
 			print("-----------------------------------------------");
 			print($"{name1}/{name2}: {test1 / test2}");
 			print("===============================================");
+		}
+
+		private struct Q
+		{
+			public int x;
+
+			public void Add(int i) => x += i;
 		}
 	}
 }

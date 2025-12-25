@@ -12,6 +12,11 @@ namespace Vurbiri
 
             return self;
         }
+        [Impl(256)] public static void OwnBrightness(this ref Color self, float brightness)
+        {
+            for (int i = 0; i < 3; i++)
+                self[i] = Mathf.Clamp01(self[i] * brightness);
+        }
 
         [Impl(256)] public static string ToHex(this Color32 self) => $"#{self.r:X2}{self.g:X2}{self.b:X2}{self.a:X2}";
         [Impl(256)] public static string ToHex(this Color self) => $"#{ToByte(self.r):X2}{ToByte(self.g):X2}{ToByte(self.b):X2}{ToByte(self.a):X2}";
@@ -24,6 +29,11 @@ namespace Vurbiri
             return self;
         }
         [Impl(256)] public static Color SetComponent(this Color self, int component, float value)
+        {
+            self[component] = value;
+            return self;
+        }
+        [Impl(256)] public static Color SetOwnComponent(this ref Color self, int component, float value)
         {
             self[component] = value;
             return self;

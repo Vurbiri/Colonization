@@ -32,7 +32,7 @@ namespace Vurbiri.Collections
             }
         }
 
-        [Impl(256)] public void Import(TValue[] values)
+        [Impl(256)] public void SetArray(TValue[] values)
         {
             _values = values;
             _count = values.Length;

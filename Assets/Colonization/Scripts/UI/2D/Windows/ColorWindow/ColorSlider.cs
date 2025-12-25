@@ -8,7 +8,7 @@ namespace Vurbiri.Colonization.UI
 #if UNITY_EDITOR
     [RequireComponent(typeof(Image))]
 #endif
-    sealed public class ColorSlider : MonoBehaviour, IDragHandler, IInitializePotentialDragHandler, IPointerDownHandler
+    sealed public class ColorSlider : MonoBehaviour, IDragHandler, IPointerDownHandler, IInitializePotentialDragHandler
     {
         private static readonly int s_colorMinID, s_colorMaxID;
 
@@ -16,7 +16,7 @@ namespace Vurbiri.Colonization.UI
         [SerializeField] private int _axis;
         [SerializeField] private RectTransform _handle;
 
-        private readonly UVAction<int, float> _onValueChanged = new();
+        private readonly VAction<int, float> _onValueChanged = new();
         private Material _material;
         private RectTransform _handleContainer;
         private float _value;
@@ -36,8 +36,8 @@ namespace Vurbiri.Colonization.UI
         public void Set(Color color)
         {
             Set(color[_component], false);
-            _material.SetColor(s_colorMinID, color.SetComponent(_component, 0f));
-            _material.SetColor(s_colorMaxID, color.SetComponent(_component, 1f));
+            _material.SetColor(s_colorMinID, color.SetOwnComponent(_component, 0f));
+            _material.SetColor(s_colorMaxID, color.SetOwnComponent(_component, 1f));
         }
 
         private void Set(float value, bool sendCallback)
@@ -64,7 +64,7 @@ namespace Vurbiri.Colonization.UI
 
         private void UpdateDrag(PointerEventData eventData)
 		{
-            RectTransform clickRect = _handleContainer;
+            var clickRect = _handleContainer;
             if (clickRect.rect.size[_axis] > 0)
             {
                 if (RectTransformUtility.ScreenPointToLocalPointInRectangle(clickRect, eventData.position, eventData.pressEventCamera, out Vector2 localCursor))
@@ -91,7 +91,6 @@ namespace Vurbiri.Colonization.UI
 
         [Impl(256)] private bool CanDrag(PointerEventData eventData) => eventData.button == PointerEventData.InputButton.Left && isActiveAndEnabled;
 
-
         public void OnPointerDown(PointerEventData eventData)
         {
             if (!CanDrag(eventData)) return;
@@ -114,7 +113,6 @@ namespace Vurbiri.Colonization.UI
             if (CanDrag(eventData))
                 UpdateDrag(eventData);
         }
-
         public void OnInitializePotentialDrag(PointerEventData eventData) => eventData.useDragThreshold = false;
         #endregion
 
@@ -126,21 +124,21 @@ namespace Vurbiri.Colonization.UI
             if (UnityEditor.PrefabUtility.IsPartOfPrefabAsset(this))
                 return;
             
-            const string ShaderName = "UI/SimpleGradient";
-            const int Vertical = 1;
+            const string SHADER_NAME = "UI/SimpleGradient";
+            const int VERTICAL = 1;
 
             var image = GetComponent<Image>();
             var material = image.material;
 
-            if (material == null || material.shader.name != ShaderName)
+            if (material == null || material.shader.name != SHADER_NAME)
             {
-                var shader = Shader.Find(ShaderName);
+                var shader = Shader.Find(SHADER_NAME);
                 material = new Material(shader);
-                image.SetMaterialField(material);
+                image.SetObjectField(material, "m_Material");
             }
 
             UnityEngine.Rendering.LocalKeyword keyVertical = new(material.shader, "IS_VERTICAL");
-            bool isVertical = _axis == Vertical;
+            bool isVertical = _axis == VERTICAL;
             if (isVertical != material.IsKeywordEnabled(keyVertical))
             {
                 material.SetKeyword(keyVertical, isVertical);

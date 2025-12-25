@@ -28,7 +28,7 @@ namespace Vurbiri.Colonization.UI
 
         private void OnDestroy()
         {
-            _subscription.Dispose();
+            _subscription?.Dispose();
         }
 
 #if UNITY_EDITOR

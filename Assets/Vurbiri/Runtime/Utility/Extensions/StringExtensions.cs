@@ -17,10 +17,12 @@ namespace Vurbiri
         [Impl(256)] public static string Delete(this string self, string strA, string strB) => self.Replace(strA, string.Empty).Replace(strB, string.Empty);
         [Impl(256)] public static string Delete(this string self, params string[] str)
         {
-            for (int i = 0; i < str.Length; i++)
-                self = self.Replace(str[i], string.Empty);
+            System.Text.StringBuilder builder = new(self);
+
+            for (int i = 0; i < str.Length; ++i)
+                builder.Replace(str[i], string.Empty);
             
-            return self;
+            return builder.ToString();
         }
     }
 }

@@ -24,8 +24,8 @@ namespace Vurbiri.Collections
 
         [Impl(256)] public ReadOnlyArray(int count)
         {
-            _values = new TValue[count];
             _count = count;
+            _values = count == 0 ? s_empty : new TValue[count];
         }
         [Impl(256)] public ReadOnlyArray(params TValue[] values)
         {
@@ -56,6 +56,8 @@ namespace Vurbiri.Collections
 
         [Impl(256)] public int LeftIndex(int index) => (index == 0 ? _count : index) - 1;
         [Impl(256)] public int RightIndex(int index) => (index + 1) % _count;
+
+        [Impl(256)] public ref TValue Ref(int index) { return ref _values[index]; }
 
         [Impl(256)] public void CopyTo(TValue[] array, int arrayIndex) => Array.Copy(_values, 0, array, arrayIndex, _count);
 

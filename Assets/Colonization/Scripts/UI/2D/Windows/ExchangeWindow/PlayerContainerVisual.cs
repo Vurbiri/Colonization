@@ -13,12 +13,11 @@ namespace Vurbiri.Colonization.UI
 		
 		public void Init()
 		{
-			var color = GameContainer.UI.PlayerColors[PlayerId.Person];
+			Color color = GameContainer.UI.PlayerColors[PlayerId.Person];
             _caption.text = GameContainer.UI.PlayerNames[PlayerId.Person];
             _caption.color = color;
 
-            color.a = _borderAlpha;
-            _border.color = color;
+            _border.color = color.SetAlpha(_borderAlpha);
 
 			Destroy(this);
         }

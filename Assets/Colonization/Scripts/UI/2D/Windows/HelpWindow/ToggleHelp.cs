@@ -23,7 +23,7 @@ namespace Vurbiri.Colonization
 
         protected override void StartColorTween(int intState, Vector3 targetScale, Color targetColor, float duration)
         {
-            if (_isOn) targetColor = targetColor.Brightness(0.80f);
+            if (_isOn) targetColor.OwnBrightness(0.80f);
             base.StartColorTween(intState, targetScale, targetColor, duration);
         }
 

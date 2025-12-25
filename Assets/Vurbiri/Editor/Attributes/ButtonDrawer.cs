@@ -62,7 +62,7 @@ namespace VurbiriEditor
         public override float GetPropertyHeight(SerializedProperty mainProperty, GUIContent label)
         {
             float height = ((ButtonAttribute)attribute).drawProperty ? EditorGUI.GetPropertyHeight(mainProperty) + EditorGUIUtility.standardVerticalSpacing : 0f;
-            return height += EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing; ;
+            return height += EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing;
         }
     }
 }

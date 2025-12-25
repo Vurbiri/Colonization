@@ -25,7 +25,7 @@ namespace Vurbiri.Colonization
         public PlayerNames Init(ProjectStorage storage)
 		{
             if (storage.TryLoadPlayerNames(out string[] customs))
-                _customs.Import(customs);
+                _customs.SetArray(customs);
 
             Localization.Subscribe(SetNames);
 			storage.BindPlayerNames(_customsChange);

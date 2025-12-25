@@ -52,7 +52,7 @@ namespace Vurbiri.Colonization
                         }
                     }
                 }
-                return _canCast = _target != null; ;
+                return _canCast = _target != null;
             }
 
             public override void Cast(SpellParam param)

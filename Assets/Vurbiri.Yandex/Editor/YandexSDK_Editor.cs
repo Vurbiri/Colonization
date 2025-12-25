@@ -27,7 +27,7 @@ namespace Vurbiri.Yandex
         public WaitResult<bool> LogOn()
         {
             IsLogOn = true;
-            return WaitResult.Instant(IsLogOn); ;
+            return WaitResult.Instant(IsLogOn);
         }
         public WaitResult<bool> InitLeaderboards() => WaitResult.Instant(IsLeaderboard);
         public string GetPlayerAvatarURL(AvatarSize size) => string.Empty;

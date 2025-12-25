@@ -46,7 +46,7 @@ namespace Vurbiri
             bool notName = string.IsNullOrEmpty(name);
             if (obj != null && (notName || obj.gameObject.name == name)) return;
 
-            obj = notName ? Object.FindAnyObjectByType<T>(FindObjectsInactive.Include) : FindObjectByName<T>(name); ;
+            obj = notName ? Object.FindAnyObjectByType<T>(FindObjectsInactive.Include) : FindObjectByName<T>(name);
             if (obj == null)
                 LogErrorFind<T>("object", notName ? typeof(T).Name : name);
         }
@@ -138,20 +138,20 @@ namespace Vurbiri
         }
 
         // ********************************************
-        public static void SetColorField(this Graphic self, Color color) => SetColorField<Graphic>(self, color, "m_Color");
-        public static void SetColorField(this TMP_Text self, Color color) => SetColorField<TMP_Text>(self, color, "m_fontColor");
         public static void SetColorField<T>(T self, Color color, string field) where T : Object
         {
             SerializedObject so = new(self);
             so.FindProperty(field).colorValue = color;
             so.ApplyModifiedProperties();
         }
-        public static void SetMaterialField(this Image self, Material material)
+        public static void SetObjectField(this Object self, Object obj, string field)
         {
             SerializedObject so = new(self);
-            so.FindProperty("m_Material").objectReferenceValue = material;
+            so.FindProperty(field).objectReferenceValue = obj;
             so.ApplyModifiedProperties();
         }
+        public static void SetColorField(this Graphic self, Color color) => SetColorField<Graphic>(self, color, "m_Color");
+        public static void SetColorField(this TMP_Text self, Color color) => SetColorField<TMP_Text>(self, color, "m_fontColor");
         public static void SetImageFields(this Image self, Color color, float pixelsPerUnit)
         {
             SerializedObject so = new(self);

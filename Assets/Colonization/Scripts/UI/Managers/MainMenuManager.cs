@@ -39,7 +39,7 @@ namespace Vurbiri.Colonization
 
             public void OnOpenWindow(Switcher switcher)
             {
-                _current?.SilentClose();
+                _current?.Close();
                 _current = switcher;
             }
             public void OnCloseWindow(Switcher switcher)
@@ -50,7 +50,7 @@ namespace Vurbiri.Colonization
 
             public void Continue()
             {
-                _current?.SilentClose();
+                _current?.Close();
                 Vurbiri.EntryPoint.Transition.Exit();
             }
         }

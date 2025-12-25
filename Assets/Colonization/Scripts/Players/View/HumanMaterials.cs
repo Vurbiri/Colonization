@@ -5,7 +5,9 @@ namespace Vurbiri.Colonization
 {
 	public class HumanMaterials
 	{
-		private readonly Material _materialLit;
+		private static readonly int s_colorID, s_baseColorID;
+
+        private readonly Material _materialLit;
 		private readonly Material _materialUnlit;
 		private readonly Material _materialWarriors;
 		private Color _color;
@@ -15,7 +17,13 @@ namespace Vurbiri.Colonization
 		public Material Warriors { [Impl(256)] get => _materialWarriors; }
 		public Color Color { [Impl(256)] get => _color; }
 
-		public HumanMaterials(Material materialLit, Material materialUnlit, Material materialWarriors)
+        static HumanMaterials()
+        {
+            s_colorID = Shader.PropertyToID("_Color");
+            s_baseColorID = Shader.PropertyToID("_BaseColor");
+        }
+
+        public HumanMaterials(Material materialLit, Material materialUnlit, Material materialWarriors)
 		{
 			_materialLit = materialLit;
 			_materialUnlit = materialUnlit;
@@ -25,9 +33,9 @@ namespace Vurbiri.Colonization
 		public void SetColor(Color color)
 		{
 			_color = color;
-			_materialLit.color = color;
-			_materialUnlit.color = color;
-			_materialWarriors.color = color;
-		}
+			_materialLit.SetColor(s_baseColorID, color);
+			_materialUnlit.SetColor(s_baseColorID, color);
+            _materialWarriors.SetColor(s_colorID, color);
+        }
 	}
 }

@@ -81,7 +81,7 @@ namespace Vurbiri.Colonization.UI
 
             Vector2 position = new(0f, PerkSize.y), current;
             Vector2 offset = new(0f, -_separatorsContainer.pivot.y * mainSize.y);
-            SerializedObject so;;
+            SerializedObject so;
             for (int i = 0; i < _countLevels; i++)
             {
                 current = position * i + offset;

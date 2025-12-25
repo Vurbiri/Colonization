@@ -1,3 +1,4 @@
+using UnityEngine;
 using Vurbiri.Collections;
 using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
@@ -19,9 +20,9 @@ namespace Vurbiri.Colonization
         }
 
         private void Set(ReadOnlyArray<string> names) => Set(names, ProjectContainer.UI.PlayerColors);
-        private void Set(PlayerColors colors) => Set(ProjectContainer.UI.PlayerNames, colors);
+        private void Set(ReadOnlyArray<Color32> colors) => Set(ProjectContainer.UI.PlayerNames, colors);
 
-        [Impl(256)] private void Set(ReadOnlyArray<string> names, PlayerColors colors)
+        [Impl(256)] private void Set(ReadOnlyArray<string> names, ReadOnlyArray<Color32> colors)
         {
             for (int i = 0; i < PlayerId.Count; ++i)
                 _names[i] = $"<{colors[i].ToHex()}>{names[i]}</color>";

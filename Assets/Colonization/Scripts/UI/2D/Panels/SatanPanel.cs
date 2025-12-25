@@ -107,7 +107,8 @@ namespace Vurbiri.Colonization.UI
 
         public void UpdateVisuals_Ed(PlayerColors playerColors, Vector2 padding)
         {
-            _bar.color = _icon.color = playerColors[PlayerId.Satan];
+            Color color = playerColors[PlayerId.Satan];
+            _bar.color = color; _icon.color = color;
 
             _padding = -padding;
             var rectTransform = (RectTransform)transform;

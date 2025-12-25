@@ -22,7 +22,7 @@ namespace Vurbiri.Colonization.UI
             _backgroundBar.size = size;
 
             _backgroundBar.color = colors[ActorAbilityId.MaxHP];
-            _hpSprite.color = colors[ActorAbilityId.CurrentHP]; ;
+            _hpSprite.color = colors[ActorAbilityId.CurrentHP];
 
             _backgroundBar.sortingOrder += orderLevel;
             _barSprite.sortingOrder += orderLevel;

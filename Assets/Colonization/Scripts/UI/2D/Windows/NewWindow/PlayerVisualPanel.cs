@@ -11,15 +11,19 @@ namespace Vurbiri.Colonization.UI
 		[Space]
 		[SerializeField] private TMP_InputField _inputName;
         [SerializeField] private HintButton _nameReset;
+        [SerializeField] private ColorInputField _inputColor;
+        [SerializeField] private HintButton _colorReset;
 
-        public string Name { [Impl(256)] get => _inputName.text; }
+        public (string, Color32) Input { [Impl(256)] get => new(_inputName.text, _inputColor.Color); }
 
-        public void Init(PlayerNames players)
+        public void Init(PlayerNames names, PlayerColors colors, ColorWindow window)
 		{
-			_inputName.SetTextWithoutNotify(players[_id]);
+			_inputName.SetTextWithoutNotify(names[_id]);
             _inputName.onEndEdit.AddListener(OnEndNameEdit);
-
             _nameReset.AddListener(NameReset); _nameReset = null;
+
+            _inputColor.Init(colors[_id], window);
+            _colorReset.AddListener(ColorReset); _colorReset = null;
         }
 
         public void Dispose()
@@ -43,6 +47,11 @@ namespace Vurbiri.Colonization.UI
                 _inputName.SetTextWithoutNotify(name);
         }
 
+        private void ColorReset()
+        {
+            _inputColor.SetColor(ProjectContainer.UI.PlayerColors.GetDefault(_id));
+        }
+
 #if UNITY_EDITOR
 
         private RectTransform _panel;
@@ -52,7 +61,9 @@ namespace Vurbiri.Colonization.UI
 			_id = id;
             parent.SetChildren(ref _panel, $"PlayerVisualPanel_{id}");
 			_panel.SetChildren(ref _inputName);
-            _panel.SetChildren(ref _nameReset, "NameReset");
+            _inputName.SetChildren(ref _nameReset);
+            _panel.SetChildren(ref _inputColor);
+            _inputColor.SetChildren(ref _colorReset);
         }
 #endif
     }

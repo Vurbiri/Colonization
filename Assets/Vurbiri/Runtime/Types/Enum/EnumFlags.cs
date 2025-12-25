@@ -58,7 +58,7 @@ namespace Vurbiri
         [Impl(256)] private EnumFlags(int value, int i, bool operation)
         {
             Throw.IfOutOfRange(i, 0, s_count);
-            _value = operation ? value |= 1 << i : value &= ~(1 << i); ;
+            _value = operation ? value |= 1 << i : value &= ~(1 << i);
         }
         [Impl(256)] private EnumFlags(int value, T e, bool operation)
         {

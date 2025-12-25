@@ -18,10 +18,7 @@ namespace Vurbiri.Colonization
             if (UnityEditor.EditorApplication.isPlayingOrWillChangePlaymode)
                 return;
 
-            if(_switcher == null)
-                _switcher = new(this);
-            else
-                _switcher.OnValidate(this);
+            _switcher?.OnValidate(this);
         }
 
         //public virtual void UpdateVisuals_Ed(float pixelsPerUnit, ProjectColors project, SceneColorsEd scene)
