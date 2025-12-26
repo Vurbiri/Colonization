@@ -15,8 +15,8 @@ namespace Vurbiri.Colonization
 		[SerializeField] private SceneColorsEd _colors;
 		[Space]
 		[SerializeField, HideInInspector] private CanvasHint _hint;
-        [SerializeField, HideInInspector] private NewWindow _newWindow;
-        [SerializeField, HideInInspector] private SettingsWindow _settingsWindow;
+		[SerializeField, HideInInspector] private NewWindow _newWindow;
+		[SerializeField, HideInInspector] private SettingsWindow _settingsWindow;
 		[SerializeField, HideInInspector] private MainMenuManager _menu;
 		[SerializeField, HideInInspector] private MenuEntryPoint _entryPoint;
 		[EndEditor] public bool endEditor;
@@ -31,8 +31,8 @@ namespace Vurbiri.Colonization
 			float windowsPixelsPerUnit = _windowsPixelsPerUnit;
 
 			_hint.UpdateVisuals_Ed(_colors.hintBack, _colors.hintText);
-            _newWindow.UpdateVisuals_Ed(windowsPixelsPerUnit, _colors);
-            _settingsWindow.UpdateVisuals_Ed(windowsPixelsPerUnit, _colors);
+			_newWindow.UpdateVisuals_Ed(windowsPixelsPerUnit, _colors);
+			_settingsWindow.UpdateVisuals_Ed(windowsPixelsPerUnit, _colors);
 
 			_menu.SetColors_Ed(_colors);
 			_entryPoint.SetColors_Ed(_colors);
@@ -54,18 +54,18 @@ namespace Vurbiri.Colonization
 				EUtility.SetScriptable(ref _colorSettings);
 
 				EUtility.SetObject(ref _hint);
-                EUtility.SetObject(ref _newWindow);
-                EUtility.SetObject(ref _settingsWindow);
+				EUtility.SetObject(ref _newWindow);
+				EUtility.SetObject(ref _settingsWindow);
 				//EUtility.SetObject(ref _helpWindow);
 				EUtility.SetObject(ref _menu);
 				EUtility.SetObject(ref _entryPoint);
 
 				CanvasUpdateRegistry.RegisterCanvasElementForLayoutRebuild(this);
 
-                _colors = _colorSettings.menu;
+				_colors = _colorSettings.menu;
 
-                _windowsPixelsPerUnit = _colorSettings.windowsPixelsPerUnit;
-            }
+				_windowsPixelsPerUnit = _colorSettings.windowsPixelsPerUnit;
+			}
 		}
 	}
 }

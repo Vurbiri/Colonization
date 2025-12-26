@@ -9,8 +9,8 @@ namespace Vurbiri.Colonization.UI
 {
 	public class ActorBar : MonoBehaviour
     {
-        private static short s_orderLevel = short.MinValue;
-        private static readonly short s_incOrderLevel = 7;
+        private const short ADD_LVL = 7;
+        private static short s_currentOrderLevel = short.MinValue;
 
         [SerializeField] private Settings _settings;
 
@@ -103,19 +103,16 @@ namespace Vurbiri.Colonization.UI
 
                 bar._renderer = _hpBar.Renderer;
                 bar._thisTransform.localPosition = new(0f, actor.Skin.Size.y + _offset, 0f);
+                bar._selfOrderLevel = unchecked(s_currentOrderLevel += ADD_LVL);
 
-                if (s_orderLevel >= short.MaxValue - (s_incOrderLevel << 1))
-                    s_orderLevel = short.MinValue;
-                bar._selfOrderLevel = s_orderLevel += s_incOrderLevel;
+                _popup.Init(s_currentOrderLevel);
 
-                _popup.Init(s_orderLevel);
-
-                bar.Add(_hpBar.Get(abilities, abilitiesColors, _popup, s_orderLevel));
-                bar.Add(_apBar.Get(abilities, abilitiesColors, s_orderLevel));
-                bar.Add(new MoveBar(_moveSprite, abilities, abilitiesColors, s_orderLevel));
+                bar.Add(_hpBar.Get(abilities, abilitiesColors, _popup, s_currentOrderLevel));
+                bar.Add(_apBar.Get(abilities, abilitiesColors, s_currentOrderLevel));
+                bar.Add(new MoveBar(_moveSprite, abilities, abilitiesColors, s_currentOrderLevel));
 
                 foreach (var value in _valueBars)
-                    bar.Add(value.Get(abilities, abilitiesColors, _popup, s_orderLevel));
+                    bar.Add(value.Get(abilities, abilitiesColors, _popup, s_currentOrderLevel));
             }
 
 #if UNITY_EDITOR

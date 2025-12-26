@@ -6,7 +6,7 @@ namespace Vurbiri
 {
 	public static class ParticleSystemExtensions
 	{
-        [Impl(256)] public static float GetAvgSpeed(this MinMaxCurve self)
+        [Impl(256)] public static float GetAvgSpeed(this in MinMaxCurve self)
         {
             return self.mode switch
             {

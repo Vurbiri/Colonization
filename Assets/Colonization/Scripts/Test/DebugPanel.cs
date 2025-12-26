@@ -11,29 +11,29 @@ namespace Vurbiri.Colonization
 		private TMP_InputField _input;
 		private int _inputValue;
 
-        private void Start()
+		private void Start()
 		{
 			_dropdown = GetComponentInChildren<TMP_Dropdown>();
-            _dropdown.ClearOptions();
-            _dropdown.AddOptions(new List<string>()
-            {
-                "Res.+",
-                "Blood+",
-                "Warrior",
-                "Demon",
-                "Chaos-",
-                "Chaos+",
-                "Score+",
-                "Artefact+",
-                "Spawn",
-            });
+			_dropdown.ClearOptions();
+			_dropdown.AddOptions(new List<string>()
+			{
+				"Res.+",
+				"Blood+",
+				"Warrior",
+				"Demon",
+				"Chaos-",
+				"Chaos+",
+				"Score+",
+				"Artefact+",
+				"Spawn",
+			});
 			_dropdown.value = 0;
 
-            _input = GetComponentInChildren<TMP_InputField>();
-            _input.onEndEdit.AddListener(OnInput);
+			_input = GetComponentInChildren<TMP_InputField>();
+			_input.onEndEdit.AddListener(OnInput);
 
-            //gameObject.SetActive(false);
-            GameContainer.InputController.OnDebug.Add(SwitchEnable);
+			//gameObject.SetActive(false);
+			GameContainer.InputController.OnDebug.Add(SwitchEnable);
 		}
 
 		public void Invoke()

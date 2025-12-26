@@ -88,16 +88,16 @@ namespace Vurbiri.Colonization
 			}
 
 #if TEST
-            sealed public override bool IsApplied(int id, Actor target)
+			sealed public override bool IsApplied(int id, Actor target)
 			{
 				try
 				{
-                    return target._effects.Contains(_actionSkills[id].code);
-                }
+					return target._effects.Contains(_actionSkills[id].code);
+				}
 				catch
 				{
-                    UnityEngine.Debug.Log($"{_actor._owner}-{_actor._id}");
-                    UnityEngine.Debug.LogError($"{target._owner}-{target._id}: HP: {target._HP}, _effects {target._effects.Count}");
+					UnityEngine.Debug.Log($"{_actor._owner}-{_actor._id}");
+					UnityEngine.Debug.LogError($"{target._owner}-{target._id}: HP: {target._HP}, _effects {target._effects.Count}");
 					return false;
 				}
 			}
@@ -106,7 +106,7 @@ namespace Vurbiri.Colonization
 #endif
 
 
-            sealed public override WaitStateSource<DeathStage> Death()
+			sealed public override WaitStateSource<DeathStage> Death()
 			{
 				_stateMachine.ForceSetState(_deathState = new(this), true);
 				return _deathState.stage;

@@ -5,127 +5,127 @@ using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization
 {
-    public class Crossroads
-    {
-        private readonly Dictionary<Key, Crossroad> _crossroads = new(CROSS.MAX);
-        private readonly Coast _coast = new();
+	public class Crossroads
+	{
+		private readonly Dictionary<Key, Crossroad> _crossroads = new(CROSS.MAX);
+		private readonly Coast _coast = new();
 
-        private ReadOnlyArray<int> _hexWeight;
-        private Transform _container;
-       
-        private Vector3[] _vertices = new Vector3[HEX.VERTICES];
-        private Quaternion[] _angles = { Quaternion.Euler(0f, 180f, 0f), Quaternion.identity };
+		private ReadOnlyArray<int> _hexWeight;
+		private Transform _container;
+	   
+		private Vector3[] _vertices = new Vector3[HEX.VERTICES];
+		private Quaternion[] _angles = { Quaternion.Euler(0f, 180f, 0f), Quaternion.identity };
 
-        public Crossroad this[Key key] { [Impl(256)] get => _crossroads[key]; }
+		public Crossroad this[Key key] { [Impl(256)] get => _crossroads[key]; }
 
-        public int CoastCount  { [Impl(256)] get => _coast.Count; }
+		public int CoastCount  { [Impl(256)] get => _coast.Count; }
 
-        public Crossroads(Transform container, ReadOnlyIdSet<EdificeId, AEdifice> prefabs)
-        {
-            _hexWeight = SettingsFile.Load<HexWeight>();
-            _container = container;
+		public Crossroads(Transform container, ReadOnlyIdSet<EdificeId, AEdifice> prefabs)
+		{
+			_hexWeight = SettingsFile.Load<HexWeight>();
+			_container = container;
 
-            Crossroad.Init(prefabs);
+			Crossroad.Init(prefabs);
 
-            for (int i = 0; i < HEX.VERTICES; i++)
-                _vertices[i] = HEX.RADIUS_OUT * CROSS.DIRECTIONS[i];
-        }
+			for (int i = 0; i < HEX.VERTICES; i++)
+				_vertices[i] = HEX.RADIUS_OUT * CROSS.DIRECTIONS[i];
+		}
 
-        public void CrossroadCreate(Vector3 positionHex, Hexagon hex, bool isLastCircle)
-        {
-            Crossroad cross; Key key; Vector3 position;
-            for (int i = 0, type; i < HEX.VERTICES; i++)
-            {
-                position = _vertices[i] + positionHex;
+		public void CrossroadCreate(Vector3 positionHex, Hexagon hex, bool isLastCircle)
+		{
+			Crossroad cross; Key key; Vector3 position;
+			for (int i = 0, type; i < HEX.VERTICES; i++)
+			{
+				position = _vertices[i] + positionHex;
 
-                key = position.CrossPositionToKey();
+				key = position.CrossPositionToKey();
 
-                if (!_crossroads.TryGetValue(key, out cross))
-                {
-                    if (isLastCircle)
-                        continue;
+				if (!_crossroads.TryGetValue(key, out cross))
+				{
+					if (isLastCircle)
+						continue;
 
-                    type = i % CrossroadType.Count;
-                    cross = new(type, key, _container, position, _angles[type]);
-                    _crossroads.Add(key, cross);
-                }
+					type = i % CrossroadType.Count;
+					cross = new(type, key, _container, position, _angles[type]);
+					_crossroads.Add(key, cross);
+				}
 
-                if (cross.AddHexagon(hex, out bool ending))
-                {
-                    if (ending)
-                    {
-                        cross.Setup(_hexWeight);
-                        _coast.Add(cross);
-                    }
-                }
-                else
-                {
-                    _crossroads.Remove(key);
-                }
-            }
-        }
+				if (cross.AddHexagon(hex, out bool ending))
+				{
+					if (ending)
+					{
+						cross.Setup(_hexWeight);
+						_coast.Add(cross);
+					}
+				}
+				else
+				{
+					_crossroads.Remove(key);
+				}
+			}
+		}
 
-        public void FinishCreate()
-        {
-            _container = null;
-            _hexWeight = null;
-            _vertices = null;
-            _angles = null;
+		public void FinishCreate()
+		{
+			_container = null;
+			_hexWeight = null;
+			_vertices = null;
+			_angles = null;
 
-            _coast.TrimExcess();
-        }
+			_coast.TrimExcess();
+		}
 
-        [Impl(256)] public Crossroad GetRandomPort() => _crossroads[_coast.Roll];
+		[Impl(256)] public Crossroad GetRandomPort() => _crossroads[_coast.Roll];
 
-        public bool TryExtractPort(out Crossroad crossroad)
-        {
-            crossroad = null;
-            if (_coast.Count > 0)
-            {
-                crossroad = _crossroads[_coast.Extract()];
-                crossroad.BannedBuild.Remove(_coast.RemoveKey);
-            }
-            return crossroad != null;
-        }
-        public void ReturnPorts(List<Crossroad> ports)
-        {
-            for (int i = ports.Count - 1; i >= 0; --i)
-                _coast.Add(ports[i]);
-        }
+		public bool TryExtractPort(out Crossroad crossroad)
+		{
+			crossroad = null;
+			if (_coast.Count > 0)
+			{
+				crossroad = _crossroads[_coast.Extract()];
+				crossroad.BannedBuild.Remove(_coast.RemoveKey);
+			}
+			return crossroad != null;
+		}
+		public void ReturnPorts(List<Crossroad> ports)
+		{
+			for (int i = ports.Count - 1; i >= 0; --i)
+				_coast.Add(ports[i]);
+		}
 
-        [Impl(256)] public bool IsDeadEnd(Key start, Key end, Id<PlayerId> playerId) => _crossroads[start].IsDeadEnd(playerId) || _crossroads[end].IsDeadEnd(playerId);
-        [Impl(256)] public int DeadEndCount(Key start, Key end, Id<PlayerId> playerId) => (_crossroads[start].IsDeadEnd(playerId) ? 1:0) + (_crossroads[end].IsDeadEnd(playerId) ? 1:0);
+		[Impl(256)] public bool IsDeadEnd(Key start, Key end, Id<PlayerId> playerId) => _crossroads[start].IsDeadEnd(playerId) || _crossroads[end].IsDeadEnd(playerId);
+		[Impl(256)] public int DeadEndCount(Key start, Key end, Id<PlayerId> playerId) => (_crossroads[start].IsDeadEnd(playerId) ? 1:0) + (_crossroads[end].IsDeadEnd(playerId) ? 1:0);
 
 
-        #region Nested: Coast
-        //***********************************
-        private class Coast : WeightsList<Key>
-        {
-            public Coast() : base(HEX.SIDES * (CONST.MAX_CIRCLES + HEX.SIDES)) { }
+		#region Nested: Coast
+		//***********************************
+		private class Coast : WeightsList<Key>
+		{
+			public Coast() : base(HEX.SIDES * (CONST.MAX_CIRCLES + HEX.SIDES)) { }
 
-            public void Add(Crossroad crossroad)
-            {
-                if (crossroad.CanBuildOnCoast && HexagonsValid(crossroad.Hexagons))
-                {
-                    base.Add(crossroad.Key, crossroad.Weight);
-                    crossroad.BannedBuild.Add(RemoveKey);
-                }
-            }
+			public void Add(Crossroad crossroad)
+			{
+				if (crossroad.CanBuildOnCoast && HexagonsValid(crossroad.Hexagons))
+				{
+					base.Add(crossroad.Key, crossroad.Weight);
+					crossroad.BannedBuild.Add(RemoveKey);
+				}
+			}
 
-            private bool HexagonsValid(ReadOnlyArray<Hexagon> hexagons)
-            {
-                const int maxX = CONST.MAX_CIRCLES << 1; Key key;
-                for (int i = 0; i < Crossroad.HEX_COUNT; i++)
-                {
-                    key = hexagons[i].Key.Abs();
-                    if(key.x == maxX || (key.x == key.y & key.x == CONST.MAX_CIRCLES))
-                        return false;
-                }
-                return true;
-            }
+			private bool HexagonsValid(ReadOnlyArray<Hexagon> hexagons)
+			{
+				const int maxX = CONST.MAX_CIRCLES << 1; Key key;
+				for (int i = 0; i < Crossroad.HEX_COUNT; i++)
+				{
+					key = hexagons[i].Key.Abs();
+					if(key.x == maxX || (key.x == key.y & key.x == CONST.MAX_CIRCLES))
+						return false;
+				}
+				return true;
+			}
 
-            public void RemoveKey(Key key) => RemoveAtInternal(FindIndex(key));
-        }
-        #endregion
-    }
+			public void RemoveKey(Key key) => RemoveAtInternal(FindIndex(key));
+		}
+		#endregion
+	}
 }

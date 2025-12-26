@@ -22,7 +22,7 @@ namespace Vurbiri.Colonization.EntryPoint
 
         public override void Enter(Loading loading, Transition transition)
         {
-            Log.Info($"[GameEntryPoint] Enter");
+            Log.Info($"[Game] Enter");
 
             GameContent content = new();
 #if TEST_LOAD

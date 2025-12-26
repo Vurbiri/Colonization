@@ -55,7 +55,7 @@ namespace Vurbiri.UI
             }
         }
 
-        public static void SetColors(MessageBoxColors colors)
+        public static void SetColors(in MessageBoxColors colors)
         {
             s_instance._windowImage.color = colors.window;
             s_instance._textTMP.color = colors.text;

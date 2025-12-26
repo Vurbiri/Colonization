@@ -26,7 +26,7 @@ namespace Vurbiri.Collections
 
         public bool MoveNext()
         {
-            _version.Validate();
+            _version.Verify();
 
             bool canMoveNext; T current = null;
             while ((canMoveNext = ++_cursor < _count) && (current = _values[_cursor]) == null);

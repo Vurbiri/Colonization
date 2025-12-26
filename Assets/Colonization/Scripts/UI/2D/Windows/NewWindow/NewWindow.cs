@@ -34,7 +34,7 @@ namespace Vurbiri.Colonization.UI
 
 			_colorWindow = null;
 
-            return _switcher;
+			return _switcher;
 		}
 
 		public void GameStart()

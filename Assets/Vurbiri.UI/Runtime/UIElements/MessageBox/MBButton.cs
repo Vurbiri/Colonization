@@ -29,7 +29,7 @@ namespace Vurbiri.UI
 			gameObject.SetActive(true);
 		}
 
-		[Impl(256)] public void SetColor(Color color) => GetComponent<UnityEngine.UI.Graphic>().color = color;
+		[Impl(256)] public void SetColor(in Color color) => GetComponent<UnityEngine.UI.Graphic>().color = color;
 
 		[Impl(256)] public void Deactivate() => gameObject.SetActive(false);
 	}

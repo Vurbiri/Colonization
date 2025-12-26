@@ -10,11 +10,11 @@ namespace Vurbiri.Reactive.Collections
 
 		[Impl(256)] public ReactiveVersion() => _action = Dummy.Action;
 
-        [Impl(256)] public void SilentNext() => ++_version;
+        [Impl(256)] public void SilentNext() =>  _version = unchecked(_version + 1);
         [Impl(256)] public new void Next()
 		{
-			++_version;
-			_action.Invoke();
+            _version = unchecked(_version + 1);
+            _action.Invoke();
 		}
 
         [Impl(256)] public void Signal() => _action.Invoke();
@@ -37,7 +37,7 @@ namespace Vurbiri.Reactive.Collections
 
         [Impl(256)] public void Next(TA a)
 		{
-			++_version;
+			 _version = unchecked(_version + 1);
 			_action.Invoke(a);
 		}
 
@@ -61,7 +61,7 @@ namespace Vurbiri.Reactive.Collections
 
         [Impl(256)] public void Next(TA a, TB b)
 		{
-			++_version;
+			 _version = unchecked(_version + 1);
 			_action.Invoke(a, b);
 		}
 
@@ -85,7 +85,7 @@ namespace Vurbiri.Reactive.Collections
 
         [Impl(256)] public void Next(TA a, TB b, TC c)
 		{
-			++_version;
+			 _version = unchecked(_version + 1);
 			_action.Invoke(a, b, c);
 		}
 
@@ -109,7 +109,7 @@ namespace Vurbiri.Reactive.Collections
 
 		[Impl(256)] public void Next(TA a, TB b, TC c, TD d)
 		{
-			++_version;
+			 _version = unchecked(_version + 1);
 			_action.Invoke(a, b, c, d);
 		}
 

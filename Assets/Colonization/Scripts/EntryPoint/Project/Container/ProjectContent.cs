@@ -5,26 +5,26 @@ using Vurbiri.Yandex;
 
 namespace Vurbiri.Colonization
 {
-    public class ProjectContent : IContainerContent
-    {
-        public Settings settings;
-        public GameSettings gameSettings;
+	public class ProjectContent : IContainerContent
+	{
+		public Settings settings;
+		public GameSettings gameSettings;
 
-        public ProjectColors projectColors;
-        public PlayerColors playerColors;
-        public PlayerNames playerNames;
-        public PlayerUINames playerUINames;
-        public HumansMaterials humansMaterials;
-        public Prices prices;
+		public ProjectColors projectColors;
+		public PlayerColors playerColors;
+		public PlayerNames playerNames;
+		public PlayerUINames playerUINames;
+		public HumansMaterials humansMaterials;
+		public Prices prices;
 
-        public IStorageService storageService;
-        public ProjectStorage projectStorage;
-        public YandexSDK ysdk;
+		public IStorageService storageService;
+		public ProjectStorage projectStorage;
+		public YandexSDK ysdk;
 
-        public void Dispose() 
-        {
-            playerNames?.Dispose();
-            projectStorage?.Dispose();
-        }
-    }
+		public void Dispose() 
+		{
+			playerNames?.Dispose();
+			projectStorage?.Dispose();
+		}
+	}
 }

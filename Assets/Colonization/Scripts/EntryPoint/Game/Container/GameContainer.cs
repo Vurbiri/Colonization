@@ -43,8 +43,11 @@ namespace Vurbiri.Colonization
 
         public new class UI : ProjectContainer.UI
         {
-            public static ReadOnlyIdArray<ActorAbilityId, Sprite> SpritesOfAbilities { [Impl(256)] get => s_content.abilities; }
-            public static Pool<EffectsBar> EffectsBar { [Impl(256)] get => s_content.poolEffectsBar; }
+            public static ReadOnlyIdArray<ActorAbilityId, Sprite> SpritesOfAbilities 
+            { [Impl(256)] get => s_content.abilities; }
+
+            public static Pool<EffectsBar> EffectsBar 
+            { [Impl(256)] get => s_content.poolEffectsBar; }
         }
         
 #if TEST_LOAD
@@ -62,6 +65,7 @@ namespace Vurbiri.Colonization
         {
             s_content.Dispose();
             s_content = null;
+            Log.Info($"[Game] Exit");
         }
     }
 }

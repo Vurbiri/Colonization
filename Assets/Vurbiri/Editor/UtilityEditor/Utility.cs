@@ -3,11 +3,14 @@ using System.Reflection;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
+using Vurbiri;
 
 namespace VurbiriEditor
 {
     public static class Utility
 	{
+        private static readonly FieldInfo s_fieldType = typeof(CustomPropertyDrawer).GetField("m_Type", BindingFlags.NonPublic | BindingFlags.Instance);
+
         public static bool IsUnityProperty(SerializedProperty property)
         {
             return property.propertyType != SerializedPropertyType.Generic;
@@ -15,10 +18,9 @@ namespace VurbiriEditor
 
         public static bool IsCustomProperty(Type propertyType)
         {
-            var typeField = typeof(CustomPropertyDrawer).GetField("m_Type", BindingFlags.NonPublic | BindingFlags.Instance);
             foreach (var type in TypeCache.GetTypesDerivedFrom<PropertyDrawer>())
                 foreach (var attribute in type.GetCustomAttributes<CustomPropertyDrawer>(true))
-                    if (TypesEquals(propertyType, (Type)typeField.GetValue(attribute)))
+                    if (propertyType.IsGeneric((Type)s_fieldType.GetValue(attribute)))
                         return true;
             return false;
         }
@@ -55,23 +57,6 @@ namespace VurbiriEditor
             Selection.activeGameObject = gameObject;
 
             EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
-        }
-
-
-        private static bool TypesEquals(Type child, Type parent)
-        {
-            while (child != null)
-            {
-                if (child.IsGenericType)
-                    child = child.GetGenericTypeDefinition();
-
-                if (child == parent)
-                    return true;
-
-                child = child.BaseType;
-            }
-
-            return false;
         }
     }
 }

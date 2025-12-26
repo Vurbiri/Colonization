@@ -26,7 +26,7 @@ namespace Vurbiri.Collections
 
         public bool MoveNext()
         {
-            _version.Validate();
+            _version.Verify();
 
             if (++_cursor < _count)
             {
