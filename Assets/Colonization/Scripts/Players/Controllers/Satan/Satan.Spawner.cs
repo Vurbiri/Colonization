@@ -1,27 +1,24 @@
 using System.Collections;
 using UnityEngine;
-using Vurbiri.Colonization.Storage;
 using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization
 {
     public partial class Satan
     {
-        protected class Spawner
+        public class Spawner : ASpawner
         {
             private readonly WaitSignal _waitSpawn = new();
             private readonly Hexagon _startHex;
-            private readonly ActorInitData _initData;
 
             private int _potential;
 
             public int Potential { [Impl(256)] get => _potential; }
             public bool CanSpawn { [Impl(256)] get => _potential > 0 && _startHex.IsEmpty; }
 
-            public Spawner(ActorInitData initData, int potential)
+            public Spawner(ActorInitData initData, int potential) : base(ActorTypeId.Demon, initData)
             {
                 _startHex = GameContainer.Hexagons[Key.Zero];
-                _initData = initData;
                 _potential = potential;
             }
 
@@ -41,10 +38,6 @@ namespace Vurbiri.Colonization
                 }
                 yield break;
             }
-
-            [Impl(256)] public void Create(int demonId, Hexagon start) => GameContainer.Actors.Create(ActorTypeId.Demon, demonId, _initData, start);
-
-            [Impl(256)] public Actor Load(ActorLoadData loadData) => GameContainer.Actors.Load(ActorTypeId.Demon, _initData, loadData);
 
             [Impl(256)] public void AddPotential(int add) => _potential += add;
         }

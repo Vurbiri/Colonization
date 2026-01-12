@@ -28,7 +28,9 @@ namespace Vurbiri
         public T Get<T>(string key, JsonConverter converter);
         public bool TryGet<T>(string key, out T value);
         public bool TryGet<T>(string key, JsonConverter converter, out T value);
-        
+
+        public T Extract<T>(string key);
+
         public bool TryPopulate(string key, object obj, JsonConverter converter = null);
         public bool TryPopulate<T>(string key, JsonConverter converter);
 

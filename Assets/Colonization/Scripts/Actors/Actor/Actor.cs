@@ -138,7 +138,7 @@ namespace Vurbiri.Colonization
 		#region ================== Setup ============================
 		protected abstract States StatesCreate(ActorSettings settings);
 
-		public void Setup(ActorSettings settings, ActorInitData initData, Hexagon startHex)
+		public void Setup(ActorSettings settings, ActorInitData initData, Hexagon startHex, bool enable)
 		{
 			_thisTransform = GetComponent<Transform>();
 			_thisCollider = GetComponent<BoxCollider>();
@@ -181,11 +181,11 @@ namespace Vurbiri.Colonization
 
 			_subscription += GameContainer.GameEvents.Subscribe(OnGameMode);
 
-			gameObject.SetActive(true);
+            gameObject.SetActive(enable);
 
-			#region Local GetNearGroundHexOffset(..)
-			//===================================================
-			static Key GetNearGroundHexOffset(Hexagon hexagon)
+            #region Local GetNearGroundHexOffset(..)
+            //===================================================
+            static Key GetNearGroundHexOffset(Hexagon hexagon)
 			{
 				var neighbors = hexagon.Neighbors;
 				for (int i = 0; i < neighbors.Count; ++i)
@@ -209,7 +209,7 @@ namespace Vurbiri.Colonization
 				_effects.Add(data.effects[i]);
 
 			_states.Load();
-		}
+        }
 		#endregion
 
 		#region ================== Utilities ============================

@@ -11,9 +11,9 @@ namespace Vurbiri.Colonization.Storage
             this.state = state;
         }
 
-        public SatanLoadData(SatanLoadState state) : base()
+        public SatanLoadData() : base()
         {
-            this.state = state;
+            state = new();
         }
     }
 }

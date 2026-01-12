@@ -42,10 +42,10 @@ namespace Vurbiri.Colonization
 		public SpellBook SpellBook { [Impl(256)] get => _spellBook; }
 		#endregion
 
-		public Human(int playerId, Settings settings, bool isPerson) : base(playerId, isPerson)
+		public Human(int playerId, Settings settings, WaitAllWaits waitSpawn, bool isPerson) : base(playerId, isPerson)
 		{
 			var storage = GameContainer.Storage.Humans[playerId];
-			var loadData = storage.LoadData;
+			var loadData = storage.LoadData; storage.LoadData = null;
 
 			_perks = PerkTree.Create(settings, loadData);
 			_abilities = settings.humanAbilities.Get(_perks);
@@ -62,9 +62,7 @@ namespace Vurbiri.Colonization
 			{
 				_edifices = new(this, loadData.edifices);
 				storage.PopulateRoads(_roads, GameContainer.Crossroads);
-
-				for (int i = loadData.actors.Count - 1; i >= 0; i--)
-					_spawner.Load(loadData.actors[i]);
+				ActorsLoad(_spawner, loadData.actors, waitSpawn);
 			}
 			else
 			{
@@ -83,7 +81,6 @@ namespace Vurbiri.Colonization
 			storage.BindArtefact(_artefact, instantGetValue);
 			storage.BindEdifices(_edifices.edifices, instantGetValue);
 			storage.BindActors(Actors);
-			storage.LoadData = null;
 		}
 		
 		[Impl(256)] public Ability GetAbility(Id<HumanAbilityId> id) => _abilities[id];

@@ -12,7 +12,7 @@ namespace Vurbiri.Colonization
 		public bool CanEnterToGate { [Impl(256)] get => _spawner.Potential == 0; }
 
 		static SatanController() => s_settings = SettingsFile.Load<SatanControllerSettings>();
-		public SatanController(Settings settings) : base(settings)
+		public SatanController(Settings settings, WaitAllWaits waitSpawn) : base(settings, waitSpawn)
 		{
 			_commander = new(Actors, _spawner);
 		}
@@ -96,13 +96,13 @@ namespace Vurbiri.Colonization
 			}
 		}
 
-		public void OnProfit(Id<PlayerId> id, int hexId)
+		public void OnProfit(int hexId, int clampRes)
 		{
 			int progress = s_parameters.cursePerTurn + s_shrinesCount * s_parameters.cursePerShrine;
 			if (hexId > HEX.GATE)
 				hexId = (HEX.GATE << 1) - hexId;
 
-			AddCurse(progress * hexId / HEX.GATE << hexId / HEX.GATE);
+			AddCurse((progress * hexId / HEX.GATE << hexId / HEX.GATE) + clampRes * s_parameters.cursePerRes);
 		}
 	}
 }

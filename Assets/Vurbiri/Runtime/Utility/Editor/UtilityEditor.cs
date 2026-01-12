@@ -136,6 +136,13 @@ namespace Vurbiri
             if (components == null || components.Length != length)
                 LogErrorFind<T>("component", null);
         }
+        public static void SetChildrens<T>(this Component self, ref T[] components) where T : Component
+        {
+            if (components != null && components.Length > 0) return;
+            components = self.GetComponentsInChildren<T>(true);
+            if (components == null || components.Length == 0)
+                LogErrorFind<T>("component", null);
+        }
 
         // ********************************************
         public static void SetColorField<T>(T self, Color color, string field) where T : Object

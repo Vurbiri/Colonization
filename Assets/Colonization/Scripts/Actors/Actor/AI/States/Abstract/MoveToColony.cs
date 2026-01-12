@@ -43,7 +43,7 @@ namespace Vurbiri.Colonization
                         }
                     }
 
-                    return _targetHexagon != null;
+                    return Valid;
                 }
 
                 sealed public override IEnumerator Execution_Cn(Out<bool> isContinue)

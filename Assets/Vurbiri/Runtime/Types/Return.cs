@@ -1,30 +1,21 @@
 namespace Vurbiri
 {
-    public class Return<T>
+    public readonly struct Return<T>
     {
-        public bool Result { get; }
-        public T Value { get; }
+        public readonly static Return<T> Empty = new(false, default);
 
-        public static Return<T> Empty { get; } = new();
-
-        private Return()
-        {
-            Result = false;
-            Value = default;
-        }
+        public readonly bool Result;
+        public readonly T Value;
 
         public Return(T value)
         {
             Result = true;
             Value = value;
         }
-
         public Return(bool result, T value)
         {
             Result = result;
             Value = value;
         }
-
-        public override string ToString() => Value.ToString();
     }
 }

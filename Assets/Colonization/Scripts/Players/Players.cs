@@ -14,19 +14,19 @@ namespace Vurbiri.Colonization
 		public ReadOnlyArray<HumanController> Humans { [Impl(256)] get => _humans;  }
 		public SatanController Satan { [Impl(256)] get => _satan; }
 
-		public Players(Player.Settings settings, GameLoop game)
+		public Players(Player.Settings settings, GameLoop game, WaitAllWaits waitSpawn)
 		{
 
 #if TEST_AI
 			UnityEngine.Debug.LogWarning("[Players] TEST_AI");
-			_humans[PlayerId.Person] = new AIController(PlayerId.Person, settings);
+			_humans[PlayerId.Person] = new AIController(PlayerId.Person, settings, waitSpawn);
 #else
-			_humans[PlayerId.Person] = new PersonController(PlayerId.Person, settings);
+			_humans[PlayerId.Person] = new PersonController(PlayerId.Person, settings, waitSpawn);
 #endif
 			for (int i = PlayerId.AI_01; i < PlayerId.HumansCount; i++)
-				_humans[i] = new AIController(i, settings);
+				_humans[i] = new AIController(i, settings, waitSpawn);
 
-			_satan = new(settings);
+			_satan = new(settings, waitSpawn);
 
 			game.Subscribe(GameModeId.Landing, (turn, _) => this[turn.currentId.Value].OnLanding());
 			game.Subscribe(GameModeId.EndLanding, (turn, _) => this[turn.currentId.Value].OnEndLanding());
@@ -43,9 +43,10 @@ namespace Vurbiri.Colonization
 
 		private void OnProfit(TurnQueue turnQueue, int hexId)
 		{
+			int clampRes = 0;
 			for (int i = 0; i < PlayerId.HumansCount; i++)
-				_humans[i].OnProfit(turnQueue.currentId, hexId);
-			_satan.OnProfit(turnQueue.currentId, hexId);
+				clampRes += _humans[i].OnProfit(turnQueue.currentId, hexId);
+			_satan.OnProfit(hexId, clampRes);
 
 			GameContainer.GameLoop.Play();
 		}

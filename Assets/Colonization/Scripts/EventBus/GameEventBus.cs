@@ -14,7 +14,7 @@ namespace Vurbiri.Colonization
         public Event<Hexagon> EventHexagonSelect => _hexagonSelect;
         public Event<Crossroad> EventCrossroadSelect => _crossroadSelect;
         public Event<Actor> EventActorRightSelect => _actorRightSelect;
-        public Event<Actor> EventActorLeftSelect => _actorRightSelect;
+        public Event<Actor> EventActorLeftSelect => _actorLeftSelect;
         public Event<Id<PlayerId>, Id<ActorTypeId>, int> EventActorKill => _actorKill;
         public Event<bool> EventUnselect => _unselect;
 

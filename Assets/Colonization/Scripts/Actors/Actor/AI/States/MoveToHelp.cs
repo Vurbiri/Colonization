@@ -32,7 +32,7 @@ namespace Vurbiri.Colonization
                             }
                         }
                     }
-                    return _targetHexagon != null && Goals.Enemies.Add(_targetEnemy, new(Actor));
+                    return Valid && Goals.Enemies.Add(_targetEnemy, new(Actor));
                 }
 
                 sealed public override IEnumerator Execution_Cn(Out<bool> isContinue)

@@ -18,7 +18,6 @@ namespace Vurbiri.Colonization
         public void OnPlay();
         public void OnEndTurn();
         public void OnStartTurn();
-        public void OnProfit(Id<PlayerId> id, int hexId);
         public void OnGameOver();
     }
 }

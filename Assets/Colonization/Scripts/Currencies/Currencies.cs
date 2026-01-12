@@ -80,9 +80,9 @@ namespace Vurbiri.Colonization
             }
         }
 
-        public void Clamp()
+        public int Clamp()
         {
-            int delta = _amount.Value - _maxAmount.Value;
+            int delta = _amount.Value - _maxAmount.Value, output = delta;
 
             if (delta > 0)
             {
@@ -102,6 +102,8 @@ namespace Vurbiri.Colonization
                 _amount.Value = _maxAmount.Value;
                 _changeEvent.Invoke(this);
             }
+
+            return output;
 
             #region Local: ConvertToInt(..), FindMaxIndex(..)
             //==============================================

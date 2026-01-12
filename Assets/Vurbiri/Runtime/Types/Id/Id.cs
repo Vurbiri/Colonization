@@ -31,7 +31,7 @@ namespace Vurbiri
 #if UNITY_EDITOR
         [Impl(256)] public override readonly string ToString() => IdType<T>.NamesNone_Ed[_id + 1];
 #else
-        [Impl(256)] public override readonly string ToString() => _id.ToString();
+        [Impl(256)] public override readonly string ToString() => _id.ToStr();
 #endif
 
         [Impl(256)] public readonly bool Equals(Id<T> other) => _id == other._id;

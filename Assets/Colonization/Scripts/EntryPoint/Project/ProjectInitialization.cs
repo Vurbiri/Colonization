@@ -45,7 +45,9 @@ namespace Vurbiri.Colonization.EntryPoint
 
             SetColors(content.projectColors);
 
+#if YSDK
             loading.Add(new CreateYandexSDK(content, mono, _leaderboardName));
+#endif
             loading.Add(new CreateStorage(content, mono, _loadingScreen, _logOnPanel));
             loading.Add(new LoadSettingsStep(content, _playerVisualSetScriptable));
             loading.Add(new EndLoadScene(operation));

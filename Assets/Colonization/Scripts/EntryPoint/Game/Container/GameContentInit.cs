@@ -31,12 +31,7 @@ namespace Vurbiri.Colonization.EntryPoint
             content.poolEffectsBar = _poolEffectsBar.Create();
         }
 
-        public void Dispose()
-        {
-            _actorsFactory.Dispose(); _actorsFactory = null;
-            _spritesOfAbilities = null; _actorSFXFactory = null;
-            _inputControllerSettings = null; _poolEffectsBar = null;
-        }
+        public void Dispose() => _actorsFactory.Dispose();
 
 #if UNITY_EDITOR
         public void OnValidate()

@@ -466,26 +466,10 @@ var YandexPlugin =
     },
 
     $func: {
-        toUnityString: function (returnStr) {
-            if (func.isEmpty(returnStr))
-                return null;
-
-            var bufferSize = lengthBytesUTF8(returnStr) + 1;
-            var buffer = _malloc(bufferSize);
-            stringToUTF8(returnStr, buffer, bufferSize);
-            return buffer;
-        },
         isInitialize: function () { return !func.isEmpty(vars.ysdk); },
         isPlayer: function () { return func.isInitialize() && !func.isEmpty(vars.player); },
         isLogOn: function () { return func.isPlayer() && !(vars.player.getMode() === 'lite'); },
         isLeaderboard: function () { return func.isLogOn() && !func.isEmpty(vars.lb); },
-
-        isEmpty: function (obj) {
-            if (!obj)
-                return true;
-
-            return Object.keys(obj).length === 0;
-        },
     },
     $vars:
     {

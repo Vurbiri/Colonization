@@ -15,18 +15,22 @@ namespace Vurbiri.Colonization.Storage
 
         public HumanLoadData LoadData { get; set; }
 
-        public HumanStorage(int id, IStorageService storage, bool isLoad) : base(id, storage, DEFAULT_MAX_WARRIOR)
+        public HumanStorage(int id, IStorageService storage, bool isLoad) : base(id, storage)
         {
             _keyResources = P_RESOURCES.Concat(_strId); _keyExchange = P_EXCHANGE.Concat(_strId);
             _keyRoads = P_ROADS.Concat(_strId); _keyPerks = P_PERKS.Concat(_strId);
 
-            var actors = InitActors(DEFAULT_MAX_WARRIOR, isLoad);
             var edifices = CreateEdificesLoadData(isLoad);
 
-            if (isLoad) 
-                LoadData = new(storage.Get<int[]>(_keyResources), storage.Get<int[]>(_keyExchange), storage.Get<int[]>(_keyArtefact), storage.Get<int[][]>(_keyPerks), edifices, actors);
-            else        
+            if (isLoad)
+            {
+                LoadData = new(storage.Get<int[]>(_keyResources), storage.Get<int[]>(_keyExchange), storage.Get<int[]>(_keyArtefact), storage.Get<int[][]>(_keyPerks), edifices, LoadActors(DEFAULT_MAX_WARRIOR));
+            }
+            else
+            {
+                InitActors(DEFAULT_MAX_WARRIOR);
                 LoadData = new();
+            }
 
             #region Local: CreateEdificesLoadData(..)
             //================================================================
@@ -56,28 +60,28 @@ namespace Vurbiri.Colonization.Storage
         public bool PopulateRoads(Roads roads, Crossroads crossroads) => _storage.TryPopulate<Roads>(_keyRoads, new Roads.Converter(roads, crossroads));
         public void BindRoads(IReactive<Roads> reactive, bool instantGetValue)
         {
-            _subscription += reactive.Subscribe(value => _storage.Set(_keyRoads, value, _roadsConverter), instantGetValue);
+            _subscriptions += reactive.Subscribe(value => _storage.Set(_keyRoads, value, _roadsConverter), instantGetValue);
         }
 
         public void BindCurrencies(ReadOnlyCurrencies reactive, bool instantGetValue)
         {
-            _subscription += reactive.Subscribe(currencies => _storage.Set(_keyResources, currencies), instantGetValue);
+            _subscriptions += reactive.Subscribe(currencies => _storage.Set(_keyResources, currencies), instantGetValue);
         }
 
         public void BindExchange(ExchangeRate reactive, bool instantGetValue)
         {
-            _subscription += reactive.Subscribe(exchange => _storage.Set(_keyExchange, exchange), instantGetValue);
+            _subscriptions += reactive.Subscribe(exchange => _storage.Set(_keyExchange, exchange), instantGetValue);
         }
 
         public void BindPerks(IReactive<HashSet<int>[]> reactive, bool instantGetValue)
         {
-            _subscription += reactive.Subscribe(perks => _storage.Set(_keyPerks, perks), instantGetValue);
+            _subscriptions += reactive.Subscribe(perks => _storage.Set(_keyPerks, perks), instantGetValue);
         }
 
         public void BindEdifices(IReadOnlyList<ReactiveList<Crossroad>> edificesReactive, bool instantGetValue)
         {
             for(int i = 0; i < EdificeGroupId.Count; ++i)
-                _subscription += edificesReactive[i].Subscribe(OnEdifice, instantGetValue);
+                _subscriptions += edificesReactive[i].Subscribe(OnEdifice, instantGetValue);
 
             #region Local OnEdifice(..)
             //==============================

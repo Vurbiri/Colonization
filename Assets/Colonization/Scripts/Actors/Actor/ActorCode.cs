@@ -25,6 +25,8 @@ namespace Vurbiri.Colonization
         public bool Equals(Actor actor) => actor != null && actor.Owner == owner & actor.Index == index;
         public override bool Equals(object obj) => (obj is ActorCode code && Equals(code)) || (obj is Actor actor && Equals(actor));
 
+        public override string ToString() => $"[ActorCode] Owner: {owner}, Index: {index}";
+
         public static bool operator ==(ActorCode lhs, ActorCode rhs) => lhs.owner == rhs.owner & lhs.index == rhs.index;
         public static bool operator !=(ActorCode lhs, ActorCode rhs) => lhs.owner != rhs.owner | lhs.index != rhs.index;
 

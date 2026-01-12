@@ -29,7 +29,7 @@ namespace Vurbiri.Colonization
                         while (_targetHexagon == null && enemies.NotEmpty);
                     }
 
-                    return _targetHexagon != null;
+                    return Valid;
                 }
 
                 public override IEnumerator Execution_Cn(Out<bool> isContinue)

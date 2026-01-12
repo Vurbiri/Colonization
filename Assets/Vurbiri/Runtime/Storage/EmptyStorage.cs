@@ -25,6 +25,8 @@ namespace Vurbiri
         public T Get<T>(string key) => default;
         public T Get<T>(string key, JsonConverter converter) => default;
 
+        public T Extract<T>(string key) => default;
+
         public bool TryGet<T>(string key, out T value)
         {
             value = default;

@@ -1,3 +1,5 @@
+#if YSDK
+
 using System.Collections;
 using UnityEngine;
 using Vurbiri.Yandex;
@@ -16,3 +18,4 @@ namespace Vurbiri.Colonization.EntryPoint
         public override IEnumerator GetEnumerator() => _ysdk.Init_Cn();
     }
 }
+#endif

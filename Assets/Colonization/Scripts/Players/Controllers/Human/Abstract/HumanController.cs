@@ -4,94 +4,94 @@ namespace Vurbiri.Colonization
 {
 	public abstract class HumanController : Human,  IPlayerController
 	{
-        protected readonly WaitResultSource<bool> _waitGift = new();
+		protected readonly WaitResultSource<bool> _waitGift = new();
 
-        protected HumanController(Id<PlayerId> playerId, Settings settings, bool isPerson) : base(playerId, settings, isPerson) { }
+		protected HumanController(Id<PlayerId> playerId, Settings settings, WaitAllWaits waitSpawn, bool isPerson) : base(playerId, settings, waitSpawn, isPerson) { }
 
-        public void ActorKill(Id<ActorTypeId> type, int id)
-        {
-            if (type == ActorTypeId.Demon)
-            {
-                GameContainer.Score.ForKillingDemon(_id.Value, id);
-                _resources.Blood.Add(id + 1);
-            }
-            else
-            {
-                GameContainer.Score.ForKillingWarrior(_id.Value, id);
-            }
-        }
+		public void ActorKill(Id<ActorTypeId> type, int id)
+		{
+			if (type == ActorTypeId.Demon)
+			{
+				GameContainer.Score.ForKillingDemon(_id.Value, id);
+				_resources.Blood.Add(id + 1);
+			}
+			else
+			{
+				GameContainer.Score.ForKillingWarrior(_id.Value, id);
+			}
+		}
 
-        public abstract WaitResult<bool> OnGift(int giver, LiteCurrencies gift, string msg);
+		public abstract WaitResult<bool> OnGift(int giver, LiteCurrencies gift, string msg);
 
-        public abstract void OnLanding();
-        public virtual void OnEndLanding() { }
+		public abstract void OnLanding();
+		public virtual void OnEndLanding() { }
 
-        public abstract void OnEndTurn();
+		public abstract void OnEndTurn();
 
-        public void OnProfit(Id<PlayerId> id, int hexId)
-        {
-            if (id == PlayerId.Satan)
-                _resources.Blood.Add(_edifices.ShrinePassiveProfit);
+		public int OnProfit(Id<PlayerId> id, int hexId)
+		{
+			if (id == PlayerId.Satan)
+				_resources.Blood.Add(_edifices.ShrinePassiveProfit);
 
-            if (hexId == HEX.GATE)
-            {
-                _resources.Blood.Add(_edifices.ShrineProfit);
-                _resources.Clamp();
-                return;
-            }
+			if (hexId == HEX.GATE)
+			{
+				_resources.Blood.Add(_edifices.ShrineProfit);
+				return _resources.Clamp();
+			}
 
-            if (_abilities.IsTrue(HumanAbilityId.IsFreeGroundRes))
-                _resources.Add(GameContainer.Hexagons.FreeResources);
+			if (_abilities.IsTrue(HumanAbilityId.IsFreeGroundRes))
+				_resources.Add(GameContainer.Hexagons.FreeResources);
 
-            _resources.Add(_edifices.ProfitFromEdifices(hexId));
-        }
+			_resources.Add(_edifices.ProfitFromEdifices(hexId));
+			return 0;
+		}
 
-        public virtual void OnStartTurn()
-        {
-            foreach (var warrior in Actors)
-                warrior.EffectsUpdate();
+		public virtual void OnStartTurn()
+		{
+			foreach (var warrior in Actors)
+				warrior.EffectsUpdate();
 
-            _exchange.Update();
-        }
+			_exchange.Update();
+		}
 
-        public abstract void OnPlay();
+		public abstract void OnPlay();
 
-        protected IEnumerator OnEndTurn_Cn()
-        {
-            int countBuffs = 0;
-            int mainProfit = _abilities[HumanAbilityId.WarriorProfit];
-            bool isArtefact = _abilities.IsTrue(HumanAbilityId.IsArtefact);
-            LiteCurrencies profit = new();
-            ReturnSignal returnSignal;
+		protected IEnumerator OnEndTurn_Cn()
+		{
+			int countBuffs = 0;
+			int mainProfit = _abilities[HumanAbilityId.WarriorProfit];
+			bool isArtefact = _abilities.IsTrue(HumanAbilityId.IsArtefact);
+			LiteCurrencies profit = new();
+			ReturnSignal returnSignal;
 
-            GameContainer.InputController.Unselect();
+			GameContainer.InputController.Unselect();
 
-            foreach (var warrior in Actors)
-            {
-                if (!warrior.IsInCombat())
-                {
-                    if (returnSignal = warrior.IsMainProfit)
-                    {
-                        profit.Add(warrior.Hexagon.GetProfit(), mainProfit);
-                        yield return returnSignal.signal;
-                    }
-                    if (isArtefact && (returnSignal = warrior.IsAdvProfit))
-                    {
-                        countBuffs++;
-                        yield return returnSignal.signal;
-                    }
-                }
+			foreach (var warrior in Actors)
+			{
+				if (!warrior.IsInCombat())
+				{
+					if (returnSignal = warrior.IsMainProfit)
+					{
+						profit.Add(warrior.Hexagon.GetProfit(), mainProfit);
+						yield return returnSignal.signal;
+					}
+					if (isArtefact && (returnSignal = warrior.IsAdvProfit))
+					{
+						countBuffs++;
+						yield return returnSignal.signal;
+					}
+				}
 
-                yield return s_delayHalfSecond.Restart();
+				yield return s_delayHalfSecond.Restart();
 
-                warrior.StatesUpdate();
-            }
+				warrior.StatesUpdate();
+			}
 
-            _resources.Add(profit);
-            _artefact.Next(countBuffs);
+			_resources.Add(profit);
+			_artefact.Next(countBuffs);
 
-            GameContainer.GameLoop.StartTurn();
-            _coroutine = null;
-        }
-    }
+			GameContainer.GameLoop.StartTurn();
+			_coroutine = null;
+		}
+	}
 }

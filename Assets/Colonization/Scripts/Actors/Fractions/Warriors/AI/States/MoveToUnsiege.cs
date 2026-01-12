@@ -25,7 +25,7 @@ namespace Vurbiri.Colonization
                     int distance = CheckingColonies(player.Colonies, s_settings.maxDistanceUnsiege);
                     CheckingColonies(player.Ports, distance);
                 }
-                return _targetHexagon != null && Goals.Enemies.Add(_targetEnemy, new(Actor));
+                return Valid && Goals.Enemies.Add(_targetEnemy, new(Actor));
 
                 #region Local: CheckingColonies(..), TargetSelection(..)
                 // ===================================================

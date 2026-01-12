@@ -77,18 +77,17 @@ namespace Vurbiri.Yandex
 
         private Return<T> Deserialize<T>(string json)
         {
-            Return<T> result = Return<T>.Empty;
             try
             {
                 if (!string.IsNullOrEmpty(json))
-                    result = new(JsonConvert.DeserializeObject<T>(json));
+                    return new(JsonConvert.DeserializeObject<T>(json));
             }
             catch (Exception ex)
             {
                 Log.Info(ex.Message);
             }
 
-            return result;
+            return Return<T>.Empty;
         }
     }
 }

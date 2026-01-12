@@ -23,7 +23,7 @@ namespace Vurbiri.Colonization
                 public static Plan Empty { get; } = new Dummy();
 
                 public bool Done { [Impl(256)] get => _done; }
-                public virtual bool IsValid { [Impl(256)] get { int chance = 100 - (++_attempts) * 10; Log.Info(chance); return Chance.Rolling(chance); } }
+                public virtual bool IsValid { [Impl(256)] get { int chance = 100 - (++_attempts) * 10; return Chance.Rolling(chance); } }
 
                 [Impl(256)] protected Plan(Builder parent) => _builder = parent;
 

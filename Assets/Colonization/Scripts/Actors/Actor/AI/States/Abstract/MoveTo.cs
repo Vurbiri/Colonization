@@ -13,6 +13,8 @@ namespace Vurbiri.Colonization
 
                 protected Hexagon _targetHexagon;
 
+                protected bool Valid { [Impl(256)] get => _targetHexagon != null && TryGetNextHexagon(Actor, _targetHexagon, out _); }
+
                 [Impl(256)] protected MoveTo(AI<TSettings, TActorId, TStateId> parent) : base(parent) { }
 
                 protected IEnumerator Move_Cn(Out<bool> isContinue, int distance, bool isExit, bool isBuff, bool isBlock)

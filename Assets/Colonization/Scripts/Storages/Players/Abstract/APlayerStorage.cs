@@ -14,23 +14,19 @@ namespace Vurbiri.Colonization.Storage
         protected readonly IStorageService _storage;
         protected readonly string _strId;
         protected readonly string _keyArtefact;
-        protected Subscription _subscription;
+        protected Subscription _subscriptions;
 
-        public APlayerStorage(int id, IStorageService storage, int countActors)
+        public APlayerStorage(int id, IStorageService storage)
         {
             _storage = storage;
 
-            _strId = id.ToString();
+            _strId = id.ToStr();
             _keyArtefact = P_BUFFS.Concat(_strId); 
-
-            _keysActors = new(countActors);
-            for (int i = 0; i < countActors; ++i)
-                _keysActors.Add(P_ACTORS.Concat(_strId, i.ToStr()));
         }
 
         public void BindActors(ReadOnlyReactiveSet<Actor> actors)
         {
-            _subscription += actors.Subscribe(OnActors);
+            _subscriptions += actors.Subscribe(OnActors);
 
             #region Local OnActors(..)
             //==============================
@@ -44,6 +40,7 @@ namespace Vurbiri.Colonization.Storage
                     case TypeEvent.Remove:
                         _storage.Remove(_keysActors[actor.Index]);
                         return;
+                    case TypeEvent.Subscribe:
                     case TypeEvent.Change:
                         _storage.Set(_keysActors[actor.Index], actor);
                         return;
@@ -62,24 +59,32 @@ namespace Vurbiri.Colonization.Storage
         }
         public void BindArtefact(IReactive<Artefact> currencies, bool instantGetValue)
         {
-            _subscription += currencies.Subscribe(artefact => _storage.Set(_keyArtefact, artefact.Levels), instantGetValue);
+            _subscriptions += currencies.Subscribe(artefact => _storage.Set(_keyArtefact, artefact.Levels), instantGetValue);
         }
 
         public void Dispose()
         {
-            _subscription?.Dispose();
+            _subscriptions?.Dispose();
         }
 
-        protected List<ActorLoadData> InitActors(int max, bool isLoad)
+        protected void InitActors(int max)
         {
-            _keysActors = new(max);
-            List<ActorLoadData> actors = new(max);
+            List<string> keysActors = new(max);
+            for (int i = 0; i < max; ++i)
+                keysActors.Add(P_ACTORS.Concat(_strId, i.ToStr()));
+            _keysActors = keysActors;
+        }
+        protected List<ActorLoadData> LoadActors(int max)
+        {
+            string key;
+            List<ActorLoadData> actors = new(max); List<string> keysActors = new(max);
             for (int i = 0; i < max; ++i)
             {
-                _keysActors.Add(P_ACTORS.Concat(_strId, i.ToStr()));
-                if (isLoad && _storage.TryGet(_keysActors[i], out ActorLoadData actor))
-                    actors.Add(actor);
+                keysActors.Add(key = P_ACTORS.Concat(_strId, i.ToStr()));
+                if (_storage.ContainsKey(key))
+                    actors.Add(_storage.Extract<ActorLoadData>(key));
             }
+            _keysActors = keysActors;
             return actors;
         }
     }

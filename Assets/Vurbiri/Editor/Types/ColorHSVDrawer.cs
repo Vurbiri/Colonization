@@ -8,18 +8,14 @@ namespace VurbiriEditor
     [CustomPropertyDrawer(typeof(ColorHSV))]
 	public class ColorHSVDrawer : PropertyDrawer
 	{
-		#region Consts
-		private const string F_HUE = "h", F_SATURATION = "s", F_VALUE = "v", F_ALPHA = "a";
-		#endregion
-		
 		public override void OnGUI(Rect position, SerializedProperty mainProperty, GUIContent label)
 		{
 			position.height = EditorGUIUtility.singleLineHeight;
 
-            SerializedProperty propertyHue		  = mainProperty.FindPropertyRelative(F_HUE);
-			SerializedProperty propertySaturation = mainProperty.FindPropertyRelative(F_SATURATION);
-			SerializedProperty propertyValue	  = mainProperty.FindPropertyRelative(F_VALUE);
-			SerializedProperty propertyAlpha	  = mainProperty.FindPropertyRelative(F_ALPHA);
+            SerializedProperty propertyHue		  = mainProperty.FindPropertyRelative(nameof(ColorHSV.h));
+			SerializedProperty propertySaturation = mainProperty.FindPropertyRelative(nameof(ColorHSV.s));
+			SerializedProperty propertyValue	  = mainProperty.FindPropertyRelative(nameof(ColorHSV.v));
+			SerializedProperty propertyAlpha	  = mainProperty.FindPropertyRelative(nameof(ColorHSV.a));
             
 			Color color = Color.HSVToRGB(propertyHue.floatValue, propertySaturation.floatValue, propertyValue.floatValue).SetAlpha(propertyAlpha.floatValue);
 
@@ -38,6 +34,5 @@ namespace VurbiriEditor
 			}
 			EndProperty();
 		}
-
 	}
 }

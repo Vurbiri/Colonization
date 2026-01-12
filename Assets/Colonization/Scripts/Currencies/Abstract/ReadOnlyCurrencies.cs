@@ -17,6 +17,7 @@ namespace Vurbiri.Colonization
         public ReactiveValue<int> CurrentAmount { [Impl(256)] get => _amount; }
         public ReactiveValue<int> MaxAmount { [Impl(256)] get => _maxAmount; }
         public int PercentAmount { [Impl(256)] get => (100 * _amount) / _maxAmount; }
+        public bool More { [Impl(256)] get => _amount > _maxAmount; }
 
         public Blood Blood { [Impl(256)] get => _blood; }
 

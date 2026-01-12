@@ -246,7 +246,7 @@ namespace Vurbiri.Colonization
 		{
 			if (playerId == PlayerId.Satan)
 			{
-				return _isGate ? GameContainer.Satan.DefenseFromGate : 0;
+				return _isGate ? Satan.DefenseFromGate : 0;
 			}
 			else
 			{

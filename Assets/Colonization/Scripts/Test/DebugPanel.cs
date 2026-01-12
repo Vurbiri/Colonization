@@ -7,6 +7,10 @@ namespace Vurbiri.Colonization
 {
 	public class DebugPanel : MonoBehaviour
 	{
+#if UNITY_EDITOR
+		[SerializeField] private bool _startEnable;
+#endif
+
 		private TMP_Dropdown _dropdown;
 		private TMP_InputField _input;
 		private int _inputValue;
@@ -32,7 +36,11 @@ namespace Vurbiri.Colonization
 			_input = GetComponentInChildren<TMP_InputField>();
 			_input.onEndEdit.AddListener(OnInput);
 
-			//gameObject.SetActive(false);
+#if UNITY_EDITOR
+			gameObject.SetActive(_startEnable);
+#else
+			gameObject.SetActive(false);
+#endif
 			GameContainer.InputController.OnDebug.Add(SwitchEnable);
 		}
 

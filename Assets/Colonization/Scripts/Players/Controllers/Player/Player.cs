@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
+using Vurbiri.Colonization.Storage;
 using Vurbiri.Reactive;
 using Vurbiri.Reactive.Collections;
 using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
@@ -43,18 +45,16 @@ namespace Vurbiri.Colonization
 		#endregion
 
 		[Impl(256)] protected Coroutine StartCoroutine(IEnumerator routine) => GameContainer.Shared.StartCoroutine(routine);
-		[Impl(256)] protected void StopCoroutine(Coroutine coroutine) => GameContainer.Shared.StopCoroutine(coroutine);
 
 		public void OnGameOver()
 		{
-			_waitAll?.Stop();
-			if(_coroutine != null)
-				StopCoroutine(_coroutine);
-		}
+            _waitAll?.Stop();
+            if (_coroutine != null)
+                GameContainer.Shared.StopCoroutine(_coroutine);
+        }
 
 		public virtual void Dispose()
 		{
-			OnGameOver();
 			_subscription?.Dispose();
 		}
 
@@ -64,9 +64,15 @@ namespace Vurbiri.Colonization
 			s_shrinesCount.Value = 0;
 		}
 
-		#region Nested: Settings
-		//***********************************
-		[Serializable]
+        [Impl(256)] protected static void ActorsLoad(ASpawner spawner, List<ActorLoadData> actors, WaitAllWaits waitAll)
+        {
+            for (int i = actors.Count - 1; i >= 0; --i)
+                spawner.Load(actors[i], waitAll);
+        }
+
+        #region Nested: Settings
+        //***********************************
+        [Serializable]
 		public class Settings : IDisposable
 		{
 			public BuffsScriptable artefact;

@@ -39,7 +39,7 @@ namespace Vurbiri
             output?.Set(_saved.Count > 0);
         }
 
-        #region Get(..) / TryGet(..)
+        #region Get(..) / TryGet(..) / Extract(..)
         [Impl(256)] public T Get<T>(string key)
         {
             if (_saved.TryGetValue(key, out string json) && TryDeserialize<T>(json, out T value))
@@ -62,6 +62,16 @@ namespace Vurbiri
         {
             value = default;
             return _saved.TryGetValue(key, out string json) && TryDeserialize<T>(json, converter, out value);
+        }
+
+        [Impl(256)] public T Extract<T>(string key)
+        {
+            if (_saved.TryGetValue(key, out string json) && TryDeserialize<T>(json, out T value))
+            {
+                _modified |= _saved.Remove(key);
+                return value;
+            }
+            return default;
         }
         #endregion
 

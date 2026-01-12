@@ -18,7 +18,7 @@ namespace Vurbiri.Colonization.Storage
         public APlayerLoadData()
         {
             isLoaded = false;
-            actors = new(0);
+            actors = new();
         }
     }
 }

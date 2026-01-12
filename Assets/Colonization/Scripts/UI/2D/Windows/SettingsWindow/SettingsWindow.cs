@@ -72,6 +72,7 @@ namespace Vurbiri.Colonization.UI
 		}
 
 #if UNITY_EDITOR
+
 		protected override void OnValidate()
 		{
 			if (UnityEditor.EditorApplication.isPlayingOrWillChangePlaymode)
@@ -105,7 +106,10 @@ namespace Vurbiri.Colonization.UI
 
 			foreach (var item in _language.GetComponentsInChildren<LanguageItem>())
 				item.SetColors_Ed(colors);
-		}
+
+            foreach (var button in GetComponentsInChildren<HintButton>(true))
+                button.GetComponent<UnityEngine.UI.Image>().SetColorField(colors.panelBack);
+        }
 
 		private void SetSlider(Component slider, SceneColorsEd colors)
 		{
@@ -116,5 +120,5 @@ namespace Vurbiri.Colonization.UI
 
 		}
 #endif
-	}
+    }
 }
