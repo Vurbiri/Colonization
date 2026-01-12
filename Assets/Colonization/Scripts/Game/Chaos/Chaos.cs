@@ -4,7 +4,7 @@ using Vurbiri.Reactive.Collections;
 
 namespace Vurbiri.Colonization
 {
-	public class Chaos : ReactiveValue<int>
+	public class Chaos : Reactive<int>
 	{
         private readonly ChaosSettings _settings;
         private readonly VAction<Winner> _eventGameOver = new();

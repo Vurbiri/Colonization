@@ -43,8 +43,8 @@ namespace Vurbiri.Colonization
 
 		private float _zSize;
 
-		private readonly RBool _interactable = new(false);
-		private readonly RBool _canCancel = new(false);
+		private readonly ReactiveBool _interactable = new(false);
+		private readonly ReactiveBool _canCancel = new(false);
 
 		private Subscription _subscription;
 		#endregion
@@ -79,8 +79,8 @@ namespace Vurbiri.Colonization
 
 		#region  ================== IInteractable =====================
 		public Vector3 Position { [Impl(256)] get => _thisTransform.position; }
-		public ReactiveValue<bool> CanCancel => _canCancel;
-		public ReactiveValue<bool> InteractableReactive => _interactable;
+		public Reactive<bool> CanCancel => _canCancel;
+		public Reactive<bool> InteractableReactive => _interactable;
 		public bool Interactable { [Impl(256)] get => _interactable.Value; [Impl(256)] set => _thisCollider.enabled = (_interactable.Value = value) & _isPersonTurn; }
 	   
 		public void Select(MouseButton button) => _states.Select(button);

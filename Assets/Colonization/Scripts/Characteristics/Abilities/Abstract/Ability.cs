@@ -3,7 +3,7 @@ using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization
 {
-    public abstract class Ability : ReactiveValue<int>
+    public abstract class Ability : Reactive<int>
     {
         public bool IsTrue { [Impl(256)] get => _value > 0; }
         public bool IsFalse { [Impl(256)] get => _value == 0; }

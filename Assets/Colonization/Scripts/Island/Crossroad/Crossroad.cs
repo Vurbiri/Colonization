@@ -25,7 +25,7 @@ namespace Vurbiri.Colonization
         private EdificeSettings _states;
         private Id<PlayerId> _owner = PlayerId.None;
         private bool _isWall = false;
-        private readonly RBool _interactable = new(true);
+        private readonly ReactiveBool _interactable = new(true);
         private readonly VAction<Key> _bannedBuild = new();
         private readonly WaitResultSource<Hexagon> _waitHexagon = new(false);
 
@@ -35,7 +35,7 @@ namespace Vurbiri.Colonization
         private int _countFreeLink = 0, _waterCount = 0;
         private bool _isGate = false;
 
-        private readonly RBool _canCancel = new();
+        private readonly ReactiveBool _canCancel = new();
         #endregion
 
         #region ================== Properties ============================
@@ -77,9 +77,9 @@ namespace Vurbiri.Colonization
 
         #region ================== IInteractable ============================
         public Vector3 Position { [Impl(256)] get; }
-        public ReactiveValue<bool> InteractableReactive { [Impl(256)] get => _interactable; }
+        public Reactive<bool> InteractableReactive { [Impl(256)] get => _interactable; }
         public bool Interactable { [Impl(256)] get => _interactable.Value; [Impl(256)] set => _interactable.Value = value; }
-        public ReactiveValue<bool> CanCancel { [Impl(256)] get => _canCancel; }
+        public Reactive<bool> CanCancel { [Impl(256)] get => _canCancel; }
         [Impl(256)] public void Select(MouseButton button)
         {
             //Debug.Log($"ToHex: {CROSS.ToHex(_key, _type)}");

@@ -14,7 +14,7 @@ namespace Vurbiri.Reactive.Collections
         protected static readonly T[] s_empty = new T[0];
 
         protected T[] _values;
-        protected readonly RInt _count = new(0);
+        protected readonly ReactiveInt _count = new(0);
         protected readonly ReactiveVersion<int, T, TypeEvent> _version = new();
 
         public T this[int index] 
@@ -27,7 +27,7 @@ namespace Vurbiri.Reactive.Collections
         }
 
         public int Count { [Impl(256)] get => _count.Value; }
-        public ReactiveValue<int> CountReactive { [Impl(256)] get => _count; }
+        public Reactive<int> CountReactive { [Impl(256)] get => _count; }
 
         public Subscription Subscribe(Action<int, T, TypeEvent> action, bool instantGetValue = true)
         {

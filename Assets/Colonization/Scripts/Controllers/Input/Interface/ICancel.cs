@@ -4,7 +4,7 @@ namespace Vurbiri.Colonization
 {
     public interface ICancel
 	{
-        public ReactiveValue<bool> CanCancel { get; }
+        public Reactive<bool> CanCancel { get; }
         public void Cancel();
     }
 }

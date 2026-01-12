@@ -7,7 +7,7 @@ namespace Vurbiri.Colonization
 	{
         public Id<PlayerId> Id { get; }
         public bool IsPerson { get; }
-        public ReactiveValue<bool> Interactable { get; }
+        public Reactive<bool> Interactable { get; }
 
         ReadOnlyReactiveSet<Actor> Actors { get; }
 

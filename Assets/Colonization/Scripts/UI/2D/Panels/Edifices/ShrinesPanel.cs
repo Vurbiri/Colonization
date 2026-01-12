@@ -7,7 +7,7 @@ namespace Vurbiri.Colonization.UI
 {
     sealed public class ShrinesPanel : AEdificesPanel<CurrentMaxAndProfit, ShrineButton>
     {
-        private readonly RInt _maxShrines = new(0);
+        private readonly ReactiveInt _maxShrines = new(0);
 
         public void Init(IdArray<EdificeId, Sprite> sprites)
         {

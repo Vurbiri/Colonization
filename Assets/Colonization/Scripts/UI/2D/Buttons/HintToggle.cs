@@ -21,7 +21,7 @@ namespace Vurbiri.Colonization.UI
             base.InternalInit(HintId.Canvas, value, action, RATIO);
             Localization.Subscribe(SetLocalizationText);
         }
-        public void Init(RBool rBool)
+        public void Init(ReactiveBool rBool)
         {
             base.InternalInit(HintId.Canvas, rBool, rBool.GetSetor<bool>(nameof(rBool.Value)), RATIO);
             Localization.Subscribe(SetLocalizationText);

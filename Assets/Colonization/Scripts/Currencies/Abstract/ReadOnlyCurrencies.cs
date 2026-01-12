@@ -9,13 +9,13 @@ namespace Vurbiri.Colonization
     {
         protected readonly Currency[] _values = new Currency[CurrencyId.Count];
         protected readonly Blood _blood;
-        protected RInt _amount = new(0);
+        protected ReactiveInt _amount = new(0);
         protected Ability _maxAmount;
         protected readonly VAction<ReadOnlyCurrencies> _changeEvent = new();
 
         public int Amount { [Impl(256)] get => _amount; }
-        public ReactiveValue<int> CurrentAmount { [Impl(256)] get => _amount; }
-        public ReactiveValue<int> MaxAmount { [Impl(256)] get => _maxAmount; }
+        public Reactive<int> CurrentAmount { [Impl(256)] get => _amount; }
+        public Reactive<int> MaxAmount { [Impl(256)] get => _maxAmount; }
         public int PercentAmount { [Impl(256)] get => (100 * _amount) / _maxAmount; }
         public bool More { [Impl(256)] get => _amount > _maxAmount; }
 

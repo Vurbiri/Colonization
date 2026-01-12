@@ -3,7 +3,7 @@ using Vurbiri.Reactive.Collections;
 
 namespace Vurbiri.Colonization
 {
-	public class PlayerInteractable : ReactiveValue<bool>
+	public class PlayerInteractable : Reactive<bool>
     {
         private const int SPELL_INDEX = CONST.DEFAULT_MAX_DEMONS + 1, TURN_INDEX = SPELL_INDEX + 1;
 

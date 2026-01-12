@@ -19,7 +19,7 @@ namespace Vurbiri.Colonization
                 protected TActor Actor { [Impl(256)] get => _parent._actor; }
                 protected TSkin Skin { [Impl(256)] get => _parent._skin; }
                 protected BooleanAbility<ActorAbilityId> Moving { [Impl(256)] get => _parent._actor._move; }
-                protected RBool IsCancel { [Impl(256)] get => _parent._actor._canCancel; }
+                protected ReactiveBool IsCancel { [Impl(256)] get => _parent._actor._canCancel; }
                 protected bool IsPerson { [Impl(256)] get => _parent._actor._isPersonTurn; }
 
                 protected Hexagon CurrentHex

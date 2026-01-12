@@ -8,8 +8,8 @@ namespace Vurbiri.Colonization
 	{
 		private bool _isLoad;
 		private int _maxScore;
-		private readonly RBool _hexagonShow;
-		private readonly RBool _trackingCamera;
+		private readonly ReactiveBool _hexagonShow;
+		private readonly ReactiveBool _trackingCamera;
 		private readonly bool _isFirst;
 
 		private readonly VAction<GameSettings, bool> _change = new();
@@ -20,8 +20,8 @@ namespace Vurbiri.Colonization
 			[Impl(256)] set { if (!value) Reset(0); else _isLoad = true; }
 		}
 		public int MaxScore { [Impl(256)] get => _maxScore; }
-		public RBool HexagonShow { [Impl(256)] get => _hexagonShow; }
-		public RBool TrackingCamera { [Impl(256)] get => _trackingCamera; }
+		public ReactiveBool HexagonShow { [Impl(256)] get => _hexagonShow; }
+		public ReactiveBool TrackingCamera { [Impl(256)] get => _trackingCamera; }
 		public bool IsFirstStart { [Impl(256)] get => _isFirst; }
 
 		public GameSettings() : this(false, 0, true, true, true) { }

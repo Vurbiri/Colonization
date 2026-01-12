@@ -8,7 +8,7 @@ namespace Vurbiri.Colonization
     {
         private readonly Ability _max;
 
-        public ReactiveValue<int> Max { [Impl(256)] get => _max; }
+        public Reactive<int> Max { [Impl(256)] get => _max; }
         public int Percent { [Impl(256)] get => (100 * _value) / _max; }
 
         public Blood(int value, Ability maxValue, System.Action<int> action)

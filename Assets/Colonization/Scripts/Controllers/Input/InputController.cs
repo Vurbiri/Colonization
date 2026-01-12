@@ -12,7 +12,7 @@ namespace Vurbiri.Colonization.Controllers
         private readonly Camera _camera;
         private readonly float _distance;
         private readonly InputControlAction _inputActions;
-        private readonly RBool _windowMode = new(false);
+        private readonly ReactiveBool _windowMode = new(false);
         private readonly VAction _debug = new();
 
         private ISelectable _selectObj;
@@ -22,7 +22,7 @@ namespace Vurbiri.Colonization.Controllers
         private bool _spectatorMode;
 
         public InputControlAction.CameraActions CameraActions { [Impl(256)] get => _cameraMap; }
-        public RBool IsWindowMode { [Impl(256)] get => _windowMode; }
+        public ReactiveBool IsWindowMode { [Impl(256)] get => _windowMode; }
         public Event OnDebug { [Impl(256)] get => _debug; }
 
         public InputController(GameEvents events, Camera camera, Settings settings)

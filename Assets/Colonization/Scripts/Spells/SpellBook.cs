@@ -13,7 +13,7 @@ namespace Vurbiri.Colonization
         private static readonly Keys s_keys;
 
         private static readonly ASpell[][] s_spells = {new ASpell[EconomicSpellId.Count], new ASpell[MilitarySpellId.Count] };
-        private static readonly RBool s_isCasting = new();
+        private static readonly ReactiveBool s_isCasting = new();
 
         private static ReadOnlyArray<HumanController> Humans { [Impl(256)] get => GameContainer.Humans; }
 
@@ -24,7 +24,7 @@ namespace Vurbiri.Colonization
 
         public static int BloodTradeCost { [Impl(256)] get => s_settings.bloodTradeBay; }
 
-        public static RBool IsCasting { [Impl(256)] get => s_isCasting; }
+        public static ReactiveBool IsCasting { [Impl(256)] get => s_isCasting; }
         public static IEnumerator WaitEndCasting { [Impl(256)] get; } = new WaitCasting();
 
         static SpellBook()

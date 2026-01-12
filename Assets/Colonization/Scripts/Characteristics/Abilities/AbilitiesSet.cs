@@ -57,7 +57,7 @@ namespace Vurbiri.Colonization
         {
             return ReplaceTo(id, new SubAbility<TId>(_abilities[id], _abilities[max], _abilities[restore]));
         }
-        public void ReplaceToDependent(Id<TId> id, ReactiveValue<int> remove, ReactiveValue<int> add)
+        public void ReplaceToDependent(Id<TId> id, Reactive<int> remove, Reactive<int> add)
         {
             _abilities[id] = new DependentAbility<TId>(_abilities[id], remove, add);
         }

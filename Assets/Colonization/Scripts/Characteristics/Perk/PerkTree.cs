@@ -14,7 +14,7 @@ namespace Vurbiri.Colonization
         
         private static readonly ReadOnlyArray<ReadOnlyArray<Perk>> s_perks;
 
-        private readonly RInt[] _progress = new RInt[AbilityTypeId.Count];
+        private readonly ReactiveInt[] _progress = new ReactiveInt[AbilityTypeId.Count];
         private readonly HashSet<int>[] _learnedPerks = new HashSet<int>[AbilityTypeId.Count];
         private readonly VAction<Perk> _eventPerk = new();
         private readonly VAction<HashSet<int>[]> _eventHashSet = new();
@@ -58,7 +58,7 @@ namespace Vurbiri.Colonization
 
         [Impl(256)] public static int ProgressToLevel(int progress) => MathI.Sqrt(1 + (progress << 2)) - 1 >> 1;
 
-        [Impl(256)] public RInt GetProgress(int typePerkId) => _progress[typePerkId];
+        [Impl(256)] public ReactiveInt GetProgress(int typePerkId) => _progress[typePerkId];
         [Impl(256)] public int GetLevel(int typePerkId) => ProgressToLevel(_progress[typePerkId]);
         
         [Impl(256)] public bool IsPerkLearned(int typePerkId, int perkId) => _learnedPerks[typePerkId].Contains(perkId);

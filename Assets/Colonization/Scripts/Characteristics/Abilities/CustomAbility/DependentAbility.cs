@@ -6,7 +6,7 @@ namespace Vurbiri.Colonization
     {
         private readonly ReactiveCombination<int, int> _combination;
 
-        public DependentAbility(AAbility<TId> other, ReactiveValue<int> remove, ReactiveValue<int> add) : base(other)
+        public DependentAbility(AAbility<TId> other, Reactive<int> remove, Reactive<int> add) : base(other)
         {
             _maxValue = _value;
             _combination = new(remove, add, Change);

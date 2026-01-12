@@ -32,22 +32,22 @@ namespace Vurbiri.Colonization
 
 		[Impl(256)] public Actor Create(int type, int id, ActorInitData initData, Hexagon startHex, bool enable = true)
 		{
-			Actor actor = UnityEngine.Object.Instantiate(_prefabs[type], _container);
+			var actor = UnityEngine.Object.Instantiate(_prefabs[type], _container);
 			actor.Setup(_settings[type][id], initData, startHex, enable);
 			_actors[initData.owner].Add(actor);
 
 			return actor;
 		}
 
-		[Impl(256)] public void Load(int type, ActorInitData initData, ActorLoadData loadData, WaitAllWaits waitAll)
+		[Impl(256)] public WaitSignal Load(int type, ActorInitData initData, ActorLoadData loadData)
 		{
-			WaitSignal signal = new();
-			Actor actor = Create(type, loadData.state.id, initData, GameContainer.Hexagons[loadData.keyHex], false);
+			var signal = new WaitSignal();
+			var actor = Create(type, loadData.state.id, initData, GameContainer.Hexagons[loadData.keyHex], false);
 			actor.SetLoadData(loadData);
 			actor.Skin.EventStart.Add(signal.Send);
-			waitAll.Add(signal);
-
 			Enable(actor).Start();
+
+			return signal;
 
 			// ======== Local ============
 			static System.Collections.IEnumerator Enable(Actor actor) 

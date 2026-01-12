@@ -14,7 +14,7 @@ namespace Vurbiri.Reactive.Collections
 
         protected T[] _values;
         protected int _capacity;
-        protected readonly RInt _count = new(0);
+        protected readonly ReactiveInt _count = new(0);
         protected readonly ReactiveVersion<T, TypeEvent> _version = new();
 
         public T this[int index] { [Impl(256)] get => _values[index]; }
@@ -22,7 +22,7 @@ namespace Vurbiri.Reactive.Collections
         public int Capacity { [Impl(256)] get => _capacity; }
 
         public int Count { [Impl(256)] get => _count.Value; }
-        public ReactiveValue<int> CountReactive { [Impl(256)] get => _count; }
+        public Reactive<int> CountReactive { [Impl(256)] get => _count; }
 
         public T First
         {

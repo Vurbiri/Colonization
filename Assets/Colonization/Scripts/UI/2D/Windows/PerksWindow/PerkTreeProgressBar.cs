@@ -14,7 +14,7 @@ namespace Vurbiri.Colonization.UI
 
         public Id<AbilityTypeId> Id => _id;
 
-        public void Init(RInt progress)
+        public void Init(ReactiveInt progress)
         {
             _valueRect.anchorMin = Vector2.zero;
 

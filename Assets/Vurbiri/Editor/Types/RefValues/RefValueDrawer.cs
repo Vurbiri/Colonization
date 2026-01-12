@@ -5,7 +5,7 @@ using static UnityEditor.EditorGUI;
 
 namespace VurbiriEditor
 {
-	[CustomPropertyDrawer(typeof(RefValue<>), true)]
+	[CustomPropertyDrawer(typeof(Ref<>), true)]
 	public class RefValueDrawer : PropertyDrawer
 	{
 		private const string P_NAME = "_value";

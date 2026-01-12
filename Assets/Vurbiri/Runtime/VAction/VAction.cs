@@ -41,7 +41,7 @@ namespace Vurbiri
 		}
 
 		[Impl(256)] public void Remove(Action<T> action) => _action -= action;
-	}
+    }
 	//----------------------------------------------
 	public class VAction<T> : Event<T>
 	{
@@ -84,7 +84,7 @@ namespace Vurbiri
 		}
 
 		[Impl(256)] public void Remove(Action<TA, TB> action) => _action -= action;
-	}
+    }
 	//----------------------------------------------
 	public class VAction<TA, TB> : Event<TA, TB>
 	{

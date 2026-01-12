@@ -13,8 +13,8 @@ namespace Vurbiri.Colonization
 	{
 		protected static readonly WaitRealtime s_delayHalfSecond = new(0.5f);
 
-		protected static RInt s_shrinesCount = new();
-		public static ReactiveValue<int> ShrinesCount { [Impl(256)] get => s_shrinesCount; }
+		protected static ReactiveInt s_shrinesCount = new();
+		public static Reactive<int> ShrinesCount { [Impl(256)] get => s_shrinesCount; }
 
 		protected readonly Id<PlayerId> _id;
 		protected readonly bool _isPerson;
@@ -27,7 +27,7 @@ namespace Vurbiri.Colonization
 		public Id<PlayerId> Id { [Impl(256)] get => _id; }
 		public bool IsPerson { [Impl(256)] get => _isPerson; }
 		public ReadOnlyReactiveSet<Actor> Actors { [Impl(256)] get => GameContainer.Actors[_id]; }
-		public ReactiveValue<bool> Interactable { [Impl(256)] get => _interactable; }
+		public Reactive<bool> Interactable { [Impl(256)] get => _interactable; }
 
 		protected Player(Id<PlayerId> playerId, bool isPerson)
 		{
@@ -67,7 +67,7 @@ namespace Vurbiri.Colonization
         [Impl(256)] protected static void ActorsLoad(ASpawner spawner, List<ActorLoadData> actors, WaitAllWaits waitAll)
         {
             for (int i = actors.Count - 1; i >= 0; --i)
-                spawner.Load(actors[i], waitAll);
+                waitAll.Add(spawner.Load(actors[i]));
         }
 
         #region Nested: Settings
