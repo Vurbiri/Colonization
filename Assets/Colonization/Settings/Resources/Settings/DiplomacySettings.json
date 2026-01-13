@@ -1,11 +1,11 @@
 {
   "min": -99,
   "max": 100,
-  "great": 75,
-  "defaultValue": 15,
-  "defaultDelta": 15,
+  "great": 60,
+  "defaultValue": 10,
+  "defaultDelta": 12,
   "personPerRound": [
-    -3,
+    -2,
     3
   ],
   "aiPerRound": [

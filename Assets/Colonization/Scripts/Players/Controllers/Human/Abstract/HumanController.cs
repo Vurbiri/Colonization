@@ -36,17 +36,37 @@ namespace Vurbiri.Colonization
 			if (hexId == HEX.GATE)
 			{
 				_resources.Blood.Add(_edifices.ShrineProfit);
+#if TEST_AI
+                return Clamp();
+#else
 				return _resources.Clamp();
-			}
+#endif
+            }
 
-			if (_abilities.IsTrue(HumanAbilityId.IsFreeGroundRes))
+            if (_abilities.IsTrue(HumanAbilityId.IsFreeGroundRes))
 				_resources.Add(GameContainer.Hexagons.FreeResources);
 
 			_resources.Add(_edifices.ProfitFromEdifices(hexId));
-			return 0;
-		}
+#if TEST_AI
+			DrawRes();
+#endif
+            return 0;
 
-		public virtual void OnStartTurn()
+#if TEST_AI
+            #region Local
+            void DrawRes() => UnityEngine.Debug.Log($"[{_id}]  {_resources}");
+            int Clamp()
+			{
+                int delta = _resources.Clamp();
+                DrawRes();
+                UnityEngine.Debug.Log($"[{_id}] Delta {delta}");
+                return delta;
+            }
+            #endregion
+#endif
+        }
+
+        public virtual void OnStartTurn()
 		{
 			foreach (var warrior in Actors)
 				warrior.EffectsUpdate();

@@ -3,6 +3,7 @@ using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri
 {
+	#region ========================= Event / VAction ==========================================
 	public abstract class Event : IUnsubscribed<Action>
 	{
 		protected internal Action _action;
@@ -17,7 +18,7 @@ namespace Vurbiri
 
 		[Impl(256)] public void Remove(Action action) => _action -= action;
 	}
-	//----------------------------------------------
+	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	public class VAction : Event
 	{
 		[Impl(256)] public VAction() => _action = Dummy.Action;
@@ -27,7 +28,8 @@ namespace Vurbiri
 
 		[Impl(256)] public void Clear() => _action = Dummy.Action;
 	}
-	//=======================================================================================
+	#endregion
+	#region ========================= Event<T> / VAction<T> ====================================
 	public abstract class Event<T> : IUnsubscribed<Action<T>>
 	{
 		protected internal Action<T> _action;
@@ -41,8 +43,8 @@ namespace Vurbiri
 		}
 
 		[Impl(256)] public void Remove(Action<T> action) => _action -= action;
-    }
-	//----------------------------------------------
+	}
+	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	public class VAction<T> : Event<T>
 	{
 		[Impl(256)] public VAction() => _action = Dummy.Action;
@@ -70,7 +72,8 @@ namespace Vurbiri
 		[Impl(256)] public static ComboAction<T> operator +(VAction action, VAction<T> actionT) => new(action, actionT);
 		[Impl(256)] public static ComboAction<T> operator +(VAction<T> actionT, VAction action) => new(action, actionT);
 	}
-	//=======================================================================================
+	#endregion
+	#region ========================= Event<TA, TB> / VAction<TA, TB> ==========================
 	public abstract class Event<TA, TB> : IUnsubscribed<Action<TA, TB>>
 	{
 		protected Action<TA, TB> _action;
@@ -84,8 +87,8 @@ namespace Vurbiri
 		}
 
 		[Impl(256)] public void Remove(Action<TA, TB> action) => _action -= action;
-    }
-	//----------------------------------------------
+	}
+	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	public class VAction<TA, TB> : Event<TA, TB>
 	{
 		[Impl(256)] public VAction() => _action = Dummy.Action;
@@ -110,7 +113,8 @@ namespace Vurbiri
 
 		[Impl(256)] public void Clear() => _action = Dummy.Action;
 	}
-	//=======================================================================================
+	#endregion
+	#region ========================= Event<TA, TB, TC> / VAction<TA, TB, TC> ==================
 	public abstract class Event<TA, TB, TC> : IUnsubscribed<Action<TA, TB, TC>>
 	{
 		protected Action<TA, TB, TC> _action;
@@ -125,7 +129,7 @@ namespace Vurbiri
 
 		[Impl(256)] public void Remove(Action<TA, TB, TC> action) => _action -= action;
 	}
-	//----------------------------------------------
+	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	public class VAction<TA, TB, TC> : Event<TA, TB, TC>
 	{
 		[Impl(256)] public VAction() => _action = Dummy.Action;
@@ -150,7 +154,8 @@ namespace Vurbiri
 
 		[Impl(256)] public void Clear() => _action = Dummy.Action;
 	}
-	//=======================================================================================
+	#endregion
+	#region ========================= Event<TA, TB, TC, TD> / VAction<TA, TB, TC, TD> ==========
 	public abstract class Event<TA, TB, TC, TD> : IUnsubscribed<Action<TA, TB, TC, TD>>
 	{
 		protected Action<TA, TB, TC, TD> _action;
@@ -165,7 +170,7 @@ namespace Vurbiri
 
 		[Impl(256)] public void Remove(Action<TA, TB, TC, TD> action) => _action -= action;
 	}
-	//----------------------------------------------
+	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	public class VAction<TA, TB, TC, TD> : Event<TA, TB, TC, TD>
 	{
 		[Impl(256)] public VAction() => _action = Dummy.Action;
@@ -190,4 +195,5 @@ namespace Vurbiri
 
 		[Impl(256)] public void Clear() => _action = Dummy.Action;
 	}
+	#endregion
 }

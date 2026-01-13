@@ -3,7 +3,7 @@ using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Reactive
 {
-	public abstract class Reactive<T> : Ref<T>, IReactive<T> where T : struct, IEquatable<T>, IComparable<T>
+	public abstract class Reactive<T> : Ref<T>, IReactive<T>
     {
         protected readonly VAction<T> _onChange = new();
 

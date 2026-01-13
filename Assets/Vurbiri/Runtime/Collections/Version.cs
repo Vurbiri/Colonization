@@ -6,7 +6,7 @@ namespace Vurbiri.Collections
 	{
 		protected uint _version;
 
-		[Impl(256)] public void Next() => _version = unchecked(_version + 1);
+		[Impl(256)] public void Next() => _version = unchecked(++_version);
 
 		[Impl(256)] public static implicit operator Current(Version version) => new(version);
 
@@ -30,5 +30,4 @@ namespace Vurbiri.Collections
 		}
 		//--------------------------------------------
 	}
-	
 }

@@ -7,8 +7,8 @@ namespace Vurbiri.Reactive
 	[Serializable, JsonConverter(typeof(Converter))]
 	sealed public class ReactiveFloat : ReactiveValue<float>
 	{
-		public ReactiveFloat() : base(0f) { }
-		public ReactiveFloat(float value) : base(value) { }
+        [Impl(256)] public ReactiveFloat() { }
+        [Impl(256)] public ReactiveFloat(float value) => _value = value;
 
 		#region Arithmetic
 		[Impl(256)] public void Add(float value)
@@ -44,29 +44,23 @@ namespace Vurbiri.Reactive
         [Impl(256)] public static explicit operator int(ReactiveFloat value) => (int)value._value;
 
         #region Arithmetic operator
-        public static float operator +(ReactiveFloat a, ReactiveFloat b) => a._value + b._value;
-		public static float operator +(ReactiveFloat r, IReactiveValue<float> f) => r._value + f.Value;
-		public static float operator +(IReactiveValue<float> f, ReactiveFloat r) => f.Value + r._value;
-		public static float operator +(ReactiveFloat r, float f) => r._value + f;
-		public static float operator +(float f, ReactiveFloat r) => f + r._value;
+        [Impl(256)] public static float operator +(ReactiveFloat r) => r._value;
+        [Impl(256)] public static float operator +(ReactiveFloat a, ReactiveFloat b) => a._value + b._value;
+        [Impl(256)] public static float operator +(ReactiveFloat r, float f) => r._value + f;
+        [Impl(256)] public static float operator +(float f, ReactiveFloat r) => f + r._value;
 
-		public static float operator -(ReactiveFloat a, ReactiveFloat b) => a._value - b._value;
-		public static float operator -(ReactiveFloat r, IReactiveValue<float> f) => r._value - f.Value;
-		public static float operator -(IReactiveValue<float> f, ReactiveFloat r) => f.Value - r._value;
-		public static float operator -(ReactiveFloat r, float f) => r._value - f;
-		public static float operator -(float f, ReactiveFloat r) => f - r._value;
+        [Impl(256)] public static float operator -(ReactiveFloat r) => -r._value;
+        [Impl(256)] public static float operator -(ReactiveFloat a, ReactiveFloat b) => a._value - b._value;
+        [Impl(256)] public static float operator -(ReactiveFloat r, float f) => r._value - f;
+        [Impl(256)] public static float operator -(float f, ReactiveFloat r) => f - r._value;
 
-		public static float operator *(ReactiveFloat a, ReactiveFloat b) => a._value * b._value;
-		public static float operator *(ReactiveFloat r, IReactiveValue<float> f) => r._value * f.Value;
-		public static float operator *(IReactiveValue<float> f, ReactiveFloat r) => f.Value * r._value;
-		public static float operator *(ReactiveFloat r, float f) => r._value * f;
-		public static float operator *(float f, ReactiveFloat r) => f * r._value;
+        [Impl(256)] public static float operator *(ReactiveFloat a, ReactiveFloat b) => a._value * b._value;
+        [Impl(256)] public static float operator *(ReactiveFloat r, float f) => r._value * f;
+        [Impl(256)] public static float operator *(float f, ReactiveFloat r) => f * r._value;
 
-		public static float operator /(ReactiveFloat a, ReactiveFloat b) => a._value / b._value;
-		public static float operator /(ReactiveFloat r, IReactiveValue<float> f) => r._value / f.Value;
-		public static float operator /(IReactiveValue<float> f, ReactiveFloat r) => f.Value / r._value;
-		public static float operator /(ReactiveFloat r, float f) => r._value / f;
-		public static float operator /(float f, ReactiveFloat r) => f / r._value;
+        [Impl(256)] public static float operator /(ReactiveFloat a, ReactiveFloat b) => a._value / b._value;
+        [Impl(256)] public static float operator /(ReactiveFloat r, float f) => r._value / f;
+        [Impl(256)] public static float operator /(float f, ReactiveFloat r) => f / r._value;
 		#endregion
 
 		#region Nested JsonConverter

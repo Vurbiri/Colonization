@@ -8,6 +8,7 @@ namespace Vurbiri.Colonization
 	{
         public int max; // = 666;
         [Header("-=Penalty=-")]
+        public int penaltyPerTurn;
         public int penaltyPerDemon;
         public int penaltyPerBlood; 
         public ReadOnlyIdArray<WarriorId, int> penaltyPerKillWarrior;

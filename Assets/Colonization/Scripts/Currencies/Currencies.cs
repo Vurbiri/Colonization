@@ -82,7 +82,7 @@ namespace Vurbiri.Colonization
 
         public int Clamp()
         {
-            int delta = _amount.Value - _maxAmount.Value, output = delta;
+            int delta = _amount.Value - _maxAmount.Value, output = MathI.Max(0, delta);
 
             if (delta > 0)
             {

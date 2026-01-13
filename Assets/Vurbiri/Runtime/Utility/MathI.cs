@@ -12,7 +12,7 @@ namespace Vurbiri
 		[Impl(256)] public static int Abs(this int x)
 		{
 			int m = x >> 31;
-			return (x ^ m) - m;
+			return checked((x ^ m) - m);
 		}
 
 		[Impl(256)] public static int Sign(this int x) => unchecked(x >> 31 | (int)((uint)-x >> 31));

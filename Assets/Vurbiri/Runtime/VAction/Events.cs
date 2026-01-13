@@ -4,14 +4,14 @@ using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 namespace Vurbiri
 {
 	#region ============== EventExt ======================
-	public static class EventExt
-	{
-		[Impl(256)] public static Events<TA, TB> Combine<TA, TB>(this Event<TA> eventA, Event<TB> eventB) => new(eventA, eventB);
+	//public static class EventExt
+	//{
+	//	[Impl(256)] public static Events<TA, TB> Combine<TA, TB>(this Event<TA> eventA, Event<TB> eventB) => new(eventA, eventB);
 
-		[Impl(256)] public static Events<TA, TB, TC> Combine<TA, TB, TC>(this Event<TA> eventA, Event<TB> eventB, Event<TC> eventC) => new(eventA, eventB, eventC);
-		[Impl(256)] public static Events<TA, TB, TC> Combine<TA, TB, TC>(this Event<TA, TB> eventAB, Event<TC> eventC) => new(eventAB, eventC);
-		[Impl(256)] public static Events<TA, TB, TC> Combine<TA, TB, TC>(this Event<TC> eventC, Event<TA, TB> eventAB) => new(eventAB, eventC);
-	}
+	//	[Impl(256)] public static Events<TA, TB, TC> Combine<TA, TB, TC>(this Event<TA> eventA, Event<TB> eventB, Event<TC> eventC) => new(eventA, eventB, eventC);
+	//	[Impl(256)] public static Events<TA, TB, TC> Combine<TA, TB, TC>(this Event<TA, TB> eventAB, Event<TC> eventC) => new(eventAB, eventC);
+	//	[Impl(256)] public static Events<TA, TB, TC> Combine<TA, TB, TC>(this Event<TC> eventC, Event<TA, TB> eventAB) => new(eventAB, eventC);
+	//}
 	#endregion
 
 	#region ============== Events<TA, TB> ======================

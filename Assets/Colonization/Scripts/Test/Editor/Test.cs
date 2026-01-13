@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
 using UnityEngine;
@@ -13,16 +12,19 @@ namespace Vurbiri.Colonization
 
 		public void Testing()
 		{
-			var arr = new Q[] { new() };
-			print(arr[0].x);
-			arr[0].Add(5);
-            print(arr[0].x);
+			print(MathI.Abs(int.MinValue + 1));
+            print(Math.Abs(int.MinValue + 1));
 
-			List<Q> list = new() { new() };
-            print(list[0].x);
-            list[0].Add(5);
-            print(list[0].x);
-		}
+            //var arr = new Q[] { new() };
+            //print(arr[0].x);
+            //arr[0].Add(5);
+            //print(arr[0].x);
+
+            //List<Q> list = new() { new() };
+            //print(list[0].x);
+            //list[0].Add(5);
+            //print(list[0].x);
+        }
 
 		public void MathITesting()
 		{

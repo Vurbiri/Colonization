@@ -49,7 +49,10 @@ namespace Vurbiri.Colonization
 			// ======= Local ==========
 			IEnumerator OnPlay_Cn()
 			{
-				if (_resources.PercentAmount < s_settings.minPercentRes)
+#if TEST_AI
+                Log.Info($"====================== {_id} ======================");
+#endif
+                if (_resources.PercentAmount < s_settings.minPercentRes)
 					_resources.AddToMin(s_settings.addRes);
 
 				yield return s_settings.waitPlayStart.Restart();

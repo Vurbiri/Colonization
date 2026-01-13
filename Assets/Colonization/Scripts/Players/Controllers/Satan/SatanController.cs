@@ -31,7 +31,8 @@ namespace Vurbiri.Colonization
 
 		public void OnStartTurn()
 		{
-			foreach (var demon in Actors)
+            GameContainer.Chaos.ForSatanTurn();
+            foreach (var demon in Actors)
 				demon.EffectsUpdate(demon.Hexagon.IsGate ? s_parameters.gateDefense : 0);
 		}
 
@@ -64,7 +65,7 @@ namespace Vurbiri.Colonization
 			// ======= Local ==========
 			IEnumerator OnEndTurn_Cn()
 			{
-				int countBuffs = 0, balance = 0;
+				int countBuffs = 0, chaos = 0;
 				ReturnSignal returnSignal;
 
 				foreach (var demon in Actors)
@@ -73,7 +74,7 @@ namespace Vurbiri.Colonization
 					{
 						if (returnSignal = demon.IsMainProfit)
 						{
-							balance++;
+							chaos++;
 							yield return returnSignal.signal;
 						}
 						if (returnSignal = demon.IsAdvProfit)
@@ -88,7 +89,7 @@ namespace Vurbiri.Colonization
 					demon.StatesUpdate();
 				}
 
-				GameContainer.Chaos.ForDemonCurse(balance);
+				GameContainer.Chaos.ForDemonCurse(chaos);
 				_artefact.Next(countBuffs);
 
 				GameContainer.GameLoop.StartTurn();

@@ -1,6 +1,7 @@
 using Vurbiri.Colonization.Storage;
 using Vurbiri.Reactive;
 using Vurbiri.Reactive.Collections;
+using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization
 {
@@ -9,8 +10,10 @@ namespace Vurbiri.Colonization
         private readonly ChaosSettings _settings;
         private readonly VAction<Winner> _eventGameOver = new();
 
-        public Event<Winner> OnGameOver => _eventGameOver;
-        public int Max => _settings.max;
+        [Impl(256)] public static implicit operator int(Chaos chaos) => chaos._value;
+
+        public Event<Winner> OnGameOver { [Impl(256)] get => _eventGameOver; }
+        public int Max { [Impl(256)] get => _settings.max; }
 
         public Chaos(GameStorage storage, GameLoop gameLoop, ActorsFactory actorsFactory)
         {
@@ -27,11 +30,12 @@ namespace Vurbiri.Colonization
                 actorsFactory[i].Subscribe(OnWarriorDeath, false);
         }
 
-        public void ForDemonCurse(int value) => Add(_settings.penaltyPerDemon * value);
-        public void ForSatanLevelUP(int level) => Add(-level);
+        [Impl(256)] public void ForDemonCurse(int value) => Add(_settings.penaltyPerDemon * value);
+        [Impl(256)] public void ForSatanLevelUP(int level) => Add(level);
+        [Impl(256)] public void ForSatanTurn() => Add(_settings.penaltyPerTurn);
 
-        public void BindShrines(ReadOnlyReactiveList<Crossroad> shrines) => shrines.Subscribe((_, _, _) => Add(_settings.rewardPerShrine), false);
-        public void BindBlood(Blood blood) => blood.SubscribeDelta(OnPayInBlood);
+        [Impl(256)] public void BindShrines(ReadOnlyReactiveList<Crossroad> shrines) => shrines.Subscribe((_, _, _) => Add(_settings.rewardPerShrine), false);
+        [Impl(256)] public void BindBlood(Blood blood) => blood.SubscribeDelta(OnPayInBlood);
 
         public void Add(int value)
         {
@@ -71,7 +75,5 @@ namespace Vurbiri.Colonization
             if (delta < 0)
                 Add(_settings.penaltyPerBlood * delta);
         }
-
-        public static implicit operator int(Chaos balance) => balance._value;
     }
 }

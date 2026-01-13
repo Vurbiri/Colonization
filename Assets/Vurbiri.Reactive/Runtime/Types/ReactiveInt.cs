@@ -8,10 +8,10 @@ namespace Vurbiri.Reactive
 	sealed public class ReactiveInt : ReactiveValue<int>
 	{
 		[Impl(256)] public ReactiveInt() { }
-		[Impl(256)] public ReactiveInt(int value) : base(value) { }
+		[Impl(256)] public ReactiveInt(int value) => _value = value;
 
-		#region Arithmetic
-		[Impl(256)] public void Increment() => _onChange.Invoke(++_value);
+        #region Arithmetic
+        [Impl(256)] public void Increment() => _onChange.Invoke(++_value);
 		[Impl(256)] public void Decrement() => _onChange.Invoke(--_value);
 		[Impl(256)] public void Add(int value)
 		{
@@ -45,44 +45,60 @@ namespace Vurbiri.Reactive
 		[Impl(256)] public static implicit operator int(ReactiveInt value) => value._value;
 		[Impl(256)] public static implicit operator float(ReactiveInt value) => value._value;
 
-		#region Arithmetic operator
-		[Impl(256)] public static int operator +(ReactiveInt a, ReactiveInt b) => a._value + b._value;
-		[Impl(256)] public static int operator +(ReactiveInt r, ReactiveValue<int> i) => r._value + i.Value;
-		[Impl(256)] public static int operator +(ReactiveValue<int> i, ReactiveInt r) => i.Value + r._value;
+        #region Arithmetic operator
+        [Impl(256)] public static int operator +(ReactiveInt r) => r._value;
+        [Impl(256)] public static int operator +(ReactiveInt a, ReactiveInt b) => a._value + b._value;
 		[Impl(256)] public static int operator +(ReactiveInt r, int i) => r._value + i;
 		[Impl(256)] public static int operator +(int i, ReactiveInt r) => i + r._value;
 		[Impl(256)] public static float operator +(ReactiveInt r, float f) => r._value + f;
 		[Impl(256)] public static float operator +(float f, ReactiveInt r) => f + r._value;
 
-		[Impl(256)] public static int operator -(ReactiveInt a, ReactiveInt b) => a._value - b._value;
-		[Impl(256)] public static int operator -(ReactiveInt r, ReactiveValue<int> i) => r._value - i.Value;
-		[Impl(256)] public static int operator -(ReactiveValue<int> i, ReactiveInt r) => i.Value - r._value;
+        [Impl(256)] public static int operator -(ReactiveInt r) => -r._value;
+        [Impl(256)] public static int operator -(ReactiveInt a, ReactiveInt b) => a._value - b._value;
 		[Impl(256)] public static int operator -(ReactiveInt r, int i) => r._value - i;
 		[Impl(256)] public static int operator -(int i, ReactiveInt r) => i - r._value;
 		[Impl(256)] public static float operator -(ReactiveInt r, float f) => r._value - f;
 		[Impl(256)] public static float operator -(float f, ReactiveInt r) => f - r._value;
 
 		[Impl(256)] public static int operator *(ReactiveInt a, ReactiveInt b) => a._value * b._value;
-		[Impl(256)] public static int operator *(ReactiveInt r, ReactiveValue<int> i) => r._value * i.Value;
-		[Impl(256)] public static int operator *(ReactiveValue<int> i, ReactiveInt r) => i.Value * r._value;
 		[Impl(256)] public static int operator *(ReactiveInt r, int i) => r._value * i;
 		[Impl(256)] public static int operator *(int i, ReactiveInt r) => i * r._value;
 		[Impl(256)] public static float operator *(ReactiveInt r, float f) => r._value * f;
 		[Impl(256)] public static float operator *(float f, ReactiveInt r) => f * r._value;
 
 		[Impl(256)] public static int operator /(ReactiveInt a, ReactiveInt b) => a._value / b._value;
-		[Impl(256)] public static int operator /(ReactiveInt r, ReactiveValue<int> i) => r._value / i.Value;
-		[Impl(256)] public static int operator /(ReactiveValue<int> i, ReactiveInt r) => i.Value / r._value;
 		[Impl(256)] public static int operator /(ReactiveInt r, int i) => r._value / i;
 		[Impl(256)] public static int operator /(int i, ReactiveInt r) => i / r._value;
 		[Impl(256)] public static float operator /(ReactiveInt r, float f) => r._value / f;
 		[Impl(256)] public static float operator /(float f, ReactiveInt r) => f / r._value;
 
-		#endregion
+        [Impl(256)] public static int operator %(ReactiveInt a, ReactiveInt b) => a._value % b._value;
+        [Impl(256)] public static int operator %(ReactiveInt r, int i) => r._value % i;
+        [Impl(256)] public static int operator %(int i, ReactiveInt r) => i % r._value;
+        #endregion
 
-		#region Nested JsonConverter
-		//***************************************************
-		sealed public class Converter : AJsonConverter<ReactiveInt>
+        #region Logic operator
+        [Impl(256)] public static int operator ~(ReactiveInt r) => ~r._value;
+
+        [Impl(256)] public static int operator |(ReactiveInt a, ReactiveInt b) => a._value | b._value;
+        [Impl(256)] public static int operator |(ReactiveInt r, int i) => r._value | i;
+        [Impl(256)] public static int operator |(int i, ReactiveInt r) => i | r._value;
+
+        [Impl(256)] public static int operator &(ReactiveInt a, ReactiveInt b) => a._value & b._value;
+        [Impl(256)] public static int operator &(ReactiveInt r, int i) => r._value & i;
+        [Impl(256)] public static int operator &(int i, ReactiveInt r) => i & r._value;
+
+        [Impl(256)] public static int operator ^(ReactiveInt a, ReactiveInt b) => a._value ^ b._value;
+        [Impl(256)] public static int operator ^(ReactiveInt r, int i) => r._value ^ i;
+        [Impl(256)] public static int operator ^(int i, ReactiveInt r) => i ^ r._value;
+
+        [Impl(256)] public static int operator >>(ReactiveInt r, int i) => r._value >> i;
+        [Impl(256)] public static int operator <<(ReactiveInt r, int i) => r._value << i;
+        #endregion
+
+        #region Nested JsonConverter
+        //***************************************************
+        sealed public class Converter : AJsonConverter<ReactiveInt>
 		{
 			public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
 			{

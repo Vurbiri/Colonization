@@ -106,7 +106,21 @@ namespace Vurbiri.Colonization
                 sb.AppendFormat(TAG.CURRENCY, i, _values[i].ToString());
 
             sb.Append(" ");
-            sb.Append(_amount.ToString()); sb.Append("/"); sb.Append(_maxAmount.ToString());
+            sb.Append(_amount.Value.ToStr()); sb.Append("/"); sb.Append(_maxAmount.Value.ToStr());
+        }
+
+        sealed public override string ToString()
+        {
+            StringBuilder sb = new(32); 
+            sb.Append("[");
+            for (int i = 0; i < CurrencyId.Count - 1; ++i)
+            {
+                sb.Append(_values[i].ToString()); sb.Append(", ");
+            }
+            sb.Append(_values[CurrencyId.Count - 1].ToString());
+            sb.Append("] ["); sb.Append(_blood.ToString()); sb.Append("|"); sb.Append(_blood.Max.Value.ToStr());  sb.Append("]  ");
+            sb.Append(_amount.Value.ToStr()); sb.Append("|"); sb.Append(_maxAmount.Value.ToStr());
+            return sb.ToString();
         }
 
         private void RedirectBlood(int value) => _changeEvent.Invoke(this);
