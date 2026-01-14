@@ -81,10 +81,10 @@ namespace Vurbiri.Colonization
 			public RoadFactory roadFactory;
 			[Space]
 			public BuffsScriptable satanLeveling;
+			
 			public void Dispose()
 			{
-				humanAbilities.Dispose(); satanLeveling.Dispose(); artefact.Dispose();
-				humanAbilities = null; satanLeveling = null; artefact = null;
+				humanAbilities.Unload(); satanLeveling.Unload(); artefact.Unload();
 			}
 
 #if UNITY_EDITOR

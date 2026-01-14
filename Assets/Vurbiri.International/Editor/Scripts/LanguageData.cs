@@ -14,6 +14,7 @@ namespace VurbiriEditor.International
 		public static string[][] keys;
 
 		public static string folder;
+
 		static LanguageData()
 		{
 			folder = JsonResources.Load<LanguageType[]>(CONST_L.LANG_FILE)[0].Folder;

@@ -29,6 +29,19 @@ namespace Vurbiri
             component = null;
         }
 
+        public static bool TryGetResourcePath(string name, out string path)
+        {
+            var asset = Resources.Load(name);
+            if (asset != null)
+            {
+                path = FileUtil.GetPhysicalPath(AssetDatabase.GetAssetPath(asset));
+                Resources.UnloadAsset(asset);
+                return true;
+            }
+            path = null;
+            return false;
+        }
+
         // ********************************************
 
         public static void SetGameObject(ref GameObject obj, string name)
@@ -270,21 +283,6 @@ namespace Vurbiri
             return list;
         }
 
-        public static T CreateScriptable<T>(string defaultName, string defaultPath) where T : ScriptableObject
-        {
-            string path = EditorUtility.SaveFilePanelInProject("Create Scriptable", defaultName, "asset", "", defaultPath);
-            if (!string.IsNullOrEmpty(path))
-            {
-                T asset = ScriptableObject.CreateInstance<T>();
-
-                AssetDatabase.CreateAsset(asset, path);
-                AssetDatabase.SaveAssets();
-
-                return asset;
-            }
-            return null;
-        }
-
         public static void CheckScriptable<T>(ref T scriptable, string defaultName, string defaultPath) where T : ScriptableObject
         {
             if (scriptable == null)
@@ -295,6 +293,21 @@ namespace Vurbiri
                 else
                     Debug.LogWarning($"Set {typeof(T).Name}");
             }
+        }
+
+        public static T CreateScriptable<T>(string defaultName, string defaultPath) where T : ScriptableObject
+        {
+            string path = EditorUtility.SaveFilePanelInProject("Create Scriptable", defaultName, "asset", "", defaultPath);
+            if (!string.IsNullOrEmpty(path))
+            {
+                T scriptable = ScriptableObject.CreateInstance<T>();
+
+                AssetDatabase.CreateAsset(scriptable, path);
+                AssetDatabase.SaveAssets();
+
+                return scriptable;
+            }
+            return null;
         }
 
         public static T FindAnyAsset<T>() where T : Object

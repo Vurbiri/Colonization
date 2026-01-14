@@ -14,9 +14,19 @@ namespace VurbiriEditor.International
 		private int _index = 0;
 		private ListView _list;
 
-		public override VisualElement CreateInspectorGUI()
+		public static void Load(string searchContext, VisualElement rootElement)
 		{
-			var settings = LanguageFilesScriptable.GetOrCreateSelf();
+            rootElement.Add(CreateEditorAndBind(LanguageFilesScriptable.LoadOrCreate(), out s_self));
+		}
+        public static void Unload()
+        {
+            Destroy();
+            LanguageFilesScriptable.Unload();
+        }
+
+        public override VisualElement CreateInspectorGUI()
+		{
+			var settings = LanguageFilesScriptable.LoadOrCreate();
 
 			var root = _treeAsset.CloneTree();
 
@@ -30,9 +40,12 @@ namespace VurbiriEditor.International
 			_list.itemsAdded += settings.OnAdded;
 
 			root.Q<Button>("Load").clicked += settings.Load;
-			root.Q<Button>("Apply").clicked += settings.Apply;
+            root.Q<Button>("Apply").clicked += settings.Apply;
 
-			return root;
+			settings.Load();
+			serializedObject.Update();
+
+            return root;
 		}
 
 		private VisualElement OnMakeItem()

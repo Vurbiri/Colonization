@@ -6,9 +6,8 @@
         <ui:VisualElement style="margin-top: 4px; margin-right: 4px; margin-bottom: 4px; margin-left: 4px; flex-direction: row; align-items: center; justify-content: center; align-self: stretch; flex-wrap: nowrap; padding-top: 4px; padding-right: 4px; padding-bottom: 4px; padding-left: 4px; flex-grow: 1; min-height: 40px; height: 40px; max-height: 40px;">
             <ui:Label tabindex="-1" text="File:" parse-escape-sequences="false" display-tooltip-when-elided="false" enable-rich-text="false" style="-unity-font-style: bold; width: 30px; min-width: 30px; max-width: 30px;" />
             <ui:DropdownField binding-path="_selectFile" name="File" choices="Main" index="0" style="width: 120px; min-width: 120px; max-width: 150px;" />
-            <ui:VisualElement style="flex-grow: 0; margin-top: 2px; margin-right: 2px; margin-bottom: 2px; margin-left: 2px; padding-top: 2px; padding-right: 2px; padding-bottom: 2px; padding-left: 2px; flex-direction: row; justify-content: center; align-self: auto; width: 200px; min-width: 200px; position: relative;">
+            <ui:VisualElement style="flex-grow: 0; margin-top: 2px; margin-right: 2px; margin-bottom: 2px; margin-left: 2px; padding-top: 2px; padding-right: 2px; padding-bottom: 2px; padding-left: 2px; flex-direction: row; justify-content: center; align-self: auto; width: 130px; min-width: 130px; position: relative;">
                 <ui:Button text="Load" parse-escape-sequences="false" display-tooltip-when-elided="false" enable-rich-text="false" name="Load" style="min-width: 60px; min-height: 20px;" />
-                <ui:Button text="Unload" parse-escape-sequences="false" display-tooltip-when-elided="false" enable-rich-text="false" name="Unload" style="min-width: 60px; min-height: 20px;" />
                 <ui:Button text="Save" parse-escape-sequences="false" display-tooltip-when-elided="false" enable-rich-text="false" name="Save" style="min-width: 60px; min-height: 20px;" />
             </ui:VisualElement>
         </ui:VisualElement>

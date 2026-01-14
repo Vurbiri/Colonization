@@ -6,19 +6,27 @@ using UnityEditor;
 using UnityEngine;
 using Vurbiri;
 using Vurbiri.International;
-using static Vurbiri.JsonResources;
 
 namespace VurbiriEditor.International
 {
 	using static CONST;
 
-	internal class LanguageFilesScriptable : AGetOrCreateScriptableObject<LanguageFilesScriptable>
-	{
+	internal class LanguageFilesScriptable : ScriptableObject
+    {
 		private const string META_EXP = ".meta";
+        private static LanguageFilesScriptable s_instance;
 
-		[SerializeField] private List<string> _files;
+        [SerializeField] private List<string> _files = new();
 
-		public void OnAdded(IEnumerable<int> indexes)
+        public static LanguageFilesScriptable LoadOrCreate()
+        {
+            if (s_instance == null)
+                s_instance = InitDataCreate.LoadOrCreateScriptable<LanguageFilesScriptable>(LANG_FILES_NAME, LANG_FILES_PATH);
+            return s_instance;
+        }
+        public static void Unload() => ResourcesExt.Unload(ref s_instance);
+
+        public void OnAdded(IEnumerable<int> indexes)
 		{
 			foreach (int index in indexes)
 				_files[index] = string.Empty;
@@ -26,12 +34,13 @@ namespace VurbiriEditor.International
 
 		public void Load()
 		{
-			_files = Load<List<string>>(FILE_FILES);
+			_files = JsonResources.Load<List<string>>(FILE_FILES);
 			LanguageData.SetFiles(_files);
 			EditorUtility.SetDirty(this);
-		}
+            //AssetDatabase.SaveAssets();
+        }
 
-		public void Apply()
+        public void Apply()
 		{
 			if (Save())
 			{
@@ -79,10 +88,10 @@ namespace VurbiriEditor.International
 			//=================================
 			void Rename()
 			{
-				var folders = Load<List<LanguageType>>(FILE_LANG)
-					.Select(l => FileUtil.GetPhysicalPath(OUT_RESOURCE_FOLDER.Concat(l.Folder, "/"))).GroupBy(f => f).Select(g => g.First()).ToArray();
+				var folders = JsonResources.Load<List<LanguageType>>(FILE_LANG)
+					.Select(l => FileUtil.GetPhysicalPath(RESOURCES_FOLDER.Concat(l.Folder, "/"))).GroupBy(f => f).Select(g => g.First()).ToArray();
 
-				int count = Mathf.Min(_files.Count, LanguageData.fileCount);
+				int count = MathI.Min(_files.Count, LanguageData.fileCount);
 				for (int i = 0; i < count; i++)
 				{
 					if (_files[i] != LanguageData.fileNames[i])
@@ -108,12 +117,8 @@ namespace VurbiriEditor.International
 
 		private void OnValidate()
 		{
-			_files ??= new();
-			if (_files.Count == 0)
+			if (LanguageData.fileCount == 0)
 				_files.Add("Main");
 		}
-
-		public static LanguageFilesScriptable GetOrCreateSelf() => GetOrCreateSelf(LANG_FILES_NAME, LANG_FILES_PATH);
-		public static SerializedObject GetSerializedSelf() => new(GetOrCreateSelf(LANG_FILES_NAME, LANG_FILES_PATH));
 	}
 }

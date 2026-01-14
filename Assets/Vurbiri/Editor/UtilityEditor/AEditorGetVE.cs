@@ -7,7 +7,7 @@ namespace VurbiriEditor
 {
     public abstract class AEditorGetVE<T> : Editor where T : AEditorGetVE<T>
     {
-        private static Editor s_self;
+        protected static Editor s_self;
 
         protected VisualElement CreateDefaultInspectorGUI()
         {
@@ -34,5 +34,14 @@ namespace VurbiriEditor
         }
 
         public static VisualElement CreateInstanceAndGetVisualElement() => CreateInstance<T>().CreateInspectorGUI();
+
+        public static void Destroy()
+        {
+            if (s_self != null)
+            {
+                GameObject.DestroyImmediate(s_self); 
+                s_self = null;
+            }
+        }
     }
 }

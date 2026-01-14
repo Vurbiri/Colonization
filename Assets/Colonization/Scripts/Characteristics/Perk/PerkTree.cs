@@ -25,7 +25,7 @@ namespace Vurbiri.Colonization
         static PerkTree()
         {
             var scriptable = UnityEngine.Resources.Load<PerksScriptable>(string.Concat(SettingsFile.FOLDER, PerksScriptable.NAME));
-            s_perks = scriptable; scriptable.Dispose();
+            s_perks = scriptable; scriptable.Unload();
         }
 
         private PerkTree()

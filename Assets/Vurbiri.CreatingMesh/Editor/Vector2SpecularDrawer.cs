@@ -1,8 +1,8 @@
 using UnityEditor;
 using UnityEngine;
-using Vurbiri;
+using Vurbiri.CreatingMesh;
 
-namespace VurbiriEditor
+namespace VurbiriEditor.CreatingMesh
 {
     [CustomPropertyDrawer(typeof(Vector2Specular))]
     public class Vector2SpecularDrawer : PropertyDrawer

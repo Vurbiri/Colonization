@@ -9,14 +9,11 @@ namespace VurbiriEditor.International
 		[SettingsProvider]
 		public static SettingsProvider CreateProjectSettingsProvider()
 		{
-			LanguageStringsScriptable strings = LanguageStringsScriptable.GetOrCreateSelf();
-
 			var provider = new SettingsProvider(PROJECT_STRING_MENU, SettingsScope.Project)
 			{
 				label = PROJECT_STRING_LABEL,
-				activateHandler = (searchContext, rootElement)
-								=> rootElement.Add(LanguageStringsEditor.CreateCachedEditorAndBind(strings)),
-				deactivateHandler = strings.Dispose
+				activateHandler = LanguageStringsEditor.Load,
+				deactivateHandler = LanguageStringsEditor.Unload
 			};
 
 			return provider;

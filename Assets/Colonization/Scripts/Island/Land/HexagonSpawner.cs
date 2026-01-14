@@ -38,7 +38,7 @@ namespace Vurbiri.Colonization
         public void Dispose()
         {
             _landMesh.Dispose();
-            _surfaces.Dispose();
+            _surfaces.Unload();
         }
 
 #if UNITY_EDITOR

@@ -12,8 +12,8 @@ namespace VurbiriEditor.International
 			var provider = new SettingsProvider(PROJECT_TYPES_MENU, SettingsScope.Project)
 			{
 				label = PROJECT_TYPES_LABEL,
-				activateHandler = (searchContext, rootElement)
-								=> rootElement.Add(LanguageTypesEditor.CreateCachedEditorAndBind(LanguageTypesScriptable.GetOrCreateSelf()))
+				activateHandler = LanguageTypesEditor.Load,
+				deactivateHandler = LanguageTypesEditor.Unload
 			};
 
 			return provider;

@@ -5,7 +5,7 @@ using Vurbiri.Collections;
 
 namespace Vurbiri.Colonization
 {
-	public class PerksScriptable : ScriptableObjectDisposable
+	public class PerksScriptable : ScriptableObject
     {
         public const string NAME = "Perks";
         

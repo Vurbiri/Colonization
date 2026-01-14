@@ -84,8 +84,8 @@ namespace Vurbiri.Colonization
 
 			public void Dispose()
 			{
-				warriorsSettings.Dispose();
-				demonsSettings.Dispose();
+				warriorsSettings.Unload();
+				demonsSettings.Unload();
 			}
 
 #if UNITY_EDITOR

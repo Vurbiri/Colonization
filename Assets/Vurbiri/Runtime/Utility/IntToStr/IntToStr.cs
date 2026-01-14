@@ -1,56 +1,53 @@
+using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
+
 namespace Vurbiri
 {
 	public static class IntToStr
 	{
-        private static readonly Settings s_settings;
-        private static readonly string[] s_cache;
+		private static readonly Settings s_settings;
+		private static readonly string[] s_cache;
 
-        public static int Min => s_settings.min;
-        public static int Max => s_settings.max;
-        public static int Count => s_settings.max - s_settings.min + 1;
+		public static int Min { [Impl(256)] get => s_settings.min; }
+		public static int Max { [Impl(256)] get => s_settings.max; }
+		public static int Count { [Impl(256)] get => s_settings.max - s_settings.min + 1; }
 
-        static IntToStr()
-        {
-            s_settings = (Settings)JsonResources.Load(Settings.PATH, typeof(Settings));
+		static IntToStr()
+		{
+			s_settings = (Settings)JsonResources.Load(Settings.PATH, typeof(Settings));
 
-            int count = s_settings.max - s_settings.min + 1;
+			int count = Count;
 
-            s_cache = new string[count];
-            for (int i = 0, n = s_settings.min; i < count; i++, n++)
-                s_cache[i] = n.ToString();
-        }
+			s_cache = new string[count];
+			for (int i = 0, n = s_settings.min; i < count; ++i, ++n)
+				s_cache[i] = n.ToString();
+		}
 
-        public static string ToStr(this int number)
-        {
-            string output;
-            if (number >= s_settings.min && number <= s_settings.max)
-                output = s_cache[number - s_settings.min];
-            else
-                output = number.ToString();
-            return output;
-        }
+		[Impl(256)]
+		public static string ToStr(this int number)
+		{
+			if (number >= s_settings.min && number <= s_settings.max)
+				return s_cache[number - s_settings.min];
 
-        // ****************** Nested **********************
-        public struct Settings : System.IEquatable<Settings>
-        {
-#if UNITY_EDITOR
-            public const string RESOURCE = "/Vurbiri/Runtime/Utility/IntToStr/Resources/";
-            public const int MIN_LIMIT = -256, MAX_LIMIT = 512;
-#endif
-            public const string PATH = "IntToStr/Settings";
+			return number.ToString();
+		}
 
-            public int min;
-            public int max;
+		// ****************** Nested **********************
+		public struct Settings : System.IEquatable<Settings>
+		{
+			public const string PATH = "IntToStr/Settings";
 
-            public Settings(int min, int max)
-            {
-                this.min = min;
-                this.max = max;
-            }
+			public int min;
+			public int max;
 
-            public readonly bool Equals(Settings other) => other.min == min && other.max == max;
-        }
-    }
+			public Settings(int min, int max)
+			{
+				this.min = min;
+				this.max = max;
+			}
 
-      
+			public readonly bool Equals(Settings other) => other.min == min & other.max == max;
+		}
+	}
+
+	  
 }

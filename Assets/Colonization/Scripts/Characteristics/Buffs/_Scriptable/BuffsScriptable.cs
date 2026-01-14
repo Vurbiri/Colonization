@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Vurbiri.Colonization
 {
-    sealed public class BuffsScriptable : ScriptableObjectDisposable
+    sealed public class BuffsScriptable : ScriptableObject
     {
         [SerializeField] private int _maxLevel;
         [SerializeField] private List<BuffSettings> _settings;

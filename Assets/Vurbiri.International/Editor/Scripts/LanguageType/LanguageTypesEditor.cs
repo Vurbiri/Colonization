@@ -14,9 +14,19 @@ namespace VurbiriEditor.International
 		[SerializeField] private VisualTreeAsset _treeAssetList;
 		[SerializeField] private VisualTreeAsset _treeAssetItem;
 
-		public override VisualElement CreateInspectorGUI()
+        public static void Load(string searchContext, VisualElement rootElement)
+        {
+            rootElement.Add(CreateEditorAndBind(LanguageTypesScriptable.LoadOrCreate(), out s_self));
+        }
+        public static void Unload()
+        {
+            Destroy();
+            LanguageTypesScriptable.Unload();
+        }
+
+        public override VisualElement CreateInspectorGUI()
 		{
-			var language = LanguageTypesScriptable.GetOrCreateSelf();
+			var language = LanguageTypesScriptable.LoadOrCreate();
 
 			var allLang = Load<LanguageType[]>(CONST.LANG_LIST);
 			Dictionary<SystemLanguage, LanguageType> langs = new(allLang.Length);
@@ -37,7 +47,10 @@ namespace VurbiriEditor.International
 			root.Q<Button>("Load").clicked += language.Load;
 			root.Q<Button>("Save").clicked += language.Save;
 
-			return root;
+			language.Load();
+            serializedObject.Update();
+
+            return root;
 
 			#region Local: LoadLangs(), MakeItem(), OnItemIndexChanged(...)
 			//=================================

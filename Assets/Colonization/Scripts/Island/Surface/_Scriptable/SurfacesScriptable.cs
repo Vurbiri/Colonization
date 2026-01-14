@@ -4,7 +4,7 @@ using Vurbiri.Collections;
 namespace Vurbiri.Colonization
 {
     //[CreateAssetMenu(fileName = "Surfaces", menuName = "Vurbiri/Colonization/Surfaces Array", order = 51)]
-    public class SurfacesScriptable : ScriptableObjectDisposable
+    public class SurfacesScriptable : ScriptableObject
     {
         [SerializeField] private IdArray<SurfaceId, SurfaceType> _surfaces = new();
 

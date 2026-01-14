@@ -3,7 +3,7 @@ using Vurbiri.Collections;
 
 namespace Vurbiri.Colonization
 {
-    public abstract partial class ActorSettingsScriptable<TId, TSettings> : ScriptableObjectDisposable where TId : ActorId<TId> where TSettings : ActorSettings
+    public abstract partial class ActorSettingsScriptable<TId, TSettings> : ScriptableObject where TId : ActorId<TId> where TSettings : ActorSettings
 	{
         [SerializeField] private IdArray<TId, TSettings> _settings;
 

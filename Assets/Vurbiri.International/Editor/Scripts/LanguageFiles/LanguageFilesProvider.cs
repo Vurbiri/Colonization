@@ -9,15 +9,12 @@ namespace VurbiriEditor.International
 		[SettingsProvider]
 		public static SettingsProvider CreateProjectSettingsProvider()
 		{
-			LanguageFilesScriptable files = LanguageFilesScriptable.GetOrCreateSelf();
-			
 			var provider = new SettingsProvider(PROJECT_FILES_MENU, SettingsScope.Project)
 			{
 				label = PROJECT_FILES_LABEL,
-				activateHandler = (searchContext, rootElement)
-								=> rootElement.Add(LanguageFilesEditor.CreateCachedEditorAndBind(files)),
-				deactivateHandler = files.Dispose
-			};
+				activateHandler = LanguageFilesEditor.Load,
+				deactivateHandler = LanguageFilesEditor.Unload
+            };
 
 			return provider;
 		}
