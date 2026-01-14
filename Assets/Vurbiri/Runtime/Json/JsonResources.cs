@@ -5,13 +5,13 @@ using UnityEngine;
 
 namespace Vurbiri
 {
-    public static class Storage
+    public static class JsonResources
     {
-        public static bool TryLoadObjectFromJsonResource<T>(string path, out T obj, bool logWarning = true)
+        public static bool TryLoad<T>(string path, out T obj, bool logWarning = true)
         {
             try
             {
-                obj = (T)LoadObjectFromJsonResource(path, typeof(T));
+                obj = (T)Load(path, typeof(T));
                 return true;
             }
             catch (Exception ex)
@@ -23,8 +23,8 @@ namespace Vurbiri
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T LoadObjectFromJsonResource<T>(string path) => (T)LoadObjectFromJsonResource(path, typeof(T));
-        public static object LoadObjectFromJsonResource(string path, Type type)
+        public static T Load<T>(string path) => (T)Load(path, typeof(T));
+        public static object Load(string path, Type type)
         {
             var textAsset = Resources.Load<TextAsset>(path);
             var obj = JsonConvert.DeserializeObject(textAsset.text, type, settings: null);

@@ -2,8 +2,7 @@ using TMPro.EditorUtilities;
 using UnityEditor;
 using Vurbiri.International.UI;
 
-
-namespace Vurbiri.International.Editor
+namespace VurbiriEditor.International
 {
 	[CustomEditor(typeof(TextMeshProL), true), CanEditMultipleObjects]
 	public class TextMeshProLEditor : TMP_EditorPanel

@@ -16,6 +16,7 @@ namespace Vurbiri.Colonization
         [Range(1, 20)] public int cursePerRes; // = 10;
         public ReadOnlyIdArray<WarriorId, int> cursePerKillWarrior;
         [Header("-=Spawner=-")]
+        [Range(0, 3)] public int startPotential; // = 3;
         [Range(1, 6)] public int potentialFromLvlRatio; // = 3;
         [Range(1, 6)] public int minPotentialRatio;
     }

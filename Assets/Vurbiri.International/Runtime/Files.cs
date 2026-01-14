@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
-using static Vurbiri.Storage;
+using static Vurbiri.JsonResources;
 
 namespace Vurbiri.International
 {
@@ -12,7 +12,7 @@ namespace Vurbiri.International
 
         static Files()
         {
-            s_files = LoadObjectFromJsonResource<string[]>(CONST_L.FILES_FILE);
+            s_files = Load<string[]>(CONST_L.FILES_FILE);
             Throw.IfLengthZero(s_files, "s_files");
 
             Count = s_files.Length;
@@ -21,7 +21,7 @@ namespace Vurbiri.International
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool TryLoad(string folder, int fileId, out Dictionary<string, string> load)
         {
-            return TryLoadObjectFromJsonResource(string.Concat(folder, "/", s_files[fileId]), out load);
+            return JsonResources.TryLoad(string.Concat(folder, "/", s_files[fileId]), out load);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

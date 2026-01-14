@@ -6,6 +6,8 @@ namespace Vurbiri.Colonization
 {
 	public partial class Satan : Player, IReactive<Satan>
 	{
+		private const int DISPLAY_MAX_CURSE = 50;
+		
 		protected static readonly SatanAbilities s_parameters;
 
 		protected readonly Spawner _spawner;
@@ -18,8 +20,8 @@ namespace Vurbiri.Colonization
 
 		public int Level { [Impl(256)] get => _leveling.Level; }
 		public int MaxLevel { [Impl(256)] get => _leveling.MaxLevel; }
-		public int Curse { [Impl(256)] get => _curse / s_parameters.maxCursePerLevel; }
-		public int MaxCurse { [Impl(256)] get => _maxCurse / s_parameters.maxCursePerLevel; }
+		public int Curse { [Impl(256)] get => _curse * DISPLAY_MAX_CURSE / _maxCurse; }
+		public int MaxCurse { [Impl(256)] get => DISPLAY_MAX_CURSE; }
 		public float CursePercent { [Impl(256)] get => (float)_curse / _maxCurse; }
 
 		static Satan() => s_parameters = SettingsFile.Load<SatanAbilities>();
@@ -34,7 +36,7 @@ namespace Vurbiri.Colonization
 			_leveling = new(settings.satanLeveling, loadData.state.level);
 			_artefact = Artefact.Create(settings.artefact, loadData);
 
-			_spawner = new(new(PlayerId.Satan, _leveling, _artefact), loadData.state.spawn);
+			_spawner = new(new(PlayerId.Satan, _leveling, _artefact), loadData.isLoaded ? loadData.state.spawn : s_parameters.startPotential);
 
 			ActorsLoad(_spawner, loadData.actors, waitSpawn);
 

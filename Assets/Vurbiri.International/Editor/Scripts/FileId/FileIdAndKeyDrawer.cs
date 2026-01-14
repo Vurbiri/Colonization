@@ -1,8 +1,10 @@
 using UnityEditor;
 using UnityEngine;
+using Vurbiri;
+using Vurbiri.International;
 using static UnityEditor.EditorGUI;
 
-namespace Vurbiri.International.Editor
+namespace VurbiriEditor.International
 {
 	[CustomPropertyDrawer(typeof(FileIdAndKey))]
 	public class FileIdAndKeyDrawer : PropertyDrawer
@@ -13,12 +15,12 @@ namespace Vurbiri.International.Editor
 		{
 			position.height = EditorGUIUtility.singleLineHeight;
 
-            var idProperty = mainProperty.FindPropertyRelative(F_ID);
-            var keyProperty = mainProperty.FindPropertyRelative(F_KEY);
+			var idProperty = mainProperty.FindPropertyRelative(F_ID);
+			var keyProperty = mainProperty.FindPropertyRelative(F_KEY);
 
-            var (labelRect, idRect, keyRect) = CalkPosition(position);
+			var (labelRect, idRect, keyRect) = CalkPosition(position);
 
-            label = BeginProperty(position, label, mainProperty);
+			label = BeginProperty(position, label, mainProperty);
 			{
 				LabelField(labelRect, label);
 				idProperty.intValue = IntPopup(idRect, idProperty.intValue, LanguageData.fileNames, LanguageData.fileValues);
@@ -27,33 +29,33 @@ namespace Vurbiri.International.Editor
 			EndProperty();
 		}
 
-        private static void KeyField(Rect position, SerializedProperty keyProperty, int fileId)
-        {
-            var keys = LanguageData.keys[fileId];
-            int index = Popup(position, System.Array.IndexOf(keys, keyProperty.stringValue), keys);
-            keyProperty.stringValue = keys[MathI.Max(0, index)];
-        }
+		private static void KeyField(Rect position, SerializedProperty keyProperty, int fileId)
+		{
+			var keys = LanguageData.keys[fileId];
+			int index = Popup(position, System.Array.IndexOf(keys, keyProperty.stringValue), keys);
+			keyProperty.stringValue = keys[MathI.Max(0, index)];
+		}
 
-        public static (Rect, Rect, Rect) CalkPosition(Rect position)
-        {
-            const float s_space = 2f;
+		public static (Rect, Rect, Rect) CalkPosition(Rect position)
+		{
+			const float s_space = 2f;
 
-            float offset = indentLevel * 15f;
-            float fieldWidth = position.width - EditorGUIUtility.labelWidth;
-            float idSize = fieldWidth * 0.31f;
-            float keySize = fieldWidth - idSize - s_space * 2f;
+			float offset = indentLevel * 15f;
+			float fieldWidth = position.width - EditorGUIUtility.labelWidth;
+			float idSize = fieldWidth * 0.31f;
+			float keySize = fieldWidth - idSize - s_space * 2f;
 
-            Rect labelRect = position, idRect = position, keyRect = position;
+			Rect labelRect = position, idRect = position, keyRect = position;
 
-            labelRect.width = EditorGUIUtility.labelWidth - offset + s_space;
-            idRect.width = idSize + offset;
-            keyRect.width = keySize + offset;
+			labelRect.width = EditorGUIUtility.labelWidth - offset + s_space;
+			idRect.width = idSize + offset;
+			keyRect.width = keySize + offset;
 
-            idRect.x += labelRect.width;
-            keyRect.x = idRect.x + idSize + s_space;
+			idRect.x += labelRect.width;
+			keyRect.x = idRect.x + idSize + s_space;
 
-            return (labelRect, idRect, keyRect);
-        }
+			return (labelRect, idRect, keyRect);
+		}
 
-    }
+	}
 }

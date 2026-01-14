@@ -43,7 +43,7 @@ namespace Vurbiri.Colonization
 				{
 					yield return CreatePlan_Cn();
 #if TEST_AI
-					Log.Info($"[Builder] {HumanId} current plan [{_currentPlan}]");
+					Log.Info($"[Builder] {HumanId} create plan [{_currentPlan}]");
 #endif
 					yield return StartCoroutine(_currentPlan.Execution_Cn());
 				}

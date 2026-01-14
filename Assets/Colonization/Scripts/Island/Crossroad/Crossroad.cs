@@ -82,13 +82,12 @@ namespace Vurbiri.Colonization
         public Reactive<bool> CanCancel { [Impl(256)] get => _canCancel; }
         [Impl(256)] public void Select(MouseButton button)
         {
-            //Debug.Log($"ToHex: {CROSS.ToHex(_key, _type)}");
-            if (_interactable.Value)
+            if (_interactable)
                 GameContainer.TriggerBus.TriggerCrossroadSelect(this);
         }
         public void Unselect(ISelectable newSelectable)
         {
-            if (!_interactable.Value) return;
+            if (!_interactable) return;
 
             GameContainer.TriggerBus.TriggerUnselect(Equals(newSelectable));
 

@@ -2,7 +2,8 @@
     "name": "Vurbiri.Yandex",
     "rootNamespace": "Vurbiri.Yandex",
     "references": [
-        "GUID:8d796b54c349a5e4e9e760d782ae9adf"
+        "GUID:8d796b54c349a5e4e9e760d782ae9adf",
+        "GUID:a3a353efde3d1864990a18e6ad7da2fc"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

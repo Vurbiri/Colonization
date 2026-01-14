@@ -1,24 +1,10 @@
 using Newtonsoft.Json;
 using System.Collections;
 
-namespace Vurbiri
+namespace Vurbiri.Storage
 {
     public interface IStorageService
     {
-        public static void Init()
-        {
-#if UNITY_EDITOR
-            if (UnityEngine.Application.isPlaying)
-#endif
-            Log.Info("[StorageService] Settings JsonConvert");
-            JsonConvert.DefaultSettings = GetJsonSerializerSettings;
-
-            static JsonSerializerSettings GetJsonSerializerSettings() => new()
-            {
-                ContractResolver = ContractResolver.Instance
-            };
-        }
-
         public bool IsValid { get; }
         public bool IsSaved { get; }
 
@@ -49,15 +35,5 @@ namespace Vurbiri
         public void Clear();
         public void Clear(string excludeKey);
         public void Clear(params string[] excludeKeys);
-
-
-#if UNITY_EDITOR
-        [UnityEditor.InitializeOnLoadMethod]
-        private static void Init_Ed()
-        {
-            if (!UnityEditor.EditorApplication.isPlayingOrWillChangePlaymode)
-                Init();
-        }
-#endif
     }
 }

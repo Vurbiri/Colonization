@@ -1,8 +1,9 @@
 using UnityEditor;
 using UnityEngine;
+using Vurbiri.International;
 using static UnityEditor.EditorGUI;
 
-namespace Vurbiri.International.Editor
+namespace VurbiriEditor.International
 {
 	[CustomPropertyDrawer(typeof(FileIds))]
 	public class FileIdsDrawer : PropertyDrawer
@@ -15,17 +16,17 @@ namespace Vurbiri.International.Editor
 		{
 			position.height = EditorGUIUtility.singleLineHeight;
 
-            SerializedProperty valueProperty = mainProperty.FindPropertyRelative(F_NAME);
-            label = BeginProperty(position, label, mainProperty);
+			SerializedProperty valueProperty = mainProperty.FindPropertyRelative(F_NAME);
+			label = BeginProperty(position, label, mainProperty);
 			{
-                valueProperty.intValue = MaskField(position, label, valueProperty.intValue, LanguageData.fileNames) & ~(-1 << LanguageData.fileCount);
-            }
+				valueProperty.intValue = MaskField(position, label, valueProperty.intValue, LanguageData.fileNames) & ~(-1 << LanguageData.fileCount);
+			}
 			EndProperty();
 		}
 		
 		public override float GetPropertyHeight(SerializedProperty mainProperty, GUIContent label)
 		{
-            return EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing;
-        }
+			return EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing;
+		}
 	}
 }

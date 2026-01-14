@@ -1,7 +1,7 @@
 using UnityEditor;
-using VurbiriEditor;
+using Vurbiri.EntryPoint;
 
-namespace Vurbiri.EntryPoint.Editor
+namespace VurbiriEditor.EntryPoint
 {
 
 	[CustomPropertyDrawer(typeof(LoadEmptyScene))]

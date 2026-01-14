@@ -11,7 +11,7 @@ namespace Vurbiri
 
         static IntToStr()
         {
-            s_settings = (Settings)Storage.LoadObjectFromJsonResource(Settings.PATH, typeof(Settings));
+            s_settings = (Settings)JsonResources.Load(Settings.PATH, typeof(Settings));
 
             int count = s_settings.max - s_settings.min + 1;
 

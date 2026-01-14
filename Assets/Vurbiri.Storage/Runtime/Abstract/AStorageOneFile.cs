@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
-namespace Vurbiri
+namespace Vurbiri.Storage
 {
     public abstract class AStorageOneFile : IStorageService
     {

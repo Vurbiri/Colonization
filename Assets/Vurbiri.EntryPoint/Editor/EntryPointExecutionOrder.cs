@@ -1,8 +1,10 @@
 using System;
 using UnityEditor;
 using UnityEngine;
+using Vurbiri;
+using Vurbiri.EntryPoint;
 
-namespace Vurbiri.EntryPoint.Editor
+namespace VurbiriEditor.EntryPoint
 {
     [InitializeOnLoad]
     internal class EntryPointExecutionOrder : AssetPostprocessor
@@ -19,7 +21,7 @@ namespace Vurbiri.EntryPoint.Editor
         private static readonly string s_key_save = Application.productName + "_EPEO_AUTO";
 
         private static readonly Type s_monoType = typeof(MonoBehaviour);
-        private static readonly Type s_sceneType = typeof(ASceneEntryPoint), _projectType = typeof(AProjectEntryPoint);
+        private static readonly Type s_sceneType = typeof(ASceneEntryPoint), s_projectType = typeof(AProjectEntryPoint);
 
         static EntryPointExecutionOrder()
         {
@@ -82,7 +84,7 @@ namespace Vurbiri.EntryPoint.Editor
             if (currentType == null) return;
 
             SetOrder(monoScript, currentType, s_sceneType, SCENE_ORDER);
-            SetOrder(monoScript, currentType, _projectType, PROJECT_ORDER);
+            SetOrder(monoScript, currentType, s_projectType, PROJECT_ORDER);
         }
 
         private static void SetOrder(MonoScript monoScript, Type currentType, Type type, int order)

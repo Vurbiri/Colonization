@@ -3,7 +3,7 @@ using System.Collections;
 using System.IO;
 using UnityEngine;
 
-namespace Vurbiri
+namespace Vurbiri.Storage
 {
     sealed public class JsonToHard : AStorageOneFile
     {

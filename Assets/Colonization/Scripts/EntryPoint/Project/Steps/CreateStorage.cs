@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Vurbiri.Colonization.Storage;
 using Vurbiri.EntryPoint;
+using Vurbiri.Storage;
 using Vurbiri.Web;
 using Vurbiri.Yandex;
 
@@ -17,8 +18,6 @@ namespace Vurbiri.Colonization.EntryPoint
 
         public CreateStorage(ProjectContent content, MonoBehaviour mono, ILoadingScreen loadingScreen, LogOnPanel logOnPanel) : base("StorageCreationStep")
         {
-            IStorageService.Init();
-
             _content = content;
             _mono = mono;
             _loadingScreen = loadingScreen;

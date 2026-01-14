@@ -1,7 +1,7 @@
 using Newtonsoft.Json;
 using System.Collections;
 
-namespace Vurbiri
+namespace Vurbiri.Storage
 {
     public class EmptyStorage : IStorageService
     {

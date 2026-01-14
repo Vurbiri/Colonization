@@ -2,7 +2,7 @@ using TMPro.EditorUtilities;
 using UnityEditor;
 using UnityEngine;
 
-namespace Vurbiri.International.Editor
+namespace VurbiriEditor.International
 {
 	internal class TextMeshLocalizationDraw
 	{

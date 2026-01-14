@@ -51,7 +51,7 @@ namespace Vurbiri.International
 
 		private Localization(int fileId) 
 		{
-			var languages = Storage.LoadObjectFromJsonResource<List<LanguageType>>(CONST_L.LANG_FILE);
+			var languages = JsonResources.Load<List<LanguageType>>(CONST_L.LANG_FILE);
 			Throw.IfLengthZero(languages, "_languages");
 
 			_text = new Dictionary<string, string>[Files.Count];

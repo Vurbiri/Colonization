@@ -1,5 +1,6 @@
 using UnityEngine;
 using Vurbiri.Collections;
+using Vurbiri.Storage;
 using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization.Storage

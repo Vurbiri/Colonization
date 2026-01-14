@@ -1,3 +1,5 @@
+using Vurbiri.Storage;
+
 namespace Vurbiri.Colonization.Storage
 {
     public class GameStorage : System.IDisposable
@@ -13,7 +15,7 @@ namespace Vurbiri.Colonization.Storage
             _storage = GameContainer.StorageService;
             _isLoad = isLoad;
 
-            ContractResolver.Add(new GameLoop.Converter(), new Crossroad.Converter());
+            JsonConverters.Add(new GameLoop.Converter(), new Crossroad.Converter());
 
             for (int i = 0; i < PlayerId.HumansCount; ++i)
                 _humanStorages[i] = new(i, _storage, isLoad);

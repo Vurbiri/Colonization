@@ -5,9 +5,10 @@ using UnityEngine;
 
 namespace Vurbiri.Colonization
 {
+
 	public class Test : MonoBehaviour
-	{
-		[Button(nameof(Testing))]
+    {
+        [Button(nameof(Testing))]
 		public Color value;
 
 		public void Testing()

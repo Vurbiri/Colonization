@@ -1,6 +1,6 @@
 {
-    "name": "Vurbiri.International.Editor",
-    "rootNamespace": "Vurbiri.International.Editor",
+    "name": "VurbiriEditor.International",
+    "rootNamespace": "VurbiriEditor.International",
     "references": [
         "GUID:6546d7765b4165b40850b3667f981c26",
         "GUID:9fa1b33fdc3c3894994221ede2152958",

@@ -25,10 +25,10 @@ namespace Vurbiri.Colonization
             {
                 set
                 {
-                    for (int j = 0; j < EdificeGroupId.Count; j++)
+                    for (int j = 0; j < EdificeGroupId.Count; ++j)
                     {
                         var list = edifices[j];
-                        for (int i = list.Count - 1; i >= 0; i--)
+                        for (int i = 0; i < list.Count; ++i)
                             list[i].Interactable = value;
                     }
                 }
