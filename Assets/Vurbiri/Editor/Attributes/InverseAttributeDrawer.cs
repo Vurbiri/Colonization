@@ -6,7 +6,7 @@ using static UnityEditor.EditorGUI;
 namespace VurbiriEditor
 {
 	[CustomPropertyDrawer(typeof(InverseAttribute))]
-	public class InverseDrawer : PropertyDrawer
+	public class InverseAttributeDrawer : PropertyDrawer
 	{
 		public override void OnGUI(Rect position, SerializedProperty mainProperty, GUIContent label)
 		{

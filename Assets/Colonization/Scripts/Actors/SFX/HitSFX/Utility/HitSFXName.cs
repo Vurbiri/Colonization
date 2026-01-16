@@ -1,5 +1,6 @@
 using Newtonsoft.Json;
 using System;
+using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization
 {
@@ -8,14 +9,14 @@ namespace Vurbiri.Colonization
 	{
 		[UnityEngine.SerializeField] private string _value;
 
-        public string Value => _value;
+        public string Value { [Impl(256)] get => _value; }
 
         public HitSFXName() { }
-        public HitSFXName(string value) => _value = value;
+        [Impl(256)] public HitSFXName(string value) => _value = value;
 
-        public bool Equals(string str) => _value.Equals(str);
+        [Impl(256)] public bool Equals(string str) => _value.Equals(str);
 
-        public static implicit operator string(HitSFXName sfxName) => sfxName?._value;
+        [Impl(256)] public static implicit operator string(HitSFXName sfxName) => sfxName?._value;
 
         #region Nested Json Converter
         sealed public class Converter : AJsonConverter<HitSFXName>

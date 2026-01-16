@@ -8,8 +8,8 @@ namespace VurbiriEditor
     [CustomPropertyDrawer(typeof(FloatZRnd))]
     public class FloatZRndDrawer : ARValueDrawer
     {
-        private readonly string NAME_VALUE = "_value";
-        private readonly float ZERO = 0.00001f;
+        private const string NAME_VALUE = "_value";
+        private const float ZERO = 1E-5f;
 
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
@@ -32,18 +32,29 @@ namespace VurbiriEditor
             }
             else
             {
-                var (sizeLabel, sizeMin, sizeMax) = CalkPosition(position);
-                EditorGUI.LabelField(sizeLabel, label);
-                if (value >= 0f) 
+                var (labelSize, minLabelSize, minSize, maxLabelSize, maxSize) = CalkPosition(position);
+                EditorGUI.LabelField(labelSize, label);
+
+                if (value >= 0f)
                 {
-                    EditorGUI.FloatField(sizeMin, 0f);
-                    value = EditorGUI.FloatField(sizeMax, value);
+                    min = 0f; max = value;
                 }
-                else 
+                else
                 {
-                    value = EditorGUI.FloatField(sizeMin, value);
-                    EditorGUI.FloatField(sizeMax, 0f);
+                    min = value; max = 0f;
                 }
+
+                EditorGUI.PrefixLabel(minLabelSize, s_minLabel);
+                EditorGUI.BeginChangeCheck();
+                min = EditorGUI.DelayedFloatField(minSize, min);
+                if (EditorGUI.EndChangeCheck())
+                    value = min;
+
+                EditorGUI.PrefixLabel(maxLabelSize, s_maxLabel);
+                EditorGUI.BeginChangeCheck();
+                max = EditorGUI.DelayedFloatField(maxSize, max);
+                if (EditorGUI.EndChangeCheck())
+                    value = max;
             }
 
             EditorGUI.EndProperty();

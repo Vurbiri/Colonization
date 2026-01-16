@@ -79,7 +79,7 @@ namespace Vurbiri.UI
             for (int i = 0; i < count; ++i)
             {
                 uiVertex = vertexes[i];
-                uiVertex.color = Color.Lerp(_startColor, _endColor, (vertexes[i].position[axis] - extreme.min) / delta).ToColor32();
+                uiVertex.color = Color.Lerp(_startColor, _endColor, (vertexes[i].position[axis] - extreme.Min) / delta).ToColor32();
                 vertexes[i] = uiVertex;
             }
 

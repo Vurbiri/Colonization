@@ -5,7 +5,7 @@ using Vurbiri;
 namespace VurbiriEditor
 {
     [CustomPropertyDrawer(typeof(StartEditorAttribute))]
-    public class StartEditorDrawer : PropertyDrawer
+    public class StartEditorAttributeDrawer : PropertyDrawer
     {
         private readonly float _ratio = 0.9f;
 
@@ -33,7 +33,7 @@ namespace VurbiriEditor
     }
 
     [CustomPropertyDrawer(typeof(EndEditorAttribute))]
-	public class EndEditorDrawer : PropertyDrawer
+	public class EndEditorAttributeDrawer : PropertyDrawer
 	{
 		public override void OnGUI(Rect position, SerializedProperty mainProperty, GUIContent label)
 		{

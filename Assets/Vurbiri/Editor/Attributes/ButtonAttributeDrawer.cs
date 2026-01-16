@@ -7,7 +7,7 @@ using Vurbiri;
 namespace VurbiriEditor
 {
     [CustomPropertyDrawer(typeof(ButtonAttribute))]
-    public class ButtonDrawer : PropertyDrawer
+    public class ButtonAttributeDrawer : PropertyDrawer
     {
         private static readonly float s_buttonWidth = 260f;
         private object _target;

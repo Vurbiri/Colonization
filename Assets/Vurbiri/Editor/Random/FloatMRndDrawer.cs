@@ -33,10 +33,16 @@ namespace VurbiriEditor
             }
             else
             {
-                var (sizeLabel, sizeMin, sizeMax) = CalkPosition(position);
-                EditorGUI.LabelField(sizeLabel, label);
-                min = EditorGUI.DelayedFloatField(sizeMin, min);
-                max = EditorGUI.DelayedFloatField(sizeMax, max);
+                var (labelSize, minLabelSize, minSize, maxLabelSize, maxSize) = CalkPosition(position);
+                EditorGUI.LabelField(labelSize, label);
+
+                EditorGUI.BeginDisabledGroup(true);
+                EditorGUI.PrefixLabel(minLabelSize, s_minLabel);
+                EditorGUI.FloatField(minSize, min);
+                EditorGUI.EndDisabledGroup();
+
+                EditorGUI.PrefixLabel(maxLabelSize, s_maxLabel);
+                max = EditorGUI.DelayedFloatField(maxSize, max);
             }
 
             EditorGUI.EndProperty();

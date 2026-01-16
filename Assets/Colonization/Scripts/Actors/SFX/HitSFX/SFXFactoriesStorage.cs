@@ -15,11 +15,11 @@ namespace Vurbiri.Colonization
             {
                 factory = _factories[i];
                 SFXs.Add(factory.Name, factory.Create());
-                Resources.UnloadAsset(factory);
+                factory.Unload();
             }
             SFXs.Add(EmptySFX.NAME, new EmptySFX());
 
-            Resources.UnloadAsset(this);
+            this.Unload();
 
             return new(SFXs);
         }

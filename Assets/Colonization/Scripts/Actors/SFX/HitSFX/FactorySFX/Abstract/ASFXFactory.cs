@@ -1,4 +1,5 @@
 using UnityEngine;
+using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization
 {
@@ -6,7 +7,7 @@ namespace Vurbiri.Colonization
     {
         [SerializeField, Delayed] private string _name;
 
-        public string Name => _name;
+        public string Name { [Impl(256)] get => _name; }
 
         public abstract ISFX Create();
 

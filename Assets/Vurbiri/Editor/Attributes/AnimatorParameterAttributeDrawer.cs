@@ -8,7 +8,7 @@ using static UnityEditor.EditorGUI;
 namespace VurbiriEditor
 {
     [CustomPropertyDrawer(typeof(AnimatorParameterAttribute))]
-    public class AnimatorParameterDrawer : PropertyDrawer
+    public class AnimatorParameterAttributeDrawer : PropertyDrawer
     {
         private static readonly Dictionary<int, Parameters> s_cache = new();
 

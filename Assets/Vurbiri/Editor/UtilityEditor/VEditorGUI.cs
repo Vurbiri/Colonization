@@ -8,6 +8,7 @@ namespace VurbiriEditor
     public static class VEditorGUI
     {
         private const float VALUE_SIZE = 50f, SPACE_SIZE = 6f;
+        private const float MIN = 1E-5f;
 
         private static readonly float s_height = EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing;
         private static readonly float s_ySpace = EditorGUIUtility.standardVerticalSpacing;
@@ -32,8 +33,8 @@ namespace VurbiriEditor
             bool isValid = minLimit < maxLimit && minProperty.propertyType == maxProperty.propertyType && maxProperty.propertyType == SerializedPropertyType.Float;
             if (isValid)
             {
-                float minValue = Mathf.Clamp(minProperty.floatValue, minLimit, maxLimit - 1E-5f);
-                float maxValue = Mathf.Clamp(maxProperty.floatValue, minValue + 1E-5f, maxLimit);
+                float minValue = Mathf.Clamp(minProperty.floatValue, minLimit, maxLimit - MIN);
+                float maxValue = Mathf.Clamp(maxProperty.floatValue, minValue + MIN, maxLimit);
 
                 var (labelSize, minSize, sliderSize, maxSize) = CalkPositionSlider(position);
 
@@ -45,8 +46,8 @@ namespace VurbiriEditor
                 minValue = Math.Max(minValue, minLimit);
                 maxValue = Math.Min(maxValue, maxLimit);
 
-                minProperty.floatValue = Math.Clamp(minValue, minLimit, maxValue - 1E-5f);
-                maxProperty.floatValue = Math.Clamp(maxValue, minValue + 1E-5f, maxLimit);
+                minProperty.floatValue = Math.Clamp(minValue, minLimit, maxValue - MIN);
+                maxProperty.floatValue = Math.Clamp(maxValue, minValue + MIN, maxLimit);
             }
             return isValid;
         }

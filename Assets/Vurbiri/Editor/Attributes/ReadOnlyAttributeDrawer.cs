@@ -5,7 +5,7 @@ using Vurbiri;
 namespace VurbiriEditor
 {
     [CustomPropertyDrawer(typeof(ReadOnlyAttribute))]
-	public class ReadOnlyDrawer : PropertyDrawer
+	public class ReadOnlyAttributeDrawer : PropertyDrawer
 	{
 		public override void OnGUI(Rect position, SerializedProperty mainProperty, GUIContent label)
 		{

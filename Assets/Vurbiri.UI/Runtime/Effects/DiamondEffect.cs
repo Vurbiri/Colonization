@@ -5,9 +5,8 @@ using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.UI
 {
-
     [AddComponentMenu("UI/Effects/Diamond")]
-    public class DiamondEffect : AMeshEffect
+    sealed public class DiamondEffect : AMeshEffect
     {
         [SerializeField] private Color _leftTopColor = Color.white;
         [SerializeField] private Color _rightTopColor = Color.white;
@@ -133,10 +132,10 @@ namespace Vurbiri.UI
         }
 
         // ************** Nested *********************
-        private struct Points
+        private readonly struct Points
         {
-            public Vector2 min;
-            public Vector2 size;
+            public readonly Vector2 min;
+            public readonly Vector2 size;
 
             public Points(List<UIVertex> vertexes)
             {
@@ -154,8 +153,8 @@ namespace Vurbiri.UI
                 size.x = xMinMax.Delta;
                 size.y = yMinMax.Delta;
 
-                min.x = xMinMax.min;
-                min.y = yMinMax.min;
+                min.x = xMinMax.Min;
+                min.y = yMinMax.Min;
             }
         }
 

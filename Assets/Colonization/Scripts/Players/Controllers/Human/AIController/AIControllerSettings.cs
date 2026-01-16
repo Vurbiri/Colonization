@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 namespace Vurbiri.Colonization
@@ -46,17 +45,6 @@ namespace Vurbiri.Colonization
 				[MinMax(0, 50)] public int turn; // = 15;
 				public Id<EconomicPerksId> economic;
 				public Id<MilitaryPerksId> military;
-
-				public readonly void Subscribe(PerkTree tree, Action<TurnQueue, int> action)
-				{
-					if (!(tree.IsPerkLearned(EconomicPerksId.Type, economic) && tree.IsPerkLearned(MilitaryPerksId.Type, military)))
-					{
-#if TEST_AI
-						UnityEngine.Debug.Log($"[FreePerks] Subscribe");
-#endif
-						GameContainer.GameEvents.Subscribe(GameModeId.Play, action);
-					}
-				}
 			}
 		}
 		//-----------------------------------------------

@@ -8,6 +8,11 @@ namespace Vurbiri.Colonization
 
 	public class Test : MonoBehaviour
     {
+		public MinMax test;
+		public FloatMRnd test2;
+        public FloatZRnd test3;
+        public IntRnd test4;
+
         [Button(nameof(Testing))]
 		public Color value;
 

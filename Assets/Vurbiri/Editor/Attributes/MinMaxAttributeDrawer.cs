@@ -7,7 +7,7 @@ using static UnityEditor.EditorGUI;
 namespace VurbiriEditor
 {
     [CustomPropertyDrawer(typeof(MinMaxAttribute))]
-	public class MinMaxDrawer : ARValueDrawer
+	public class MinMaxAttributeDrawer : ARValueDrawer
     {
         private readonly List<System.Type> _excludeTypes = new() { typeof(IntRnd), typeof(WaitRealtime), typeof(WaitScaledTime) };
         private readonly System.Type _refValue = typeof(Ref<>);

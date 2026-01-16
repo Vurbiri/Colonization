@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 
 namespace Vurbiri.Colonization
 {
@@ -9,6 +10,7 @@ namespace Vurbiri.Colonization
 
 		public SFXStorage(Dictionary<string, ISFX> SFXs) => _SFXs = SFXs;
 
-        public IEnumerator Run(string name, ActorSFX user, ActorSkin target) => _SFXs[name].Run(user, target);
+        [MethodImpl(MethodImplOptions.AggressiveInlining)] 
+		public IEnumerator Run(string name, ActorSFX user, ActorSkin target) => _SFXs[name].Run(user, target);
     }
 }

@@ -8,16 +8,16 @@ namespace VurbiriEditor
     [CustomPropertyDrawer(typeof(IntRnd))]
     public class IntRndDrawer : ARValueDrawer
     {
-        private readonly string NAME_MIN = "_min", NAME_MAX = "_max";
+        private const string NAME_MIN = "_min", NAME_MAX = "_max";
 
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
             position.height = EditorGUIUtility.singleLineHeight;
 
-            SerializedProperty minProperty = property.FindPropertyRelative(NAME_MIN);
-            SerializedProperty maxProperty = property.FindPropertyRelative(NAME_MAX);
+            var minProperty = property.FindPropertyRelative(NAME_MIN);
+            var maxProperty = property.FindPropertyRelative(NAME_MAX);
 
-            MinMaxAttribute range = fieldInfo.GetCustomAttribute<MinMaxAttribute>();
+            var range = fieldInfo.GetCustomAttribute<MinMaxAttribute>();
 
             label = EditorGUI.BeginProperty(position, label, property);
 
@@ -42,11 +42,15 @@ namespace VurbiriEditor
             else
             {
                 int min = minProperty.intValue, max = maxProperty.intValue - 1;
-                
-                var (sizeLabel, sizeMin, sizeMax) = CalkPosition(position);
-                EditorGUI.LabelField(sizeLabel, label);
-                min = EditorGUI.DelayedIntField(sizeMin, min);
-                max = EditorGUI.DelayedIntField(sizeMax, max);
+
+                var (labelSize, minLabelSize, minSize, maxLabelSize, maxSize) = CalkPosition(position);
+                EditorGUI.LabelField(labelSize, label);
+
+                EditorGUI.PrefixLabel(minLabelSize, s_minLabel);
+                min = EditorGUI.DelayedIntField(minSize, min);
+
+                EditorGUI.PrefixLabel(maxLabelSize, s_maxLabel);
+                max = EditorGUI.DelayedIntField(maxSize, max);
 
                 if (min > max) (min, max) = (max, min);
                 minProperty.intValue = min;

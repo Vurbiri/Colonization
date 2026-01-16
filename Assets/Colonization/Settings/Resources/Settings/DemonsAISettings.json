@@ -122,10 +122,10 @@
           {
             "skill": 3,
             "currentHP": {
-              "_min": 10,
-              "_max": 80
+              "_min": 50,
+              "_max": 100
             },
-            "chance": 56
+            "chance": 46
           }
         ]
       },
