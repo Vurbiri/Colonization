@@ -24,7 +24,7 @@ namespace Vurbiri.Colonization
 			Cancel();
 		}
 #else
-		public void Init(YProjectStorage storage)
+		public void Init(ProjectStorage storage)
         {
             _profile.Init();
 

@@ -6,7 +6,7 @@ namespace Vurbiri.Colonization
 {
 	public partial class Satan : Player, IReactive<Satan>
 	{
-		private const int DISPLAY_MAX_CURSE = 66;
+		private const int DISPLAY_MAX_CURSE = 99;
 		
 		protected static readonly SatanAbilities s_parameters;
 
@@ -63,7 +63,7 @@ namespace Vurbiri.Colonization
 
 					_curse -= _maxCurse;
 					_spawner.AddPotential(1 + (leveling.Level / s_parameters.potential.levelRatio));
-					GameContainer.Chaos.ForSatanLevelUP(leveling.Level);
+					GameContainer.Chaos.ForSatanLevelUP(leveling.Level / s_parameters.levelRatio);
 				}
 
 				_eventChanged.Invoke(this);

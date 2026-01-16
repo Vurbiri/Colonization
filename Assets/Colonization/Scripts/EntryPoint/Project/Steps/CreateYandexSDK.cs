@@ -13,6 +13,7 @@ namespace Vurbiri.Colonization.EntryPoint
         public CreateYandexSDK(ProjectContent content, MonoBehaviour mono, string lbName) : base("YandexStep")
         {
             content.ysdk = _ysdk = new(mono, lbName);
+            content.money = new();
         }
 
         public override IEnumerator GetEnumerator() => _ysdk.Init_Cn();

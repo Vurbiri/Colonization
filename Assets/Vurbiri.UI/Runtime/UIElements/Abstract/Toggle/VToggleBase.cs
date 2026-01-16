@@ -108,9 +108,18 @@ namespace Vurbiri.UI
 
 		protected override void OnDisable()
 		{
+#if UNITY_EDITOR
+			if (_group != null)
+			{
+				if(Application.isPlaying)
+					_group.DelayedUnregisterToggle(_this);
+				else
+					_group.UnregisterToggle(_this);
+			}
+#else
 			if (_group != null)
 				_group.DelayedUnregisterToggle(_this);
-
+#endif
 			base.OnDisable();
 		}
 

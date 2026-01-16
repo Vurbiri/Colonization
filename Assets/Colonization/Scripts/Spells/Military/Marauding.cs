@@ -68,7 +68,7 @@ namespace Vurbiri.Colonization
                         sb.AppendLine(_strMsg);
                         _currencies[param.playerId].ToStringBuilder(sb);
                         int amount = _currencies[PlayerId.Person].Amount;
-                        Banner.Open(sb.ToString(), amount == 0 ? MessageTypeId.Warning : amount > 0 ? MessageTypeId.Profit : MessageTypeId.Error, 15f);
+                        Banner.Open(sb.ToString(), amount == 0 ? MessageTypeId.Warning : amount > 0 ? MessageTypeId.Profit : MessageTypeId.Error, s_settings.msgShowTime);
                     }
 
                     for (int i = 0; i < PlayerId.HumansCount; i++)

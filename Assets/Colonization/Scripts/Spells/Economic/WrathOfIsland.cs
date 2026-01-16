@@ -47,7 +47,7 @@ namespace Vurbiri.Colonization
                     s_isCasting.True();
 
                     Cast_Cn().Start();
-                    ShowSpellName(param.playerId, 3f + 2f * count);
+                    ShowSpellName(param.playerId, 1.75f * count);
                     Humans[param.playerId].Pay(_cost);
 
                     _canCast = false;

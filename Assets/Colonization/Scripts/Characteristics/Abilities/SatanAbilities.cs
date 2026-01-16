@@ -7,6 +7,7 @@ namespace Vurbiri.Colonization
 	public class SatanAbilities
 	{
         [Range(1, 6)] public int gateDefense; // = 4;
+        [Range(1, 4)] public int levelRatio; // = 3;
         [Space]
         public Curse curse;
         [Space]

@@ -6,38 +6,40 @@ namespace Vurbiri.Colonization
     [System.Serializable]
     public class SpellsSettings
     {
-        [Header("Order")]
-        public int orderPerMana;
+        [Range(2f, 12f)] public float nameShowTime;
+        [Range(10f, 30f)] public float msgShowTime;
+        [Space, Header("Order")]
+        [Range(2, 12)] public int orderPerMana;
         [Header("RandomHealing")]
         public HitSFXName healSFX;
-        public int healPercentValue;
+        [Range(10, 50)] public int healPercentValue;
         [Header("Blessing")]
         public HitSFXName blessSFX;
-        public int blessBasa;
-        public int blessPerRes;
-        public int blessDuration;
+        [Range(4, 16)] public int blessBasa;
+        [Range(2, 8)] public int blessPerRes;
+        [Range(1, 3)] public int blessDuration;
         [Header("Wrath")]
         public HitSFXName wrathSFX;
-        public int wrathBasa;
-        public int wrathPerRes;
-        public int wrathPierce;
+        [Range(10, 50)] public int wrathBasa;
+        [Range(5, 25)] public int wrathPerRes;
+        [Range(10, 50)] public int wrathPierce;
         [Header("Sacrifice")]
         public HitSFXName sacrificeKnifeSFX;
         public HitSFXName sacrificeTargetSFX;
-        public int sacrificeHPPercent;
-        public int sacrificePierce;
+        [Range(50, 200)] public int sacrificeHPPercent;
+        [Range(5, 25)] public int sacrificePierce;
         [Space]
         [Header("BloodTrade")]
-        public int bloodTradePay;
-        public int bloodTradeBay;
+        [Range(1, 3)] public int bloodTradePay;
+        [Range(1, 3)] public int bloodTradeBay;
         [Header("Marauding")]
-        public int reductionFromWall;
+        [Range(10, 50)] public int reductionFromWall;
         [Header("SwapId")]
         public Color swapHexColor;
-        public float swapShowTime;
+        [Range(2f, 12f)] public float swapShowTime;
         [Header("Zeal")]
         public HitSFXName zealSFX;
-        public int zealAddAP;
+        [Range(1, 5)] public int zealAddAP;
         [Header("Cost")]
         public ReadOnlyIdArray<EconomicSpellId, int> economicCost;
         public ReadOnlyIdArray<MilitarySpellId, int> militaryCost;

@@ -59,7 +59,10 @@ namespace Vurbiri.Colonization
             protected void SetManaCost() => _strCost = SEPARATOR.Concat(string.Format(TAG.CURRENCY, CurrencyId.Mana, _cost[CurrencyId.Mana]));
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            protected void ShowSpellName(int playerId, float duration = 5f) => Banner.Open(_strName, playerId == PlayerId.Person ? MessageTypeId.Profit : MessageTypeId.Warning, duration);
+            protected void ShowSpellName(int playerId, float addTime = 0f)
+            {
+                Banner.Open(_strName, playerId == PlayerId.Person ? MessageTypeId.Profit : MessageTypeId.Warning, s_settings.nameShowTime + addTime);
+            }
 
             protected abstract string GetDesc(Localization localization);
 

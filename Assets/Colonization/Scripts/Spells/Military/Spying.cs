@@ -66,7 +66,7 @@ namespace Vurbiri.Colonization
                     if (isPerson) 
                         Cast_Cn(sb.ToString()).Start();
                     else
-                        Banner.Open(_strName, MessageTypeId.Warning, 6f);
+                        Banner.Open(_strName, MessageTypeId.Warning, s_settings.nameShowTime);
 
                     _canCast = false;
                 }

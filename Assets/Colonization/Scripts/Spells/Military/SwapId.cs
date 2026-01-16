@@ -61,7 +61,7 @@ namespace Vurbiri.Colonization
                 }
                 else
                 {
-                    Banner.Open(_strName, MessageTypeId.Warning, 6f);
+                    Banner.Open(_strName, MessageTypeId.Warning, s_settings.nameShowTime);
                 }
 
                 EventBus.EventHexagonSelect.Add(SetHexagon);

@@ -97,7 +97,11 @@ namespace Vurbiri.UI
 			_unregistered.Enqueue(toggle);
 			Invoke(nameof(DelayedUnregister), 0f);
 		}
-		private void DelayedUnregister() => UnregisterToggle(_unregistered.Dequeue());
+		private void DelayedUnregister()
+		{
+			if(_unregistered.Count > 0)
+				UnregisterToggle(_unregistered.Dequeue());
+		}
 
 		internal void UnregisterToggle(TToggle toggle)
 		{
@@ -183,7 +187,7 @@ namespace Vurbiri.UI
 #if UNITY_EDITOR
 		protected virtual void OnValidate()
 		{
-			if (!Application.isPlaying)
+			if (!UnityEditor.EditorApplication.isPlayingOrWillChangePlaymode)
 			{
 				OnEnable();
 			}

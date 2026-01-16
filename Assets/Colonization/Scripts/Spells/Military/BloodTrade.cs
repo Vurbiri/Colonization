@@ -36,11 +36,11 @@ namespace Vurbiri.Colonization
                         sb.AppendLine(_strName);
                         _cost.PlusToStringBuilder(sb);
                         sb.AppendLine(TAG.ALING_OFF);
-                        Banner.Open(sb.ToString(), MessageTypeId.Profit, 15f);
+                        Banner.Open(sb.ToString(), MessageTypeId.Profit, s_settings.msgShowTime);
                     }
                     else
                     {
-                        Banner.Open(_strName, MessageTypeId.Warning, 5f);
+                        Banner.Open(_strName, MessageTypeId.Warning, s_settings.nameShowTime);
                     }
 
                     _cost.Clear();

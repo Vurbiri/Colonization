@@ -85,14 +85,16 @@ namespace Vurbiri.Colonization
 
 		private void SetNames(Localization localization)
 		{
-			int index = 0;
-			if (ProjectContainer.YSDK.TryGetPlayerName(out string name))
+			int index = 0; string name;
+#if YSDK
+			if (ProjectContainer.YSDK.TryGetPlayerName(out name))
 			{
 				SetName(PlayerId.Person, name, _customs[PlayerId.Person]);
 				index = PlayerId.AI_01;
 			}
+#endif
 
-			for (; index < PlayerId.HumansCount; ++index)
+            for (; index < PlayerId.HumansCount; ++index)
 				SetName(index, localization.GetText(LangFiles.Main, _nameKeys[index], true), _customs[index]);
 
 			name = localization.GetText(LangFiles.Main, _nameKeys[PlayerId.Satan], true);

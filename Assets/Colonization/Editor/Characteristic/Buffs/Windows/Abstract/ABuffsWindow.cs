@@ -13,8 +13,8 @@ namespace VurbiriEditor.Colonization
 {
     public abstract class ABuffsWindow : EditorWindow
     {
-        private const int MIN_VALUE = 1, MAX_VALUE = 5;
-        private const int MIN_LEVEL = 10, MAX_LEVEL = 100;
+        private const int MIN_VALUE = 1, MAX_VALUE = 8;
+        private const int MIN_LEVEL = 10, MAX_LEVEL = 99;
 
         protected static readonly Vector2 s_minSize = new(450f, 450f);
 

@@ -15,7 +15,7 @@ namespace VurbiriEditor.Colonization
 
         private void OnEnable()
         {
-            base.Enable(NAME, "Level Up", 35);
+            base.Enable(NAME, "Level Up", 50);
         }
         private void OnDisable()
         {

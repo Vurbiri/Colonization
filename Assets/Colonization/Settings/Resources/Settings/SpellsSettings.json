@@ -1,4 +1,6 @@
 {
+  "nameShowTime": 6.0,
+  "msgShowTime": 15.76,
   "orderPerMana": 5,
   "healSFX": "Heal",
   "healPercentValue": 16,

@@ -1,8 +1,9 @@
 {
   "gateDefense": 3,
+  "levelRatio": 2,
   "curse": {
-    "maxBase": 900,
-    "perLevel": 15,
+    "maxBase": 800,
+    "perLevel": 10,
     "perTurn": 160,
     "perShrine": -10,
     "perRes": 15,
