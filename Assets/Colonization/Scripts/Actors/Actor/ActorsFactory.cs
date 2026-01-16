@@ -26,8 +26,8 @@ namespace Vurbiri.Colonization
 			_settings[ActorTypeId.Demon]   = settings.demonsSettings.Init();
 
 			for (int i = 0; i < PlayerId.HumansCount; ++i)
-				_actors[i] = new(CONST.DEFAULT_MAX_WARRIOR);
-			_actors[PlayerId.Satan] = new(CONST.DEFAULT_MAX_DEMONS);
+				_actors[i] = new(CONST.MAX_WARRIOR);
+			_actors[PlayerId.Satan] = new(CONST.MAX_DEMONS);
 		}
 
 		[Impl(256)] public Actor Create(int type, int id, ActorInitData initData, Hexagon startHex, bool enable = true)

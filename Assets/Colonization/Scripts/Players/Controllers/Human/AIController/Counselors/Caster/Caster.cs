@@ -43,7 +43,7 @@ namespace Vurbiri.Colonization
                 {
                     current = _current[i]; _current[i] = null;
 #if TEST_AI
-                    Log.Info($"[Caster] {HumanId} current cast [{current}]");
+                    UnityEngine.Debug.Log($"[Caster] {HumanId} current cast [{current}]");
 #endif
                     yield return current.TryCasting_Cn();
                     _casts.Add(current);

@@ -14,13 +14,13 @@ namespace Vurbiri.Colonization
 		static SatanController() => s_settings = SettingsFile.Load<SatanControllerSettings>();
 		public SatanController(Settings settings, WaitAllWaits waitSpawn) : base(settings, waitSpawn)
 		{
-			_commander = new(Actors, _spawner);
+			_commander = new(_spawner);
 		}
 
 		public void ActorKill(Id<ActorTypeId> type, int id)
 		{
 			if (type == ActorTypeId.Warrior)
-				AddCurse(s_parameters.cursePerKillWarrior[id]);
+				AddCurse(s_parameters.curse.perKillWarrior[id]);
 		}
 
 		public void OnLanding()
@@ -43,14 +43,14 @@ namespace Vurbiri.Colonization
 			IEnumerator OnPlay_Cn()
 			{
 #if TEST_AI
-				Log.Info("====================== Satan ======================");
+                UnityEngine.Debug.Log("====================== Satan ======================");
 #endif
 
 				yield return s_settings.waitPlayStart.Restart();
 				yield return _waitAll.Add(s_settings.waitPlay.Restart(), _commander.Execution_Cn());
 
 #if TEST_AI
-				Log.Info("===================================================");
+                UnityEngine.Debug.Log("===================================================");
 #endif
 
 				GameContainer.GameLoop.EndTurn();
@@ -99,11 +99,12 @@ namespace Vurbiri.Colonization
 
 		public void OnProfit(int hexId, int clampRes)
 		{
-			int progress = s_parameters.cursePerTurn + s_shrinesCount * s_parameters.cursePerShrine;
+            var curse = s_parameters.curse;
+            int progress = curse.perTurn + s_shrinesCount * curse.perShrine;
 			if (hexId > HEX.GATE)
 				hexId = (HEX.GATE << 1) - hexId;
 
-			AddCurse((progress * hexId / HEX.GATE << hexId / HEX.GATE) + clampRes * s_parameters.cursePerRes);
+			AddCurse((progress * hexId / HEX.GATE << hexId / HEX.GATE) + clampRes * curse.perRes);
 		}
 	}
 }

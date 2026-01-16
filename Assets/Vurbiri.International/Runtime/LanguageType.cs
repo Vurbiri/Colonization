@@ -40,7 +40,8 @@ namespace Vurbiri.International
         }
 
         [Impl(256)] public bool CodeEquals(string code) => _code.ToLowerInvariant() == code.ToLowerInvariant();
-        public bool Equals(SystemLanguage id) => _id == id;
+        [Impl(256)] public bool Equals(SystemLanguage id) => _id == id;
+
         public override bool Equals(object obj)
         {
             if (obj is null) return false;
@@ -50,7 +51,7 @@ namespace Vurbiri.International
             return false;
         }
 
-        public override int GetHashCode() => _id.GetHashCode();
+        [Impl(256)] public override int GetHashCode() => _id.GetHashCode();
 
         [Impl(256)] public static bool operator ==(LanguageType type, SystemLanguage id) => type._id == id;
         [Impl(256)] public static bool operator !=(LanguageType type, SystemLanguage id) => type._id != id;

@@ -1,9 +1,19 @@
 {
-  "waitPlayStart": 3.0,
+  "waitPlayStart": 2.88,
   "waitPlay": 4.0,
   "militarist": 1,
-  "percentBloodOffset": 10,
-  "minExchangeBlood": 3,
-  "minPercentRes": 25,
-  "addRes": 1
+  "exchange": {
+    "percentBloodOffset": 10,
+    "minExchangeBlood": 2,
+    "minPercentAmount": 86
+  },
+  "cheat": {
+    "minPercentRes": 25,
+    "addRes": 2,
+    "freePerks": {
+      "turn": 17,
+      "economic": 11,
+      "military": 9
+    }
+  }
 }

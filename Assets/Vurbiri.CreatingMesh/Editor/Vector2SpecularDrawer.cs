@@ -5,7 +5,7 @@ using Vurbiri.CreatingMesh;
 namespace VurbiriEditor.CreatingMesh
 {
     [CustomPropertyDrawer(typeof(Vector2Specular))]
-    public class Vector2SpecularDrawer : PropertyDrawer
+    internal class Vector2SpecularDrawer : PropertyDrawer
     {
         private const string NAME_VALUE = "_value";
         private static readonly string[] s_labelsSpecular = { "Metallic", "Smoothness" };

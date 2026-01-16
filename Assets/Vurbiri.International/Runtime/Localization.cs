@@ -87,6 +87,16 @@ namespace Vurbiri.International
 			s_instance?._changed.Remove(action);
 		}
 
+		public SystemLanguage GetDefaultId()
+		{
+			var id = Application.systemLanguage;
+			for (int i = 0; i < _languages.Count; ++i)
+				if (_languages[i] == id)
+					return id;
+
+			return _defaultLanguage.Id;
+		}
+
 		public SystemLanguage IdFromCode(string code)
 		{
 			if (!string.IsNullOrEmpty(code))

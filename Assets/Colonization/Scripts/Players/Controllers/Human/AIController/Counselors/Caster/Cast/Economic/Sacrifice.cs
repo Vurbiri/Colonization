@@ -10,7 +10,7 @@ namespace Vurbiri.Colonization
         {
             sealed private class Sacrifice : Cast
             {
-                private static readonly List<Actor> s_militias = new(CONST.DEFAULT_MAX_WARRIOR);
+                private static readonly List<Actor> s_militias = new(CONST.MAX_WARRIOR);
 
                 private Sacrifice(Caster parent) : base(parent, EconomicSpellId.Type, EconomicSpellId.Sacrifice, parent.IsMilitarist) { }
                 public static void Create(Caster parent) => new Sacrifice(parent);

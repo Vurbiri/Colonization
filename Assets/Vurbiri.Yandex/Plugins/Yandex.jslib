@@ -390,10 +390,10 @@ var YandexPlugin =
 
     },
     
-    ShowFullscreenAdvJS: function () {
+    ShowFullScreenAdvJS: function () {
         if (!func.isInitialize()) {
             console.log("-- ShowFullscreenAdv: not ysdk --");
-            window.unityInstance.SendMessage('YMoney', 'OnEndShowFullscreenAdv', 0);
+            window.unityInstance.SendMessage('YMoney', 'OnEndShowFullScreenAdv', 0);
             return;
         }
 

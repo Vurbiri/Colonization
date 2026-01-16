@@ -20,8 +20,8 @@ namespace Vurbiri.Colonization
 
 		public const int CHANCE_WATER = MAX_CIRCLES * MAX_CIRCLES;
 
-		public const int DEFAULT_MAX_WARRIOR = 5;
-		public const int DEFAULT_MAX_DEMONS = DEFAULT_MAX_WARRIOR << 1;
+		public const int MAX_WARRIOR = 5;
+		public const int MAX_DEMONS = MAX_WARRIOR << 1;
 		public const int DEFAULT_MAX_EDIFICES = 6;
 
 		public const int DICES_COUNT = 2;

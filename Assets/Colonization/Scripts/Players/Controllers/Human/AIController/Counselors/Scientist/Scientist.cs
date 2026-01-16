@@ -21,11 +21,15 @@ namespace Vurbiri.Colonization
                 _perks = new(parent._specialization);
                 _leveling = new(PerkTrees.GetLevel(AbilityTypeId.Economic), PerkTrees.GetLevel(AbilityTypeId.Military));
 
-                Create(AbilityTypeId.Economic);
-                Create(AbilityTypeId.Military);
+                var freePerks = s_aiSettings.cheat.freePerks;
+
+                Create(AbilityTypeId.Economic, freePerks.economic);
+                Create(AbilityTypeId.Military, freePerks.military);
+
+                freePerks.Subscribe(PerkTrees, FreeLearn);
 
                 // ==== Local ====
-                void Create(int type)
+                void Create(int type, int skip)
                 {
                     if (!PerkTrees.IsAllTreeLearned(type))
                     {
@@ -34,7 +38,7 @@ namespace Vurbiri.Colonization
 
                         for (int id = 0; id < count; id++)
                         {
-                            if (PerkTrees.GetNotLearned(type, id, out Perk perk))
+                            if (id != skip && PerkTrees.GetNotLearned(type, id, out Perk perk))
                             {
                                 if (perk.Level > level)
                                     _leveling.Add(perk);
@@ -58,12 +62,33 @@ namespace Vurbiri.Colonization
                     if (progress < PerkTree.MAX_PROGRESS && _leveling.TryGet(_perk.Type, PerkTree.ProgressToLevel(progress), out List<Perk> perks))
                         _perks.Add(_perk.Type, perks);
 #if TEST_AI
-                    Log.Info($"[Scientist] {HumanId} learned a perk {_perk}");
+                    UnityEngine.Debug.Log($"[Scientist] {HumanId} learned a perk {_perk}");
 #endif
                     _perk = null;
                 }
 
                 yield return s_delayHalfSecond.Restart();
+            }
+
+            private void FreeLearn(TurnQueue turnQueue, int hexId)
+            {
+                var freePerks = s_aiSettings.cheat.freePerks;
+                if(turnQueue.currentId == HumanId && turnQueue.turn >= freePerks.turn)
+                {
+#if TEST_AI
+                    UnityEngine.Debug.Log($"[Scientist] {HumanId} FREE LEARN");
+#endif
+                    GameContainer.GameEvents.Unsubscribe(GameModeId.Play, FreeLearn);
+                    Learn(EconomicPerksId.Type, freePerks.economic);
+                    Learn(MilitaryPerksId.Type, freePerks.military);
+                }
+
+                // ================== Local ======================
+                [Impl(256)] void Learn(int typePerkId, int perkId)
+                {
+                    if (PerkTrees.GetNotLearned(typePerkId, perkId, out Perk perk))
+                        PerkTrees.Learn(perk);
+                }
             }
 
             #region Nested: Perks, Leveling
@@ -96,6 +121,8 @@ namespace Vurbiri.Colonization
                         
                 }
 
+                [Impl(256)] public bool Remove(Perk perk) => _perks[perk.Type].Remove(perk);
+
                 public void Extract(ref Perk perk)
                 {
                     if (perk == null)
@@ -126,6 +153,7 @@ namespace Vurbiri.Colonization
                 }
 
                 [Impl(256)] public void Add(Perk perk) => _perks[perk.Type][perk.Level].Add(perk);
+                [Impl(256)] public void Remove(Perk perk) => _perks[perk.Type][perk.Level]?.Remove(perk);
 
                 public bool TryGet(int type, int level, out List<Perk> perks)
                 {

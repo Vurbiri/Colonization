@@ -13,12 +13,14 @@ namespace Vurbiri.Colonization.EntryPoint
     {
         [SerializeField] private SceneId _startScene;
         [Space]
-        [SerializeField] private LogOnPanel _logOnPanel;
         [SerializeField] private LoadingScreen _loadingScreen;
         [Space]
         [SerializeField] private FileIds _localizationFiles = new(false);
+#if YSDK
         [Space]
+        [SerializeField] private Canvas _logOnPanel;
         [SerializeField] private string _leaderboardName = "lbColonization";
+#endif
         [Space]
         [SerializeField] private Prices _prices;
         [SerializeField] private ColorSettingsScriptable _settingsColorScriptable;
@@ -47,8 +49,10 @@ namespace Vurbiri.Colonization.EntryPoint
 
 #if YSDK
             loading.Add(new CreateYandexSDK(content, mono, _leaderboardName));
-#endif
             loading.Add(new CreateStorage(content, mono, _loadingScreen, _logOnPanel));
+#else
+            loading.Add(new CreateStorage(content, mono, _loadingScreen));
+#endif
             loading.Add(new LoadSettingsStep(content, _playerVisualSetScriptable));
             loading.Add(new EndLoadScene(operation));
 
@@ -67,13 +71,16 @@ namespace Vurbiri.Colonization.EntryPoint
 #if UNITY_EDITOR
         private void OnValidate()
         {
-            EUtility.SetObject(ref _logOnPanel);
             EUtility.SetObject(ref _loadingScreen);
             EUtility.SetScriptable(ref _prices);
             EUtility.SetScriptable(ref _settingsColorScriptable);
             EUtility.SetScriptable(ref _playerVisualSetScriptable);
 
             _settings.OnValidate();
+
+#if YSDK
+            EUtility.SetPrefab(ref _logOnPanel);
+#endif
         }
 #endif
     }

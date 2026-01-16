@@ -6,7 +6,7 @@ namespace Vurbiri.Colonization
 {
 	public partial class Satan : Player, IReactive<Satan>
 	{
-		private const int DISPLAY_MAX_CURSE = 50;
+		private const int DISPLAY_MAX_CURSE = 66;
 		
 		protected static readonly SatanAbilities s_parameters;
 
@@ -31,12 +31,12 @@ namespace Vurbiri.Colonization
 			var loadData = storage.LoadData; storage.LoadData = null;
 
 			_curse = loadData.state.curse;
-			_maxCurse = s_parameters.maxCurseBase + loadData.state.level * s_parameters.maxCursePerLevel;
+			_maxCurse = s_parameters.curse.maxBase + loadData.state.level * s_parameters.curse.perLevel;
 
 			_leveling = new(settings.satanLeveling, loadData.state.level);
 			_artefact = Artefact.Create(settings.artefact, loadData);
 
-			_spawner = new(new(PlayerId.Satan, _leveling, _artefact), loadData.isLoaded ? loadData.state.spawn : s_parameters.startPotential);
+			_spawner = new(new(PlayerId.Satan, _leveling, _artefact), loadData.isLoaded ? loadData.state.spawn : s_parameters.potential.start);
 
 			ActorsLoad(_spawner, loadData.actors, waitSpawn);
 
@@ -49,20 +49,25 @@ namespace Vurbiri.Colonization
 
 		protected void AddCurse(int add)
 		{
-			if(add <= 0) return;
-			
-			_curse += add;
-			if (_curse >= _maxCurse)
+			if (add > 0)
 			{
-				if (_leveling.Next())
-					_maxCurse = s_parameters.maxCurseBase + _leveling.Level * s_parameters.maxCursePerLevel;
+				_curse += add;
 
-				_curse -= _maxCurse;
-				_spawner.AddPotential(1 + (_leveling.Level / s_parameters.potentialFromLvlRatio));
-				GameContainer.Chaos.ForSatanLevelUP(_leveling.Level);
+				var leveling = _leveling;
+				var settings = s_parameters.curse;
+
+				if (_curse >= _maxCurse)
+				{
+					if (leveling.Next())
+						_maxCurse = settings.maxBase + leveling.Level * settings.perLevel;
+
+					_curse -= _maxCurse;
+					_spawner.AddPotential(1 + (leveling.Level / s_parameters.potential.levelRatio));
+					GameContainer.Chaos.ForSatanLevelUP(leveling.Level);
+				}
+
+				_eventChanged.Invoke(this);
 			}
-
-			_eventChanged.Invoke(this);
 		}
 
 		[Impl(256)] public void Spawn(int demonId, Hexagon start) => _spawner.Create(demonId, start);

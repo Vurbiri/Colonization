@@ -86,7 +86,7 @@ namespace Vurbiri.Colonization
         }
         #endregion
 
-        public bool GetNotLearned(int typePerk, int idPerk, out Perk perk)
+        [Impl(256)] public bool GetNotLearned(int typePerk, int idPerk, out Perk perk)
         {
             perk = s_perks[typePerk][idPerk];
             return !_learnedPerks[typePerk].Contains(idPerk);

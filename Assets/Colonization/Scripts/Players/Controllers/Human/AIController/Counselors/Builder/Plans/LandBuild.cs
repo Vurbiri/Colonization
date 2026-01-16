@@ -68,7 +68,7 @@ namespace Vurbiri.Colonization
                             canRoadBuild = _cursor < _roadsCount;
                             --_attempts;
 #if TEST_AI
-                            Log.Info($"[Builder::LandBuild] {HumanId} built Road");
+                            UnityEngine.Debug.Log($"[Builder::LandBuild] {HumanId} built Road");
 #endif
                         }
                     }
@@ -84,7 +84,7 @@ namespace Vurbiri.Colonization
                         yield return Human.BuyEdificeUpgrade(crossroad, _edificeCost);
                         _done = true;
 #if TEST_AI
-                        Log.Info($"[Builder::LandBuild] {HumanId} built {crossroad.Id}");
+                        UnityEngine.Debug.Log($"[Builder::LandBuild] {HumanId} built {crossroad.Id}");
 #endif
                     }
                 }

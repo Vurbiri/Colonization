@@ -1,6 +1,5 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
@@ -20,8 +19,33 @@ namespace Vurbiri
 
         [Impl(256)] public static void Add(JsonConverter converter) => s_converters.Add(converter);
         [Impl(256)] public static void Add(params JsonConverter[] converters) => s_converters.AddRange(converters);
+        [Impl(256)] public static void Add<T>() where T : JsonConverter, new() => s_converters.Add(new T());
 
         [Impl(256)] public static bool Remove(JsonConverter converter) => s_converters.Remove(converter);
+        public static bool Remove<T>() where T : JsonConverter
+        {
+            var type = typeof(T);
+			for (int i = s_converters.Count - 1; i >= 0; --i)
+            {
+                if (s_converters[i].GetType() == type)
+                {
+                    s_converters.RemoveAt(i);
+                    return true;
+                }
+            }
+			return false;
+        }
+
+        [Impl(256)] public static bool Contains(JsonConverter converter) => s_converters.Contains(converter);
+        public static bool Contains<T>() where T : JsonConverter
+        {
+            var type = typeof(T);
+            for (int i = s_converters.Count - 1; i >= 0; --i)
+                if (s_converters[i].GetType() == type)
+                    return true;
+
+            return false;
+        }
 
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSplashScreen)]
@@ -45,7 +69,7 @@ namespace Vurbiri
 		// ********************* Nested **************************
 		sealed private class ContractResolver : DefaultContractResolver
 		{
-			protected override JsonContract CreateContract(Type objectType)
+			protected override JsonContract CreateContract(System.Type objectType)
 			{
 				var contract = base.CreateContract(objectType);
 

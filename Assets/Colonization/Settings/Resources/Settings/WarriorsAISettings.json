@@ -47,10 +47,10 @@
           {
             "skill": 3,
             "currentHP": {
-              "_min": 25,
-              "_max": 95
+              "_min": 30,
+              "_max": 75
             },
-            "chance": 75
+            "chance": 70
           }
         ]
       },
@@ -124,7 +124,7 @@
       "raider": true,
       "defense": {
         "_buff": 3,
-        "_buffChance": 40,
+        "_buffChance": 8,
         "_block": true,
         "_blockChance": 90
       },
@@ -139,7 +139,7 @@
             "skill": 3,
             "currentHP": {
               "_min": 15,
-              "_max": 65
+              "_max": 60
             },
             "chance": 45
           }
@@ -352,7 +352,7 @@
             },
             "selfHP": {
               "_min": 0,
-              "_max": 80
+              "_max": 84
             },
             "targetHP": {
               "_min": 0,

@@ -13,6 +13,7 @@ namespace Vurbiri.Colonization
         protected TurnQueue _turnQueue;
 
         public Id<GameModeId> GameMode { [Impl(256)] get => _gameMode; }
+        public TurnQueue TurnQueue { [Impl(256)] get => _turnQueue; }
         public Id<PlayerId> CurrentPlayer { [Impl(256)] get => _turnQueue.currentId; }
 
         public Subscription Subscribe(Id<GameModeId> gameMode, Action<TurnQueue, int> onChanging) => _changeGameModes[gameMode].Add(onChanging);

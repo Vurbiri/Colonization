@@ -31,7 +31,7 @@ namespace Vurbiri.Colonization
                             yield return _build(_crossroad, _cost);
                             _done = true;
 #if TEST_AI
-                            Log.Info($"[Builder::{this}] {HumanId} {_build.Method.Name}");
+                            UnityEngine.Debug.Log($"[Builder::{this}] {HumanId} {_build.Method.Name}");
 #endif
                         }
                     }

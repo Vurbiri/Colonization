@@ -54,7 +54,7 @@ namespace Vurbiri.Colonization
                 do
                 {
 #if TEST_AI
-                    Log.Info($"[{_actor}AI_{_actor.Index}] {_actor.Owner} state [{_current}]");
+                    UnityEngine.Debug.Log($"[{_actor}AI_{_actor.Index}] {_actor.Owner} state [{_current}]");
 #endif
                     _status.Update(_actor);
                     yield return StartCoroutine(_current.Execution_Cn(Out<bool>.Get(out key)));

@@ -5,16 +5,16 @@ namespace Vurbiri.Colonization
 {
 	sealed public partial class AIController : HumanController
 	{
-		private static readonly AIControllerSettings s_settings;
+		private static readonly AIControllerSettings s_aiSettings;
 		
 		private readonly Counselors _counselors;
 		private readonly int _specialization = AbilityTypeId.Economic;
 
-		static AIController() => s_settings = SettingsFile.Load<AIControllerSettings>();
+		static AIController() => s_aiSettings = SettingsFile.Load<AIControllerSettings>();
 
 		public AIController(Id<PlayerId> playerId, Settings settings, WaitAllWaits waitSpawn) : base(playerId, settings, waitSpawn, false) 
 		{
-			if (s_settings.militarist == playerId)
+			if (s_aiSettings.militarist == playerId)
 				_specialization = AbilityTypeId.Military;
 
 			_counselors = new(this);
@@ -34,7 +34,7 @@ namespace Vurbiri.Colonization
 			{
 				_resources.Blood.Add(_id.Value);
 				
-				yield return s_settings.waitPlayStart.Restart();
+				yield return s_aiSettings.waitPlayStart.Restart();
 				yield return _counselors.Landing_Cn();
 
 				GameContainer.GameLoop.EndLanding();
@@ -50,15 +50,14 @@ namespace Vurbiri.Colonization
 			IEnumerator OnPlay_Cn()
 			{
 #if TEST_AI
-                Log.Info($"====================== {_id} ======================");
+                Debug.Log($"====================== {_id} ======================");
 #endif
-                if (_resources.PercentAmount < s_settings.minPercentRes)
-					_resources.AddToMin(s_settings.addRes);
+				s_aiSettings.cheat.TryAddRes(_resources);
 
-				yield return s_settings.waitPlayStart.Restart();
-				yield return _waitAll.Add(s_settings.waitPlay.Restart(), _counselors.Execution_Cn());
+				yield return s_aiSettings.waitPlayStart.Restart();
+				yield return _waitAll.Add(s_aiSettings.waitPlay.Restart(), _counselors.Execution_Cn());
 #if TEST_AI
-				Log.Info("===================================================");
+                Debug.Log("===================================================");
 #endif
 				GameContainer.GameLoop.EndTurn();
 				_coroutine = null;
@@ -81,27 +80,29 @@ namespace Vurbiri.Colonization
 
 		private IEnumerator Exchange_Cn(ReadOnlyLiteCurrencies needed, Out<bool> output)
 		{
-			bool result = _resources >= needed;
+			var settings = s_aiSettings.exchange;
+			var resources = _resources;
+            var result = resources >= needed;
 
-			if (!result)
+            if (!result)
 			{
-				var blood = _resources.Blood;
+				var blood = resources.Blood;
 				int exchangeBlood = blood >> (_perks.IsAllLearned() ? 0 : 1);
-				if (exchangeBlood > s_settings.minExchangeBlood && Chance.Rolling(blood.Percent - s_settings.percentBloodOffset))
+				if (exchangeBlood > settings.minExchangeBlood && Chance.Rolling(blood.Percent - settings.percentBloodOffset))
 				{
-					_spellBook.Cast(MilitarySpellId.Type, MilitarySpellId.BloodTrade, new(_id, Random.Range(s_settings.minExchangeBlood, exchangeBlood + 1)));
-					result = _resources >= needed;
+					_spellBook.Cast(MilitarySpellId.Type, MilitarySpellId.BloodTrade, new(_id, Random.Range(settings.minExchangeBlood, exchangeBlood + 1)));
+					result = resources >= needed;
 				}
 
 				yield return null;
 
-				if (!result && _resources.OverCount(needed, out int exchangeIndex) == 1)
+				if (!result && resources.OverCount(needed, out int exchangeIndex) == 1)
 				{
-					int need = needed[exchangeIndex], current = _resources[exchangeIndex], delta = need - current;
+					int need = needed[exchangeIndex], current = resources[exchangeIndex], delta = need - current;
 					int exchange = _exchange[exchangeIndex], exchangeValue = delta * exchange;
-					if (((_resources.Amount - current) - (needed.Amount - need)) > exchangeValue && Chance.Rolling((int)(6.251f * (20 - exchange * exchange))))
+					if (((resources.Amount - current) - (needed.Amount - need)) > exchangeValue && (resources.PercentAmount > settings.minPercentAmount || Chance.Rolling((int)(6.251f * (20 - exchange * exchange)))))
 					{
-						LiteCurrencies pay = new(), diff = _resources - needed;
+						LiteCurrencies pay = new(), diff = resources - needed;
 						pay.Remove(exchangeIndex, delta);
 						diff.Set(exchangeIndex, 0);
 
@@ -114,7 +115,7 @@ namespace Vurbiri.Colonization
 
 							yield return null;
 						}
-						_resources.Remove(pay);
+                        resources.Remove(pay);
 						result = true;
 					}
 				}

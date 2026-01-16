@@ -35,7 +35,7 @@ namespace Vurbiri.Colonization
 				if (_currentPlan.Done || !_currentPlan.IsValid)
 					yield return CreatePlan_Cn();
 #if TEST_AI
-				Log.Info($"[Builder] {HumanId} current plan [{_currentPlan}]");
+                UnityEngine.Debug.Log($"[Builder] {HumanId} current plan [{_currentPlan}]");
 #endif
 				yield return StartCoroutine(_currentPlan.Execution_Cn());
 
@@ -43,7 +43,7 @@ namespace Vurbiri.Colonization
 				{
 					yield return CreatePlan_Cn();
 #if TEST_AI
-					Log.Info($"[Builder] {HumanId} create plan [{_currentPlan}]");
+                    UnityEngine.Debug.Log($"[Builder] {HumanId} create plan [{_currentPlan}]");
 #endif
 					yield return StartCoroutine(_currentPlan.Execution_Cn());
 				}

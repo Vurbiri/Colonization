@@ -9,7 +9,7 @@ namespace Vurbiri.Colonization
         {
             sealed private class Zeal : Cast
             {
-                private static readonly List<Actor> s_actors = new(CONST.DEFAULT_MAX_WARRIOR);
+                private static readonly List<Actor> s_actors = new(CONST.MAX_WARRIOR);
 
                 private Zeal(Caster parent) : base(parent, MilitarySpellId.Type, MilitarySpellId.Zeal) { }
                 public static void Create(Caster parent) => new Zeal(parent);

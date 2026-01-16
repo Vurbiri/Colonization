@@ -17,7 +17,7 @@ namespace VurbiriEditor.International
 		private const string IMPORT_SETTINGS = "BannerImportSettings";
         private const string ZIP_FILE = "ImportData";
 
-        public static T LoadOrCreateScriptable<T>(string name, string path) where T : ScriptableObject
+        internal static T LoadOrCreateScriptable<T>(string name, string path) where T : ScriptableObject
         {
             var scriptable = AssetDatabase.LoadAssetAtPath<T>(path);
 			if (scriptable == null)

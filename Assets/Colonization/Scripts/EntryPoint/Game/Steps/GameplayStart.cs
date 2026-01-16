@@ -17,6 +17,15 @@ namespace Vurbiri.Colonization.EntryPoint
             GameContainer.GameSettings.Start();
             GameContainer.InputController.Enable();
 
+#if YSDK
+            var money = ProjectContainer.Money;
+            if (money.IsInitialize)
+            {
+                money.ShowBannerAdv();
+                Transition.OnExit.Add(money.HideBannerAdv);
+                yield return null;
+            }
+#endif
             GameContainer.GameLoop.Start();
         }
     }

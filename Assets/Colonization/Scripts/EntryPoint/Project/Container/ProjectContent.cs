@@ -2,7 +2,6 @@ using Vurbiri.Colonization.Storage;
 using Vurbiri.Colonization.UI;
 using Vurbiri.EntryPoint;
 using Vurbiri.Storage;
-using Vurbiri.Yandex;
 
 namespace Vurbiri.Colonization
 {
@@ -20,9 +19,13 @@ namespace Vurbiri.Colonization
 
 		public IStorageService storageService;
 		public ProjectStorage projectStorage;
-		public YandexSDK ysdk;
 
-		public void Dispose() 
+#if YSDK
+        public Vurbiri.Yandex.YandexSDK ysdk;
+		public Vurbiri.Yandex.YMoney money;
+#endif
+
+        public void Dispose() 
 		{
 			playerNames?.Dispose();
 			projectStorage?.Dispose();

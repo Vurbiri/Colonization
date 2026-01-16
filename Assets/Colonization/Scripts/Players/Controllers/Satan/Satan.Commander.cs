@@ -1,5 +1,4 @@
 using System.Collections;
-using Vurbiri.Reactive.Collections;
 
 namespace Vurbiri.Colonization
 {
@@ -9,10 +8,10 @@ namespace Vurbiri.Colonization
 		{
 			private readonly Spawner _spawner;
 
-			public Commander(ReadOnlyReactiveSet<Actor> actors, Spawner spawner) : base(CONST.DEFAULT_MAX_DEMONS)
+			public Commander(Spawner spawner) : base(CONST.MAX_DEMONS)
 			{
 				DemonAI.Start();
-				actors.Subscribe(OnActor);
+				spawner.Demons.Subscribe(OnActor);
 				_spawner = spawner;
 			}
 

@@ -6,7 +6,7 @@ namespace Vurbiri.Colonization
     {
         sealed private class Commander : Commander<WarriorAI>
         {
-            public Commander(ReadOnlyReactiveSet<Actor> actors) : base(CONST.DEFAULT_MAX_WARRIOR)
+            public Commander(ReadOnlyReactiveSet<Actor> actors) : base(CONST.MAX_WARRIOR)
             {
                 WarriorAI.Start();
                 actors.Subscribe(OnActor);

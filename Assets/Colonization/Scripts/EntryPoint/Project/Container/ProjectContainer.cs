@@ -1,7 +1,6 @@
 using Vurbiri.Colonization.UI;
 using Vurbiri.EntryPoint;
 using Vurbiri.Storage;
-using Vurbiri.Yandex;
 using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization
@@ -28,8 +27,12 @@ namespace Vurbiri.Colonization
         public static IStorageService StorageService 
         { [Impl(256)] get => s_projectContent.storageService; }
 
-        public static YandexSDK YSDK                 
+#if YSDK
+        public static Vurbiri.Yandex.YandexSDK YSDK                 
         { [Impl(256)] get => s_projectContent.ysdk; }
+        public static Vurbiri.Yandex.YMoney Money
+        { [Impl(256)] get => s_projectContent.money; }
+#endif
 
         public class UI
         {

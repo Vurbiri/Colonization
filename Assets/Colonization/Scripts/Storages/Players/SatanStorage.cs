@@ -16,11 +16,11 @@ namespace Vurbiri.Colonization.Storage
                 if (!storage.TryGet(P_SATAN, out SatanLoadState state))
                     state = new();
 
-                LoadData = new(storage.Get<int[]>(_keyArtefact), state, LoadActors(CONST.DEFAULT_MAX_DEMONS));
+                LoadData = new(storage.Get<int[]>(_keyArtefact), state, LoadActors(CONST.MAX_DEMONS));
             }
             else
             {
-                InitActors(CONST.DEFAULT_MAX_DEMONS);
+                InitActors(CONST.MAX_DEMONS);
                 LoadData = new();
             }
         }

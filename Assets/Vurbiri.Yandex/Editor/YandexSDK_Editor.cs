@@ -15,8 +15,8 @@ namespace Vurbiri.Yandex
 
 		public bool IsDesktop = true;
 		public bool IsInitialize = true;
-		public string PlayerName = "Best of the Best";
-		public bool IsLogOn = true;
+		public string PlayerName = "Player Name";
+		public bool IsLogOn = false;
 		public string Lang = "ru";
 		public bool IsPlayer => IsInitialize && _isPlayer;
 		public bool IsLeaderboard => IsLogOn && _isLeaderboard;
@@ -26,7 +26,7 @@ namespace Vurbiri.Yandex
 		public WaitResult<bool> InitPlayer() => WaitResult.Instant(_isPlayer);
 		public WaitResult<bool> LogOn()
 		{
-			IsLogOn = true;
+			IsLogOn = false;
 			return WaitResult.Instant(IsLogOn);
 		}
 		public WaitResult<bool> InitLeaderboards() => WaitResult.Instant(IsLeaderboard);

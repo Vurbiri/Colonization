@@ -5,7 +5,7 @@ namespace Vurbiri.Colonization
 {
 	public class PlayerInteractable : Reactive<bool>
     {
-        private const int SPELL_INDEX = CONST.DEFAULT_MAX_DEMONS + 1, TURN_INDEX = SPELL_INDEX + 1;
+        private const int SPELL_INDEX = CONST.MAX_DEMONS + 1, TURN_INDEX = SPELL_INDEX + 1;
 
         protected readonly Id<PlayerId> _id;
         private int _flags;

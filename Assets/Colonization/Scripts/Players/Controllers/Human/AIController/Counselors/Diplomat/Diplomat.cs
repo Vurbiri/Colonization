@@ -50,9 +50,9 @@ namespace Vurbiri.Colonization
             {
                 for (Id<PlayerId> id = PlayerId.None; id.Next(PlayerId.HumansCount);)
                     yield return TryGive_Cn(id);
-  
+
 #if TEST_AI
-                Log.Info($"[Diplomat] {HumanId}");
+                UnityEngine.Debug.Log($"[Diplomat] {HumanId}");
                 if (HumanId == PlayerId.Person) yield break;
 #endif
                 int relation = GameContainer.Diplomacy[HumanId.Value, PlayerId.Person];

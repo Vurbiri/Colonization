@@ -8,7 +8,7 @@ namespace Vurbiri.Colonization
     {
         sealed private class RandomHealing : ASpell
         {
-            private readonly List<Actor> _wounded = new(CONST.DEFAULT_MAX_WARRIOR << 2);
+            private readonly List<Actor> _wounded = new(CONST.MAX_WARRIOR << 2);
             private readonly Effect _heal;
 
             private RandomHealing(int type, int id) : base(type, id) 

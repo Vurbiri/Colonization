@@ -1,46 +1,57 @@
 using UnityEngine;
 using Vurbiri.Colonization.Storage;
-using Vurbiri.Yandex;
 using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization
 {
-    [System.Serializable]
-    public class Settings
-    {
-        [SerializeField] private Profile _profile = new();
-        [SerializeField] private AudioMixer<MixerId> _mixer = new();
+	[System.Serializable]
+	public class Settings
+	{
+		[SerializeField] private Profile _profile = new();
+		[SerializeField] private AudioMixer<MixerId> _mixer = new();
 
-        public AudioMixer<MixerId> Volumes { [Impl(256)] get => _mixer; }
-        public Profile Profile { [Impl(256)] get => _profile; }
+		public AudioMixer<MixerId> Volumes { [Impl(256)] get => _mixer; }
+		public Profile Profile { [Impl(256)] get => _profile; }
 
-        public void Init(YandexSDK ysdk, ProjectStorage storage)
-        {
+#if YSDK
+        public void Init(Vurbiri.Yandex.YandexSDK ysdk, ProjectStorage storage)
+		{
             _profile.Init(ysdk);
+
+            storage.SetAndBindAudioMixer(_mixer);
+			storage.SetAndBindProfile(_profile);
+
+			Cancel();
+		}
+#else
+		public void Init(YProjectStorage storage)
+        {
+            _profile.Init();
 
             storage.SetAndBindAudioMixer(_mixer);
             storage.SetAndBindProfile(_profile);
 
             Cancel();
         }
+#endif
 
         [Impl(256)] public void Apply()
-        {
-            _profile.Apply();
-            _mixer.Apply();
-        }
+		{
+			_profile.Apply();
+			_mixer.Apply();
+		}
 
-        [Impl(256)] public void Cancel()
-        {
-            _profile.Cancel();
-            _mixer.Cancel();
-        }
+		[Impl(256)] public void Cancel()
+		{
+			_profile.Cancel();
+			_mixer.Cancel();
+		}
 
 #if UNITY_EDITOR
-        public void OnValidate()
-        {
-            _mixer.OnValidate();
-        }
+		public void OnValidate()
+		{
+			_mixer.OnValidate();
+		}
 #endif
-    }
+	}
 }

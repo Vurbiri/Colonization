@@ -20,9 +20,15 @@ namespace VurbiriEditor
                 return;
             }
 
-            if(fieldInfo.FieldType.IsGeneric(_refValue))
+            if (mainProperty.propertyType == SerializedPropertyType.Float || mainProperty.propertyType == SerializedPropertyType.Integer)
             {
-                DrawRefValue(position, mainProperty.FindPropertyRelative("_value"), label, range);
+                DrawNumericValue(position, mainProperty, label, range);
+                return;
+            }
+
+            if (fieldInfo.FieldType.IsGeneric(_refValue))
+            {
+                DrawNumericValue(position, mainProperty.FindPropertyRelative("_value"), label, range);
                 return;
             }
 
@@ -66,7 +72,7 @@ namespace VurbiriEditor
             EndProperty();
         }
 
-        private static void DrawRefValue(Rect position, SerializedProperty property, GUIContent label, MinMaxAttribute range)
+        private static void DrawNumericValue(Rect position, SerializedProperty property, GUIContent label, MinMaxAttribute range)
         {
             position.height = EditorGUIUtility.singleLineHeight;
 

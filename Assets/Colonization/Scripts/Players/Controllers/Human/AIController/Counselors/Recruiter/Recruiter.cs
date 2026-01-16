@@ -52,7 +52,7 @@ namespace Vurbiri.Colonization
                             yield return GameContainer.CameraController.ToPositionControlled(hexagon.Position);
                             yield return Human.Recruiting_Wait(_current, hexagon, cost);
 #if TEST_AI
-                            Log.Info($"[Recruiter] {HumanId} recruiting [{_current}]");
+                            UnityEngine.Debug.Log($"[Recruiter] {HumanId} recruiting [{_current}]");
 #endif
                             _current = WarriorId.None;
                         }
@@ -62,7 +62,7 @@ namespace Vurbiri.Colonization
                         if (_current != WarriorId.Militia && (Resources.Amount << 1) <= cost.Amount)
                             _current = WarriorId.Militia;
                         if (warriorsCount <= 1)
-                            Resources.AddToMin(s_settings.addRes);
+                            Resources.AddToMin(s_aiSettings.cheat.addRes);
                     }
 
                     // ====== Local ======

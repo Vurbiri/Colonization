@@ -4,7 +4,7 @@ namespace VurbiriEditor.International
 {
 	using static CONST;
 
-	public class LanguageStringsProvider
+    internal class LanguageStringsProvider
 	{
 		[SettingsProvider]
 		public static SettingsProvider CreateProjectSettingsProvider()

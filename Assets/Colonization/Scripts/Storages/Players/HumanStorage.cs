@@ -25,11 +25,11 @@ namespace Vurbiri.Colonization.Storage
 
             if (isLoad)
             {
-                LoadData = new(storage.Get<int[]>(_keyResources), storage.Get<int[]>(_keyExchange), storage.Get<int[]>(_keyArtefact), storage.Get<int[][]>(_keyPerks), edifices, LoadActors(DEFAULT_MAX_WARRIOR));
+                LoadData = new(storage.Get<int[]>(_keyResources), storage.Get<int[]>(_keyExchange), storage.Get<int[]>(_keyArtefact), storage.Get<int[][]>(_keyPerks), edifices, LoadActors(MAX_WARRIOR));
             }
             else
             {
-                InitActors(DEFAULT_MAX_WARRIOR);
+                InitActors(MAX_WARRIOR);
                 LoadData = new();
             }
 
