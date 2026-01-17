@@ -12,8 +12,8 @@ namespace Vurbiri.Colonization
         public int defaultValue; // = 25;
         public int defaultDelta; // = 5;
         [Header("-=Round=-")]
-        public IntRnd personPerRound; // = new(-1, 1);
-        public IntRnd aiPerRound; // = new(-1, 2);
+        public RndInt personPerRound; // = new(-1, 1);
+        public RndInt aiPerRound; // = new(-1, 2);
         [Header("-=Reward=-")]
         public int rewardForBuff; // = 10;
         public int rewardForGift; // = 5;

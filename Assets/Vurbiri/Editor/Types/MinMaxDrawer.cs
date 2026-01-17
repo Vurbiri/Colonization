@@ -4,7 +4,7 @@ using Vurbiri;
 namespace VurbiriEditor
 {
 	[CustomPropertyDrawer(typeof(MinMax))]
-	public class MinMaxDrawer : FloatRndDrawer
+	public class MinMaxDrawer : RndFloatDrawer
 	{
 	}
 }

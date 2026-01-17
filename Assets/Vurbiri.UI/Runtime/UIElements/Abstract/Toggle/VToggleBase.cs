@@ -123,11 +123,6 @@ namespace Vurbiri.UI
 			base.OnDisable();
 		}
 
-		protected virtual void OnApplicationQuit()
-		{
-			_group = null;
-		}
-
 		public void OnPointerClick(PointerEventData eventData)
 		{
 			if (eventData.button == PointerEventData.InputButton.Left)

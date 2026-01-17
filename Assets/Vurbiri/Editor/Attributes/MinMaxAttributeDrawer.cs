@@ -9,7 +9,7 @@ namespace VurbiriEditor
     [CustomPropertyDrawer(typeof(MinMaxAttribute))]
 	public class MinMaxAttributeDrawer : ARValueDrawer
     {
-        private readonly List<System.Type> _excludeTypes = new() { typeof(IntRnd), typeof(WaitRealtime), typeof(WaitScaledTime) };
+        private readonly List<System.Type> _excludeTypes = new() { typeof(RndInt), typeof(WaitRealtime), typeof(WaitScaledTime) };
         private readonly System.Type _refValue = typeof(Ref<>);
 
         public override void OnGUI(Rect position, SerializedProperty mainProperty, GUIContent label)

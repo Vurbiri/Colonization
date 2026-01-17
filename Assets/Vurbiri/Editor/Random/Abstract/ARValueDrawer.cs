@@ -8,6 +8,7 @@ namespace VurbiriEditor
 		private const float LABEL_SIZE = 32f, RIGHT_SPACE = 6f;
         private const float FULL_SIZE = LABEL_SIZE * 2.5f + RIGHT_SPACE;
 
+		protected const float MIN = 0.01f;
         protected readonly static GUIContent s_minLabel = new("Min"), s_maxLabel = new("Max");
 
 		protected static (Rect, Rect, Rect, Rect, Rect) CalkPosition(Rect position)

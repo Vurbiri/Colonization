@@ -9,9 +9,10 @@ namespace Vurbiri.Colonization
 	public class Test : MonoBehaviour
     {
 		public MinMax test;
-		public FloatMRnd test2;
-        public FloatZRnd test3;
-        public IntRnd test4;
+		[Max(10f)] public RndMFloat test2;
+        [Max(10f)] public RndPFloat test3;
+        public RndNFloat test5;
+        public RndInt test4;
 
         [Button(nameof(Testing))]
 		public Color value;

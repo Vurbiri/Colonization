@@ -139,8 +139,8 @@ namespace Vurbiri.UI
 
             public Points(List<UIVertex> vertexes)
             {
-                MinMax xMinMax = MinMax.empty;
-                MinMax yMinMax = MinMax.empty;
+                var xMinMax = MinMax.Empty;
+                var yMinMax = MinMax.Empty;
 
                 Vector3 current;
                 for (int i = vertexes.Count - 1; i >= 0; --i)

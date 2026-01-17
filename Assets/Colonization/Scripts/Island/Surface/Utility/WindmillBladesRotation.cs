@@ -4,7 +4,7 @@ namespace Vurbiri.Colonization
 {
     public class WindmillBladesRotation : MonoBehaviour
     {
-        [SerializeField] private FloatRnd _speed = new(90f, 140f);
+        [SerializeField] private RndFloat _speed; // = new(90f, 140f);
 
         private Quaternion _rotation;
         private Transform _thisTransform;

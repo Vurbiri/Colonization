@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Vurbiri.CreatingMesh;
 using static Vurbiri.Colonization.CONST;
+using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization
 {
@@ -32,13 +33,13 @@ namespace Vurbiri.Colonization
             float angle, angleStep, angleOffset;
             bool isHigh = Chance.Rolling();
             Chance chance;
-            FloatMRnd offset = step * _ratioOffset;
+            RndMFloat offset = step * _ratioOffset;
             Vector3 position;
 
             for (int i = 0; i < _countCircle; i++)
             {
                 angleStep = 2f * _density * step / radius;
-                angleOffset = FloatZRnd.Rolling(angleStep);
+                angleOffset = RndFloat.Next(angleStep);
                 angle = TAU + angleOffset;
                 chance = ((_countCircle << 1) - i) * _ratioChanceRock / (_countCircle << 1);
 
@@ -70,28 +71,28 @@ namespace Vurbiri.Colonization
         [System.Serializable]
         private class Rock
         {
-            [SerializeField, MinMax(3, MAX_VERTEX)] private IntRnd _countVertexRange; // = new(5, MAX_VERTEX);
+            [SerializeField, MinMax(3, MAX_VERTEX)] private RndInt _countVertexRange; // = new(5, MAX_VERTEX);
             [Space]
             [SerializeField] private float _startHeight; // = -0.1f;
-            [SerializeField, MinMax(0.5f, 3f)] private FloatRnd _heightRangeHigh; // = new(1.1f, 2f);
-            [SerializeField, MinMax(0.1f, 3f)] private FloatRnd _heightRangeLow; // = new(0.4f, 1.3f);
+            [SerializeField, MinMax(0.5f, 3f)] private RndFloat _heightRangeHigh; // = new(1.1f, 2f);
+            [SerializeField, MinMax(0.1f, 3f)] private RndFloat _heightRangeLow; // = new(0.4f, 1.3f);
             [Space]
-            [SerializeField, MinMax(0.1f, 2f)] private FloatRnd _ratioRadiusRange; // = new(0.65f, 0.9f);
+            [SerializeField, MinMax(0.1f, 2f)] private RndFloat _ratioRadiusRange; // = new(0.65f, 0.9f);
             [Space]
-            [SerializeField, MinMax(0.01f, 0.5f)] private FloatRnd _ratioOffsetRange; // = new(0.075f, 0.15f);
+            [SerializeField, MinMax(0.01f, 0.5f)] private RndFloat _ratioOffsetRange; // = new(0.075f, 0.15f);
             [Space]
             [SerializeField] private byte _color; // = 211;
 
             private const int MAX_VERTEX = 6;
 
-            public float RadiusAvg => _radiusRange.Avg;
-            public float Radius { set => _radiusRange = new(_ratioRadiusRange, value); }
-
-            private readonly List<Triangle> _triangles = new(MAX_VERTEX);
-            private FloatRnd _radiusRange;
-
             private static readonly Vector2[] s_uvPick = { new(0f, 0f), new(1f, 0f), new(0.5f, SIN_60) };
             private static readonly Color32[] s_barycentricColors = { new(255, 0, 0, 255), new(0, 255, 0, 255), new(255, 255, 255, 255) };
+
+            private readonly List<Triangle> _triangles = new(MAX_VERTEX);
+            private RndFloat _radiusRange;
+
+            public float RadiusAvg { [Impl(256)] get => _radiusRange.Avg; }
+            public float Radius { [Impl(256)] set => _radiusRange = new(_ratioRadiusRange, value); }
 
             public List<Triangle> Create(Vector3 position, bool isHigh, float heightRatio, float ratioRadius)
             {
@@ -100,13 +101,13 @@ namespace Vurbiri.Colonization
 
                 float height = heightRatio * (isHigh ? _heightRangeHigh : _heightRangeLow);
                 float radius = _radiusRange * ratioRadius;
-                FloatMRnd offsetSide = radius * _ratioOffsetRange;
+                RndMFloat offsetSide = radius * _ratioOffsetRange;
 
                 float stepAngle = TAU / countVertex;
-                float angle = FloatZRnd.Rolling(stepAngle);
+                float angle = RndFloat.Next(stepAngle);
 
-                Vector3[] bottom = new Vector3[countVertex];
-                Vector3[] top = new Vector3[countVertex];
+                var bottom = new Vector3[countVertex];
+                var top = new Vector3[countVertex];
 
                 float x, z;
                 Vector3 positionTop = new(position.x, position.y + height, position.z);

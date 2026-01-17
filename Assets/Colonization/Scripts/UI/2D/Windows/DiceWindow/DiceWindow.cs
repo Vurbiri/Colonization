@@ -9,14 +9,14 @@ namespace Vurbiri.Colonization.UI
 	public class DiceWindow : ASwitchableWindow
     {
         [Space]
-        [SerializeField] private FloatRnd _delayAI;
+        [SerializeField] private RndFloat _delayAI;
         [SerializeField] private WaitRealtime _openTime;
         [SerializeField] private WaitRealtime _closeTime;
         [Space]
         [SerializeField] private VButton _stopButton;
         [SerializeField] private TextMeshProUGUI _result;
         [Space]
-        [SerializeField] private FloatRnd _delayDice;
+        [SerializeField] private RndFloat _delayDice;
         [SerializeField] private TextMeshProUGUI[] _labelsDice;
 
         private readonly Dice[] _dices = new Dice[CONST.DICES_COUNT];

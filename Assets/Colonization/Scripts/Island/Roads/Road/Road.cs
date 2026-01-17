@@ -12,16 +12,16 @@ namespace Vurbiri.Colonization
 
         [SerializeField] private LineRenderer _roadRenderer;
         [Space]
-        [SerializeField, Range(0.5f, 1.5f)] private float _widthRoad = 0.95f;
+        [SerializeField, Range(0.5f, 1.5f)] private float _widthRoad; // = 0.95f;
         [Space]
-        [SerializeField, MinMax(2, 7)] private IntRnd _rangeCount = new(3, 6);
-        [SerializeField, MinMax(0.5f, 1.5f)] private FloatRnd _lengthFluctuation = new(0.85f, 1.15f);
-        [SerializeField, MinMax(0.1f, 0.32f)] private FloatRnd _rateWave = new(0.19f, 0.27f);
+        [SerializeField, MinMax(2, 7)] private RndInt _rangeCount; //= new(3, 6);
+        [SerializeField, MinMax(0.5f, 1.5f)] private RndFloat _lengthFluctuation; // = new(0.85f, 1.15f);
+        [SerializeField, MinMax(0.1f, 0.32f)] private RndFloat _rateWave; // = new(0.19f, 0.27f);
         [Space]
-        [SerializeField, MinMax(0.1f, 2f)] private FloatRnd _textureXRange = new(0.6f, 0.9f);
-        [SerializeField, MinMax(0.1f, 2f)] private FloatRnd _textureYRange = new(0.4f, 1f);
+        [SerializeField, MinMax(0.1f, 2f)] private RndFloat _textureXRange; // = new(0.6f, 0.9f);
+        [SerializeField, MinMax(0.1f, 2f)] private RndFloat _textureYRange; // = new(0.4f, 1f);
         [Space]
-        [SerializeField, Range(2f, 6f)] private float _buildingSpeed = 4.3f;
+        [SerializeField, Range(2f, 6f)] private float _buildingSpeed; // = 4.3f;
 
         private Action<Road> a_onDisable;
         private readonly List<RemoveLink> _removeLinks = new(2);

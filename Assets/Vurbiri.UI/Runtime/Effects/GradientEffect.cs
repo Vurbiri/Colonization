@@ -71,7 +71,7 @@ namespace Vurbiri.UI
             List<UIVertex> vertexes = new(vh.currentIndexCount);
 			vh.GetUIVertexStream(vertexes);
 
-            MinMax extreme = MinMax.empty;
+            var extreme = MinMax.Empty;
             for (int i = 0; i < count; ++i)
                 extreme.Set(vertexes[i].position[axis]);
 
